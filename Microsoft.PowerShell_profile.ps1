@@ -12,8 +12,6 @@ if(Test-Path "C:\lastpath.txt") {
     Get-Content "C:\lastpath.txt" | Set-Location
 }
 
-
-
 ### ----------------------PROMPT--------------------- ###
 
 function prompt {
@@ -45,8 +43,6 @@ function prompt {
     Write-Host " >" -ForegroundColor White -NoNewline
     "` "
 }
-
-
 
 ### -------------------FUNCTIONS--------------------- ###
 
