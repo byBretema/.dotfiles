@@ -1,0 +1,31 @@
+### CODE FOLDERS ###
+var/
+bin/
+obj/
+env/
+dist/
+build/
+.Python
+
+### CODE FILES ###
+*.a
+*.o
+*.so
+*.pyc
+*.exe
+*.log
+*.test
+*.spec
+*.class
+*.manifest
+_testmain.go
+
+### OSX ###
+._*
+.Trashes
+.DS_Store
+.fseventsd
+.TemporaryItems
+.Spotlight-V100
+.VolumeIcon.icns
+.DocumentRevisions-V100
