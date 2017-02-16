@@ -1,16 +1,13 @@
-@echo off
-title Cool Windows setup!
-
-rem Ensure Get-ExecutionPolicy is not restricted!
+# Ensure Get-ExecutionPolicy is not restricted!
 Set-ExecutionPolicy RemoteSigned -s cu
 
-rem A PowerShell environment for Git!
+# A PowerShell environment for Git!
 PowerShellGet\Install-Module posh-git -Scope CurrentUser
 
 md $env:USERPROFILE\.vim\autoload\
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -Outfile "$env:USERPROFILE\.vim\autoload\plug.vim"
 
-rem A command-line installer for Windows!
+# A command-line installer for Windows!
 iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 scoop bucket add extras
 scoop install 7zip
@@ -115,6 +112,7 @@ scoop install winmerge
 scoop install write
 
 
-rem -----------------------------
+# Link powershell profile.
+mklink .\Microsoft.PowerShell_profile.ps1 $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
 
-Copy-Item $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+# Link powershell profile.
