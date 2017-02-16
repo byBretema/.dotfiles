@@ -113,6 +113,15 @@ scoop install write
 
 
 # Link powershell profile.
-mklink .\Microsoft.PowerShell_profile.ps1 $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1
+mklink $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1 .\Microsoft.PowerShell_profile.ps1
 
-# Link powershell profile.
+# Link consoleZ profile.
+mklink  C:\consoleZ\console.xml .\console.xml
+
+
+# Link git config and default ignore list.
+mklink $env:userprofile\.gitignore .\.gitignore
+mklink $env:userprofile\.gitconfig .\.gitconfig
+
+# Link vim config.
+mklink $env:userprofile\.vimrc .\.vimrc
