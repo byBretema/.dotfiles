@@ -1,4 +1,3 @@
-# Made with ♥ by cambalamas.
 
 ### -----------------------LOAD---------------------- ###
 
@@ -29,7 +28,7 @@ function prompt {
     $host.UI.RawUI.WindowTitle = "[$usu] @ $dom"
 
     # Prompt Vars...
-    $cd = Get-Location
+    $cd = (Get-Location).Path
     $time = (Get-Date).ToLongTimeString()
     if(Get-GitStatus) { $sep = "`n " } else { $sep = " " }
     # Write prompt...
@@ -58,7 +57,13 @@ function qgp {
     git push
 }
 
+# Alias to git status resume and branch indicator.
+function gst { git status -sb }
+
 # Hack powershell 'ls' with git bash binaries.
 function l { ls.exe -AFGh --color --group-directories-first }
 function ll { ls.exe -AFGhl --color --group-directories-first }
 function lt { ls.exe -AFGhlR --color --group-directories-first }
+
+# Open explorer windows on current directory.
+function oo { explorer (Get-Location).Path }
