@@ -63,3 +63,6 @@ function lt { ls.exe -AFGhlR --color --group-directories-first }
 
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
+
+# Quick access to home directory.
+function ho { Set-Location $env:userprofile }
