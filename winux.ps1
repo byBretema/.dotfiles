@@ -10,106 +10,125 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 # A command-line installer for Windows!
 iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 scoop bucket add extras
+
+
+# end-user stuff
 scoop install 7zip
-scoop install adb
-scoop install ag
-scoop install apache
-scoop install busybox
-scoop install caddy
-scoop install chromedriver
-scoop install cmake
-scoop install concfg
-scoop install coreutils
-scoop install cowsay
-scoop install csvtosql
-scoop install ctags
-scoop install curl
-scoop install devd
-scoop install diffutils
-scoop install dig
-scoop install doxygen
-scoop install erlang
-scoop install ffmpeg
-scoop install findutils
-scoop install forge
-scoop install gawk
-scoop install gcc
-scoop install go
-scoop install grep
-scoop install haskell
-scoop install hub
-scoop install hugo
-scoop install iconv
-scoop install imagemagick
-scoop install kvm
-scoop install latex
-scoop install less
-scoop install ln
-scoop install lua
-scoop install lynx
-scoop install make
-scoop install mariadb
-scoop install maven
+scoop install vlc
+scoop install cpu-z
+scoop install putty
+scoop install slack
+scoop install write
+scoop install mplayer
+scoop install telegram
 scoop install mediainfo
-scoop install mercurial
-scoop install mongodb
-scoop install mono
-scoop install msys
-scoop install mysql
-scoop install nginx
+scoop install filezilla
+scoop install imagemagick
+scoop install thunderbird
+scoop install sublime-text
+scoop install chromedriver
+
+# sys tools
+scoop install hub
 scoop install nmap
-scoop install nodejs
-scoop install nssm
+scoop install msys
+scoop install lynx
 scoop install nuget
+
+# unix tools
+scoop install ag
+scoop install ln
+scoop install sed
+scoop install say
+scoop install kvm
+scoop install time
+scoop install sudo
+scoop install gawk
+scoop install grep
+scoop install less
+scoop install curl
+scoop install touch
+scoop install cowsay
 scoop install openjdk
 scoop install openssh
 scoop install openssl
+scoop install diffutils
+scoop install findutils
+scoop install coreutils
+
+# dev tools
+scoop install dig
+scoop install adb
+scoop install make
+scoop install ctags
+scoop install cmake
+scoop install ffmpeg
+scoop install doxygen
+scoop install busybox
+scoop install mercurial
+
+# servers
+scoop install devd
+scoop install caddy
+scoop install nginx
+scoop install apache
+
+# langs
+scoop install r
+scoop install go
+scoop install gcc
+scoop install lua
+scoop install php
+scoop install ruby
+scoop install rust
+scoop install mono
+scoop install latex
+scoop install python
+scoop install nodejs
+scoop install erlang
+scoop install haskell
+
+# frameworks
+scoop install hugo
+scoop install maven
+
+# databases
+scoop install redis
+scoop install mysql
+scoop install sqlite
+scoop install mongodb
+scoop install mariadb
+scoop install csvtosql
+scoop install postgresql
+
+scoop install tar
+scoop install telnet
+
+
+scoop install forge
+scoop install iconv
+scoop install nssm
 scoop install optipng
 scoop install packer
 scoop install pdftk
-scoop install php
-scoop install postgresql
-scoop install python
-scoop install r
-scoop install redis
-scoop install ruby
-scoop install rust
-scoop install say
 scoop install scala
-scoop install sed
 scoop install shasum
-scoop install sqlite
-scoop install sudo
-scoop install tar
-scoop install telnet
-scoop install time
-scoop install touch
 scoop install vim
 scoop install webp
 scoop install wget
 scoop install which
 scoop install youtube-dl
-scoop install cpu-z
-scoop install filezilla
 scoop install gifcam
 scoop install gitextensions
 scoop install gvim
 scoop install handle
 scoop install heroku-cli
 scoop install jkrypto
-scoop install mplayer
 scoop install ngrok
 scoop install pandoc
-scoop install putty
-scoop install slack
-scoop install sublime-text
-scoop install telegram
-scoop install thunderbird
-scoop install vlc
 scoop install whois
-scoop install wifi-manager
 scoop install winmerge
-scoop install write
+scoop install wifi-manager
 
 
 # Link consoleZ profile.
