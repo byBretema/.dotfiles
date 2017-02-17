@@ -112,12 +112,11 @@ scoop install winmerge
 scoop install write
 
 
-# Link powershell profile.
-mklink $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1 .\Microsoft.PowerShell_profile.ps1
-
 # Link consoleZ profile.
 mklink  C:\consoleZ\console.xml .\console.xml
 
+# Link powershell profile.
+mklink $env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1 .\Microsoft.PowerShell_profile.ps1
 
 # Link git config and default ignore list.
 mklink $env:userprofile\.gitignore .\.gitignore
