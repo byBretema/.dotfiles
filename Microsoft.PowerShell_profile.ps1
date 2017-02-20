@@ -1,5 +1,5 @@
 
-### -----------------------LOAD---------------------- ###
+### --------------------------------- LOAD -------------------------------- ###
 
 # Avoid "Microsoft Copyright spam"!
 Clear-Host
@@ -8,16 +8,19 @@ Clear-Host
 Import-Module posh-git
 
 # Hack consoleZ "open in the same directory"
-if(Test-Path "C:\lastpath.txt") {
-    Get-Content "C:\lastpath.txt" | Set-Location
+
+$lastpath = "$env:USERPROFILE\lastpath.txt"
+
+if(Test-Path $lastpath ) {
+    Get-Content $lastpath | Set-Location
 }
 
-### ----------------------PROMPT--------------------- ###
+### -------------------------------- PROMPT ------------------------------- ###
 
 function prompt {
 
     # Hack consoleZ "open in the same directory"
-    (Get-Location).Path | Out-File "C:\lastpath.txt"
+    (Get-Location).Path | Out-File $lastpath
 
     # Title Vars...
     $usu = $env:username
@@ -44,7 +47,7 @@ function prompt {
     "` "
 }
 
-### -------------------FUNCTIONS--------------------- ###
+### ------------------------------ FUNCTIONS ------------------------------ ###
 
 # QuickGitPush: the args are the string to commit.
 function qgp {
@@ -66,3 +69,5 @@ function oo { explorer (Get-Location).Path }
 
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
+
+### ------------------------------- CHOCO --------------------------------- ###
