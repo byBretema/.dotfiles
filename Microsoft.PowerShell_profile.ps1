@@ -15,6 +15,12 @@ if(Test-Path $lastpath ) {
     Get-Content $lastpath | Set-Location
 }
 
+# Hack for use GUI linux apps via Docker.
+# Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
+$NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
+$HostIP = $NetInfo[4].IPAddressToString
+$DISPLAY = $HostIP+":0"
+
 ### -------------------------------- PROMPT ------------------------------- ###
 
 function prompt {
@@ -71,3 +77,9 @@ function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
 
 ### ------------------------------- CHOCO --------------------------------- ###
+
+# Chocolatey profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}
