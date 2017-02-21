@@ -17,7 +17,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 ### ------------------------------ CHOCOLATEY ----------------------------- ###
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
-$choco_apps = @( "7zip", "putty", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "cpu-z", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "dropbox", "googledrive", "googlechrome", "xmind" )
+$choco_apps = @( "7zip", "putty", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "cpu-z", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
 
 $choco | ForEach-Object { choco install -y --force $_ }
 choco install -y --force --allow-empty-checksums battle.net
@@ -29,7 +29,7 @@ iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 # add extra packages from scoop-extra repo.
 scoop bucket add extras
 
-$scoop_tools = @( "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "kvm", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "iconv", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "mysql", "sqlite", "mongodb", "mariadb", "postgresql" )
+$scoop_tools = @( "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "sqlite", "mongodb", "postgresql" )
 
 $scoop_tools | ForEach-Object { scoop install -a 64bit $_}
 
