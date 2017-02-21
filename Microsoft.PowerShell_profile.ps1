@@ -68,9 +68,9 @@ function qgp {
 function gst { git status -sb }
 
 # Hack powershell 'ls' with git bash binaries.
-function l { ls.exe -AFGh --color --group-directories-first }
-function ll { ls.exe -AFGhl --color --group-directories-first }
-function lt { ls.exe -AFGhlR --color --group-directories-first }
+function l { ls.exe -AFGh --color }
+function ll { ls.exe -AFGhl --color }
+function lt { ls.exe -AFGhlR --color }
 
 # bd: goto previous directory.
 function bd {
