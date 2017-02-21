@@ -9,10 +9,11 @@ Import-Module posh-git
 
 # Hack consoleZ "open in the same directory"
 
-$lastpath = "$env:USERPROFILE\lastpath.txt"
+$currentPath = "$env:USERPROFILE\currentPath.txt"
+$previousPath = "$env:USERPROFILE\previousPath.txt"
 
-if(Test-Path $lastpath ) {
-    Get-Content $lastpath | Set-Location
+if( Test-Path $currentPath ) {
+    Get-Content $currentPath | Set-Location
 }
 
 # Hack for use GUI linux apps via Docker.
@@ -26,7 +27,8 @@ $DISPLAY = $HostIP+":0"
 function prompt {
 
     # Hack consoleZ "open in the same directory"
-    (Get-Location).Path | Out-File $lastpath
+    Get-Content $currentPath | Out-File $previousPath
+    (Get-Location).Path | Out-File $currentPath
 
     # Title Vars...
     $usu = $env:username
@@ -70,6 +72,13 @@ function l { ls.exe -AFGh --color --group-directories-first }
 function ll { ls.exe -AFGhl --color --group-directories-first }
 function lt { ls.exe -AFGhlR --color --group-directories-first }
 
+# bd: goto previous directory.
+function bd {
+    if( Test-Path $previousPath ) {
+        Get-Content $previousPath | Set-Location
+    }
+}
+
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
 
@@ -80,6 +89,6 @@ function ho { Set-Location $env:userprofile }
 
 # Chocolatey profile
 $ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
+if ( Test-Path $ChocolateyProfile ) {
   Import-Module "$ChocolateyProfile"
 }
