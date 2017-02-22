@@ -1,3 +1,8 @@
+# Made with ??? by cambalamas.
+
+### --------------------------------- VARS -------------------------------- ###
+
+$EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
 
 ### --------------------------------- LOAD -------------------------------- ###
 
@@ -8,11 +13,9 @@ Clear-Host
 Import-Module posh-git
 
 # Hack consoleZ "open in the same directory"
-
 $currentPath = "$env:USERPROFILE\currentPath.txt"
 $previousPath = "$env:USERPROFILE\previousPath.txt"
-
-if( Test-Path $currentPath ) {
+if ( Test-Path $currentPath ) {
     Get-Content $currentPath | Set-Location
 }
 
@@ -25,7 +28,6 @@ $DISPLAY = $HostIP+":0"
 ### -------------------------------- PROMPT ------------------------------- ###
 
 function prompt {
-
     # Hack consoleZ "open in the same directory"
     Get-Content $currentPath | Out-File $previousPath
     (Get-Location).Path | Out-File $currentPath
@@ -79,11 +81,38 @@ function bd {
     }
 }
 
+# choco search install and update with -fyr flags by default.
+function chos { choco search $args }
+function chou { choco upgrade -fyr all }
+function choi { choco install -fyr $args }
+
+# scoop search install and update easier aliases.
+function scoops { scoop search $args }
+function scoopi { scoop install -a 64bit $args }
+function scoopu { scoop update * ; scoop update * -q }
+
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
 
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
+
+$h_vimrc     = "$env:userprofile\.vimrc"
+$h_gitingore = "$env:userprofile\.gitignore"
+$h_gitconfig = "$env:userprofile\.gitconfig"
+$h_consoleZ  = "$ConsoleZSettingsDir\console.xml"
+$h_profile   = "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+function qe {
+    switch ($args[0])
+        {
+            "vim"  { subl $h_vimrc }
+            "posh" { subl $h_profile}
+            "z"    { subl $h_consoleZ }
+            "git"  { subl $h_gitconfig ; subl $h_gitingore }
+            default { }
+        }
+}
+
 
 ### ------------------------------- CHOCO --------------------------------- ###
 
