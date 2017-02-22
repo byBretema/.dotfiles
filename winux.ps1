@@ -19,8 +19,8 @@ iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
 $choco_apps = @( "7zip", "putty", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "cpu-z", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
 
-$choco | ForEach-Object { choco install -y --force $_ }
-choco install -y --force --allow-empty-checksums battle.net
+$choco | ForEach-Object { choco install -y $_ }
+choco install -y --allow-empty-checksums battle.net
 
 
 ### -------------------------------- SCOOP -------------------------------- ###

@@ -1,0 +1,3 @@
+[submodule "sublime_env"]
+	path = sublime_env
+	url = https://github.com/cambalamas/sublime_env
