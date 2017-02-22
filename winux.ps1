@@ -74,8 +74,18 @@ New-Item -Path $h_vimrc -ItemType SymbolicLink -Value $g_vimrc
 
 ### -------------------------- LINK SUBLIME ENV --------------------------- ###
 
-## $g_sublD = ".\sublime_env\Packages\Default"
-## $h_sublD = "$env:userprofile\\AppData\Roaming\Sublime Text 3\Packages\Default"
+$g_sublU = ".\sublime_env\Packages\User"
+$h_sublU = "$env:userprofile\AppData\Roaming\Sublime Text 3\Packages\User"
 
-## $g_sublP = ".\sublime_env\Packages\Default"
-## $h_sublP = "$env:userprofile\\AppData\Roaming\Sublime Text 3\Packages\Default"
+foreach ( $file in (ls $g_sublU).name ) {
+    if ( Test-Path "$h_sublU\$file" ) { Remove-Item -r $h_sublU\$file }
+    New-Item -Path $h_sublU\$file -ItemType SymbolicLink -Value $g_sublU\$file
+}
+
+$g_sublD = ".\sublime_env\Packages\Default"
+$h_sublD = "$env:userprofile\AppData\Roaming\Sublime Text 3\Packages\Default"
+
+foreach ( $file in (ls $g_sublD).name ) {
+    if ( Test-Path "$h_sublD\$file" ) { Remove-Item -r $h_sublD\$file }
+    New-Item -Path $h_sublD\$file -ItemType SymbolicLink -Value $g_sublD\$file
+}
