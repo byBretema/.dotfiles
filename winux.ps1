@@ -71,3 +71,11 @@ $g_vimrc = ".\.vimrc"
 $h_vimrc = "$env:userprofile\.vimrc"
 if ( Test-Path $h_vimrc ) { Remove-Item $h_vimrc }
 New-Item -Path $h_vimrc -ItemType SymbolicLink -Value $g_vimrc
+
+### -------------------------- LINK SUBLIME ENV --------------------------- ###
+
+## $g_sublD = ".\sublime_env\Packages\Default"
+## $h_sublD = "$env:userprofile\\AppData\Roaming\Sublime Text 3\Packages\Default"
+
+## $g_sublP = ".\sublime_env\Packages\Default"
+## $h_sublP = "$env:userprofile\\AppData\Roaming\Sublime Text 3\Packages\Default"
