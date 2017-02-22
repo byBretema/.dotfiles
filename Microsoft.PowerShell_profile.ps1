@@ -2,7 +2,14 @@
 
 ### --------------------------------- VARS -------------------------------- ###
 
+# A unix friendly var to select your favorite editor.
 $EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
+
+# Hack for use GUI linux apps via Docker.
+# Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
+$NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
+$HostIP = $NetInfo[4].IPAddressToString
+$DISPLAY = $HostIP+":0"
 
 ### --------------------------------- LOAD -------------------------------- ###
 
@@ -19,11 +26,6 @@ if ( Test-Path $currentPath ) {
     Get-Content $currentPath | Set-Location
 }
 
-# Hack for use GUI linux apps via Docker.
-# Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
-$NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
-$HostIP = $NetInfo[4].IPAddressToString
-$DISPLAY = $HostIP+":0"
 
 ### -------------------------------- PROMPT ------------------------------- ###
 
