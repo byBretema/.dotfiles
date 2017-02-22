@@ -5,7 +5,7 @@
 # Ask for computer name, if empty, don't change it.
 Write-Host "Sets a new name for the computer (Empty == No changes) :   " -ForegroundColor Cyan -NoNewline
 $computerName = Read-Host
-if ($computerName.Lenght != 0) {
+if ($computerName.Lenght > 0) {
     Rename-Computer $computerName
 }
 
@@ -18,7 +18,7 @@ PowerShellGet\Install-Module -Force posh-git -Scope CurrentUser
 
 # Plugin manager for vim!
 $vimAutoload = "$env:USERPROFILE\.vim\autoload"
-if ( Test-Path $h_vimrc ) { Remove-Item $h_vimrc }
+if ( Test-Path $vimAutoload ) { Remove-Item -r $vimAutoload }
 New-Item -ItemType Directory $vimAutoload
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -Outfile "$vimAutoload\plug.vim"
 
