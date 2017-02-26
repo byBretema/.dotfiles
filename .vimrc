@@ -23,10 +23,6 @@ map <leader>t :TagbarToggle<CR>
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
 map <leader>u :UndotreeToggle<CR>
 
-Plug 'tpope/vim-fugitive'       " git workflow.
-nnoremap <leader>gC :Gcommit<Tab>
-nnoremap <leader>gc :Gcommit .<CR>
-
 Plug 'terryma/vim-multiple-cursors'
 let g:multi_cursor_use_default_mapping=0
 let g:multi_cursor_next_key=','
@@ -42,7 +38,6 @@ let g:NERDTreeAutoDeleteBuffer=1
 
 
 "" visuals
-Plug 'itchyny/lightline.vim'
 Plug 'junegunn/rainbow_parentheses.vim'
 au VimEnter * :RainbowParentheses
 
@@ -77,7 +72,7 @@ Plug 'morhetz/gruvbox'
 let g:gruvbox_italic = 1
 let g:gruvbox_invert_signs = 1
 let g:gruvbox_invert_tabline = 1
-let g:gruvbox_contrast_ = "light"
+let g:gruvbox_contrast_ = "hard"
 let g:gruvbox_vert_split = "gray"
 let g:gruvbox_number_column = "bg1"
 let g:gruvbox_italicize_strings = 1
@@ -142,7 +137,7 @@ set smarttab autoindent smartindent shiftround " correct indent.
 "" visual
 set bg=dark
 set t_Co=256 " darkness and rainbows.
-colorscheme gruvbox  " fancy warm colorscheme.
+"colorscheme gruvbox  " fancy warm colorscheme.
 " hi Normal ctermbg=darkblack
 
 set textwidth=80   " max line chars. /hi= outrange, cc./
@@ -171,7 +166,6 @@ set completeopt=menu,menuone,longest,preview
 
 "" last but not least
 set formatoptions-=t               " don't break line at textwidth setting.
-" set formatoptions+=j,c,r           " better joins.
 set diffopt+=filler,vertical       " vimdiff stuff.
 set backspace=indent,eol,start     " overpowered backspace.
 set timeoutlen=1000 ttimeoutlen=0  " fast timeout for escape codes
@@ -192,15 +186,12 @@ nnoremap <leader>n :set rnu!<CR>
 
 " edit/load vimrc.
 nnoremap <leader>v :e ~/.vimrc<CR>
-nnoremap <leader>V :source~/.vimrc<CR>
-" save.
-nnoremap <C-e> :update<CR>
-inoremap <C-e> <C-o>:update<CR>
-vnoremap <C-e> <Esc>:update<CR>
+nnoremap <leader>V :source ~/.vimrc<CR>
 " clear highlight.
 nnoremap <silent><leader>h :noh<CR>
 
 "" fixes
+nnoremap ´´ :silent! !<CR>
 " move over visual lines.
 nnoremap j gj
 nnoremap k gk
@@ -210,7 +201,7 @@ inoremap <DOWN> <C-o>gj
 "" ide-like
 " buffers
 nnoremap <S-TAB> :bn<CR>
-nnoremap <leader><leader> :ls<CR>
+nnoremap <leader><leader> :ls<CR>:b
 " undo/redo.
 nnoremap U <C-r>
 inoremap <C-u> <C-o>u
@@ -226,28 +217,28 @@ inoremap <C-k> <Esc>:m-2<CR>==gi
 nnoremap <silent><leader>fix :call Fix()<CR>
 
 
-" FUNCS !
-"" not lost the cursros position.
-function! Preserve(command)
-  let l:search=@/
-  let l:line = line(".")
-  let l:col = col(".")
-  execute a:command
-  let @/=l:search
-  call cursor(l:line, l:col)
-endfunction
-"" fix indents, trailing spaces & mixeds EOLs
-function! Fix()
-  :call Preserve("normal! gg=G")
-  :call Preserve("%s/\\s\\+$//e")
-  :call Preserve("%s///e")
-endfunction
+" " FUNCS !
+" "" not lost the cursros position.
+" function! Preserve(command)
+"   let l:search=@/
+"   let l:line = line(".")
+"   let l:col = col(".")
+"   execute a:command
+"   let @/=l:search
+"   call cursor(l:line, l:col)
+" endfunction
+" "" fix indents, trailing spaces & mixeds EOLs
+" function! Fix()
+"   :call Preserve("normal! gg=G")
+"   :call Preserve("%s/\\s\\+$//e")
+"   :call Preserve("%s///e")
+" endfunction
 
 
 " AUTOCOMMANDS !
 " markdown
 au BufNewFile,BufRead *.md set filetype=markdown
 " autoreload
-au FocusGained,BufEnter * :silent! !
+au FocusGained,FocusLost,BufEnter,BufRead,BufLeave,WinEnter,WinLeave,BufWinEnter,BufWinLeave * :silent! !
 " autosave
 au FocusLost,BufLeave,CursorHold,CursorHoldI * silent! wa

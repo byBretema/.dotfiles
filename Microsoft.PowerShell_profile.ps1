@@ -99,6 +99,7 @@ function oo { explorer (Get-Location).Path }
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
 
+# Quick edit to config files.
 $h_vimrc     = "$env:userprofile\.vimrc"
 $h_gitingore = "$env:userprofile\.gitignore"
 $h_gitconfig = "$env:userprofile\.gitconfig"
@@ -113,6 +114,16 @@ function qe {
             "git"  { subl $h_gitconfig ; subl $h_gitingore }
             default { }
         }
+}
+
+# Use dir to make trees and use first arg as depth level.
+function tri {
+    $depth_level = ""
+    for ($i=0; $i -lt $args[0]; $i++ ) {
+        $depth_level += "*\"
+        Write-Host "`n`n### ------------------------------- LVL $($i+1) --------------------------------- ###" -ForegroundColor Yellow
+        Get-ChildItem .\$depth_level
+    }
 }
 
 

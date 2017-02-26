@@ -17,28 +17,28 @@ Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 PowerShellGet\Install-Module -Force posh-git -Scope CurrentUser
 
 # Plugin manager for vim!
-$vimAutoload = "$env:USERPROFILE\.vim\autoload"
+$vimAutoload = "$env:USERPROFILE\vimfiles\autoload"
 if ( Test-Path $vimAutoload ) { Remove-Item -r $vimAutoload }
 New-Item -ItemType Directory $vimAutoload
 Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim" -Outfile "$vimAutoload\plug.vim"
 
 ### ------------------------------ CHOCOLATEY ----------------------------- ###
-## iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
+iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
-## $choco_apps = @( "ditto", "7zip", "putty", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "cpu-z", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
+$choco_apps = @( "ditto", "7zip", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
 
-## $choco_apps | ForEach-Object { choco install -fyr $_ }
-## choco install -fyr --allow-empty-checksums battle.net
+$choco_apps | ForEach-Object { choco install -fyr $_ }
+choco install -fyr --allow-empty-checksums battle.net
 
 ### -------------------------------- SCOOP -------------------------------- ###
-## iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
+iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 
 # add extra packages from scoop-extra repo.
-## scoop bucket add extras
+scoop bucket add extras
 
-## $scoop_tools = @( "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "sqlite", "mongodb", "postgresql" )
+$scoop_tools = @( "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "sqlite", "mongodb", "postgresql" )
 
-## $scoop_tools | ForEach-Object { scoop install -a 64bit $_ }
+$scoop_tools | ForEach-Object { scoop install -a 64bit $_ }
 
 ### -------------------------- LINK CONFIG FILES -------------------------- ###
 
