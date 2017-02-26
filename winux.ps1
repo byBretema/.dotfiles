@@ -119,3 +119,8 @@ $toDisableServices = @( "SysMain", "WSearch", "DiagTrack", "diagnosticshub.stand
 $toDisableServices | ForEach-Object {
     Set-Service -StartupType Disabled -Name $_ 2>$null
 }
+
+### ----------------------------- SSD STUFF ------------------------------- ###
+
+fsutil behavior set disabledeletenotify NTFS 0
+fsutil behavior set disabledeletenotify ReFS 0
