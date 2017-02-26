@@ -63,7 +63,7 @@ function prompt {
 
 ### ---------------------------- POSH ALIAS ------------------------------- ###
 
-if ( ! Get-Alias e ) { New-Alias e $EDITOR }
+if ( -Not $(Get-Alias -name e 2>$null) ) { New-Alias e $EDITOR }
 
 Remove-Item alias:ls
 Remove-Item alias:rm
@@ -93,6 +93,7 @@ function gitit {
 }
 
 # Hack powershell 'ls' with git bash binaries.
+function ls { ls.exe --color }
 function l { ls.exe -AFGh --color }
 function ll { ls.exe -AFGhl --color }
 function lt { ls.exe -AFGhlR --color }
@@ -146,7 +147,6 @@ function tri {
         Get-ChildItem .\$depth_level
     }
 }
-
 
 ### ------------------------------- CHOCO --------------------------------- ###
 
