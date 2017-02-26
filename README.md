@@ -8,7 +8,7 @@
 
 ***I do not take responsibility for unwanted changes.***
 
-> ***However, in time I will try to elaborate a detailed description of all this.***
+***However, in time I will try to elaborate a detailed description of all this.***
 
 ```git
 git clone https://github.com/cambalamas/winux $env:userprofile\.dotfiles
