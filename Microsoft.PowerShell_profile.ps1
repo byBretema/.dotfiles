@@ -1,4 +1,4 @@
-# Made with ??? by cambalamas.
+# Made with ♥ by cambalamas.
 
 ### --------------------------------- VARS -------------------------------- ###
 
@@ -12,10 +12,6 @@ $NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
 $HostIP = $NetInfo[4].IPAddressToString
 $DISPLAY = $HostIP+":0"
 $env:DISPLAY = $DISPLAY
-
-### --------------------------------- PATH -------------------------------- ###
-
-# $env:PATH = ""
 
 ### --------------------------------- LOAD -------------------------------- ###
 
