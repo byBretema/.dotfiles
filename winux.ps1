@@ -25,7 +25,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 ### ------------------------------ CHOCOLATEY ----------------------------- ###
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
-$choco_apps = @( "ditto", "7zip", "docker", "filezilla", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
+$choco_apps = @( "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind" )
 
 $choco_apps | ForEach-Object { choco install -fyr $_ }
 choco install -fyr --allow-empty-checksums battle.net
