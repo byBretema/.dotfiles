@@ -13,6 +13,10 @@ $HostIP = $NetInfo[4].IPAddressToString
 $DISPLAY = $HostIP+":0"
 $env:DISPLAY = $DISPLAY
 
+### --------------------------------- PATH -------------------------------- ###
+
+# $env:PATH = ""
+
 ### --------------------------------- LOAD -------------------------------- ###
 
 # Avoid "Microsoft Copyright spam"!
@@ -27,7 +31,6 @@ $previousPath = "$env:USERPROFILE\previousPath.txt"
 if ( Test-Path $currentPath ) {
     Get-Content $currentPath | Set-Location
 }
-
 
 ### -------------------------------- PROMPT ------------------------------- ###
 
@@ -93,16 +96,26 @@ function gitit {
 }
 
 # Hack powershell 'ls' with git bash binaries.
-function ls { ls.exe --color }
-function l { ls.exe -AFGh --color }
-function ll { ls.exe -AFGhl --color }
-function lt { ls.exe -AFGhlR --color }
+function ls { ls.exe --color $args}
+function l { ls.exe -AFGh --color $args}
+function ll { ls.exe -AFGhl --color $args}
+function lt { ls.exe -AFGhlR --color $args}
 
 # bd: goto previous directory.
 function bd {
     if ( Test-Path $previousPath ) {
         Get-Content $previousPath | Set-Location
     }
+}
+
+function netinfo {
+    Write-Host ""
+    Write-Host "IP privada:           $HostIP"
+    Write-Host "IP publica:           $(curl.exe -s icanhazip.com)"
+    Write-Host "---------------------------------------------------------------"
+    Write-Host "IP time:         $((ping 8.8.8.8)[11])"
+    Write-Host "DNS local time:  $((ping www.google.es)[11])"
+    Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
 
 # choco search install and update with -fyr flags by default.
@@ -121,6 +134,11 @@ function oo { explorer (Get-Location).Path }
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
 
+# Avoid System32\find.exe use 'seek' to use scoop unix-like sane find.
+function seek {
+    "$env:userprofile\scoop\shims\find.exe $args 2>$null" | Invoke-Expression
+}
+
 # Quick edit to config files.
 $h_vimrc     = "$env:userprofile\.vimrc"
 $h_gitingore = "$env:userprofile\.gitignore"
@@ -128,23 +146,12 @@ $h_gitconfig = "$env:userprofile\.gitconfig"
 $h_consoleZ  = "$ConsoleZSettingsDir\console.xml"
 $h_profile   = "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 function qe {
-    switch ($args[0])
-        {
-            "vim"  { subl $h_vimrc }
-            "posh" { subl $h_profile}
-            "z"    { subl $h_consoleZ }
-            "git"  { subl $h_gitconfig ; subl $h_gitingore }
-            default { }
-        }
-}
-
-# Use dir to make trees and use first arg as depth level.
-function tri {
-    $depth_level = ""
-    for ( $i=0; $i -lt $args[0]; $i++ ) {
-        $depth_level += "*\"
-        Write-Host "`n`n### ------------------------------- LVL $($i+1) --------------------------------- ###" -ForegroundColor Yellow
-        Get-ChildItem .\$depth_level
+    switch ($args[0]) {
+        "vim"  { subl $h_vimrc }
+        "posh" { subl $h_profile}
+        "z"    { subl $h_consoleZ }
+        "git"  { subl $h_gitconfig ; subl $h_gitingore }
+        default { }
     }
 }
 

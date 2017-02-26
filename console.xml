@@ -28,7 +28,7 @@
 			<color use="0" r="0" g="0" b="0"/></font>
 		<window title="OP-SHELL" icon="" main_title_format="%s" tab_title_format="%p %A" use_tab_icon="1" use_tab_title="1" trim_tab_titles="20" trim_tab_titles_right="0"/>
 		<fullscreen start_in_fullscreen="0" fullscreen_monitor="1">
-			<controls show_menu="0" show_toolbar="0" show_searchbar="0" show_statusbar="0" show_tabs="1" hide_single_tab="0" tabs_on_bottom="1" hide_tab_icons="1" show_scrollbars="0"/></fullscreen>
+			<controls show_menu="0" show_toolbar="0" show_searchbar="0" show_statusbar="0" show_tabs="1" hide_single_tab="1" tabs_on_bottom="1" hide_tab_icons="1" show_scrollbars="0"/></fullscreen>
 		<controls show_menu="0" show_toolbar="0" show_searchbar="0" show_statusbar="0" show_tabs="1" hide_single_tab="1" tabs_on_bottom="1" hide_tab_icons="1" show_scrollbars="0"/>
 		<styles caption="0" resizable="1" taskbar_button="1" border="0" inside_border="2" tray_icon="0" quake_like="1" quake_animation_time="50" jumplist="0" integrated_ime="1" hide_when_inactive="0" per_monitor_dpi="0">
 			<selection_color r="255" g="255" b="255"/>
