@@ -71,6 +71,11 @@ function qgp {
 # Alias to git status resume and branch indicator.
 function gst { git status -sb }
 
+# ZSH GitIt poor imitation. Works bad for ssh.
+function gitit {
+    Start-Process chrome "$(git remote -v | gawk '{print $2}' | head -1)"
+}
+
 # Hack powershell 'ls' with git bash binaries.
 function l { ls.exe -AFGh --color }
 function ll { ls.exe -AFGhl --color }
