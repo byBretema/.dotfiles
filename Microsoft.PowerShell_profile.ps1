@@ -4,12 +4,14 @@
 
 # A unix friendly var to select your favorite editor.
 $EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
+$env:EDITOR = $EDITOR
 
 # Hack for use GUI linux apps via Docker.
 # Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
 $NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
 $HostIP = $NetInfo[4].IPAddressToString
 $DISPLAY = $HostIP+":0"
+$env:DISPLAY = $DISPLAY
 
 ### --------------------------------- LOAD -------------------------------- ###
 
@@ -43,7 +45,7 @@ function prompt {
     # Prompt Vars...
     $cd = (Get-Location).Path
     $time = (Get-Date).ToLongTimeString()
-    if(Get-GitStatus) { $sep = "`n " } else { $sep = " " }
+    if ( Get-GitStatus ) { $sep = "`n " } else { $sep = " " }
     # Write prompt...
     Write-Host ""
     Write-Host "$(Write-VcsStatus)" -NoNewline
@@ -58,6 +60,20 @@ function prompt {
     Write-Host " >" -ForegroundColor White -NoNewline
     "` "
 }
+
+### ---------------------------- POSH ALIAS ------------------------------- ###
+
+if ( ! Get-Alias e ) { New-Alias e $EDITOR }
+
+Remove-Item alias:ls
+Remove-Item alias:rm
+Remove-Item alias:mv
+Remove-Item alias:cp
+Remove-Item alias:cat
+Remove-Item alias:man
+Remove-Item alias:wget
+Remove-Item alias:echo
+Remove-Item alias:curl
 
 ### ------------------------------ FUNCTIONS ------------------------------ ###
 
@@ -83,7 +99,7 @@ function lt { ls.exe -AFGhlR --color }
 
 # bd: goto previous directory.
 function bd {
-    if( Test-Path $previousPath ) {
+    if ( Test-Path $previousPath ) {
         Get-Content $previousPath | Set-Location
     }
 }
@@ -124,7 +140,7 @@ function qe {
 # Use dir to make trees and use first arg as depth level.
 function tri {
     $depth_level = ""
-    for ($i=0; $i -lt $args[0]; $i++ ) {
+    for ( $i=0; $i -lt $args[0]; $i++ ) {
         $depth_level += "*\"
         Write-Host "`n`n### ------------------------------- LVL $($i+1) --------------------------------- ###" -ForegroundColor Yellow
         Get-ChildItem .\$depth_level
