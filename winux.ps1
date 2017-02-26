@@ -28,7 +28,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
 # Define apps array.
-$choco_apps = @( "spotify" "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
+$choco_apps = @( "spotify", "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
 
 # Execute install over the array elements.
 $choco_apps | ForEach-Object { choco install -fyr $_ }
@@ -43,7 +43,7 @@ iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 scoop bucket add extras
 
 # Define tools array.
-$scoop_tools = @( "figlet" "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "sqlite", "mongodb", "postgresql" )
+$scoop_tools = @( "figlet", "tar", "nmap", "lynx", "nssm", "nuget", "wifi-manager", "ag", "ln", "sed", "say", "time", "sudo", "gawk", "grep", "less", "touch", "wget", "which", "cowsay", "openssh", "diffutils", "findutils", "coreutils", "vim", "adb", "make", "ctags", "whois", "ffmpeg", "shasum", "doxygen", "busybox", "winmerge", "mercurial", "heroku-cli", "gitextensions", "go", "rust", "mono", "python", "devd", "ngrok", "caddy", "nginx", "redis", "sqlite", "mongodb", "postgresql" )
 
 # Execute install over the array elements.
 $scoop_tools | ForEach-Object { scoop install -a 64bit $_ }
@@ -113,7 +113,7 @@ $toManualServices | ForEach-Object {
 }
 
 # Array with some crap services.
-$toDisableServices = @( "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
+$toDisableServices = @( "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
 
 # Set them to disable startup.
 $toDisableServices | ForEach-Object {
