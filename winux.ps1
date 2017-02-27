@@ -137,6 +137,7 @@ fsutil behavior set disabledeletenotify ReFS 0
 
 Write-Host "`n`nList of things to configure via GUI or more powershell knowledge:
          ---------------------------------------------------
+♥ Equipo > Propiedades del SSD > Indizado = 0
 ♥ Config avanzada sistema > Protección sistema: Config protección = 0
 ♥ Config avanzada sistema > Rendimiento > Opciones avanzadas: Mem Virtual = 0
 ♥ Ventana del explorador > Vista > Opciones > Abrir el Explorador: Este equipo
