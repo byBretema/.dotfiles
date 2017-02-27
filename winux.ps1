@@ -121,7 +121,7 @@ $toDisableServices | ForEach-Object {
 }
 
 # Array with needed services name.
-$toAutomaticServices = @( "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
+$toAutomaticServices = @( "NVDisplay.ContainerLocalSystem", "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
 
 # Set them to automatic startup.
 $toAutomaticServices | ForEach-Object {
