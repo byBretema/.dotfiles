@@ -1,4 +1,4 @@
-# Made with ♥ by cambalamas.
+# Made with ??? by cambalamas.
 
 ### --------------------------------- VARS -------------------------------- ###
 
@@ -115,14 +115,19 @@ function netinfo {
 }
 
 # choco search install and update with -fyr flags by default.
+function chof { choco info $args }
 function chos { choco search $args }
 function chou { choco upgrade -fyr all }
+function chol { choco list --local-only }
 function choi { choco install -fyr $args }
 
 # scoop search install and update easier aliases.
 function scoops { scoop search $args }
 function scoopi { scoop install -a 64bit $args }
 function scoopu { scoop update * ; scoop update * -q }
+
+# system update.
+function sysup { chou ; scoopu }
 
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }

@@ -28,7 +28,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
 # Define apps array.
-$choco_apps = @( "spotify", "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
+$choco_apps = @( "bulk-crap-uninstaller", "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
 
 # Execute install over the array elements.
 $choco_apps | ForEach-Object { choco install -fyr $_ }
@@ -113,11 +113,19 @@ $toManualServices | ForEach-Object {
 }
 
 # Array with some crap services.
-$toDisableServices = @( "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
+$toDisableServices = @( "wpscloudsvr", "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
 
 # Set them to disable startup.
 $toDisableServices | ForEach-Object {
     Set-Service -StartupType Disabled -Name $_ 2>$null
+}
+
+# Array with needed services name.
+$toAutomaticServices = @( "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
+
+# Set them to automatic startup.
+$toAutomaticServices | ForEach-Object {
+    Set-Service -StartupType Automatic -Name $_ 2>$null
 }
 
 ### ----------------------------- SSD STUFF ------------------------------- ###
