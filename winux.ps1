@@ -139,6 +139,7 @@ Write-Host "`n`nList of things to configure via GUI or more powershell knowledge
          ---------------------------------------------------
 ♥ Config avanzada sistema > Protección sistema: Config protección = 0
 ♥ Config avanzada sistema > Rendimiento > Opciones avanzadas: Mem Virtual = 0
+♥ Ventana del explorador > Vista > Opciones > Abrir el Explorador: Este equipo
 ♥ Ventana del explorador > Vista > Opciones > Privacidad: recientemente = 0 / frecuencia = 0
 ♥ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters: EnablePrefetcher = 0
-"
+`n`n YOU WIN! Ehm... YOU WINUX :'D`n"
