@@ -132,3 +132,13 @@ $toAutomaticServices | ForEach-Object {
 
 fsutil behavior set disabledeletenotify NTFS 0
 fsutil behavior set disabledeletenotify ReFS 0
+
+### --------------------------- VIA GUI STUFF ----------------------------- ###
+
+Write-Host "`n`nList of things to configure via GUI or more powershell knowledge:
+         ---------------------------------------------------
+♥ Config avanzada sistema > Protección sistema: Config protección = 0
+♥ Config avanzada sistema > Rendimiento > Opciones avanzadas: Mem Virtual = 0
+♥ Ventana del explorador > Vista > Opciones > Privacidad: recientemente = 0 / frecuencia = 0
+♥ HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters: EnablePrefetcher = 0
+"
