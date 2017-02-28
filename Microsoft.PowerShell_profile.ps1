@@ -88,7 +88,8 @@ function gst { git status -sb }
 
 # ZSH GitIt poor imitation. Works bad for ssh.
 function gitit {
-    Start-Process chrome "$(git remote -v | gawk '{print $2}' | head -1)"
+    $chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
+    Start-Process $chrome "$(git remote -v | gawk '{print $2}' | head -1)"
 }
 
 # Hack powershell 'ls' with git bash binaries.
@@ -137,7 +138,7 @@ function ho { Set-Location $env:userprofile }
 
 # Avoid System32\find.exe use 'seek' to use scoop unix-like sane find.
 function seek {
-    "$env:userprofile\scoop\shims\find.exe $args 2>$null" | Invoke-Expression
+    "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
 }
 
 # Quick edit to config files.
