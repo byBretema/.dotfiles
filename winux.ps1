@@ -28,7 +28,7 @@ Invoke-WebRequest -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/mast
 iwr https://chocolatey.org/install.ps1 -UseBasicParsing | iex
 
 # Define apps array.
-$choco_apps = @( "bulk-crap-uninstaller", "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
+$choco_apps = @( "evernote", "bulk-crap-uninstaller", "rufus", "ditto", "7zip", "docker", "filezilla", "xming", "sublimetext3", "youtube-dl", "mediainfo-cli", "imagemagick.tool", "pdftk", "vlc", "mpv", "mediainfo", "adobe-creative-cloud", "slack", "skype", "discord", "whatsapp", "telegram", "goggalaxy", "steam", "dolphin", "googlechrome", "xmind", "evince" )
 
 # Execute install over the array elements.
 $choco_apps | ForEach-Object { choco install -fyr $_ }

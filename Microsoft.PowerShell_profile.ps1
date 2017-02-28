@@ -1,4 +1,4 @@
-# Made with ??? by cambalamas.
+# Made with ♥ by cambalamas.
 
 ### --------------------------------- VARS -------------------------------- ###
 
@@ -25,7 +25,16 @@ Import-Module posh-git
 $currentPath = "$env:USERPROFILE\currentPath.txt"
 $previousPath = "$env:USERPROFILE\previousPath.txt"
 if ( Test-Path $currentPath ) {
-    Get-Content $currentPath | Set-Location
+    if ( -not $(Test-Path $(Get-Content $currentPath)) ) {
+        Write-Host "Previous directory has been deleted, go to home..." -ForegroundColor Red
+        Set-Location $env:USERPROFILE
+    } else {
+        Write-Host "Redirected to: $(Get-Content $currentPath) ..." -ForegroundColor Green
+        Get-Content $currentPath | Set-Location
+    }
+} else {
+    Write-Host "Empty history, go to home..." -ForegroundColor Red
+    Set-Location $env:USERPROFILE
 }
 
 ### -------------------------------- PROMPT ------------------------------- ###
