@@ -157,6 +157,22 @@ function qe {
     }
 }
 
+### ---------------------------- WINDOWS SYS ------------------------------ ###
+
+function allServices {
+    $svc = (Get-Service).Name
+    $svc | ForEach-Object { Set-Service -StartupType Automatic -Name $_ 2>$null }
+}
+
+function myServices {
+    $svc = (Get-Service).Name
+    $svc | ForEach-Object { Set-Service -StartupType Manual -Name $_ 2>$null }
+    $svc = @( "wpscloudsvr", "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
+    $svc | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
+    $svc = @( "UevAgentService", "vds", "vmcompute", "vmicguestinterface", "vmicheartbeat", "vmickvpexchange", "vmicrdv", "vmicshutdown", "vmictimesync", "vmicvmsession", "vmicvss", "vmms", "PrintNotify", "Spooler", "NVDisplay.ContainerLocalSystem", "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
+    $svc | ForEach-Object { Set-Service -StartupType Automatic -Name $_ 2>$null }
+}
+
 ### ------------------------------- CHOCO --------------------------------- ###
 
 # Chocolatey profile
