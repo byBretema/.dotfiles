@@ -15,6 +15,7 @@ Plug 'airblade/vim-gitgutter' " git line status.
 Plug 'sickill/vim-pasta'      " auto indent paste (better than, p`[v`]= remap)
 Plug 'tpope/vim-surround'     " modify delimites.
 Plug 'tpope/vim-commentary'   " easy comment with gcc or gc
+
 Plug 'godlygeek/tabular'      " easy align text. ( :Tab /pattern )
 
 Plug 'majutsushi/tagbar'
