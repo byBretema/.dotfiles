@@ -5,6 +5,11 @@
 # A unix friendly var to select your favorite editor.
 $EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
 $env:EDITOR = $EDITOR
+### --------------------------------- VARS -------------------------------- ###
+
+# A unix friendly var to select your favorite editor.
+$EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
+$env:EDITOR = $EDITOR
 
 # Hack for use GUI linux apps via Docker.
 # Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
@@ -44,44 +49,41 @@ function prompt {
     Get-Content $currentPath | Out-File $previousPath
     (Get-Location).Path | Out-File $currentPath
 
-    # Title Vars...
+    # Vars...
     $usu = $env:username
     $dom = $env:userdomain
+    $cd = (Get-Location).Path
+    $time = (Get-Date).ToLongTimeString()
+
     # Write title...
     $host.UI.RawUI.WindowTitle = "[$usu] @ $dom"
 
-    # Prompt Vars...
-    $cd = (Get-Location).Path
-    $time = (Get-Date).ToLongTimeString()
-    if ( Get-GitStatus ) { $sep = "`n " } else { $sep = " " }
     # Write prompt...
-    Write-Host ""
     Write-Host "$(Write-VcsStatus)" -NoNewline
-    Write-Host "$sep" -NoNewline
-    Write-Host "[" -ForegroundColor Gray -NoNewline
-    Write-Host "$time" -ForegroundColor Magenta -NoNewline
-    Write-Host "]" -ForegroundColor Gray -NoNewline
-    Write-Host " @ " -ForegroundColor Gray -NoNewline
-    Write-Host "[" -ForegroundColor Gray -NoNewline
-    Write-Host "$cd" -ForegroundColor Blue -NoNewline
-    Write-Host "]" -ForegroundColor Gray
+    Write-Host " On " -ForegroundColor White -NoNewline
+    Write-Host "$dom" -ForegroundColor DarkBlue -NoNewline
+    Write-Host " as " -ForegroundColor White -NoNewline
+    Write-Host "$usu" -ForegroundColor DarkYellow -NoNewline
+    Write-Host " at " -ForegroundColor White -NoNewline
+    Write-Host "$time" -ForegroundColor DarkMagenta -NoNewline
+    Write-Host " in " -ForegroundColor White -NoNewline
+    Write-Host "$cd" -ForegroundColor DarkCyan -NoNewline
     Write-Host " >" -ForegroundColor White -NoNewline
     "` "
 }
 
 ### ---------------------------- POSH ALIAS ------------------------------- ###
 
-if ( -Not $(Get-Alias -name e 2>$null) ) { New-Alias e $EDITOR }
+if ( -Not $(Get-Alias -name e 2>$null) ) {
+    New-Alias e $EDITOR
+}
 
-Remove-Item alias:ls
-Remove-Item alias:rm
-Remove-Item alias:mv
-Remove-Item alias:cp
-Remove-Item alias:cat
-Remove-Item alias:man
-Remove-Item alias:wget
-Remove-Item alias:echo
-Remove-Item alias:curl
+$rmAlias = @( 'ls', 'rm', 'mv', 'cp', 'cat', 'man', 'wget', 'echo', 'curl')
+$rmAlias | ForEach-Object {
+    if(Get-Alias -name $_ 2>$null) {
+        Remove-Item alias:$_
+    }
+}
 
 ### ------------------------------ FUNCTIONS ------------------------------ ###
 
@@ -168,6 +170,9 @@ function qe {
 
 ### ---------------------------- WINDOWS SYS ------------------------------ ###
 
+# reload profile.
+function lo { & $profile }
+
 # programming shutdown.
 function poff {
     if( -not $args ) {
@@ -189,7 +194,7 @@ function myServices {
     $svc | ForEach-Object { Set-Service -StartupType Manual -Name $_ 2>$null }
     $svc = @( "wpscloudsvr", "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
     $svc | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
-    $svc = @( "UevAgentService", "vds", "vmcompute", "vmicguestinterface", "vmicheartbeat", "vmickvpexchange", "vmicrdv", "vmicshutdown", "vmictimesync", "vmicvmsession", "vmicvss", "vmms", "PrintNotify", "Spooler", "NVDisplay.ContainerLocalSystem", "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
+    $svc = @( "ETDService", "UevAgentService", "vds", "vmcompute", "vmicguestinterface", "vmicheartbeat", "vmickvpexchange", "vmicrdv", "vmicshutdown", "vmictimesync", "vmicvmsession", "vmicvss", "vmms", "PrintNotify", "Spooler", "NVDisplay.ContainerLocalSystem", "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
     $svc | ForEach-Object { Set-Service -StartupType Automatic -Name $_ 2>$null }
 }
 
