@@ -97,6 +97,9 @@ function gitit {
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
 
+# Restart explorer file manager.
+function ke { Stop-Process (Get-Process explorer).id }
+
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
 
