@@ -1,7 +1,5 @@
 <p align="center"> <img src="logo.png" height="450" width="450"> </p>
 
-# Windows dotfiles, with strong linux taste.
-
 ## Via POWERSHELL
 
 ### Computer name...
