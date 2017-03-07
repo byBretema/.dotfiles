@@ -105,7 +105,14 @@ function seek {
     "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
 }
 
-# bd: goto previous directory.
+# jump N above.
+function b ([Int]$jumps) {
+    for ( $i=0; $i -lt $jumps; $i++) {
+        Set-Location ..
+    }
+}
+
+# go to previous directory.
 function bd {
     if ( Test-Path $previousPath ) {
         Get-Content $previousPath | Set-Location
