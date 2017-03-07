@@ -1,24 +1,6 @@
 # Made with ♥ by cambalamas.
 
-### --------------------------------- VARS -------------------------------- ###
-
-# A unix friendly var to select your favorite editor.
-$EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
-$env:EDITOR = $EDITOR
-### --------------------------------- VARS -------------------------------- ###
-
-# A unix friendly var to select your favorite editor.
-$EDITOR = "C:\Program Files\Sublime Text 3\subl.exe"
-$env:EDITOR = $EDITOR
-
-# Hack for use GUI linux apps via Docker.
-# Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
-$NetInfo = [System.Net.Dns]::GetHostAddresses("$env:computername")
-$HostIP = $NetInfo[4].IPAddressToString
-$DISPLAY = $HostIP+":0"
-$env:DISPLAY = $DISPLAY
-
-### --------------------------------- LOAD -------------------------------- ###
+### ------------------------------- ON LOAD ------------------------------- ###
 
 # Avoid "Microsoft Copyright spam"!
 Clear-Host
@@ -26,21 +8,26 @@ Clear-Host
 # Git info.
 Import-Module posh-git
 
+# Chocolatey stuff.
+Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
+### --------------------------------- VARS -------------------------------- ###
+
+$env:PATH += ";${env:ProgramFiles(x86)}\Xming"
+
+# A unix friendly var to select your favorite editor.
+$EDITOR = "$env:ProgramFiles\Sublime Text 3\subl.exe"
+
+# Hack for use GUI linux apps via Docker.
+# Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
+$DISPLAY = $((Get-NetAdapter "vEthernet (DockerNAT)" |
+    Get-NetIPAddress).IPAddress)+":0" 2>$null
+
 # Hack consoleZ "open in the same directory"
 $currentPath = "$env:USERPROFILE\currentPath.txt"
 $previousPath = "$env:USERPROFILE\previousPath.txt"
-if ( Test-Path $currentPath ) {
-    if ( -not $(Test-Path $(Get-Content $currentPath)) ) {
-        Write-Host "Previous directory has been deleted, go to home..." -ForegroundColor Red
-        Set-Location $env:USERPROFILE
-    } else {
-        Write-Host "Redirected to: $(Get-Content $currentPath) ..." -ForegroundColor Green
-        Get-Content $currentPath | Set-Location
-    }
-} else {
-    Write-Host "Empty history, go to home..." -ForegroundColor Red
-    Set-Location $env:USERPROFILE
-}
+Get-Content $currentPath | Set-Location 2>$null
+
 
 ### -------------------------------- PROMPT ------------------------------- ###
 
@@ -85,7 +72,12 @@ $rmAlias | ForEach-Object {
     }
 }
 
-### ------------------------------ FUNCTIONS ------------------------------ ###
+### -------------------------------- GIT ---------------------------------- ###
+
+# Alias to git status resume and branch indicator.
+function gst {
+    git status -sb
+}
 
 # QuickGitPush: the args are the string to commit.
 function qgp {
@@ -94,52 +86,13 @@ function qgp {
     git push
 }
 
-# Alias to git status resume and branch indicator.
-function gst { git status -sb }
-
 # ZSH GitIt poor imitation. Works bad for ssh.
 function gitit {
     $chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
     Start-Process $chrome "$(git remote -v | gawk '{print $2}' | head -1)"
 }
 
-# Hack powershell 'ls' with git bash binaries.
-function ls { ls.exe --color $args}
-function l { ls.exe -AFGh --color $args}
-function ll { ls.exe -AFGhl --color $args}
-function lt { ls.exe -AFGhlR --color $args}
-
-# bd: goto previous directory.
-function bd {
-    if ( Test-Path $previousPath ) {
-        Get-Content $previousPath | Set-Location
-    }
-}
-
-function netinfo {
-    Write-Host ""
-    Write-Host "IP privada:           $HostIP"
-    Write-Host "IP publica:           $(curl.exe -s icanhazip.com)"
-    Write-Host "---------------------------------------------------------------"
-    Write-Host "IP time:         $((ping 8.8.8.8)[11])"
-    Write-Host "DNS local time:  $((ping www.google.es)[11])"
-    Write-Host "DNS foreign time:$((ping www.google.com)[11])"
-}
-
-# choco search install and update with -fyr flags by default.
-function chof { choco info $args }
-function chos { choco search $args }
-function chou { choco upgrade -fyr all }
-function chol { choco list --local-only }
-function choi { choco install -fyr $args }
-
-# scoop search install and update easier aliases.
-function scoops { scoop search $args }
-function scoopi { scoop install -a 64bit $args }
-function scoopu { scoop update * ; scoop update * -q }
-
-# system update.
-function sysup { chou ; scoopu }
+### ------------------------------ FUNCTIONS ------------------------------ ###
 
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
@@ -152,28 +105,14 @@ function seek {
     "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
 }
 
-# Quick edit to config files.
-$h_vimrc     = "$env:userprofile\.vimrc"
-$h_gitingore = "$env:userprofile\.gitignore"
-$h_gitconfig = "$env:userprofile\.gitconfig"
-$h_consoleZ  = "$ConsoleZSettingsDir\console.xml"
-$h_profile   = "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
-function qe {
-    switch ($args[0]) {
-        "vim"  { subl $h_vimrc }
-        "posh" { subl $h_profile}
-        "z"    { subl $h_consoleZ }
-        "git"  { subl $h_gitconfig ; subl $h_gitingore }
-        default { }
+# bd: goto previous directory.
+function bd {
+    if ( Test-Path $previousPath ) {
+        Get-Content $previousPath | Set-Location
     }
 }
 
-### ---------------------------- WINDOWS SYS ------------------------------ ###
-
-# reload profile.
-function lo { & $profile }
-
-# programming shutdown.
+# shutdown timer.
 function poff {
     if( -not $args ) {
         shutdown -a -fw
@@ -182,26 +121,34 @@ function poff {
     }
 }
 
-# turn automatic all services.
-function allServices {
-    $svc = (Get-Service).Name
-    $svc | ForEach-Object { Set-Service -StartupType Automatic -Name $_ 2>$null }
+# Hack powershell 'ls' with git bash binaries.
+function ls { ls.exe --color $args}
+function l  { ls.exe -AFGh --color $args}
+function ll { ls.exe -AFGhl --color $args}
+function lt { ls.exe -AFGhlt --color $args}
+
+# info about ip and from ping.
+function netinfo {
+    Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
+    Write-Host "IP privada (Eth) :   $((Get-NetAdapter "Wi-Fi" |
+        Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP privada (Wifi):   $((Get-NetAdapter "Ethernet" |
+        Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP time:         $((ping 8.8.8.8)[11])"
+    Write-Host "DNS local time:  $((ping www.google.es)[11])"
+    Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
 
-# selective services startup.
-function myServices {
-    $svc = (Get-Service).Name
-    $svc | ForEach-Object { Set-Service -StartupType Manual -Name $_ 2>$null }
-    $svc = @( "wpscloudsvr", "SysMain", "WSearch", "DiagTrack", "diagnosticshub.standardcollector.service", "WerSvc", "WMPNetworkSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "DcpSvc", "wscsvc", "wercplsupport", "MapsBroker", "WinRM" )
-    $svc | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
-    $svc = @( "ETDService", "UevAgentService", "vds", "vmcompute", "vmicguestinterface", "vmicheartbeat", "vmickvpexchange", "vmicrdv", "vmicshutdown", "vmictimesync", "vmicvmsession", "vmicvss", "vmms", "PrintNotify", "Spooler", "NVDisplay.ContainerLocalSystem", "Dhcp", "Dnscache", "Netman", "WlanSvc", "AtherosSvc" , "MpsSvc" )
-    $svc | ForEach-Object { Set-Service -StartupType Automatic -Name $_ 2>$null }
-}
-
-### ------------------------------- CHOCO --------------------------------- ###
-
-# Chocolatey profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if ( Test-Path $ChocolateyProfile ) {
-  Import-Module "$ChocolateyProfile"
+# Quick edit to config files.
+$h_vimrc     = "$env:userprofile\.vimrc"
+$h_gitingore = "$env:userprofile\.gitignore"
+$h_gitconfig = "$env:userprofile\.gitconfig"
+$h_profile   = "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+function qe {
+    switch ($args[0]) {
+        "vim"  { subl $h_vimrc }
+        "posh" { subl $h_profile}
+        "git"  { subl $h_gitconfig ; subl $h_gitingore }
+        default { }
+    }
 }
