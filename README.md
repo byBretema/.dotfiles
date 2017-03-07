@@ -1,9 +1,6 @@
-<p align="center"> <img src="logo.png"> </p>
-<p align="center"> <h1> - MDDR - </h1> </p>
-<p align="center"> <h2> Maybe a Different Dotfile Repo. </h2> </p>
+<p align="center"> <img src="logo.png" height="450" width="450"> </p>
 
-<p align="center"> <h1> Preview... </h1> </p>
-<p align="center"> <img src="screen.png"> </p>
+# Windows dotfiles, with strong linux taste.
 
 ## Via POWERSHELL
 
@@ -29,29 +26,34 @@
 	    -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"`
 	    -Outfile "$vimAutoload\plug.vim"
 
-### Install chocolatey.
+### Chocolatey.
+
+#### 1. Install chocolatey.
 	Invoke-WebRequest https://chocolatey.org/install.ps1 `
 		-UseBasicParsing | Invoke-Expression
 
-### Install apps via chocolatey.
+#### 2. Install apps via chocolatey.
 
 > I've got my apps listed on " .\apps\choco.txt ", write yours.
+
 > The `Where-Object { $_ -ne "" }` let you separate the list with blank lines.
 
 	$(Get-Content .\apps\choco.txt) | Where-Object { $_ -ne "" } |
 	    ForEach-Object {
 	        choco install -fyr --allow-empty-checksums $_ 2>$null
 	    }
+### Scoop
 
-### Install scoop.
+#### 1. Install scoop.
 	iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 
-### Add extra packages from scoop-extra repo.
+#### 2. Add extra packages from scoop-extra repo.
 	scoop bucket add extras
 
-### Install tools via scoop.
+#### 3. Install tools via scoop.
 
 > I've got my apps listed on " .\apps\choco.txt ", write yours.
+
 > The `Where-Object { $_ -ne "" }` let you separate the list with blank lines.
 
 	$(Get-Content .\apps\scoop.txt) | Where-Object { $_ -ne "" } |
@@ -132,13 +134,16 @@
 - Disable `VirtualMem` on `Adv System > Performance > Adv options`.
 - Disable `EnablePrefetcher` on `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters`.
 
-### Windows services.
+### Windows services !!!
 
 ***[ BE CAREFUL, DO NOT RUN IF YOU DO NOT KNOW THE EFFECTS OF THESE LINES. ]***
 
 > I've got my services filtered on " .\services "
+
 > With a `whiteList.txt`, those services that always will run.
+
 > And a `blackList.txt`, those services that prefer disabled.
+
 > Rewrite those files adapting to your needs.
 
 	# Manual startup (all the files to manual to be able to filter them).
