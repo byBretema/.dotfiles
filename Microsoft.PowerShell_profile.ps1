@@ -5,6 +5,9 @@
 # Avoid "Microsoft Copyright spam"!
 Clear-Host
 
+# Ignore dups !
+Set-PSReadLineOption –HistoryNoDuplicates:$True
+
 # Git info.
 Import-Module posh-git
 
