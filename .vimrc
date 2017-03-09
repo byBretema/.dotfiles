@@ -1,4 +1,4 @@
-" Made with <3 by @cambalamas
+" MAde with <3 by @cambalamas
 
 " allow save on RO files with :W instead :w
 command! W silent execute 'w !sudo tee % > /dev/null' | :e! | syn on
@@ -78,6 +78,7 @@ let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_trailing_whitespace_error = 1
 
 Plug 'honza/dockerfile.vim'
+
 
 "" colors
 Plug 'morhetz/gruvbox'
