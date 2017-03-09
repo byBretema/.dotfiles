@@ -6,7 +6,7 @@
 Clear-Host
 
 # Ignore dups !
-Set-PSReadLineOption –HistoryNoDuplicates:$True
+Set-PSReadLineOption -HistoryNoDuplicates:$True
 
 # Git info.
 Import-Module posh-git
@@ -109,6 +109,12 @@ function ho { Set-Location $env:userprofile }
 # Avoid System32\find.exe use 'seek' to use scoop unix-like sane find.
 function seek {
     "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
+}
+
+function vf ()
+{
+    $filepaths = $input | Get-Item | % { $_.fullname }
+    vim $filepaths
 }
 
 # jump N above.
