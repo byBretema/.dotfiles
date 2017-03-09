@@ -2,6 +2,8 @@
 
 ## Via POWERSHELL
 
+> The bottom text is a brief orientation on how I have set up my environment, feel free to follow the "guide" or just read and hack the files that are of interest to you :)
+
 ### Computer name...
 	Rename-Computer <computerName>
 
