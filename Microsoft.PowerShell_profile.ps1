@@ -35,6 +35,7 @@ Get-Content $currentPath | Set-Location 2>$null
 ### -------------------------------- PROMPT ------------------------------- ###
 
 function prompt {
+
     # Hack consoleZ "open in the same directory"
     Get-Content $currentPath | Out-File $previousPath
     (Get-Location).Path | Out-File $currentPath
@@ -55,7 +56,11 @@ function prompt {
     Write-Host " in" -ForegroundColor White -NoNewline
     Write-Host " $path" -ForegroundColor Magenta -NoNewline
     Write-Host "$sep" -ForegroundColor White -NoNewline
-    Write-Host "$(Write-VcsStatus)" #-NoNewline
+    Write-Host "$(Write-VcsStatus)" -NoNewline
+    Write-Host " where " -ForegroundColor White -NoNewline
+    Write-Host "{ " -ForegroundColor Yellow -NoNewline
+    Write-Host "$(ls.exe -AXFp)" -NoNewline
+    Write-Host "}" -ForegroundColor Yellow #-NoNewline
     Write-Host " >_" -ForegroundColor White -NoNewline
     "` "
 }
