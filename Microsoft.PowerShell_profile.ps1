@@ -42,23 +42,21 @@ function prompt {
     # Vars...
     $usu = $env:username
     $dom = $env:userdomain
-    $cd = (Get-Location).Path
+    $path = (Get-Location).Path
     $time = (Get-Date).ToLongTimeString()
+    $sep = (""," on")[$(Test-Path ".\.git")]
 
     # Write title...
-    $host.UI.RawUI.WindowTitle = "[$usu] @ $dom"
+    $host.UI.RawUI.WindowTitle = ">_ $usu @ $dom"
 
     # Write prompt...
-    Write-Host "$(Write-VcsStatus)" -NoNewline
-    Write-Host " On " -ForegroundColor White -NoNewline
-    Write-Host "$dom" -ForegroundColor DarkBlue -NoNewline
-    Write-Host " as " -ForegroundColor White -NoNewline
-    Write-Host "$usu" -ForegroundColor DarkYellow -NoNewline
-    Write-Host " at " -ForegroundColor White -NoNewline
-    Write-Host "$time" -ForegroundColor DarkMagenta -NoNewline
-    Write-Host " in " -ForegroundColor White -NoNewline
-    Write-Host "$cd" -ForegroundColor DarkCyan -NoNewline
-    Write-Host " >" -ForegroundColor White -NoNewline
+    Write-Host ""
+    Write-Host " $time" -ForegroundColor Green -NoNewline
+    Write-Host " in" -ForegroundColor White -NoNewline
+    Write-Host " $path" -ForegroundColor Magenta -NoNewline
+    Write-Host "$sep" -ForegroundColor White -NoNewline
+    Write-Host "$(Write-VcsStatus)" #-NoNewline
+    Write-Host " >_" -ForegroundColor White -NoNewline
     "` "
 }
 
@@ -68,7 +66,7 @@ if ( -Not $(Get-Alias -name e 2>$null) ) {
     New-Alias e $EDITOR
 }
 
-$rmAlias = @( 'ls', 'rm', 'mv', 'cp', 'cat', 'man', 'wget', 'echo', 'curl')
+$rmAlias = @( 'ls', 'rm', 'mv', 'cp', 'cat', 'pwd', 'man', 'wget', 'echo', 'curl')
 $rmAlias | ForEach-Object {
     if(Get-Alias -name $_ 2>$null) {
         Remove-Item alias:$_
@@ -93,6 +91,20 @@ function qgp {
 function gitit {
     $chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
     Start-Process $chrome "$(git remote -v | gawk '{print $2}' | head -1)"
+}
+
+# Get repo info via github rest API.
+function gitinfo ($who, $which) {
+    $repoinfo = irm -Uri "https://api.github.com/repos/$who/$which"
+    $webpage = ($repoinfo.homepage, "<None>")[-not $repoinfo.homepage]
+
+    Write-Host "Forks: "         -NoNewline; $repoinfo.forks
+    Write-Host "Stars: "         -NoNewline; $repoinfo.stargazers_count
+    Write-Host "Watchers: "      -NoNewline; $repoinfo.watchers_count
+    Write-Host "Private: "       -NoNewline; $repoinfo.private
+    Write-Host "Main lang: "     -NoNewline; $repoinfo.language
+    Write-Host "Lines of code: " -NoNewline; $repoinfo.size
+    Write-Host "Web page: "      -NoNewline; $webpage
 }
 
 ### ------------------------------ FUNCTIONS ------------------------------ ###

@@ -24,7 +24,7 @@
 			<image file="" relative="0" extend="0" position="0">
 				<tint opacity="0" r="0" g="0" b="0"/></image></background></console>
 	<appearance>
-		<font name="Consolas" size="10" extra_width="0" bold="0" italic="0" smoothing="3" bold_intensified="0" italic_intensified="0" ligature="1">
+		<font name="PragmataPro Mono" size="11" extra_width="1" bold="0" italic="0" smoothing="3" bold_intensified="1" italic_intensified="0" ligature="1">
 			<color use="0" r="0" g="0" b="0"/></font>
 		<window title="OP-SHELL" icon="" main_title_format="%s" tab_title_format="[%A] · %t " use_tab_icon="1" use_tab_title="1" trim_tab_titles="25" trim_tab_titles_right="0"/>
 		<fullscreen start_in_fullscreen="0" fullscreen_monitor="0">
@@ -34,7 +34,7 @@
 			<selection_color r="255" g="255" b="255"/>
 			<highlight_color r="191" g="191" b="191"/></styles>
 		<position x="-1" y="-1" save_position="0" w="-1" h="-1" save_size="0" z_order="0" dock="5" snap="0" save_state="0" state="3"/>
-		<transparency type="0" active_alpha="245" inactive_alpha="230" r="64" g="128" b="128"/></appearance>
+		<transparency type="1" active_alpha="245" inactive_alpha="230" r="64" g="128" b="128"/></appearance>
 	<behavior>
 		<copy_paste copy_on_select="0" clear_on_copy="1" sensitive_copy="1" no_wrap="1" eol_spaces="1" trim_spaces="1" rtf="1" copy_newline_char="1" include_left_delimiter="0" include_right_delimiter="0" left_delimiters=" ([" right_delimiters=" )]"/>
 		<scroll page_scroll_rows="0"/>

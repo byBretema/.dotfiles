@@ -10,9 +10,7 @@ command! W silent execute 'w !sudo tee % > /dev/null' | :e! | syn on
 call plug#begin('~/.vim/plugged')
 
 " plug shortcuts
-nnoremap <leader>pi :PlugInstall<CR>
-nnoremap <leader>pu :PlugUpdate<CR>
-nnoremap <leader>pU :PlugUpgrade<CR>
+nnoremap <C-p> :PlugInstall<CR> :PlugUpdate<CR> :PlugUpgrade<CR>
 
 "" ignored packages
 "Plug 'godlygeek/tabular'      " easy align text. ( :Tab /pattern )
@@ -20,7 +18,15 @@ nnoremap <leader>pU :PlugUpgrade<CR>
 
 
 "" visuals
-Plug 'itchyny/lightline.vim' " or airline
+
+"Plug 'vim-airline/vim-airline'
+"Plug 'vim-airline/vim-airline-themes'
+"let g:airline#extensions#tabline#enabled = 1
+"let g:airline#extensions#tabline#left_sep = ' '
+"let g:airline#extensions#tabline#left_alt_sep = '|'
+
+"Plug 'itchyny/lightline.vim'
+
 Plug 'junegunn/rainbow_parentheses.vim'
 au VimEnter * :RainbowParentheses
 
@@ -42,19 +48,22 @@ let g:multi_cursor_skip_key='-'
 let g:multi_cursor_quit_key='<Esc>'
 
 Plug 'majutsushi/tagbar'
-map <leader>t :TagbarToggle<CR>
+noremap <C-b> :TagbarToggle<CR>
 
 Plug 'mbbill/undotree', { 'on': 'UndotreeToggle' }
-map <leader>u :UndotreeToggle<CR>
+noremap <C-u> :UndotreeToggle<CR>
 
 Plug 'tiagofumo/vim-nerdtree-syntax-highlight'
 Plug 'scrooloose/nerdtree', { 'on': 'NERDTreeToggle' }
-noremap <leader>n :NERDTreeToggle<cr>
+noremap <C-n> :NERDTreeToggle<cr>
 let NERDTreeShowHidden=1
 let g:NERDTreeAutoDeleteBuffer=1
 
 
 "" langs
+
+Plug 'honza/dockerfile.vim'
+
 Plug 'fatih/vim-go', { 'do': ':GoInstallBinaries' }
 setlocal omnifunc=go#complete#Complete
 let g:go_fmt_command = "goimports"
@@ -76,8 +85,6 @@ let g:go_highlight_space_tab_error = 1
 let g:go_highlight_build_constraints = 1
 let g:go_highlight_array_whitespace_error = 1
 let g:go_highlight_trailing_whitespace_error = 1
-
-Plug 'honza/dockerfile.vim'
 
 
 "" colors
