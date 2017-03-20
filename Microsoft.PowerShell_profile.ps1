@@ -41,6 +41,7 @@ function prompt {
     (Get-Location).Path | Out-File $currentPath
 
     # Vars...
+    $ls = (dir).name -join ", "
     $usu = $env:username
     $dom = $env:userdomain
     $path = (Get-Location).Path
@@ -59,17 +60,14 @@ function prompt {
     Write-Host "$(Write-VcsStatus)" -NoNewline
     Write-Host " where " -ForegroundColor White -NoNewline
     Write-Host "{ " -ForegroundColor Yellow -NoNewline
-    Write-Host "$(ls.exe -AXFp)" -NoNewline
-    Write-Host "}" -ForegroundColor Yellow #-NoNewline
+    Write-Host "$($ls)" -ForegroundColor DarkBlue -NoNewline
+    # Write-Host "$(ls.exe -XAFp)" -NoNewline
+    Write-Host " }" -ForegroundColor Yellow #-NoNewline
     Write-Host " >_" -ForegroundColor White -NoNewline
     "` "
 }
 
 ### ---------------------------- POSH ALIAS ------------------------------- ###
-
-if ( -Not $(Get-Alias -name e 2>$null) ) {
-    New-Alias e $EDITOR
-}
 
 $rmAlias = @( 'ls', 'rm', 'mv', 'cp', 'cat', 'pwd', 'man', 'wget', 'echo', 'curl')
 $rmAlias | ForEach-Object {
@@ -77,6 +75,8 @@ $rmAlias | ForEach-Object {
         Remove-Item alias:$_
     }
 }
+
+Set-Alias e $EDITOR
 
 ### -------------------------------- GIT ---------------------------------- ###
 
@@ -113,6 +113,9 @@ function gitinfo ($who, $which) {
 }
 
 ### ------------------------------ FUNCTIONS ------------------------------ ###
+
+# x11 via xming.
+function x11 { xming -ac -multiwindow -clipboard }
 
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
@@ -158,7 +161,7 @@ function poff {
 }
 
 # Hack powershell 'ls' with git bash binaries.
-function ls { ls.exe --color $args}
+function ls { (dir $args).name -join ", "}
 function l  { ls.exe -AFGh --color $args}
 function ll { ls.exe -AFGhl --color $args}
 function lt { ls.exe -AFGhlt --color $args}
