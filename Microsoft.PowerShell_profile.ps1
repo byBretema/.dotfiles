@@ -1,4 +1,4 @@
-# Made with ♥ by cambalamas.
+# Made with ??? by cambalamas.
 
 ### ------------------------------- ON LOAD ------------------------------- ###
 
@@ -10,6 +10,7 @@ Set-PSReadLineOption -HistoryNoDuplicates:$True
 
 # Git info.
 Import-Module posh-git
+Import-Module posh-docker
 
 # Chocolatey stuff.
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
@@ -20,6 +21,7 @@ $env:PATH += ";${env:ProgramFiles(x86)}\Xming"
 
 # A unix friendly var to select your favorite editor.
 $EDITOR = "$env:ProgramFiles\Sublime Text 3\subl.exe"
+$PLAYER = "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
 
 # Hack for use GUI linux apps via Docker.
 # Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
@@ -37,7 +39,9 @@ Get-Content $currentPath | Set-Location 2>$null
 function prompt {
 
     # Hack consoleZ "open in the same directory"
-    Get-Content $currentPath | Out-File $previousPath
+    if( -not ( $(Get-Content $currentPath) -eq $((Get-Location).path) )) {
+        Get-Content $currentPath | Out-File $previousPath
+    }
     (Get-Location).Path | Out-File $currentPath
 
     # Vars...
@@ -46,7 +50,7 @@ function prompt {
     $dom = $env:userdomain
     $path = (Get-Location).Path
     $time = (Get-Date).ToLongTimeString()
-    $sep = (""," on")[$(Test-Path ".\.git")]
+    $sep = (""," on")[ -not (-not $(Get-GitDirectory) ) ]
 
     # Write title...
     $host.UI.RawUI.WindowTitle = ">_ $usu @ $dom"
@@ -61,7 +65,6 @@ function prompt {
     Write-Host " where " -ForegroundColor White -NoNewline
     Write-Host "{ " -ForegroundColor Yellow -NoNewline
     Write-Host "$($ls)" -ForegroundColor DarkBlue -NoNewline
-    # Write-Host "$(ls.exe -XAFp)" -NoNewline
     Write-Host " }" -ForegroundColor Yellow #-NoNewline
     Write-Host " >_" -ForegroundColor White -NoNewline
     "` "
@@ -77,6 +80,7 @@ $rmAlias | ForEach-Object {
 }
 
 Set-Alias e $EDITOR
+Set-Alias p $PLAYER
 
 ### -------------------------------- GIT ---------------------------------- ###
 
@@ -96,6 +100,12 @@ function qgp {
 function gitit {
     $chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
     Start-Process $chrome "$(git remote -v | gawk '{print $2}' | head -1)"
+}
+
+# Create a branch locally and push to repo.
+function gitbranch {
+    git checkout -b "$args"
+    git push origin "$args"
 }
 
 # Get repo info via github rest API.
@@ -190,4 +200,10 @@ function qe {
         "git"  { subl $h_gitconfig ; subl $h_gitingore }
         default { }
     }
+}
+
+# Chocolatey profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
 }
