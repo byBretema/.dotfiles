@@ -188,7 +188,7 @@ function netinfo {
 $h_vimrc     = "$env:userprofile\.vimrc"
 $h_gitingore = "$env:userprofile\.gitignore"
 $h_gitconfig = "$env:userprofile\.gitconfig"
-$h_profile   = "$env:userprofile\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+$h_profile   = "$env:CMDER_ROOT\config\user-profile.ps1"
 function qe {
     switch ($args[0]) {
         "vim"  { subl $h_vimrc }
