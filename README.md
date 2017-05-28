@@ -6,7 +6,7 @@
 
 <br>
 
-## 1. Emulator:   [λ Cmder]('http://cmder.net/')
+## 1. Emulator: [λ Cmder](http://cmder.net/)
 
 - Use _**Download full**_ option to get it with _git-for-windows_.
 
