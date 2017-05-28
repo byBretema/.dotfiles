@@ -1,5 +1,7 @@
-<p align="center"> <img src="logo.png" height="250" width="250"> <br>See a [screenshot](./screen.png) for details.
-
+<p align="center">
+	<img src="logo.png" height="250" width="250">
+	<br>
+	See a <a href="/screen.png">screenshot</a> for details.
 </p>
 
 <br>
