@@ -14,7 +14,7 @@ Return
 
 ; Run spotify no adds.
 +pause::
-Run C:\tools\portables\ezBlocker\EZBlocker.exe
+Run C:\Users\Public\_tools\portables\ezBlocker\EZBlocker.exe
 Return
 
 ; Control+Alt++Shift+C color picker.

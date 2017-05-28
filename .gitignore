@@ -6,6 +6,8 @@ env/
 dist/
 build/
 .Python
+__pycache__/
+Doxygen/
 
 ### CODE FILES ###
 *.a

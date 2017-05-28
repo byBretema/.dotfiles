@@ -1,5 +1,5 @@
 [user]
-	name = cambalamas
+	name  = cambalamas
 	email = cambalamas@gmail.com
 
 [github]
@@ -18,12 +18,12 @@
 
 [filter "lfs"]
 	required = true
-	clean = git-lfs clean %f
+	clean  = git-lfs clean %f
 	smudge = git-lfs smudge %f
 
 [alias]
-	st = status -sb
-	lg = log --graph --oneline --decorate
+	st  = status -sb
+	lg  = log --graph --oneline --decorate
 	pup = !git pull && git submodule init && git submodule update && git submodule status
 
 [credential]

@@ -1,34 +1,36 @@
-# Made with ??? by cambalamas.
+
+#
+# Made with <3 by cambalamas.
+#
+
 
 ### ------------------------------- ON LOAD ------------------------------- ###
-
-# Avoid "Microsoft Copyright spam"!
-Clear-Host
 
 # Ignore dups !
 Set-PSReadLineOption -HistoryNoDuplicates:$True
 
-# Git info.
-Import-Module posh-git
+# Modules
 Import-Module posh-docker
-
-# Chocolatey stuff.
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+
 
 ### --------------------------------- VARS -------------------------------- ###
 
+# Path
 $env:PATH += ";${env:ProgramFiles(x86)}\Xming"
 
-# A unix friendly var to select your favorite editor.
-$EDITOR = "$env:ProgramFiles\Sublime Text 3\subl.exe"
+# Vars
+$GOPATH = "D:\devbox\go"
+$env:GOPATH = "D:\devbox\go"
 $PLAYER = "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
+$EDITOR = "$env:ProgramFiles\Sublime Text 3\subl.exe"
 
 # Hack for use GUI linux apps via Docker.
 # Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
 $DISPLAY = $((Get-NetAdapter "vEthernet (DockerNAT)" |
     Get-NetIPAddress).IPAddress)+":0" 2>$null
 
-# Hack consoleZ "open in the same directory"
+# Open in the same directory
 $currentPath = "$env:USERPROFILE\currentPath.txt"
 $previousPath = "$env:USERPROFILE\previousPath.txt"
 Get-Content $currentPath | Set-Location 2>$null
@@ -36,51 +38,44 @@ Get-Content $currentPath | Set-Location 2>$null
 
 ### -------------------------------- PROMPT ------------------------------- ###
 
-function prompt {
-
-    # Hack consoleZ "open in the same directory"
-    if( -not ( $(Get-Content $currentPath) -eq $((Get-Location).path) )) {
-        Get-Content $currentPath | Out-File $previousPath
-    }
-    (Get-Location).Path | Out-File $currentPath
-
-    # Vars...
-    $ls = (dir).name -join ", "
-    $usu = $env:username
-    $dom = $env:userdomain
-    $path = (Get-Location).Path
-    $time = (Get-Date).ToLongTimeString()
-    $sep = (""," on")[ -not (-not $(Get-GitDirectory) ) ]
-
-    # Write title...
-    $host.UI.RawUI.WindowTitle = ">_ $usu @ $dom"
-
-    # Write prompt...
+[ScriptBlock]$PrePrompt = {
+    # Open in the same directory hack
+    curPathUpdate
+    # Print ls output
     Write-Host ""
-    Write-Host " $time" -ForegroundColor Green -NoNewline
-    Write-Host " in" -ForegroundColor White -NoNewline
-    Write-Host " $path" -ForegroundColor Magenta -NoNewline
-    Write-Host "$sep" -ForegroundColor White -NoNewline
-    Write-Host "$(Write-VcsStatus)" -NoNewline
-    Write-Host " where " -ForegroundColor White -NoNewline
+    $ls = (dir).name -join ", "
     Write-Host "{ " -ForegroundColor Yellow -NoNewline
-    Write-Host "$($ls)" -ForegroundColor DarkBlue -NoNewline
+    Write-Host "$($ls)" -ForegroundColor DarkYellow -NoNewline
     Write-Host " }" -ForegroundColor Yellow #-NoNewline
-    Write-Host " >_" -ForegroundColor White -NoNewline
-    "` "
 }
+
+[ScriptBlock]$CmderPrompt = {
+    $time = (Get-Date).ToLongTimeString()
+    Write-Host "$time" -ForegroundColor Red -NoNewline
+    Write-Host " in " -ForegroundColor White -NoNewline
+    Write-Host "$(Get-Location)" -ForegroundColor Blue -NoNewline
+}
+
+[ScriptBlock]$PostPrompt = {
+    Write-Host "$(Write-VcsStatus)" -NoNewline
+}
+
 
 ### ---------------------------- POSH ALIAS ------------------------------- ###
 
-$rmAlias = @( 'ls', 'rm', 'mv', 'cp', 'cat', 'pwd', 'man', 'wget', 'echo', 'curl')
+$rmAlias = @('ls','rm','mv','cp','cat','pwd','man','wget','echo','curl')
 $rmAlias | ForEach-Object {
     if(Get-Alias -name $_ 2>$null) {
         Remove-Item alias:$_
     }
 }
 
+# Sublime quick access.
 Set-Alias e $EDITOR
+
+# VLC quick access.
 Set-Alias p $PLAYER
+
 
 ### -------------------------------- GIT ---------------------------------- ###
 
@@ -124,7 +119,7 @@ function gitinfo ($who, $which) {
 
 ### ------------------------------ FUNCTIONS ------------------------------ ###
 
-# x11 via xming.
+# X11 via xming.
 function x11 { xming -ac -multiwindow -clipboard }
 
 # Open explorer windows on current directory.
@@ -141,27 +136,28 @@ function seek {
     "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
 }
 
+# Open all path files on vim.
 function vf ()
 {
     $filepaths = $input | Get-Item | % { $_.fullname }
     vim $filepaths
 }
 
-# jump N above.
+# Jump back N times.
 function b ([Int]$jumps) {
     for ( $i=0; $i -lt $jumps; $i++) {
         Set-Location ..
     }
 }
 
-# go to previous directory.
+# Go to previous directory.
 function bd {
     if ( Test-Path $previousPath ) {
         Get-Content $previousPath | Set-Location
     }
 }
 
-# shutdown timer.
+# Shutdown timer.
 function poff {
     if( -not $args ) {
         shutdown -a -fw
@@ -176,7 +172,7 @@ function l  { ls.exe -AFGh --color $args}
 function ll { ls.exe -AFGhl --color $args}
 function lt { ls.exe -AFGhlt --color $args}
 
-# info about ip and from ping.
+# Info about ip and from ping.
 function netinfo {
     Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
     Write-Host "IP privada (Eth) :   $((Get-NetAdapter "Wi-Fi" |
@@ -202,8 +198,10 @@ function qe {
     }
 }
 
-# Chocolatey profile
-$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
-if (Test-Path($ChocolateyProfile)) {
-  Import-Module "$ChocolateyProfile"
+# Update last active dir path.
+function curPathUpdate {
+    if( -not ( $(Get-Content $currentPath) -eq $((Get-Location).path) )) {
+        Get-Content $currentPath | Out-File $previousPath
+    }
+    (Get-Location).Path | Out-File $currentPath
 }
