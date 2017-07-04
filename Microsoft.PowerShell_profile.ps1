@@ -97,8 +97,9 @@ function gitinfo ($who, $which) {
     Write-Host "Web page: "      -NoNewline; $webpage
 }
 
-
 ### LAZY-DEV FUNCTIONS
+# Clean and list
+function k { cls; l}
 # X11 via xming.
 function x11 { xming -ac -multiwindow -clipboard }
 # Open explorer windows on current directory.
@@ -108,9 +109,7 @@ function ke { Stop-Process (Get-Process explorer).id }
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
 # Avoid System32\find.exe use 'seek' to use scoop unix-like sane find.
-function seek {
-    "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
-}
+function seek { "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression }
 # Open a gui app via Docker.
 function dogui () {
     xming -ac -multiwindow -clipboard
@@ -146,10 +145,8 @@ function all { $(ls.exe "*.$args") }
 # Info about ip and from ping.
 function netinfo {
     Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
-    Write-Host "IP privada (Eth) :   $((Get-NetAdapter "Wi-Fi" |
-        Get-NetIPAddress).IPAddress[1])"
-    Write-Host "IP privada (Wifi):   $((Get-NetAdapter "Ethernet" |
-        Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP privada (Eth) :   $((Get-NetAdapter "Wi-Fi" | Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP privada (Wifi):   $((Get-NetAdapter "Ethernet" | Get-NetIPAddress).IPAddress[1])"
     Write-Host "IP time:         $((ping 8.8.8.8)[11])"
     Write-Host "DNS local time:  $((ping www.google.es)[11])"
     Write-Host "DNS foreign time:$((ping www.google.com)[11])"
@@ -171,7 +168,7 @@ function curPathUpdate {
     (Get-Location).Path | Out-File $currentPath
 }
 
-### WEB FUNCTION
+### WEB FUNCTIONS
 function npmServer {
     npm install -g live-server
     live-server
