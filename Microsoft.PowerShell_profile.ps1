@@ -1,120 +1,89 @@
-
-#
-# Made with <3 by cambalamas.
-#
-
 Clear-Host
-
-
-### ------------------------------- ON LOAD ------------------------------- ###
-
-# Ignore dups !
 Set-PSReadLineOption -HistoryNoDuplicates:$True
 
-# Modules
+### ON LOAD
 Import-Module posh-git
 Import-Module posh-docker
 Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 
-
-### --------------------------------- VARS -------------------------------- ###
-
-# Path
-$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:GOPATH}\bin"
-
-# Vars
-$env:GOPATH = "D:\devbox\go"
+### GLOBAL VARS
 $EDITOR = "code"
+$env:GOPATH = "D:\devbox\go"
 $PLAYER = "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
-
+$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:GOPATH}\bin"
 # Hack for use GUI linux apps via Docker.
 # Requires Xming or similar. ( xming -ac -multiwindow -clipboard )
 $DISPLAY = $((Get-NetAdapter "vEthernet (DockerNAT)" |
     Get-NetIPAddress).IPAddress)+":0" 2>$null
-
-# Open in the same directory
+# Open in the last directory
 $currentPath = "$env:USERPROFILE\currentPath.txt"
 $previousPath = "$env:USERPROFILE\previousPath.txt"
-#Get-Content $currentPath | Set-Location 2>$null
+#...Get-Content $currentPath | Set-Location 2>$null
 
-
-### -------------------------------- PROMPT ------------------------------- ###
-
+### PROMPT FUNCTION
 function prompt() {
-
-    $cwd = $(Split-Path $(Get-Location) -Leaf)
-
-    $status = ""
-    if ($?.Equals($True)) {
-        $status = "V · "
+    # Last status
+    if ($? -and $LASTEXITCODE.Equals(0)) {
+        Write-Host "V" -ForegroundColor Green -NoNewline
+        Write-Host "` " -ForegroundColor White -NoNewline
     } else {
-        $status = "X · "
+        Write-Host "X" -ForegroundColor Red -NoNewline
+        Write-Host "` " -ForegroundColor White -NoNewline
     }
-
-    $gsInfo = ""
-    $gs = (Get-GitStatus)
-    if ($gs) {
-        $gsInfo += $gs.Branch
-
+    # Current path
+    Write-Host "$(Split-Path $(Get-Location) -Leaf)" -ForegroundColor Cyan -NoNewline
+    # Git stuff
+    if (Get-GitStatus) {
+        $gs = (Get-GitStatus)
+        Write-Host ":" -ForegroundColor White -NoNewline
+        Write-Host "$($gs.Branch)" -ForegroundColor Magenta -NoNewline
         if ($gs.HasWorking) {
-            $gsInfo += "["+$gs.Working.Count+"]"
+            Write-Host "*" -ForegroundColor DarkGray -NoNewline
         }
         if ($gs.AheadBy) {
-            $gsInfo += "(A"+$gs.AheadBy+")"
+            Write-Host ".A$($gs.AheadBy)" -ForegroundColor Green -NoNewline
         }
         if ($gs.BehindBy) {
-            $gsInfo += "(B"+$gs.BehindBy+")"
+            Write-Host ".B$($gs.BehindBy)" -ForegroundColor Red -NoNewline
         }
-
-        $gsInfo += " | "
     }
-
-    Write-Host "$status$gsInfo$cwd >" #-NoNewline
-    # Write-Host " > " -ForegroundColor White -NoNewline
+    # Write-Host " | " -ForegroundColor White -NoNewline
+    # Write-Host "$(ls)" -ForegroundColor Blue -NoNewline
+    Write-Host " >" -ForegroundColor White -NoNewline
+    "` "
 }
 
-### ---------------------------- POSH ALIAS ------------------------------- ###
-
-$rmAlias = @('ls','rm','mv','cp','cat','man','pwd','wget','echo','curl')
-$rmAlias | ForEach-Object {
+### POSH ALIAS
+Set-Alias e $EDITOR
+Set-Alias p $PLAYER
+$badAliases = @('ls','rm','mv','cp','cat','man','pwd','wget','echo','curl')
+$badAliases | ForEach-Object {
     if(Get-Alias -name $_ 2>$null) {
         Remove-Item alias:$_
     }
 }
 
-# Sublime quick access.
-Set-Alias e $EDITOR
-
-# VLC quick access.
-Set-Alias p $PLAYER
-
-
-### -------------------------------- GIT ---------------------------------- ###
-
+### GIT FUNCTIONS
 # Alias to git status resume and branch indicator.
 function gst {
     git status -sb
 }
-
 # QuickGitPush: the args are the string to commit.
 function qgp {
     git add -A
     git commit -m "$args"
     git push
 }
-
 # ZSH GitIt poor imitation. Works bad for ssh.
 function gitit {
     $chrome = "${env:ProgramFiles(x86)}\Google\Chrome\Application\chrome.exe"
     Start-Process $chrome "$(git remote -v | gawk '{print $2}' | head -1)"
 }
-
 # Create a branch locally and push to repo.
 function gitbranch {
     git checkout -b "$args"
     git push origin "$args"
 }
-
 # Get repo info via github rest API.
 function gitinfo ($who, $which) {
     $rest = Invoke-RestMethod -Uri "https://api.github.com/repos/$who/$which"
@@ -129,62 +98,51 @@ function gitinfo ($who, $which) {
 }
 
 
-### ------------------------------ FUNCTIONS ------------------------------ ###
-
+### LAZY-DEV FUNCTIONS
 # X11 via xming.
 function x11 { xming -ac -multiwindow -clipboard }
-
 # Open explorer windows on current directory.
 function oo { explorer (Get-Location).Path }
-
 # Restart explorer file manager.
 function ke { Stop-Process (Get-Process explorer).id }
-
 # Quick access to home directory.
 function ho { Set-Location $env:userprofile }
-
 # Avoid System32\find.exe use 'seek' to use scoop unix-like sane find.
 function seek {
     "$env:userprofile\scoop\shims\find.exe $args 2>/null" | Invoke-Expression
 }
-
 # Open a gui app via Docker.
 function dogui () {
     xming -ac -multiwindow -clipboard
     docker run -it -v "$((Get-Location).path):/app" -e DISPLAY=$DISPLAY $args
 }
-
 # Jump back N times.
 function b ([Int]$jumps) {
     for ( $i=0; $i -lt $jumps; $i++) {
         Set-Location ..
     }
 }
-
 # Go to previous directory.
 function bd {
     if ( Test-Path $previousPath ) {
         Get-Content $previousPath | Set-Location
     }
 }
-
 # Shutdown timer.
-function poff {
+function offTimer {
     if( -not $args ) {
         shutdown -a -fw
     } else {
         shutdown -s -t $($args[0]*60)
     }
 }
-
 # Hack powershell 'ls' with git bash binaries.
-function pwdColored { $pwdOutput=$(pwd); Write-Host "$pwdOutput" -ForegroundColor Yellow}
+function pwdColored { $pwdOutput=$(pwd); Write-Host "$pwdOutput" -ForegroundColor DarkGray}
 function ls { (Get-ChildItem $args).name -join ", " }
 function l  { pwdColored; ls.exe -AFGh --color $args }
 function ll { pwdColored; ls.exe -AFGhl --color $args }
 function lt { pwdColored; ls.exe -AFGhlt --color $args }
 function all { $(ls.exe "*.$args") }
-
 # Info about ip and from ping.
 function netinfo {
     Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
@@ -196,21 +154,15 @@ function netinfo {
     Write-Host "DNS local time:  $((ping www.google.es)[11])"
     Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
-
 # Quick edit to config files.
-$h_vimrc     = "$env:userprofile\.vimrc"
-$h_gitingore = "$env:userprofile\.gitignore"
-$h_gitconfig = "$env:userprofile\.gitconfig"
-$h_profile   = "$env:CMDER_ROOT\config\user-profile.ps1"
 function qe {
     switch ($args[0]) {
-        "vim"  { e $h_vimrc }
-        "posh" { e $h_profile}
-        "git"  { e $h_gitconfig ; e $h_gitingore }
+        "vim"  { e "$env:userprofile\.vimrc" }
+        "posh" { e "$env:CMDER_ROOT\config\user-profile.ps1"}
+        "git"  { e "$env:userprofile\.gitconfig" ; e "$env:userprofile\.gitignore" }
         default { }
     }
 }
-
 # Update last active dir path.
 function curPathUpdate {
     if( -not ( $(Get-Content $currentPath) -eq $((Get-Location).path) )) {
@@ -219,9 +171,7 @@ function curPathUpdate {
     (Get-Location).Path | Out-File $currentPath
 }
 
-
-### ------------------------------- WEB ------------------------------ ###
-
+### WEB FUNCTION
 function npmServer {
     npm install -g live-server
     live-server
