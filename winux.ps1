@@ -32,7 +32,15 @@ scoop bucket add extras
 $scoopApps = @("openssh", "zeal", "go", "mono", "rust", "nodejs", "elixir", "python", "autohotkey", "dd", "say", "adb", "vim", "curl", "sudo", "whois", "xming", "cowsay", "shasum", "figlet", "mediainfo", "redis", "nginx", "ngrok", "sqlite", "mongodb", "mercurial", "postgresql", "gow")
 $scoopApps | ForEach-Object { scoop install $_ }
 
-### REGEDIT
+### LINK CONFIG FILES
+New-Item -Path "${env:UserProfile}\.gitignore" -ItemType SymbolicLink -Value ".\.gitignore" -Force
+New-Item -Path "${env:UserProfile}\.gitconfig" -ItemType SymbolicLink -Value ".\.gitconfig" -Force
+New-Item -Path "${env:SystemDrive}\tools\cmdermini\vendor\conemu-maximus5\ConEmu.xml" -ItemType SymbolicLink -Value ".\ConEmu.xml" -Force
+New-Item -Path "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -ItemType SymbolicLink -Value ".\Microsoft.PowerShell_profile.ps1" -Force
+
+### REGEDIT AND SERVICES
+$badSv = @( "SysMain", "DiagTrack", "WerSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "wercplsupport", "MapsBroker", "WinRM" )
+$badSv | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
 # Add access to HKCR.
 New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
 # 7-zip double-click simply extract.
@@ -52,9 +60,3 @@ fsutil behavior set disabledeletenotify NTFS 0
 fsutil behavior set disabledeletenotify ReFS 0
 New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnablePrefetcher" -PropertyType DWORD -value 0 -Force
 New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnableSuperfetch" -PropertyType DWORD -value 0 -Force
-
-### LINK CONFIG FILES
-New-Item -Path "${env:UserProfile}\.gitignore" -ItemType SymbolicLink -Value ".\.gitignore" -Force
-New-Item -Path "${env:UserProfile}\.gitconfig" -ItemType SymbolicLink -Value ".\.gitconfig" -Force
-New-Item -Path "${env:SystemDrive}\tools\cmdermini\vendor\conemu-maximus5\ConEmu.xml" -ItemType SymbolicLink -Value ".\ConEmu.xml" -Force
-New-Item -Path "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -ItemType SymbolicLink -Value ".\Microsoft.PowerShell_profile.ps1" -Force
