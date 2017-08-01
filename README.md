@@ -1,7 +1,6 @@
 <p align="center">
 	<img src="logo.png" height="250" width="250">
 	<br>
-	See a <a href="https://raw.githubusercontent.com/cambalamas/.dotfiles/master/screen.png">screenshot</a> for details.
 </p>
 
 <br>

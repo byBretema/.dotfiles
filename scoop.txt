@@ -1,1 +1,0 @@
-gow,doxygen,mercurial,go,gcc,mono,rust,nodejs,python,redis,sqlite,mongodb,postgresql,hugo,caddy,nginx,ngrok,adb,mediainfo,say,vim,curl,nmap,lynx,sudo,wget,which,touch,whois,cowsay,figlet,shasum,openssh,openssl,xmllint,autohotkey,xming

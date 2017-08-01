@@ -1,4 +1,4 @@
-" MAde with <3 by @cambalamas
+" Made with <3 by @cambalamas
 
 " allow save on RO files with :W instead :w
 command! W silent execute 'w !sudo tee % > /dev/null' | :e! | syn on

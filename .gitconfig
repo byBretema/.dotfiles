@@ -6,9 +6,9 @@
 	user = cambalamas
 
 [core]
-	editor = vim
-	excludesfile = ~/.gitignore
+	editor = code
 	autocrlf = input
+	excludesfile = ~/.gitignore
 
 [color]
 	ui = true
