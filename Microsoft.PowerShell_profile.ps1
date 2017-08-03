@@ -62,6 +62,7 @@ function bitUnlock { manage-bde.exe -unlock $args[0] -pw }
 function bg { if ($args) { Start-Process -NoNewWindow "$args" } }
 function ke { Stop-Process (Get-Process explorer).id }
 function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
+function su { runas /user:$( (net localgroup $((net localgroup)[4] -replace "^.") )[6] ) "$args" }
 function sudo {
     [console]::TreatControlCAsInput = $true
     $group = (net localgroup)[4] -replace "^."
