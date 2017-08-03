@@ -1,20 +1,20 @@
 Set-Alias e "code"
 Set-Alias p "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
-@('rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'echo', 'curl') | ForEach-Object { Remove-Item alias:$_ 2> $null }
+@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'echo', 'curl') | ForEach-Object { Remove-Item alias:$_ 2> $null }
 
-$env:GOPATH = "C:\devbox\code\go"
 $env:SCOOP = "C:\tools\scoop"
+$env:GOPATH = "C:\devbox\code\go"
 $env:GOBIN = "C:\devbox\code\go\bin"
 $env:ChocolateyInstall = "C:\tools\choco"
-$CURRPATH = "$env:USERPROFILE\CURRPATH.txt"
-$PREVPATH = "$env:USERPROFILE\PREVPATH.txt"
-$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:SystemDrive}\devbox\go\bin"
-function display{ (Get-NetAdapter "vEthernet (DockerNAT)" | Get-NetIPAddress -AddressFamily "IPv4").IPAddress + ":0" 2> $null }
+$CURRPATH = "${env:USERPROFILE}\CURRPATH.txt"
+$PREVPATH = "${env:USERPROFILE}\PREVPATH.txt"
+$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN}"
+function display { (Get-NetAdapter "vEthernet (DockerNAT)" | Get-NetIPAddress -AddressFamily "IPv4").IPAddress + ":0" 2> $null }
 
 function gst { git status -sb }
 function glg { git log --graph --oneline --decorate }
 function qgp { git add -A; git commit -m "$args"; git push }
-function gitb { git checkout -b "$args"; git push origin "$args" }
+function gitb { git checkout -b "$args[0]"; git push origin "$args[0]" }
 function gitit { Start-Process "$(git remote -v | gawk '{print $2}' | head -1)" }
 function gitinfo ($who, $which) {
     $rest = Invoke-RestMethod -Uri "https://api.github.com/repos/$who/$which"
@@ -28,13 +28,12 @@ function gitinfo ($who, $which) {
     Write-Host "Web page: "      -NoNewline; $webpage
 }
 
-function k { Clear-Host; l}
-function gepa { (Get-Location).path | Set-Clipboard }
-function gopa { Get-Clipboard | Set-Location }
+function k  { Clear-Host; l}
+function ls { pwdc; ls.exe --color $args }
+function l  { pwdc; ls.exe -AFGh --color $args }
+function ll { pwdc; ls.exe -AFGhl --color $args }
 function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
-function l { pwdc; ls.exe -AFGh --color $args }
-function ll { pwdc; ls.exe -AFGhl --color $args }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
 function b ([Int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. } }
 function bd { if ( Test-Path $PREVPATH ) { Get-Content $PREVPATH | Set-Location } }
@@ -56,27 +55,35 @@ function netinfo {
 }
 
 function offCancel { shutdown /a }
-function bg { Start-Process -NoNewWindow $args }
-function bitLock { manage-bde.exe -lock $args[0] }
-function ke { Stop-Process (Get-Process explorer).id }
 function offTimer { shutdown /hybrid /t $($args[0] * 60) }
+function bitLock { manage-bde.exe -lock $args[0] }
 function bitUnlock { manage-bde.exe -unlock $args[0] -pw }
-function eposh { e "${env:userprofile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
+function bg { Start-Process -NoNewWindow $args }
+function ke { Stop-Process (Get-Process explorer).id }
+function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
 
 function g { go run $(Get-ChildItem *.go).Name $args }
 function goget { go get -v -u $args }
 function gowin { $env:GOOS = "windows"; $env:GOARCH = "amd64"; go build }
 function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
 function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
-function goand { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
+function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
 
 function sudo {
+    [console]::TreatControlCAsInput = $true
     $group = (net localgroup)[4] -replace "^."
-    $adm   = (net localgroup $group)[6]
-    $user  = ${env:USERNAME}
-    runas /user:$adm "net localgroup $group $user /Add"
-    Start-Process  powershell.exe -ArgumentList "-NoExit", "-Command", "$args" -Verb RunAs
-    runas /user:$adm /savedcred "net localgroup $group $user /Del" > $null
+    $adm = (net localgroup $group)[6]
+    $user = ${env:USERNAME}
+    $cmd = "-new_console:an"
+    if ($args) { $cmd += " -Command $args" }
+    try {
+        while ($true) {
+            runas /user:$adm "net localgroup $group $user /Add"
+            Start-Process powershell -ArgumentList $cmd; Read-Host; break
+        }
+    } finally {
+        runas /user:$adm /savedcred "net localgroup $group $user /Del"
+    }
 }
 
 function prompt() {
@@ -87,8 +94,8 @@ function prompt() {
         Write-Host ":" -ForegroundColor White -NoNewline
         Write-Host "$((Get-GitStatus).Branch)" -ForegroundColor Magenta -NoNewline
         if ((Get-GitStatus).HasWorking) { Write-Host "*" -ForegroundColor DarkGray -NoNewline }
-        if ((Get-GitStatus).AheadBy) { Write-Host ".A$((Get-GitStatus).AheadBy)" -ForegroundColor Green -NoNewline }
-        if ((Get-GitStatus).BehindBy) { Write-Host ".B$((Get-GitStatus).BehindBy)" -ForegroundColor Red -NoNewline }
+        if ((Get-GitStatus).AheadBy)    { Write-Host ".A$((Get-GitStatus).AheadBy)" -ForegroundColor Green -NoNewline }
+        if ((Get-GitStatus).BehindBy)   { Write-Host ".B$((Get-GitStatus).BehindBy)" -ForegroundColor Red -NoNewline }
     }
     Write-Host " >" -ForegroundColor White -NoNewline; "` "
     curPathUpdate
