@@ -9,12 +9,12 @@ $env:ChocolateyInstall = "C:\tools\choco"
 $CURRPATH = "${env:USERPROFILE}\CURRPATH.txt"
 $PREVPATH = "${env:USERPROFILE}\PREVPATH.txt"
 $env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN}"
-function display { (Get-NetAdapter "vEthernet (DockerNAT)" | Get-NetIPAddress -AddressFamily "IPv4").IPAddress + ":0" 2> $null }
 
+function loc { if ($args[0]) { (Get-ChildItem * -recurse -include *.$args[0] | Get-Content | Measure-Object -Line).Lines } }
 function gst { git status -sb }
 function glg { git log --graph --oneline --decorate }
-function qgp { git add -A; git commit -m "$args"; git push }
-function gitb { git checkout -b "$args[0]"; git push origin "$args[0]" }
+function qgp { if ($args) { git add -A; git commit -m "$args"; git push } }
+function gitb { if ($args[0]) { git checkout -b "$args[0]"; git push origin "$args[0]" } }
 function gitit { Start-Process "$(git remote -v | gawk '{print $2}' | head -1)" }
 function gitinfo ($who, $which) {
     $rest = Invoke-RestMethod -Uri "https://api.github.com/repos/$who/$which"
@@ -26,6 +26,19 @@ function gitinfo ($who, $which) {
     Write-Host "Main lang: "     -NoNewline; $rest.language
     Write-Host "Lines of code: " -NoNewline; $rest.size
     Write-Host "Web page: "      -NoNewline; $webpage
+}
+
+function x11 { xming -ac -multiwindow -clipboard }
+function whale { if ($args) { x11; docker run -it -v "$((Get-Location).path):/app" -e DISPLAY=$(display) $args } }
+function iconFind ([String]$icon) { for ($i = 0; $i -le 65535; $i++) { if ( [char]$i -eq $icon ) { Write-Host $i } } }
+function display { (Get-NetAdapter "vEthernet (DockerNAT)" | Get-NetIPAddress -AddressFamily "IPv4").IPAddress + ":0" 2> $null }
+function netinfo {
+    Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
+    Write-Host "IP privada (Eth):    $((Get-NetAdapter "Ethernet" | Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP privada (Wifi):   $((Get-NetAdapter "Wi-Fi" | Get-NetIPAddress).IPAddress[1])"
+    Write-Host "IP time:         $((ping 8.8.8.8)[11])"
+    Write-Host "DNS local time:  $((ping www.google.es)[11])"
+    Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
 
 function k  { Clear-Host; l}
@@ -42,33 +55,13 @@ function curPathUpdate {
     (Get-Location).Path | Out-File $CURRPATH
 }
 
-function x11 { xming -ac -multiwindow -clipboard }
-function whale { x11; docker run -it -v "$((Get-Location).path):/app" -e DISPLAY=$(display) $args }
-function iconFind ([String]$icon) { for ($i = 0; $i -le 65535; $i++) { if ( [char]$i -eq $icon ) { Write-Host $i } } }
-function netinfo {
-    Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
-    Write-Host "IP privada (Eth):    $((Get-NetAdapter "Ethernet" | Get-NetIPAddress).IPAddress[1])"
-    Write-Host "IP privada (Wifi):   $((Get-NetAdapter "Wi-Fi" | Get-NetIPAddress).IPAddress[1])"
-    Write-Host "IP time:         $((ping 8.8.8.8)[11])"
-    Write-Host "DNS local time:  $((ping www.google.es)[11])"
-    Write-Host "DNS foreign time:$((ping www.google.com)[11])"
-}
-
 function offCancel { shutdown /a }
 function offTimer { shutdown /hybrid /t $($args[0] * 60) }
 function bitLock { manage-bde.exe -lock $args[0] }
 function bitUnlock { manage-bde.exe -unlock $args[0] -pw }
-function bg { Start-Process -NoNewWindow $args }
+function bg { if ($args) { Start-Process -NoNewWindow "$args" } }
 function ke { Stop-Process (Get-Process explorer).id }
 function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
-
-function g { go run $(Get-ChildItem *.go).Name $args }
-function goget { go get -v -u $args }
-function gowin { $env:GOOS = "windows"; $env:GOARCH = "amd64"; go build }
-function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
-function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
-function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
-
 function sudo {
     [console]::TreatControlCAsInput = $true
     $group = (net localgroup)[4] -replace "^."
@@ -85,6 +78,13 @@ function sudo {
         runas /user:$adm /savedcred "net localgroup $group $user /Del"
     }
 }
+
+function g { go run $(Get-ChildItem *.go).Name $args }
+function goget { if ($args[0]) { go get -v -u $args[0] } }
+function gowin { $env:GOOS = "windows"; $env:GOARCH = "amd64"; go build }
+function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
+function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
+function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
 
 function prompt() {
     if ($?) { $color = "Green" } else { $color = "Red" }
