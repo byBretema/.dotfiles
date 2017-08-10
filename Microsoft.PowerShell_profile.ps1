@@ -55,9 +55,10 @@ function Set-CurrentPath {
 function offTimer { shutdown /hybrid /s /t $($args[0] * 60) }
 function bitLock { manage-bde.exe -lock $args[0] }
 function bitUnlock { manage-bde.exe -unlock $args[0] -pw }
-function bg { if ($args) { Start-Process -NoNewWindow "$args" } }
+function bg { Start-Process powershell -NoNewWindow "-Command $args" }
 function ke { Stop-Process (Get-Process explorer).id }
 function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
+function iconFind ([String]$icon) { for ($i = 0; $i -le 65535; $i++) { if ( [char]$i -eq $icon ) { Write-Host $i } } }
 
 # GO
 function g { go run $(Get-ChildItem *.go).Name $args }
@@ -67,7 +68,7 @@ function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
 function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
 function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
 
-# OTHERS
+# NET
 function netinfo {
     Write-Host "IP publica:          $(curl.exe -s icanhazip.com)"
     Write-Host "IP privada (Eth):    $((Get-NetAdapter "Ethernet" | Get-NetIPAddress).IPAddress[1])"
@@ -76,19 +77,40 @@ function netinfo {
     Write-Host "DNS local time:  $((ping www.google.es)[11])"
     Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
-function iconFind ([String]$icon) { for ($i = 0; $i -le 65535; $i++) { if ( [char]$i -eq $icon ) { Write-Host $i } } }
+
+# OFFICE
+
+function office() {
+    Start-Job -ScriptBlock {
+        $path, $args = $args
+        $prg, $files = $args
+        switch ($prg) {
+            e { $cmd = "EXCEL" }
+            w { $cmd = "WINWORD" }
+            p { $cmd = "POWERPNT" }
+            default { exit }
+        }
+        try {
+            Start-Service 'ClickToRunSvc'
+            Set-Location $path
+            Start-Process $cmd -ArgumentList " $files"
+            Wait-Process $cmd
+        } finally { runas /user:Administrador /savedcred "powershell -Command Get-Service -Name 'ClickToRunSvc' | Stop-Service" }
+    } -ArgumentList $((Get-Location).path), $args | Out-Null
+}
 
 # SUDO
 $GRP = (net localgroup)[4] -replace "^."
 $ADM = (net localgroup $GRP)[6]
 $USR = ${env:USERNAME}
 function su { runas /user:$ADM /savedcred "$args" }
+function sua { Start-Process powershell -ArgumentList "-new_console:a -Command ' $args'" }
+function sun { Start-Process powershell -ArgumentList "-new_console:an -Command ' $args'" }
 function sudo {
     try {
         [Console]::TreatControlCAsInput = $true
         su "net localgroup $GRP $USR /Add" | Out-Null
-        Start-Process powershell -ArgumentList "-new_console:a -Command $args"
-        while ($true) { Read-Host | Out-Null; break }
+        sua $args; while($true){ Read-Host | Out-Null; break }
     } finally { su "net localgroup $GRP $USR /Del" | Out-Null }
 }
 
