@@ -79,7 +79,6 @@ function netinfo {
 }
 
 # OFFICE
-
 function office() {
     Start-Job -ScriptBlock {
         $path, $args = $args
@@ -128,6 +127,3 @@ function prompt() {
     }
     Write-Host " >" -ForegroundColor White -NoNewline; "` "; Set-CurrentPath
 }
-
-# NO ADS
-Clear-Host
