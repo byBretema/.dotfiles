@@ -95,7 +95,7 @@ function office() {
             Set-Location $path
             Start-Process $cmd -ArgumentList " $files"
             Wait-Process $cmd
-        } finally { runas /user:Administrador /savedcred "powershell -Command Get-Service -Name 'ClickToRunSvc' | Stop-Service" }
+        } finally { runas /user:$((net user)[4] -replace "[ ].*$") /savedcred "powershell -Command Get-Service -Name 'ClickToRunSvc' | Stop-Service" }
     } -ArgumentList $((Get-Location).path), $args | Out-Null
 }
 
