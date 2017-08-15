@@ -1,7 +1,7 @@
 # ALIAS
 Set-Alias e "code"
 Set-Alias p "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
-@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'echo', 'curl') | ForEach-Object { Remove-Item alias:$_ 2> $null }
+@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl') | ForEach-Object { Remove-Item alias:$_ 2> $null }
 
 # ENV
 $env:SCOOP = "C:\tools\scoop"
@@ -38,9 +38,8 @@ function gitinfo ($who, $which) {
 
 # MOVE
 function k  { Clear-Host; l}
-function ls { pwdc; ls.exe --color $args }
-function l  { pwdc; ls.exe -AFGh --color $args }
-function ll { pwdc; ls.exe -AFGhl --color $args }
+function l { pwdc; ls.exe -AhpX --color $args }
+function ll { pwdc; ls.exe -AhlpX --color $args }
 function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
@@ -77,6 +76,9 @@ function netinfo {
     Write-Host "DNS local time:  $((ping www.google.es)[11])"
     Write-Host "DNS foreign time:$((ping www.google.com)[11])"
 }
+function goo {
+    Start-Process "https://www.google.com/search?q=$($args -join '+')"
+}
 
 # OFFICE
 function office() {
@@ -94,7 +96,7 @@ function office() {
             Set-Location $path
             Start-Process $cmd -ArgumentList " $files"
             Wait-Process $cmd
-        } finally { runas /user:$((net user)[4] -replace "[ ].*$") /savedcred "powershell -Command Get-Service -Name 'ClickToRunSvc' | Stop-Service" }
+        } finally { runas /user:$((net user)[4] -replace "[ ].*$") /savedcred "powershell -Command Stop-Service ClickToRunSvc" }
     } -ArgumentList $((Get-Location).path), $args | Out-Null
 }
 
@@ -103,27 +105,37 @@ $GRP = (net localgroup)[4] -replace "^."
 $ADM = (net localgroup $GRP)[6]
 $USR = ${env:USERNAME}
 function su { runas /user:$ADM /savedcred "$args" }
-function sua { Start-Process powershell -ArgumentList "-new_console:a -Command ' $args'" }
+function sua { Start-Process powershell -ArgumentList "-new_console:a -Command $args" }
 function sun { Start-Process powershell -ArgumentList "-new_console:an -Command ' $args'" }
 function sudo {
     try {
         [Console]::TreatControlCAsInput = $true
+        $cmd = "$( if ($args) {"-Command $args"} )"
         su "net localgroup $GRP $USR /Add" | Out-Null
-        sua $args; while($true){ Read-Host | Out-Null; break }
+        Start-Process powershell -ArgumentList "-new_console:a $cmd"
+        while($true){ Read-Host | Out-Null; break }
     } finally { su "net localgroup $GRP $USR /Del" | Out-Null }
 }
 
 # PROMPT
-function prompt() {
-    if ($?) { $color = "Green" } else { $color = "Red" }
-    Write-Host "$([Char]9829)` " -ForegroundColor $color -NoNewline
-    Write-Host "$(Split-Path $(Get-Location) -Leaf)" -ForegroundColor Cyan -NoNewline
-    if (Get-GitStatus) {
-        Write-Host ":" -ForegroundColor White -NoNewline
-        Write-Host "$((Get-GitStatus).Branch)" -ForegroundColor Magenta -NoNewline
-        if ((Get-GitStatus).HasWorking) { Write-Host "*" -ForegroundColor DarkGray -NoNewline }
-        if ((Get-GitStatus).AheadBy) { Write-Host ".A$((Get-GitStatus).AheadBy)" -ForegroundColor Green -NoNewline }
-        if ((Get-GitStatus).BehindBy) { Write-Host ".B$((Get-GitStatus).BehindBy)" -ForegroundColor Red -NoNewline }
+function prompt {
+    $retColor = ("Red", "Green")[${?}]
+    $Host.UI.RawUI.ForegroundColor = "DarkCyan"
+    # $Host.UI.Write($(Split-Path $PWD -Leaf))
+    $Host.UI.Write($((Get-Location).path))
+    if ($gst = (Get-GitStatus)) {
+        $Host.UI.RawUI.ForegroundColor = "White"
+        $Host.UI.Write(":")
+        $Host.UI.RawUI.ForegroundColor = "Magenta"
+        $gitStatus = $gst.Branch
+        if ($gst.HasWorking) { $gitStatus += "*" }
+        if ($gst.AheadBy) { $gitStatus += ".A${gst.AheadBy}" }
+        if ($gst.BehindBy) { $gitStatus += ".B${gst.BehindBy}" }
+        $Host.UI.Write($gitStatus)
     }
-    Write-Host " >" -ForegroundColor White -NoNewline; "` "; Set-CurrentPath
+    $Host.UI.RawUI.ForegroundColor = $retColor
+    $Host.UI.Write(" " + [Char]10085+[Char]10085+[Char]10085)
+    $Host.UI.RawUI.ForegroundColor = "White"
+    Set-CurrentPath
+    return "` "
 }
