@@ -38,8 +38,8 @@ function gitinfo ($who, $which) {
 
 # MOVE
 function k  { Clear-Host; l}
-function l { pwdc; ls.exe -AhpX --color $args }
-function ll { pwdc; ls.exe -AhlpX --color $args }
+function l  { ls.exe -AhpX --color $args }
+function ll { ls.exe -AhlpX --color $args }
 function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
@@ -105,8 +105,6 @@ $GRP = (net localgroup)[4] -replace "^."
 $ADM = (net localgroup $GRP)[6]
 $USR = ${env:USERNAME}
 function su { runas /user:$ADM /savedcred "$args" }
-function sua { Start-Process powershell -ArgumentList "-new_console:a -Command $args" }
-function sun { Start-Process powershell -ArgumentList "-new_console:an -Command ' $args'" }
 function sudo {
     try {
         [Console]::TreatControlCAsInput = $true
@@ -119,22 +117,27 @@ function sudo {
 
 # PROMPT
 function prompt {
+    $gitStatus = ""
+    $gst = (Get-GitStatus)
+    $pwdColor = "Magenta"
     $retColor = ("Red", "Green")[${?}]
-    $Host.UI.RawUI.ForegroundColor = "DarkCyan"
-    # $Host.UI.Write($(Split-Path $PWD -Leaf))
-    $Host.UI.Write($((Get-Location).path))
-    if ($gst = (Get-GitStatus)) {
-        $Host.UI.RawUI.ForegroundColor = "White"
-        $Host.UI.Write(":")
-        $Host.UI.RawUI.ForegroundColor = "Magenta"
-        $gitStatus = $gst.Branch
+    if ($gst) {
+        $pwdColor = "Cyan"
+        $gitStatus += $gst.Branch
         if ($gst.HasWorking) { $gitStatus += "*" }
         if ($gst.AheadBy) { $gitStatus += ".A${gst.AheadBy}" }
         if ($gst.BehindBy) { $gitStatus += ".B${gst.BehindBy}" }
+    }
+    $Host.UI.RawUI.ForegroundColor = $pwdColor
+    $Host.UI.Write($((Get-Location).path))
+    if ($gst) {
+        $Host.UI.RawUI.ForegroundColor = "White"
+        $Host.UI.Write(":")
+        $Host.UI.RawUI.ForegroundColor = "Blue"
         $Host.UI.Write($gitStatus)
     }
     $Host.UI.RawUI.ForegroundColor = $retColor
-    $Host.UI.Write(" " + [Char]10085+[Char]10085+[Char]10085)
+    $Host.UI.Write(" " + [Char]10085)
     $Host.UI.RawUI.ForegroundColor = "White"
     Set-CurrentPath
     return "` "
