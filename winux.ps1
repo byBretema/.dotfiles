@@ -1,4 +1,4 @@
-### MANUAL STUFF
+### MANUAL THINGS
 # Disable: Protection.               On:  Adv System  > System Protection.
 # Disable: Optimizer.                On:  Computer    > SSD Properties     > Tools.
 # Disable: Index.                    On:  Computer    > SSD Properties     > General.
@@ -39,12 +39,13 @@ New-Item -Path "${env:UserProfile}\.gitconfig" -ItemType SymbolicLink -Value ".\
 New-Item -Path "${env:SystemDrive}\tools\cmdermini\vendor\conemu-maximus5\ConEmu.xml" -ItemType SymbolicLink -Value ".\ConEmu.xml" -Force
 New-Item -Path "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -ItemType SymbolicLink -Value ".\Microsoft.PowerShell_profile.ps1" -Force
 
-### REGEDIT AND SERVICES
-$badSv = @( "SysMain", "DiagTrack", "WerSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "wercplsupport", "MapsBroker", "WinRM" )
+### REGEDIT, SERVICES and TASKS
+$badSv = @("SysMain", "DiagTrack", "WerSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "wercplsupport", "MapsBroker", "WinRM")
 $badSv | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
 # Add access to HKCR.
 New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
 # 7-zip double-click simply extract.
+New-Item -path "hkcr:\Applications\7zG.exe\shell\open\command" -value "`"C:\Program Files\7-Zip\7zG.exe`" x `"%1`" -o* -aou" -Force
 New-Item -path "hkcr:\Applications\7zG.exe\shell\open\command" -value "`"C:\Program Files\7-Zip\7zG.exe`" x `"%1`" -o* -aou" -Force
 # Cortana -> SearchUI.
 New-Item -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Force
@@ -58,3 +59,20 @@ fsutil behavior set disabledeletenotify NTFS 0
 fsutil behavior set disabledeletenotify ReFS 0
 New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnablePrefetcher" -PropertyType DWORD -value 0 -Force
 New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnableSuperfetch" -PropertyType DWORD -value 0 -Force
+# Tasks
+function disableTasks ([String]$name) {
+    $taskArr = (Get-ScheduledTask -TaskName "*${name}*")
+    $taskArr | ForEach-Object { Disable-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath }
+}
+disableTasks "office"
+disableTasks "adobe"
+disableTasks "onedrive"
+disableTasks "microsoft"
+disableTasks "consolidator"
+disableTasks "kernelceiptask"
+disableTasks "usbceip"
+disableTasks "silentcleanup"
+disableTasks "bright"
+disableTasks "dmclient"
+disableTasks "queuereporting"
+disableTasks "scheduleddefrag"
