@@ -8,7 +8,7 @@
 [core]
 	editor = code
 	autocrlf = input
-	excludesfile = ~/.gitignore
+	# excludesfile = ~/.gitignore
 
 [color]
 	ui = true

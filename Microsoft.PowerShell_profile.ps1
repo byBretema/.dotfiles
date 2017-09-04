@@ -1,7 +1,7 @@
 # ALIAS
 Set-Alias e "code"
 Set-Alias p "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
-@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl') | ForEach-Object { Remove-Item alias:$_ 2> $null }
+@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl', 'mkdir') | ForEach-Object { Remove-Item alias:$_ 2> $null }
 
 # ENV
 $env:SCOOP = "C:\tools\scoop"
@@ -38,14 +38,14 @@ function gitinfo ($who, $which) {
 
 # MOVE
 function k  { Clear-Host; l}
-function l  { ls.exe -AhpX --color $args }
+function l  { ls.exe -AhpX $args }
 function ll { ls.exe -AhlpX --color $args }
 function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
 function b ([Int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. } }
 function bd { if ( Test-Path $PREVPATH ) { Get-Content $PREVPATH | Set-Location } }
-function Set-CurrentPath {
+function Update-SavedPath {
     if ( -not ( $(Get-Content $CURRPATH) -eq $((Get-Location).path) )) { Get-Content $CURRPATH | Out-File $PREVPATH }
     (Get-Location).Path | Out-File $CURRPATH
 }
@@ -117,28 +117,39 @@ function sudo {
 
 # PROMPT
 function prompt {
-    $gitStatus = ""
-    $gst = (Get-GitStatus)
-    $pwdColor = "Magenta"
-    $retColor = ("Red", "Green")[${?}]
-    if ($gst) {
-        $pwdColor = "Cyan"
-        $gitStatus += $gst.Branch
-        if ($gst.HasWorking) { $gitStatus += "*" }
-        if ($gst.AheadBy) { $gitStatus += ".A${gst.AheadBy}" }
-        if ($gst.BehindBy) { $gitStatus += ".B${gst.BehindBy}" }
-    }
-    $Host.UI.RawUI.ForegroundColor = $pwdColor
-    $Host.UI.Write($((Get-Location).path))
-    if ($gst) {
-        $Host.UI.RawUI.ForegroundColor = "White"
-        $Host.UI.Write(":")
+    $Host.UI.RawUI.ForegroundColor = ("Red", "Green")[${?}]
+    # $Host.UI.Write(" " + [Char]11166)
+    $Host.UI.Write(" " + [Char]9679)
+
+    $Host.UI.RawUI.ForegroundColor = "Cyan"
+    $Host.UI.Write(" " + $(Split-Path $PWD -leaf))
+
+    if ($gst = (Get-GitStatus)) {
         $Host.UI.RawUI.ForegroundColor = "Blue"
-        $Host.UI.Write($gitStatus)
+        $Host.UI.Write(" git(")
+        $Host.UI.RawUI.ForegroundColor = "Red"
+        $Host.UI.Write($gst.Branch)
+        $Host.UI.RawUI.ForegroundColor = "Blue"
+        $Host.UI.Write(")")
+
+        $Host.UI.RawUI.ForegroundColor = "Magenta"
+        if ($gst.AheadBy) {
+            $Host.UI.Write(" " + [Char]8593)
+        } elseif ($gst.BehindBy) {
+            $Host.UI.Write(" " + [Char]8595)
+        } else {
+            if ($gst.HasWorking) {
+                $Host.UI.Write(" " + [Char]10008)
+            } else {
+                $Host.UI.Write(" " + [Char]10004)
+            }
+        }
+    } else {
+        $Host.UI.RawUI.ForegroundColor = "Magenta"
+        $Host.UI.Write(" " + [Char]10247)
     }
-    $Host.UI.RawUI.ForegroundColor = $retColor
-    $Host.UI.Write(" " + [Char]10085)
+
     $Host.UI.RawUI.ForegroundColor = "White"
-    Set-CurrentPath
-    return "` "
+    Update-SavedPath
+    return "` ` "
 }

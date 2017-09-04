@@ -8,6 +8,7 @@ build/
 .Python
 __pycache__/
 Doxygen/
+node_modules/
 
 ### CODE FILES ###
 *.a
