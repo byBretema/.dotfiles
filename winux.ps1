@@ -40,7 +40,7 @@ New-Item -Path "${env:SystemDrive}\tools\cmdermini\vendor\conemu-maximus5\ConEmu
 New-Item -Path "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" -ItemType SymbolicLink -Value ".\Microsoft.PowerShell_profile.ps1" -Force
 
 ### REGEDIT, SERVICES and TASKS
-$badSv = @("SysMain", "DiagTrack", "WerSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "wercplsupport", "MapsBroker", "WinRM")
+$badSv = @("SysMain", "DiagTrack", "WerSvc", "RetailDemo", "DPS", "PcaSvc", "WdiServiceHost", "dmwappushservice", "wercplsupport", "MapsBroker", "WinRM", "AdobeUpdateService")
 $badSv | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
 # Add access to HKCR.
 New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
