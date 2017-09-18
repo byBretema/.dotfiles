@@ -10,7 +10,7 @@ $env:GOBIN = "C:\devbox\code\go\bin"
 $env:ChocolateyInstall = "C:\tools\choco"
 $CURRPATH = "${env:USERPROFILE}\CURRPATH.txt"
 $PREVPATH = "${env:USERPROFILE}\PREVPATH.txt"
-$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN}"
+$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN};${env:ProgramFiles}\dotnet"
 
 # DOCKER
 function x11 { xming -ac -multiwindow -clipboard }
@@ -66,6 +66,16 @@ function gowin { $env:GOOS = "windows"; $env:GOARCH = "amd64"; go build }
 function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
 function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
 function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
+
+# C++
+function cc {
+    $file=$(Split-Path $PWD -leaf)
+    g++ -Wall -std="c++14" $(Get-ChildItem *.cpp) -I. -o $file
+    if (Test-Path ".\$file.exe"){
+        & ".\$file.exe"
+        Remove-Item "$file.exe"
+    }
+}
 
 # NET
 function netinfo {
