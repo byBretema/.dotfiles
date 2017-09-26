@@ -8,8 +8,6 @@ $env:SCOOP = "C:\tools\scoop"
 $env:GOPATH = "C:\devbox\code\go"
 $env:GOBIN = "C:\devbox\code\go\bin"
 $env:ChocolateyInstall = "C:\tools\choco"
-$CURRPATH = "${env:USERPROFILE}\CURRPATH.txt"
-$PREVPATH = "${env:USERPROFILE}\PREVPATH.txt"
 $env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN};${env:ProgramFiles}\dotnet"
 
 # DOCKER
@@ -44,16 +42,11 @@ function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
 function b ([Int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. } }
-function bd { if ( Test-Path $PREVPATH ) { Get-Content $PREVPATH | Set-Location } }
-function Update-SavedPath {
-    if ( -not ( $(Get-Content $CURRPATH) -eq $((Get-Location).path) )) { Get-Content $CURRPATH | Out-File $PREVPATH }
-    (Get-Location).Path | Out-File $CURRPATH
-}
 
 # SYS
-function offTimer { shutdown /hybrid /s /t $($args[0] * 60) }
-function bitLock { manage-bde.exe -lock $args[0] }
-function bitUnlock { manage-bde.exe -unlock $args[0] -pw }
+function off { shutdown /hybrid /s /t $($args[0] * 60) }
+function bitLock { sudo manage-bde.exe -lock $args[0] }
+function bitUnlock { sudo manage-bde.exe -unlock $args[0] -pw }
 function bg { Start-Process powershell -NoNewWindow "-Command $args" }
 function ke { Stop-Process (Get-Process explorer).id }
 function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
@@ -160,6 +153,6 @@ function prompt {
     }
 
     $Host.UI.RawUI.ForegroundColor = "White"
-    Update-SavedPath
+    Push-Location
     return "` ` "
 }
