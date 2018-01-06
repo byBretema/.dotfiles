@@ -4,21 +4,33 @@ Set-Alias p "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
 @('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl', 'mkdir') | ForEach-Object { Remove-Item alias:$_ 2> $null }
 
 # ENV
-$env:SCOOP = "C:\tools\scoop"
-$env:GOPATH = "C:\devbox\code\go"
-$env:GOBIN = "C:\devbox\code\go\bin"
-$env:ChocolateyInstall = "C:\tools\choco"
-$env:PATH += ";${env:ProgramFiles(x86)}\Xming;${env:SystemDrive}\tools\mingw64\bin;${env:GOBIN};${env:ProgramFiles}\dotnet"
+$TOOLS = "${env:SystemDrive}\_TOOLS"
+$DEV = "${env:SystemDrive}\_DEV"
+
+# Import-Module "$TOOLS\vcpkg\scripts\posh-vcpkg"
+$env:SCOOP = "$TOOLS\scoop"
+$env:GOPATH = "$DEV\code\go"
+$env:GOBIN = "$DEV\code\go\bin"
+$env:ChocolateyInstall = "$TOOLS\choco"
+$env:PATH += ";`
+    $TOOLS\scoop\apps\xming\current;`
+    $TOOLS\mingw64\bin;`
+    ${env:GOBIN};${env:ProgramFiles}\dotnet;`
+    ${env:ProgramFiles}\VCG\MeshLab\;`
+    ${env:UserProfile}\AppData\Local\Conan\conan;`
+    $TOOLS\vcpkg;`
+"
 
 # DOCKER
 function x11 { xming -ac -multiwindow -clipboard }
-function whale { if ($args) { x11; docker run -it -v "$((Get-Location).path):/app" -e DISPLAY=$(display) $args } }
+function whale { if ($args) { x11; docker run -v "$((Get-Location).path):/app" -e DISPLAY=$(display) -it $args } }
 function display { (Get-NetAdapter "vEthernet (DockerNAT)" | Get-NetIPAddress -AddressFamily "IPv4").IPAddress + ":0" 2> $null }
 
 # GIT
 function gst { git status -sb }
 function glg { git log --graph --oneline --decorate }
 function qgp { if ($args) { git add -A; git commit -m "$args"; git push } }
+function qgfp { git init; git add -A; git commit -m "first commit"; git remote add origin $args[0]; git push -u origin master}
 function gitit { Start-Process "$(git remote -v | gawk '{print $2}' | head -1)" }
 function gitb { if ($args[0]) { git checkout -b "$args[0]"; git push origin "$args[0]" } }
 function loc { if ($args[0]) { (Get-ChildItem * -recurse -include *.$($args[0]) | Get-Content | Measure-Object -Line).Lines } }
@@ -40,33 +52,27 @@ function l  { ls.exe -AhpX $args }
 function ll { ls.exe -AhlpX --color $args }
 function oo { explorer (Get-Location).Path }
 function ho { Set-Location $env:userprofile }
+function dv { Set-Location "$DEV" }
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
 function b ([Int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. } }
 
 # SYS
+function me { net user ${env:UserName} }
 function off { shutdown /hybrid /s /t $($args[0] * 60) }
 function bitLock { sudo manage-bde.exe -lock $args[0] }
 function bitUnlock { sudo manage-bde.exe -unlock $args[0] -pw }
 function bg { Start-Process powershell -NoNewWindow "-Command $args" }
 function ke { Stop-Process (Get-Process explorer).id }
-function eposh { e "${env:USERPROFILE}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
+function eposh { e "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" }
 function iconFind ([String]$icon) { for ($i = 0; $i -le 65535; $i++) { if ( [char]$i -eq $icon ) { Write-Host $i } } }
-
-# GO
-function g { go run $(Get-ChildItem *.go).Name $args }
-function goget { if ($args[0]) { go get -v -u $args[0] } }
-function gowin { $env:GOOS = "windows"; $env:GOARCH = "amd64"; go build }
-function gomac { $env:GOOS = "darwin";  $env:GOARCH = "amd64"; go build }
-function gonix { $env:GOOS = "linux";   $env:GOARCH = "amd64"; go build }
-function godroid { $env:GOOS = "android"; $env:GOARCH = "arm";   go build }
-
-# C++
-function cc {
-    $file=$(Split-Path $PWD -leaf)
-    g++ -Wall -std="c++14" $(Get-ChildItem *.cpp) -I. -o $file
-    if (Test-Path ".\$file.exe"){
-        & ".\$file.exe"
-        Remove-Item "$file.exe"
+function top {
+    Clear-Host
+    $saveY = [console]::CursorTop
+    $saveX = [console]::CursorLeft
+    while ($true) {
+        Get-Process | Sort-Object -Descending CPU | Select-Object -First 30
+        Start-Sleep -Seconds 2
+        [console]::setcursorposition($saveX, $saveY + 3)
     }
 }
 
@@ -104,55 +110,138 @@ function office() {
 }
 
 # SUDO
-$GRP = (net localgroup)[4] -replace "^."
-$ADM = (net localgroup $GRP)[6]
-$USR = ${env:USERNAME}
-function su { runas /user:$ADM /savedcred "$args" }
+function su {
+    powershell -new_console:a ${args}
+}
 function sudo {
     try {
         [Console]::TreatControlCAsInput = $true
-        $cmd = "$( if ($args) {"-Command $args"} )"
-        su "net localgroup $GRP $USR /Add" | Out-Null
-        Start-Process powershell -ArgumentList "-new_console:a $cmd"
-        while($true){ Read-Host | Out-Null; break }
-    } finally { su "net localgroup $GRP $USR /Del" | Out-Null }
+        $USR = ${env:USERNAME}
+        $GRP = (net localgroup)[4] -replace "^."
+        powershell -new_console:an "net localgroup $GRP $USR /Add"
+        while ($true) { Read-Host | Out-Null; break }
+        powershell -new_console:a ${args}
+        while ($true) { Read-Host | Out-Null; break }
+    } finally { powershell -new_console:an "net localgroup $GRP $USR /Del" }
+}
+
+# FIX UPDATES
+function fixUpdates {
+    # Set-ExecutionPolicy Bypass
+    $manSvc = @("wuauserv", "AdobeUpdateService", "AJRouter", "ALG", "AppIDSvc", "AppMgmt", "AppReadiness", "AppVClient", "AppXSvc", "AxInstSV", "BITS", "Browser", "CertPropSvc", "ClickToRunSvc", "ClipSVC", "COMSysApp", "cphs", "cplspcon", "CscService", "debugregsvc", "defragsvc", "*DeveloperToolsS*", "DeviceInstall", "*DevicesFlowUser*", "DevQueryBroker", "*diagnosticshub*", "DiagTrack", "digiSPTIService64", "DmEnrollmentSvc", "dmwappushservice", "DoSvc", "dot3svc", "DPS", "DsmSvc", "DsSvc", "EapHost", "EFS", "embeddedmode", "EntAppSvc", "Fax", "fdPHost", "FDResPub", "fhsvc", "*FlexNetLicensi*", "FrameServer", "*GalaxyClientSer*", "*GalaxyCommunica*", "gupdate", "gupdatem", "HomeGroupListener", "HomeGroupProvider", "icssvc", "IKEEXT", "iPodService", "IpxlatCfgSvc", "irmon", "KtmRm", "LicenseManager", "lltdsvc", "LxssManager", "MapsBroker", "*MessagingServic*", "MSDTC", "MSiSCSI", "msiserver", "*NaturalAuthenti*", "NcaSvc", "NcdAutoSetup", "Netlogon", "Netman", "NetSetupSvc", "NetTcpPortSharing", "ose64", "p2pimsvc", "p2psvc", "PcaSvc", "PeerDistSvc", "PerfHost", "pla", "PNRPAutoReg", "PNRPsvc", "PrintNotify", "QWAVE", "RasAuto", "RasMan", "RemoteAccess", "RemoteRegistry", "RetailDemo", "RmSvc", "RpcLocator", "SCardSvr", "ScDeviceEnum", "SCPolicySvc", "SDRSVC", "SEMgrSvc", "Sense", "SensorDataService", "SensorService", "SensrSvc", "SessionEnv", "SharedAccess", "shpamsvc", "SkypeUpdate", "smphost", "SmsRouter", "SNMPTRAP", "spectrum", "sppsvc", "SshBroker", "SshProxy", "SstpSvc", "*SteamClientSe*", "svsvc", "swprv", "SysMain", "TabletInputService", "TapiSrv", "Te.Service", "TermService", "*TieringEngineSe*", "TrustedInstaller", "tzautoupdate", "UevAgentService", "UI0Detect", "UmRdpService", "upnphost", "UsoSvc", "vds", "vmicguestinterface", "vmicheartbeat", "vmickvpexchange", "vmicrdv", "vmicshutdown", "vmictimesync", "vmicvmsession", "vmicvss", "VSS", "*VSStandardColle*", "W32Time", "WalletService", "wbengine", "WbioSrvc", "wcncsvc", "WdiServiceHost", "WdiSystemHost", "WebClient", "Wecsvc", "WEPHOSTSVC", "wercplsupport", "WerSvc", "WFDSConMgrSvc", "WiaRpc", "WinRM", "wisvc", "wlidsvc", "wlpasvc", "wmiApSrv", "WPDBusEnum", "WSearch", "WwanSvc", "xbgm", "XblAuthManager", "XblGameSave", "XboxGipSvc", "XboxNetApiSvc")
+    $manSvc | ForEach-Object { Set-Service -StartupType Manual -Name $_ 2>$null }
+    $disSvc = @("AppVClient", "diagnosticshub.standardcollector.service", "DiagTrack", "dmwappushservice", "DoSvc", "DPS", "MapsBroker", "NetTcpPortSharing", "PcaSvc", "RemoteAccess", "RemoteRegistry", "RetailDemo", "SCardSvr", "SensorService", "SensrSvc", "shpamsvc", "SysMain", "UevAgentService", "WdiServiceHost", "wercplsupport", "WerSvc", "WinRM", "WSearch")
+    $disSvc | ForEach-Object { Set-Service -StartupType Disabled -Name $_ 2>$null }
+    # Cortana -> SearchUI.
+    New-Item -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -Force
+    New-ItemProperty -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\Windows Search" -name "AllowCortana" -PropertyType DWORD -value 0 -Force
+    # Telemetry off.
+    Set-Service DiagTrack -StartupType Disabled
+    Set-Service dmwappushservice -StartupType Disabled
+    New-ItemProperty -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -name "AllowTelemetry " -PropertyType DWORD -value 0 -Force
+    # SSD
+    fsutil behavior set disabledeletenotify NTFS 0
+    fsutil behavior set disabledeletenotify ReFS 0
+    New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnablePrefetcher" -PropertyType DWORD -value 0 -Force
+    New-ItemProperty -path "hklm:\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters" -name "EnableSuperfetch" -PropertyType DWORD -value 0 -Force
+    # Tasks
+    function disableTasks ([String]$name) {
+        $taskArr = (Get-ScheduledTask -TaskName "*${name}*")
+        $taskArr | ForEach-Object { Disable-ScheduledTask -TaskName $_.TaskName -TaskPath $_.TaskPath }
+    }
+    $disTaks = @("office", "adobe", "onedrive", "microsoft", "consolidator", "kernelceiptask", "usbceip", "silentcleanup", "bright", "dmclient", "queuereporting", "scheduleddefrag")
+    $disTaks | ForEach-Object { Set-Service -StartupType Manual -Name $_ 2>$null }
 }
 
 # PROMPT
 function prompt {
-    $Host.UI.RawUI.ForegroundColor = ("Red", "Green")[${?}]
-    # $Host.UI.Write(" " + [Char]11166)
-    $Host.UI.Write(" " + [Char]9679)
-
-    $Host.UI.RawUI.ForegroundColor = "Cyan"
-    $Host.UI.Write(" " + $(Split-Path $PWD -leaf))
+    $laststatus = ("Red", "Green")[${?}]
+    # $Host.UI.Write(" " + [Char]9679)
 
     if ($gst = (Get-GitStatus)) {
-        $Host.UI.RawUI.ForegroundColor = "Blue"
-        $Host.UI.Write(" git(")
-        $Host.UI.RawUI.ForegroundColor = "Red"
-        $Host.UI.Write($gst.Branch)
-        $Host.UI.RawUI.ForegroundColor = "Blue"
-        $Host.UI.Write(")")
-
+        # Git branch.
+        if (-not $gst.Branch -eq "master") {
+            $Host.UI.RawUI.ForegroundColor = "Blue"
+            $Host.UI.Write(" git(")
+            $Host.UI.RawUI.ForegroundColor = "Red"
+            $Host.UI.Write($gst.Branch)
+            $Host.UI.RawUI.ForegroundColor = "Blue"
+            $Host.UI.Write(") ")
+        }
+        # Git status.
         $Host.UI.RawUI.ForegroundColor = "Magenta"
         if ($gst.AheadBy) {
-            $Host.UI.Write(" " + [Char]8593)
+            $Host.UI.Write([Char]8593) # Arrow up.
         } elseif ($gst.BehindBy) {
-            $Host.UI.Write(" " + [Char]8595)
+            $Host.UI.Write([Char]8595) # Arrow down.
         } else {
             if ($gst.HasWorking) {
-                $Host.UI.Write(" " + [Char]10008)
+                $Host.UI.Write([Char]10008) # X.
             } else {
-                $Host.UI.Write(" " + [Char]10004)
+                $Host.UI.Write([Char]10004) # V.
             }
         }
     } else {
+        # No VCS.
         $Host.UI.RawUI.ForegroundColor = "Magenta"
-        $Host.UI.Write(" " + [Char]10247)
+        $Host.UI.Write([Char]10247) # Three points separator.
     }
-
+    # Current folder.
     $Host.UI.RawUI.ForegroundColor = "White"
-    Push-Location
+    $Host.UI.Write(" " + $(Split-Path $PWD -leaf))
+    # Separator and last command return status code indicator.
+    $Host.UI.RawUI.ForegroundColor = $laststatus
+    $Host.UI.Write(" " + [Char]11166)
+    # All plain text on "DarkCyan"
+    $Host.UI.RawUI.ForegroundColor = "DarkCyan"
+    # Feed popd cmdlet.
+    # if (-not $env:PREVPATH -eq $PWD.path) {
+    #     if (-not $env:OLDPWD -eq $PWD.path) {
+    #         Push-Location
+    #         $env:OLDPWD = $PWD
+    #     }
+    # }
+    # $env:PREVPATH = $PWD.Path
+    # Avoid "PS>" text.
     return "` ` "
 }
+
+# LANGS
+
+## GO
+$env:GOOS = "windows"
+$env:GOARCH = "amd64"
+function gor { go run $(Get-ChildItem *.go).Name $args }
+function goget { if ($args[0]) { go get -v -u $args[0] } }
+function gowin { gobuild("windows") }
+function gomac { gobuild("darwin") }
+function gonix { gobuild("linux") }
+function godroid { gobuild("android") }
+function gobuild ([String]$os) {
+    if ($os -eq "android") { $arch = "arm" } else { $arch = "amd64" }
+    $env:GOOS = $os
+    $env:GOARCH = $arch
+    Write-Host "Compiling project for `"${env:GOOS}`" on `"${env:GOARCH}`"..."
+    go build
+}
+
+## C++
+function cc {
+    if ($args) { $files = $args } else { $files = ( $(Get-ChildItem *.cc), $(Get-ChildItem *.cpp) ) }
+    $out = [io.path]::GetFileNameWithoutExtension($files[0])
+    Write-Host "C++ compiling... $out.exe`n================================="
+    g++ -I. -std='c++17' -fopenmp -O6 $files -o $out
+    if (Test-Path ".\$out.exe") { & ".\$out.exe"; Remove-Item "$out.exe" }
+}
+function cc_include {
+    Set-Location "$TOOLS\vcpkg\installed\x86-windows\include\"
+}
+
+## MATLAB
+function matl {
+    matlab -nodesktop -nodisplay -nosplash -n -r $([io.path]::GetFileNameWithoutExtension($args[0]))
+}
+
+# END
+# Clear-Host
+Set-PSReadLineOption -HistoryNoDuplicates:$True

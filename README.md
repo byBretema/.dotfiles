@@ -1,9 +1,6 @@
-<p align="center">
-	<img src="logo.png">
-	<br>
-</p>
+<p align="center"> <img src="logo.png"> </p>
 
-<br>
+# Winux - A powershell with linux taste
 
 ## 1. Emulator: [λ Cmder](http://cmder.net/)
 
@@ -35,31 +32,29 @@
   Rename-Computer <ComputerName>
   ```
 
-
-<br>
-
-## 2. Modules, scoop and chocolatey.
+## 2. Modules, scoop and chocolatey
 
 ```powershell
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
 ```
 
-### Install chocolatey.
+### Install chocolatey
 
 ```powershell
-Invoke-WebRequest https://chocolatey.org/install.ps1 `
-	-UseBasicParsing | Invoke-Expression
+Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
 ```
 
 Now you can use: `choco search <PartialAppName>` to search an application.
 
 And later use: `choco install -fyr <FullAppName>` to install the application.
 
-### Install scoop.
+### Install scoop
+
 ```powershell
 iex (new-object net.webclient).downloadstring('https://get.scoop.sh')
 ```
+
 ```powershell
 scoop bucket add extras
 ```
@@ -68,9 +63,8 @@ Now you can use: `scoop search <PartialAppName>` to search an application.
 
 And later use: `scoop install <FullAppName>` to install the application.
 
-<br>
+### 3. Link other configs
 
-### 3. Link other configs.
 ```powershell
 # Link .vimrc
 $g_path = ".\.vimrc"
@@ -79,19 +73,19 @@ if ( Test-Path $h_path )     { Remove-Item $h_path }
 New-Item -Path $h_path -ItemType SymbolicLink -Value $g_path
 
 # Link .gitignore
-$g_path = "..\.gitignore"
+$g_path = ".\.gitignore"
 $h_path = "$env:userprofile\.gitignore"
 if ( Test-Path $h_path )     { Remove-Item $h_path }
 New-Item -Path $h_path -ItemType SymbolicLink -Value $g_path
 
 # Link .gitconfig
-$g_path = "..\.gitconfig"
+$g_path = ".\.gitconfig"
 $h_path = "$env:userprofile\.gitconfig"
 if ( Test-Path $h_path )     { Remove-Item $h_path }
 New-Item -Path $h_path -ItemType SymbolicLink -Value $g_path
 ```
 
-### Plugin manager for vim!
+### Plugin manager for vim
 
 ```powershell
 $vimAutoload = "$env:USERPROFILE\vimfiles\autoload"
@@ -102,16 +96,17 @@ Invoke-WebRequest`
     -Uri "https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim"`
     -Outfile "$vimAutoload\plug.vim"
 ```
-<br>
 
-### 4. Pretty tips.
+### 4. Pretty tips
 
+#### SSD good practices
 
-#### SSD good practices.
-	fsutil behavior set disabledeletenotify NTFS 0
-	fsutil behavior set disabledeletenotify ReFS 0
+```cmd
+  fsutil behavior set disabledeletenotify NTFS 0
+  fsutil behavior set disabledeletenotify ReFS 0
+```
 
-> I ignore how to do the next via powershell so I have written the GUI process.
+> I ignore how to do the next stuff via powershell so I have written the GUI process.
 
 - Disable `Index` on `Computer > SSD Properties > General`.
 - Disable `Optimizer` on `Computer > SSD Properties > Tools`.
@@ -119,10 +114,9 @@ Invoke-WebRequest`
 - Disable `VirtualMem` on `Adv System > Performance > Adv options`.
 - Disable `EnablePrefetcher` on `HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Control\Session Manager\Memory Management\PrefetchParameters`.
 
-#### File Explorer stuff. (via GUI)
+#### File Explorer stuff (via GUI)
 
 > Into a explorer window.
 
 - Switch to `This computer` the `View > Options > Open explorer` select.
 - Uncheck `Recently` and `Frequently` on `View > Options > Privacity` at dialog bottom.
-
