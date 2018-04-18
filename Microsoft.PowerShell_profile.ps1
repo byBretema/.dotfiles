@@ -1,7 +1,7 @@
 # ALIAS
 Set-Alias e "code"
 Set-Alias p "$env:ProgramFiles\VideoLAN\VLC\vlc.exe"
-@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl', 'mkdir') | ForEach-Object { Remove-Item alias:$_ 2> $null }
+@('ls', 'rm', 'mv', 'cp', 'cat', 'man', 'pwd', 'wget', 'curl', 'mkdir', 'md') | ForEach-Object { Remove-Item alias:$_ 2> $null }
 
 # ENV
 $TOOLS = "${env:SystemDrive}\_TOOLS"
@@ -19,6 +19,8 @@ $env:PATH += ";`
     ${env:ProgramFiles}\VCG\MeshLab\;`
     ${env:UserProfile}\AppData\Local\Conan\conan;`
     $TOOLS\vcpkg;`
+    ${env:ProgramFiles(x86)}\Microsoft Visual Studio 14.0\VC\bin;`
+    ${env:ProgramFiles(x86)}\Microsoft Visual Studio\2017\BuildTools\MSBuild\15.0\Bin;`
 "
 
 # DOCKER
@@ -50,9 +52,10 @@ function gitinfo ($who, $which) {
 function k  { Clear-Host; l}
 function l  { ls.exe -AhpX $args }
 function ll { ls.exe -AhlpX --color $args }
-function oo { explorer (Get-Location).Path }
+function oo { if ($args) {explorer $args[0] } else { explorer (Get-Location).Path } }
 function ho { Set-Location $env:userprofile }
 function dv { Set-Location "$DEV" }
+function md { New-Item -ItemType Directory $args[0]; Set-Location $args[0]}
 function pwdc { Write-Host $(Get-Location) -ForegroundColor DarkGray }
 function b ([Int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. } }
 
@@ -75,6 +78,7 @@ function top {
         [console]::setcursorposition($saveX, $saveY + 3)
     }
 }
+function devices { sudo mmc devmgmt.msc }
 
 # NET
 function netinfo {
@@ -226,15 +230,19 @@ function gobuild ([String]$os) {
 }
 
 ## C++
-function cc {
+function ccrelease {
     if ($args) { $files = $args } else { $files = ( $(Get-ChildItem *.cc), $(Get-ChildItem *.cpp) ) }
     $out = [io.path]::GetFileNameWithoutExtension($files[0])
     Write-Host "C++ compiling... $out.exe`n================================="
     g++ -I. -std='c++17' -fopenmp -O6 $files -o $out
-    if (Test-Path ".\$out.exe") { & ".\$out.exe"; Remove-Item "$out.exe" }
+    if (Test-Path ".\$out.exe") { & ".\$out.exe"; }
 }
-function cc_include {
-    Set-Location "$TOOLS\vcpkg\installed\x86-windows\include\"
+function ccdebug {
+    if ($args) { $files = $args } else { $files = ( $(Get-ChildItem *.cc), $(Get-ChildItem *.cpp) ) }
+    $out = [io.path]::GetFileNameWithoutExtension($files[0])
+    Write-Host "C++ compiling... $out.exe`n================================="
+    g++ $files -I. -std='c++17' -Wall -o $out
+    if (Test-Path ".\$out.exe") { & ".\$out.exe"; }
 }
 
 ## MATLAB
@@ -243,5 +251,11 @@ function matl {
 }
 
 # END
-# Clear-Host
+Clear-Host
 Set-PSReadLineOption -HistoryNoDuplicates:$True
+
+# Chocolatey profile
+$ChocolateyProfile = "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
+if (Test-Path($ChocolateyProfile)) {
+  Import-Module "$ChocolateyProfile"
+}

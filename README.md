@@ -1,6 +1,6 @@
-<p align="center"> <img src="logo.png"> </p>
-
 # Winux - A powershell with linux taste
+
+<p align="center"> <img src="logo.png"> </p>
 
 ## 1. Emulator: [λ Cmder](http://cmder.net/)
 
