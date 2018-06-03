@@ -102,17 +102,19 @@ function cc {
 # PROMPT
 function prompt {
     $lastStatus = ("!", "")[${?}]
-    $promptStr = "`n ` "
+    Write-Prompt "`n"
 
     if ($gst = (Get-GitStatus)) {
-        $promptStr += "git($($gst.Branch)"
-        $promptStr += ("", ", A:$($gst.AheadBy)")[$gst.AheadBy]
-        $promptStr += ("", ", B:$($gst.BehindBy)")[$gst.BehindBy]
-        $promptStr += (", V)  |  ", ", X)  |  ")[$gst.HasWorking]
+        $gitStr += " git($($gst.Branch)"
+        $gitStr += ("", ", A:$($gst.AheadBy)")[$gst.AheadBy]
+        $gitStr += ("", ", B:$($gst.BehindBy)")[$gst.BehindBy]
+        $gitStr += (", V) ", ", X) ")[$gst.HasWorking]
+        Write-Prompt $gitStr -ForegroundColor Black -BackgroundColor White
+        Write-Prompt "` "
     }
-    $promptStr += "${pwd} "
-    $promptStr += "${lastStatus}> "
-    Write-Prompt $promptStr -ForegroundColor Black -BackgroundColor White
+    $dataStr = " ${pwd} "
+    $dataStr += "${lastStatus}> "
+    Write-Prompt $dataStr -ForegroundColor Black -BackgroundColor White
     return "` "
 }
 
