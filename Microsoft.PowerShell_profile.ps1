@@ -100,48 +100,21 @@ function cc {
 
 
 # PROMPT
-# function prompt {
-#     $laststatus = ("Red", "Green")[${?}]
-#     # $Host.UI.Write(" " + [Char]9679)
+function prompt {
+    $lastStatus = ("!", "")[${?}]
+    $promptStr = "`n ` "
 
-#     if ($gst = (Get-GitStatus)) {
-#         # Git branch.
-#         if (-not $gst.Branch -eq "master") {
-#             $Host.UI.RawUI.ForegroundColor = "Blue"
-#             $Host.UI.Write(" git(")
-#             $Host.UI.RawUI.ForegroundColor = "Red"
-#             $Host.UI.Write($gst.Branch)
-#             $Host.UI.RawUI.ForegroundColor = "Blue"
-#             $Host.UI.Write(") ")
-#         }
-#         # Git status.
-#         $Host.UI.RawUI.ForegroundColor = "Magenta"
-#         if ($gst.AheadBy) {
-#             $Host.UI.Write([Char]8593) # Arrow up.
-#         } elseif ($gst.BehindBy) {
-#             $Host.UI.Write([Char]8595) # Arrow down.
-#         } else {
-#             if ($gst.HasWorking) {
-#                 $Host.UI.Write([Char]10008) # X.
-#             } else {
-#                 $Host.UI.Write([Char]10004) # V.
-#             }
-#         }
-#     } else {
-#         # No VCS.
-#         $Host.UI.RawUI.ForegroundColor = "Magenta"
-#         $Host.UI.Write([Char]10247) # Three points separator.
-#     }
-#     # Current folder.
-#     $Host.UI.RawUI.ForegroundColor = "White"
-#     $Host.UI.Write(" " + $(Split-Path $PWD -leaf))
-#     # Separator and last command return status code indicator.
-#     $Host.UI.RawUI.ForegroundColor = $laststatus
-#     $Host.UI.Write(" " + [Char]11166)
-#     # All plain text on "DarkCyan"
-#     $Host.UI.RawUI.ForegroundColor = "DarkCyan"
-#     # return "` ` "
-# }
+    if ($gst = (Get-GitStatus)) {
+        $promptStr += "git($($gst.Branch)"
+        $promptStr += ("", ", A:$($gst.AheadBy)")[$gst.AheadBy]
+        $promptStr += ("", ", B:$($gst.BehindBy)")[$gst.BehindBy]
+        $promptStr += (", X)  |  ", ", V)  |  ")[$gst.HasWorking]
+    }
+    $promptStr += "${pwd} "
+    $promptStr += "${lastStatus}> "
+    Write-Prompt $promptStr -ForegroundColor Black -BackgroundColor White
+    return "` "
+}
 
 # ========================================================================== #
 

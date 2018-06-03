@@ -3,14 +3,14 @@
 
 # POSH GALLERY
 Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-$cmdlets = @("posh-git", "psdockerhub", "posh-docker", "posh-with")
+$cmdlets = @("posh-git", "psdockerhub", "posh-docker")
 $cmdlets | ForEach-Object { Install-Module -Name $_ }
 
 # SCOOP
 Set-ExecutionPolicy RemoteSigned -Scope CurrentUser
 Invoke-Expression (new-object net.webclient).downloadstring('https://get.scoop.sh')
 scoop install git
-scoop install go openssh sudo xming
+scoop install gcc go openssh sudo xming
 
 # CHOCO
 Set-ExecutionPolicy Bypass
