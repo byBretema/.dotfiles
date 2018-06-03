@@ -108,7 +108,7 @@ function prompt {
         $promptStr += "git($($gst.Branch)"
         $promptStr += ("", ", A:$($gst.AheadBy)")[$gst.AheadBy]
         $promptStr += ("", ", B:$($gst.BehindBy)")[$gst.BehindBy]
-        $promptStr += (", X)  |  ", ", V)  |  ")[$gst.HasWorking]
+        $promptStr += (", V)  |  ", ", X)  |  ")[$gst.HasWorking]
     }
     $promptStr += "${pwd} "
     $promptStr += "${lastStatus}> "
