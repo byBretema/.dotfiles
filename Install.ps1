@@ -15,6 +15,7 @@ scoop install go openssh sudo xming
 # CHOCO
 Set-ExecutionPolicy Bypass
 Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
+choco feature enable -n allowGlobalConfirmation
 choco install 7zip blender ditto firefox gimp GoogleChrome meshlab rufus teamviewer telegram texmaker tixati unity vscode whatsapp
 
 # 7-zip double-click simply extract
