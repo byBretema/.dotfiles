@@ -1,0 +1,158 @@
+// Coloque sus enlaces de teclado en este archivo para sobrescribir los valores predeterminados.
+[
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.deleteLines",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "-editor.action.deleteLines",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+right",
+        "command": "workbench.action.terminal.scrollToBottom",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+end",
+        "command": "-workbench.action.terminal.scrollToBottom",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+left",
+        "command": "workbench.action.terminal.scrollToTop",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+home",
+        "command": "-workbench.action.terminal.scrollToTop",
+        "when": "terminalFocus"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+shift+g",
+        "command": "workbench.action.gotoLine"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "-workbench.action.gotoLine"
+    },
+    {
+        "key": "ctrl+right",
+        "command": "cursorEnd",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "end",
+        "command": "-cursorEnd",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+right",
+        "command": "cursorEndSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+end",
+        "command": "-cursorEndSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+left",
+        "command": "cursorHome",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "home",
+        "command": "-cursorHome",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+left",
+        "command": "cursorHomeSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+home",
+        "command": "-cursorHomeSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+left",
+        "command": "cursorWordStartLeft",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+left",
+        "command": "-cursorWordStartLeft",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+left",
+        "command": "cursorWordStartLeftSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+left",
+        "command": "-cursorWordStartLeftSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+right",
+        "command": "cursorWordEndRightSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+right",
+        "command": "-cursorWordEndRightSelect",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "alt+right",
+        "command": "cursorWordEndRight",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+right",
+        "command": "-cursorWordEndRight",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+l",
+        "command": "workbench.action.toggleMaximizedPanel"
+    },
+    {
+        "key": "ctrl+alt+l",
+        "command": "editor.action.selectHighlights",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+shift+l",
+        "command": "-editor.action.selectHighlights",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+shift+f5",
+        "command": "workbench.view.debug"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "-workbench.view.debug"
+    }
+]

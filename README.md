@@ -1,4 +1,4 @@
-![](./logo.png)
+![](./pics/logo.png)
 
 1. Download repo as zip and store it on a fix place.
 2. Run (*Read it before*) `Install.ps1`

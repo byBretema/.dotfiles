@@ -1,0 +1,31 @@
+[user]
+	name  = cambalamas
+	email = cambalamas@gmail.com
+
+[github]
+	user = cambalamas
+
+[core]
+	editor = code
+	autocrlf = input
+	# excludesfile = ~/.gitignore
+
+[color]
+	ui = true
+
+[push]
+	default = simple
+
+[filter "lfs"]
+	required = true
+	clean = git-lfs clean -- %f
+	smudge = git-lfs smudge -- %f
+	process = git-lfs filter-process
+
+[alias]
+	st  = status -sb
+	lg  = log --graph --oneline --decorate
+	pup = !git pull && git submodule init && git submodule update && git submodule status
+
+[credential]
+	helper = manager
