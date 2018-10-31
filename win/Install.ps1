@@ -16,7 +16,7 @@ scoop install gcc go openssh sudo xming cmake make
 Set-ExecutionPolicy Bypass
 Invoke-WebRequest https://chocolatey.org/install.ps1 -UseBasicParsing | Invoke-Expression
 choco feature enable -n allowGlobalConfirmation
-choco install 7zip blender ditto meshlab rufus teamviewer telegram tixati whatsapp nvidia-display-driver sumatrapdf steam hyper clipgrab caffeine captura postman
+choco install 7zip blender ditto meshlab rufus teamviewer telegram tixati whatsapp sumatrapdf steam hyper clipgrab caffeine captura postman #nvidia-display-driver
 
 # 7-zip double-click simply extract
 New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
@@ -35,10 +35,10 @@ New-ItemProperty -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\DataCollection
 # LINK CONFIG FILES
 function lns([string]$to, [string]$from) {New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force}
 
-lns "${env:UserProfile}\.gitignore" ".\git\.gitignore"
-lns "${env:UserProfile}\.gitconfig" ".\git\.gitconfig"
+lns $profile ".\Microsoft.PowerShell_profile.ps1"
 
-lns "${env:APPDATA}\Code\User\settings.json" ".\vscode\settings.json"
-lns "${env:APPDATA}\Code\User\keybindings.json" ".\vscode\keybindings.json"
+lns "${env:UserProfile}\.gitignore" "..\git\.gitignore"
+lns "${env:UserProfile}\.gitconfig" "..\git\.gitconfig"
 
-lns "${env:UserProfile}\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1" ".\win\Microsoft.PowerShell_profile.ps1"
+lns "${env:APPDATA}\Code\User\settings.json" "..\vscode\settings.json"
+lns "${env:APPDATA}\Code\User\keybindings.json" "..\vscode\keybindings.json"

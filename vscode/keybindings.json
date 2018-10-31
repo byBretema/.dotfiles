@@ -154,5 +154,21 @@
     {
         "key": "ctrl+shift+d",
         "command": "-workbench.view.debug"
+    },
+    {
+        "key": "ctrl+shift+q",
+        "command": "workbench.action.quickOpenView"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "-workbench.action.quickOpenView"
+    },
+    {
+        "key": "ctrl+q",
+        "command": "workbench.action.gotoSymbol"
+    },
+    {
+        "key": "ctrl+shift+o",
+        "command": "-workbench.action.gotoSymbol"
     }
 ]
