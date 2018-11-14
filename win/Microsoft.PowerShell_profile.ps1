@@ -13,6 +13,7 @@ $env:PATH += ";`
 	${env:userprofile}\scoop\apps\xming\current;`
 	${env:ProgramFiles(x86)}\Google\Chrome` Dev\Application;`
 	${env:ProgramFiles}\OpenSSL-Win64\bin;`
+	${env:userprofile}\AppData\Local\.meteor;`
 "
 
 # MOVE
@@ -53,12 +54,12 @@ function top {
 function du {
 	Get-ChildItem $pwd | ForEach-Object {
 		$name = $_;
-		gci -r $_.FullName | measure-object -property length -sum |
-			select `
+		Get-ChildItem -r $_.FullName | measure-object -property length -sum |
+			Select-Object `
 		@{ Name = "Name"; Expression = {$name} },
 		@{ Name = "Sum (MB)"; Expression = {"{0:N3}" -f ($_.sum / 1MB) } },
 		@{ Name = "Sum(Bytes)"; Expression = {$_.sum} }
-	} | sort "Sum(Bytes)" -desc
+	} | Sort-Object "Sum(Bytes)" -desc
 }
 
 # NET
@@ -134,35 +135,48 @@ function cc {
 
 
 # PROMPT
-function _Prompt {
-	$lastStatus = (":`(", ":)")[${?}]
-	Write-Prompt "`n"
-	Write-Prompt " ${pwd} " -ForegroundColor White
-	if ($gst = (Get-GitStatus)) {
-		$gitStr += "($($gst.Branch)) "
-		$work = ($gst.AheadBy -or $gst.BehindBy -or $gst.HasWorking)
-		Write-Prompt $gitStr -ForegroundColor ("Green", "Red")[$work]
-	}
-	Write-Prompt "$lastStatus" -ForegroundColor White
-	return "` ` "
-}
-
 function Prompt {
+	# # $lastStatus = ("‼", "♥")[${?}]
+	# $lastStatusBool = ${?}
+	# $lastStatusColor = ("Red", "White")[$lastStatusBool]
+	# $lastStatusStr = ("*", ">")[$lastStatusBool]
+	# # Pwd, where am I? 1/2
+	# $pwdPath = $PWD.Path -split "\\"
+	# $timeStamp = $(Get-Date -Format T)
+	# Write-Prompt "[$($pwdpath[0])\$timeStamp] " -ForegroundColor DarkGray
+	# # Git, is there a repository?
+	# if ($gst = (Get-GitStatus)) {
+	# 	$gitStr += "($($gst.Branch)) "
+	# 	$work = ($gst.AheadBy -or $gst.BehindBy -or $gst.HasWorking)
+	# 	Write-Prompt $gitStr -ForegroundColor ("Green", "Red")[$work]
+	# }
+	# # Pwd, where am I? 2/2
+	# Write-Prompt "$($pwdpath[-1]) " -ForegroundColor White
+	# # Prev command works?
+	# Write-Prompt "$lastStatusStr " -ForegroundColor $lastStatusColor
+	# return "` "
+
 	# $lastStatus = ("‼", "♥")[${?}]
-	$lastStatus = ("<", ">")[${?}]
-	# Pwd, where am I? 1/2
+	$lastStatusBool = ${?}
+	$lastStatusColor = ("DarkRed", "DarkGreen")[$lastStatusBool]
+	$lastStatusStr = (">>", ">")[$lastStatusBool]
+	# Pwd, where am I?
 	$pwdPath = $PWD.Path -split "\\"
-	Write-Prompt "[$($pwdpath[0][0])] " -ForegroundColor DarkGray
+	Write-Prompt "$($pwdpath[-1])" -ForegroundColor White
+	Write-Prompt " | " -ForegroundColor DarkGray
+	# TimeStamp
+	$timeStamp = $(Get-Date -Format T)
+	Write-Prompt "$timeStamp" -ForegroundColor Cyan
+	Write-Prompt " | " -ForegroundColor DarkGray
 	# Git, is there a repository?
 	if ($gst = (Get-GitStatus)) {
-		$gitStr += "($($gst.Branch)) "
+		$gitStr += "$($gst.Branch) "
 		$work = ($gst.AheadBy -or $gst.BehindBy -or $gst.HasWorking)
-		Write-Prompt $gitStr -ForegroundColor ("Green", "Red")[$work]
+		Write-Prompt $gitStr -ForegroundColor ("Green", "Magenta")[$work]
 	}
-	# Pwd, where am I? 2/2
-	Write-Prompt "$($pwdpath[-1]) " -ForegroundColor White
 	# Prev command works?
-	Write-Prompt "$lastStatus " -ForegroundColor White
+	Write-Prompt "`n*---" -ForegroundColor DarkGray
+	Write-Prompt "$lastStatusStr " -ForegroundColor $lastStatusColor
 	return "` "
 }
 
@@ -175,16 +189,14 @@ function fixWindowsUpdate {
 	@("usbceip", "microsoft", "consolidator", "silentcleanup",
 		"dmclient", "scheduleddefrag", "office", "adobe") | ForEach-Object {
 		$(Get-ScheduledTask -TaskName "*$_*") | ForEach-Object {
-			Disable-ScheduledTask $_
+			Disable-ScheduledTask $_ 2> $null
 		}
 	}
-
-	#* Telemetry
-	Set-Service DiagTrack -StartupType Disabled
-	Set-Service PcaSvc -StartupType Disabled
-	Set-Service "Micro Star SCM" -StartupType Disabled
-	# Set-Service "Killer Network Service" -StartupType Disabled
-	Set-Service dmwappushservice -StartupType Disabled
+	#* Services
+	@("DiagTrack", "PcaSvc", "Micro Star SCM", "dmwappushservice") | ForEach-Object {
+		Set-Service $_ -StartupType Disabled
+	}
+	#* Not allow telemetry
 	New-ItemProperty -path "hklm:\SOFTWARE\Policies\Microsoft\Windows\DataCollection" -name "AllowTelemetry " -PropertyType DWORD -value 0 -Force
 }
 

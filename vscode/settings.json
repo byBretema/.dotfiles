@@ -20,7 +20,7 @@
 	"window.openFoldersInNewWindow": "default",
 	//
 	// WORKBENCH
-	"workbench.activityBar.visible": false,
+	"workbench.activityBar.visible": true,
 	"workbench.sideBar.location": "left",
 	"workbench.iconTheme": "vscode-icons",
 	"workbench.startupEditor": "welcomePage",
@@ -30,11 +30,42 @@
 	"workbench.editor.enablePreviewFromQuickOpen": true,
 	"workbench.settings.editor": "json",
 	"workbench.colorCustomizations": {
-		// "terminal.foreground": "#bbbbb3",
-		// "terminal.background": "#00343f"
+		// Default = #2c2c2c
+		"panel.background": "#2c2c2c",
+		"terminal.background": "#2c2c2c",
+		// Default = #1c1c1c
+		"sideBar.background": "#2c2c2c",
+		"activityBar.background": "#2c2c2c",
+		"titleBar.activeBackground": "#2c2c2c",
+		"tab.border": "#2c2c2c",
+		"tab.activeBorder": "#2c2c2c",
+		"tab.activeBorderTop": "#2c2c2c",
+		"tab.inactiveBackground": "#2c2c2c",
+		"editorGroupHeader.noTabsBackground": "#2c2c2c",
+		"editorGroupHeader.tabsBackground": "#2c2c2c",
+		// Unknow
+		"breadcrumb.background": "#ff0000",
+		"button.background": "#ff0000",
+		// "menu.background": "#ff0000aa",
+		// Badges
+		"badge.background": "#00000077",
+		"badge.foreground": "#c2c2c2",
+		"activityBarBadge.background": "#000000cc",
+		"activityBarBadge.foreground": "#c2c2c2",
+		"editorGutter.background": "#2c2c2c",
+		"editor.background": "#222222",
+		// Others
+		"terminal.foreground": "#c2c2c2",
+		"statusBar.background": "#2a2a2a",
+		"tab.activeBackground": "#525252",
+		"editorBracketMatch.background": "#00ffff55",
 	},
 	//
 	// EDITOR
+	"editor.scrollbar.horizontal": "hidden",
+	"editor.scrollbar.vertical": "hidden",
+	"editor.overviewRulerBorder": false,
+	"editor.minimap.showSlider": "mouseover",
 	"editor.fontSize": 15,
 	"editor.fontLigatures": true,
 	"editor.fontFamily": "FIRA CODE",
@@ -54,7 +85,7 @@
 	"editor.tabCompletion": "on",
 	"editor.wrappingIndent": "indent",
 	"editor.minimap.side": "right",
-	"editor.minimap.enabled": false,
+	"editor.minimap.enabled": true,
 	"editor.minimap.renderCharacters": false,
 	"editor.formatOnSave": true,
 	"editor.formatOnType": true,
@@ -128,6 +159,9 @@
 	// LANGS::GLSL
 	"glsllint.glslangValidatorPath": "C:/DAC/BIN/glslangValidator.exe",
 	//
+	// LANGS::TYPESCRIPT
+	"tslint.autoFixOnSave": true,
+	//
 	// GIT
 	"git.autofetch": true,
 	//
@@ -138,10 +172,10 @@
 	//
 	// RAINBOW
 	"indentRainbow.colors": [
-		// "rgba(255,255,255,0.1)",
-		// "rgba(255,255,255,0.05)"
-		"rgba(64,0,64,0.2)",
-		"rgba(64,32,16,0.2)"
+		"rgba(255,255,255,0.025)",
+		"rgba(255,255,255,0.05)"
+		// "rgba(64,0,64,0.2)",
+		// "rgba(64,32,16,0.2)"
 	],
 	"indentRainbow.indentSetter": {
 		"cpp": {
@@ -184,5 +218,6 @@
 	"pasteAndIndent.selectAfter": true,
 	"extensions.ignoreRecommendations": false,
 	"vsicons.dontShowNewVersionMessage": true,
-	"workbench.colorTheme": "Shades of Purple"
+	"liveServer.settings.donotVerifyTags": true,
+	"workbench.colorTheme": "One Dark Pro Monokai Darker"
 }
