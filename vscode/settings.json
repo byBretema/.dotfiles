@@ -1,223 +1,198 @@
 {
-	//
-	// FILES
-	"files.eol": "\n",
-	"files.autoSaveDelay": 500,
-	"files.insertFinalNewline": true,
-	"files.autoSave": "onFocusChange",
-	"files.trimTrailingWhitespace": true,
-	"files.hotExit": "onExitAndWindowClose",
-	"files.trimFinalNewlines": true,
-	//
-	// WINDOW
-	"window.zoomLevel": 0,
-	"window.restoreWindows": "all",
-	"window.restoreFullscreen": true,
-	"window.titleBarStyle": "custom",
-	"workbench.statusBar.visible": true,
-	"window.menuBarVisibility": "toggle",
-	"window.openFilesInNewWindow": "off",
-	"window.openFoldersInNewWindow": "default",
-	//
-	// WORKBENCH
-	"workbench.activityBar.visible": true,
-	"workbench.sideBar.location": "left",
-	"workbench.iconTheme": "vscode-icons",
-	"workbench.startupEditor": "welcomePage",
-	"workbench.quickOpen.closeOnFocusLost": true,
-	"workbench.statusBar.feedback.visible": false,
-	"workbench.commandPalette.preserveInput": true,
-	"workbench.editor.enablePreviewFromQuickOpen": true,
-	"workbench.settings.editor": "json",
-	"workbench.colorCustomizations": {
-		// Default = #2c2c2c
-		"panel.background": "#2c2c2c",
-		"terminal.background": "#2c2c2c",
-		// Default = #1c1c1c
-		"sideBar.background": "#2c2c2c",
-		"activityBar.background": "#2c2c2c",
-		"titleBar.activeBackground": "#2c2c2c",
-		"tab.border": "#2c2c2c",
-		"tab.activeBorder": "#2c2c2c",
-		"tab.activeBorderTop": "#2c2c2c",
-		"tab.inactiveBackground": "#2c2c2c",
-		"editorGroupHeader.noTabsBackground": "#2c2c2c",
-		"editorGroupHeader.tabsBackground": "#2c2c2c",
-		// Unknow
-		"breadcrumb.background": "#ff0000",
-		"button.background": "#ff0000",
-		// "menu.background": "#ff0000aa",
-		// Badges
-		"badge.background": "#00000077",
-		"badge.foreground": "#c2c2c2",
-		"activityBarBadge.background": "#000000cc",
-		"activityBarBadge.foreground": "#c2c2c2",
-		"editorGutter.background": "#2c2c2c",
-		"editor.background": "#222222",
-		// Others
-		"terminal.foreground": "#c2c2c2",
-		"statusBar.background": "#2a2a2a",
-		"tab.activeBackground": "#525252",
-		"editorBracketMatch.background": "#00ffff55",
-	},
-	//
-	// EDITOR
-	"editor.scrollbar.horizontal": "hidden",
-	"editor.scrollbar.vertical": "hidden",
-	"editor.overviewRulerBorder": false,
-	"editor.minimap.showSlider": "mouseover",
-	"editor.fontSize": 15,
-	"editor.fontLigatures": true,
-	"editor.fontFamily": "FIRA CODE",
-	"editor.cursorStyle": "line",
-	"editor.cursorBlinking": "phase",
-	"editor.multiCursorModifier": "ctrlCmd",
-	"editor.renderIndentGuides": true,
-	"editor.renderLineHighlight": "all",
-	"editor.renderWhitespace": "boundary",
-	"editor.scrollBeyondLastLine": true,
-	"editor.rulers": [
-		80,
-		120
-	],
-	"editor.folding": true,
-	"editor.wordWrap": "on",
-	"editor.tabCompletion": "on",
-	"editor.wrappingIndent": "indent",
-	"editor.minimap.side": "right",
-	"editor.minimap.enabled": true,
-	"editor.minimap.renderCharacters": false,
-	"editor.formatOnSave": true,
-	"editor.formatOnType": true,
-	"editor.formatOnPaste": true,
-	"editor.insertSpaces": false,
-	"editor.autoClosingBrackets": "always",
-	"editor.acceptSuggestionOnEnter": "off",
-	"editor.suggest.localityBonus": true,
-	//
-	// TERMINAL
-	"terminal.integrated.fontSize": 15,
-	"terminal.integrated.cursorBlinking": true,
-	"terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-	//
-	// LANGS::WEB
-	"php.validate.run": "onType",
-	"markdown.preview.fontSize": 16,
-	"html.format.endWithNewline": true,
-	"css.lint.duplicateProperties": "warning",
-	"html.format.wrapAttributes": "force-aligned",
-	//
-	// LANGS::GO
-	"go.lintFlags": [],
-	"go.lintOnSave": "package",
-	"go.vetOnSave": "package",
-	"go.docsTool": "gogetdoc",
-	"go.buildOnSave": "package",
-	"go.formatTool": "goreturns",
-	"go.lintTool": "revive",
-	"go.gopath": "C:\\DAC\\DEV\\go",
-	"go.autocompleteUnimportedPackages": true,
-	"go.useCodeSnippetsOnFunctionSuggest": true,
-	"go.goroot": "~\\scoop\\apps\\go\\current",
-	//
-	// LANGS::PYTHON
-	"python.linting.enabled": true,
-	"python.linting.pep8Enabled": true,
-	"python.linting.flake8Enabled": true,
-	"python.linting.pylintEnabled": false,
-	"python.autoComplete.addBrackets": true,
-	"python.linting.pydocstyleEnabled": false,
-	//
-	// LANGS::C++
-	"C_Cpp.navigation.length": 80,
-	"C_Cpp.dimInactiveRegions": true,
-	"C_Cpp.clang_format_style": "file",
-	"C_Cpp.intelliSenseEngine": "Default",
-	"C_Cpp.workspaceParsingPriority": "highest",
-	"C_Cpp.clang_format_sortIncludes": false,
-	"C_Cpp.intelliSenseEngineFallback": "Enabled",
-	"C_Cpp.clang_format_fallbackStyle": "LLVM",
-	"C_Cpp.commentContinuationPatterns": [
-		"/**",
-		"///",
-		"// [ ]",
-		"// --> [ ]",
-	],
-	//
-	// LANGS::POWERSHELL
-	"[powershell]": {
-		"editor.codeLens": false
-	},
-	"powershell.codeFormatting.preset": "OTBS",
-	"powershell.integratedConsole.showOnStartup": false,
-	"powershell.powerShellExePath": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-	//
-	// LANGS::CSHARP
-	"csharp.format.enable": false,
-	"csharp.referencesCodeLens.enabled": true,
-	//
-	// LANGS::GLSL
-	"glsllint.glslangValidatorPath": "C:/DAC/BIN/glslangValidator.exe",
-	//
-	// LANGS::TYPESCRIPT
-	"tslint.autoFixOnSave": true,
-	//
-	// GIT
-	"git.autofetch": true,
-	//
-	// ZEN MODE
-	"zenMode.hideTabs": false,
-	"zenMode.centerLayout": false,
-	"zenMode.hideStatusBar": true,
-	//
-	// RAINBOW
-	"indentRainbow.colors": [
-		"rgba(255,255,255,0.025)",
-		"rgba(255,255,255,0.05)"
-		// "rgba(64,0,64,0.2)",
-		// "rgba(64,32,16,0.2)"
-	],
-	"indentRainbow.indentSetter": {
-		"cpp": {
-			"tabSize": 2,
-			"insertSpaces": true
-		}
-	},
-	"indentRainbow.errorColor": "rgba(0,0,0,0)",
-	//
-	// TELEMETRY
-	"telemetry.enableTelemetry": false,
-	"telemetry.enableCrashReporter": false,
-	//
-	// PATH INTELLISENSE
-	"path-intellisense.showHiddenFiles": true,
-	"path-intellisense.extensionOnImport": true,
-	"path-intellisense.autoSlashAfterDirectory": true,
-	//
-	// LIVE SERVER
-	"liveServer.settings.donotShowInfoMsg": true,
-	//
-	// TODO-HIGHTLIGHT
-	"todohighlight.isEnable": true,
-	"todohighlight.include": [
-		"**/*.js",
-		"**/*.jsx",
-		"**/*.ts",
-		"**/*.tsx",
-		"**/*.html",
-		"**/*.php",
-		"**/*.css",
-		"**/*.scss",
-		"**/*.go",
-		"**/*.cc",
-		"**/*.hh"
-	],
-	//
-	// OTHER EXTENSIONS
-	"extensions.autoUpdate": true,
-	"pasteAndIndent.selectAfter": true,
-	"extensions.ignoreRecommendations": false,
-	"vsicons.dontShowNewVersionMessage": true,
-	"liveServer.settings.donotVerifyTags": true,
-	"workbench.colorTheme": "One Dark Pro Monokai Darker"
+  //
+  // FILES
+  "files.eol": "\n",
+  "files.autoSaveDelay": 500,
+  "files.insertFinalNewline": true,
+  "files.autoSave": "onFocusChange",
+  "files.trimTrailingWhitespace": true,
+  "files.hotExit": "onExitAndWindowClose",
+  "files.trimFinalNewlines": true,
+  //
+  // WINDOW
+  "window.zoomLevel": 0,
+  "window.restoreWindows": "folders",
+  "window.restoreFullscreen": true,
+  "window.titleBarStyle": "custom",
+  "workbench.statusBar.visible": true,
+  "window.openFilesInNewWindow": "on",
+  "window.openFoldersInNewWindow": "on",
+  //
+  // WORKBENCH
+  "workbench.activityBar.visible": false,
+  "workbench.sideBar.location": "left",
+  "workbench.iconTheme": "vscode-icons",
+  "workbench.startupEditor": "welcomePage",
+  "workbench.quickOpen.closeOnFocusLost": true,
+  "workbench.statusBar.feedback.visible": false,
+  "workbench.commandPalette.preserveInput": true,
+  "workbench.editor.enablePreviewFromQuickOpen": true,
+  "workbench.settings.editor": "json",
+  "workbench.list.keyboardNavigation": "filter",
+  //
+  // THEME CUSTOMIZATION
+  "workbench.colorCustomizations": {
+    // // 251B25
+    // "editor.background": "#FEF7E7",
+    // // 262026
+    // "terminal.background": "#262026",
+    // "editorGutter.background": "#FEF7E7"
+    // // 3E363E
+    // "tab.activeBackground": "#3E363E",
+    // "breadcrumb.background": "#3E363E",
+    // // 2E282E
+    // "panel.background": "#2E282E",
+    // "sideBar.background": "#2E282E",
+    // "statusBar.background": "#2E282E",
+    // "titleBar.activeBackground": "#2E282E",
+    // // 2E282E tabs
+    // "tab.border": "#2E282E",
+    // "tab.activeBorder": "#2E282E",
+    // "tab.activeBorderTop": "#2E282E",
+    // "tab.inactiveBackground": "#2E282E",
+    // "editorGroupHeader.tabsBackground": "#2E282E",
+    // "editorGroupHeader.noTabsBackground": "#2E282E"
+  },
+  //
+  // EDITOR
+  // "editor.scrollbar.horizontal": "hidden",
+  // "editor.scrollbar.vertical": "hidden",
+  "editor.overviewRulerBorder": false,
+  "editor.minimap.showSlider": "mouseover",
+  "editor.fontSize": 16,
+  "editor.fontLigatures": true,
+  "editor.fontFamily": "FIRA CODE",
+  "editor.cursorStyle": "line",
+  "editor.cursorBlinking": "phase",
+  "editor.multiCursorModifier": "ctrlCmd",
+  "editor.renderIndentGuides": true,
+  "editor.renderLineHighlight": "gutter",
+  "editor.renderWhitespace": "boundary",
+  "editor.scrollBeyondLastLine": true,
+  "editor.rulers": [
+    80,
+    120
+  ],
+  "editor.folding": true,
+  "editor.wordWrap": "on",
+  "editor.tabCompletion": "on",
+  "editor.wrappingIndent": "indent",
+  "editor.minimap.side": "right",
+  "editor.minimap.enabled": true,
+  "editor.minimap.renderCharacters": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.formatOnPaste": true,
+  "editor.insertSpaces": false,
+  "editor.autoClosingBrackets": "always",
+  "editor.acceptSuggestionOnEnter": "off",
+  "editor.suggest.localityBonus": true,
+  //
+  // TERMINAL
+  "terminal.integrated.fontSize": 15,
+  "terminal.integrated.cursorBlinking": true,
+  "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  //
+  // LANGS::WEB
+  "[html]": {
+    "editor.rulers": []
+  },
+  // "[javascript]": {
+  //   "editor.rulers": [120]
+  // },
+  "css.lint.compatibleVendorPrefixes": "warning",
+  "css.lint.duplicateProperties": "warning",
+  "css.lint.float": "error",
+  //
+  // LANGS::GO
+  "go.lintFlags": [],
+  "go.lintOnSave": "package",
+  "go.vetOnSave": "package",
+  "go.docsTool": "gogetdoc",
+  "go.buildOnSave": "package",
+  "go.lintTool": "revive",
+  "go.gopath": "C:\\DAC\\DEV\\go",
+  "go.autocompleteUnimportedPackages": true,
+  "go.useCodeSnippetsOnFunctionSuggest": true,
+  "go.goroot": "~\\scoop\\apps\\go\\current",
+  //
+  // LANGS::PYTHON
+  "python.linting.enabled": true,
+  "python.linting.pep8Enabled": true,
+  "python.linting.flake8Enabled": true,
+  "python.linting.pylintEnabled": false,
+  "python.autoComplete.addBrackets": true,
+  "python.linting.pydocstyleEnabled": false,
+  //
+  // LANGS::C++
+  "C_Cpp.navigation.length": 80,
+  "C_Cpp.dimInactiveRegions": true,
+  "C_Cpp.clang_format_style": "file",
+  "C_Cpp.intelliSenseEngine": "Default",
+  "C_Cpp.workspaceParsingPriority": "highest",
+  "C_Cpp.clang_format_sortIncludes": false,
+  "C_Cpp.intelliSenseEngineFallback": "Enabled",
+  "C_Cpp.clang_format_fallbackStyle": "LLVM",
+  "C_Cpp.commentContinuationPatterns": [
+    "/**",
+    "///",
+    "// [ ]",
+    "// --> [ ]"
+  ],
+  //
+  // LANGS::POWERSHELL
+  // "[powershell]": {
+  // 	"editor.codeLens": false
+  // },
+  // "powershell.codeFormatting.preset": "OTBS",
+  // "powershell.integratedConsole.showOnStartup": false,
+  // "powershell.powerShellExePath": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
+  //
+  // LANGS::CSHARP
+  "csharp.format.enable": false,
+  "csharp.referencesCodeLens.enabled": true,
+  //
+  // LANGS::GLSL
+  "glsllint.glslangValidatorPath": "C:/DAC/BIN/glslangValidator.exe",
+  //
+  // LANGS::TYPESCRIPT
+  // "tslint.autoFixOnSave": true,
+  //
+  // GIT
+  "git.autofetch": true,
+  //
+  // TELEMETRY
+  "telemetry.enableTelemetry": false,
+  "telemetry.enableCrashReporter": false,
+  //
+  // PATH INTELLISENSE
+  "path-intellisense.showHiddenFiles": true,
+  "path-intellisense.extensionOnImport": true,
+  "path-intellisense.autoSlashAfterDirectory": true,
+  //
+  // LIVE SERVER
+  "liveServer.settings.donotShowInfoMsg": true,
+  //
+  // OTHER SETTINGS
+  "extensions.autoUpdate": true,
+  "extensions.ignoreRecommendations": false,
+  "vsicons.dontShowNewVersionMessage": true,
+  "vsicons.projectDetection.autoReload": true,
+  "[powershell]": {
+    "editor.rulers": []
+  },
+  "polacode.backgroundColor": "#ffffff",
+  "polacode.borderRadius": 10,
+  "polacode.outerPadding": 20,
+  "terminal.integrated.rendererType": "dom",
+  "search.usePCRE2": true,
+  "breadcrumbs.enabled": false,
+  "workbench.editor.highlightModifiedTabs": true,
+  "window.newWindowDimensions": "maximized",
+  "window.enableMenuBarMnemonics": false,
+  "window.menuBarVisibility": "hidden",
+  "workbench.colorTheme": "Monokai One Dark Vivid",
+  "languageStylus.useSeparator": false,
+  "go.gocodeAutoBuild": true,
+  "go.gotoSymbol.includeImports": true
 }

@@ -14,7 +14,12 @@ $env:PATH += ";`
 	${env:ProgramFiles(x86)}\Google\Chrome` Dev\Application;`
 	${env:ProgramFiles}\OpenSSL-Win64\bin;`
 	${env:userprofile}\AppData\Local\.meteor;`
+	${env:userprofile}\scoop\apps\python\current\Scripts;`
+	$PERSONALPATH\.bin;`
 "
+
+# Remove aliases of 'gow' (https://github.com/bmatzelle/gow)
+@("awk", "basename", "bash", "bc", "bison", "bunzip2", "bzip2", "bzip2recover", "cat", "chgrp", "chmod", "chown", "chroot", "cksum", "clear", "cp", "csplit", "curl", "cut", "dc", "dd", "df", "diff", "diff3", "dirname", "dos2unix", "du", "egrep", "env", "expand", "expr", "factor", "fgrep", "flex", "fmt", "fold", "gawk", "gfind", "gow", "grep", "gsar", "gsort", "gzip", "head", "hostid", "hostname", "id", "indent", "install", "join", "jwhois", "less", "lesskey", "ln", "ls", "m4", "make", "md5sum", "mkdir", "mkfifo", "mknod", "mv", "nano", "ncftp", "nl", "od", "pageant", "paste", "patch", "pathchk", "plink", "pr", "printenv", "printf", "pscp", "psftp", "putty", "puttygen", "pwd", "rm", "rmdir", "scp", "sdiff", "sed", "seq", "sftp", "sha1sum", "shar", "sleep", "split", "ssh", "su", "sum", "sync", "tac", "tail", "tar", "tee", "test", "touch", "tr", "uname", "unexpand", "uniq", "unix2dos", "unlink", "unrar", "unshar", "uudecode", "uuencode", "vim", "wc", "wget", "whereis", "which", "whoami", "xargs", "yes", "zip") | ForEach-Object { if (Test-Path alias:$_) { Remove-Item -Force alias:$_ } }
 
 # MOVE
 function dev { Set-Location "$DEVPATH" }
@@ -26,13 +31,15 @@ function b ([int]$jumps) { for ( $i = 0; $i -lt $jumps; $i++) { Set-Location .. 
 function oo { if ($args) {explorer $args[0] } else { explorer (Get-Location).Path } }
 function lns([string]$to, [string]$from) {New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force}
 
+
 # SYS
 # remove-item alias:rm
-function ll { (Get-ChildItem -Force $args).Name}
+function l { ls -ALph $args}
+function ll { ls -ALphog $args}
 function hrm { Remove-Item -Force -Recurse}
 function noff { shutdown /a }
 function me { net user ${env:UserName} }
-function devices { sudo mmc devmgmt.msc }
+function devices { mmc devmgmt.msc }
 function ke { Stop-Process (Get-Process explorer).id }
 function bitLock { sudo manage-bde.exe -lock $args[0] }
 function off { shutdown /hybrid /s /t $($args[0] * 60) }
@@ -53,13 +60,16 @@ function top {
 }
 function du {
 	Get-ChildItem $pwd | ForEach-Object {
-		$name = $_;
+		$name = $_
 		Get-ChildItem -r $_.FullName | measure-object -property length -sum |
 			Select-Object `
 		@{ Name = "Name"; Expression = {$name} },
 		@{ Name = "Sum (MB)"; Expression = {"{0:N3}" -f ($_.sum / 1MB) } },
 		@{ Name = "Sum(Bytes)"; Expression = {$_.sum} }
 	} | Sort-Object "Sum(Bytes)" -desc
+}
+function sudop {
+	sudo powershell
 }
 
 # NET
@@ -88,7 +98,7 @@ function gft { git fetch }
 function gst { git status -sb }
 function glg { git log --graph --oneline --decorate }
 function qgp { if ($args) { git add -A; git commit -m "$args"; git push } }
-function gitit { chrome.exe --disable-logging "$($(git remote -v).Split()[1])" }
+function gitit { Start-Process "$($(git remote -v).Split()[1])" }
 function gitb { if ($args[0]) { git checkout -b "$args[0]"; git push origin "$args[0]" } }
 function qgfp { git init; git add -A; git commit -m "first commit"; git remote add origin $args[0]; git push -u origin master}
 function loc { if ($args[0]) { (Get-ChildItem * -recurse -include *.$($args[0]) | Get-Content | Measure-Object -Line).Lines } }
@@ -109,10 +119,11 @@ function gobuild ([String]$os) {
 	Write-Host "Compiling project for `"${env:GOOS}`" on `"${env:GOARCH}`"..."
 	go build
 }
-function gostart ([String]$vcs, [String]$projectName) {
+function gostart_old ([String]$vcs, [String]$projectName) {
 	if ($vcs -eq "lab") {
 		$vcsFolder = "gitlab.com"
-	} elseif ($vcs -eq "hub") {
+	}
+	elseif ($vcs -eq "hub") {
 		$vcsfolder = "github.com"
 	}
 	$projectFolder = "$env:GOPATH/src/$vcsFolder/$projectName"
@@ -123,6 +134,7 @@ function gostart ([String]$vcs, [String]$projectName) {
 	code $projectFolder
 }
 
+# C++
 function cc {
 	$out = (Get-Item $PWD).Name
 	$files = $(Get-ChildItem *.c, *.cc, *.cpp)
@@ -130,13 +142,66 @@ function cc {
 	if (Test-Path ".\$out.exe") { & ".\$out.exe"; Remove-Item ".\$out.exe"}
 }
 
+# CARBON-NOW-SH : 'npm i -g carbon-now-cli'.
+# '-i' to setup your preset
+# '-o' to open img on photos
+# '--clear' remove all imgs from the folder
+# '--path' open the path of imgs
+function Carbon {
+	$path = "${env:LOCALAPPDATA}\CarbonNow\"
+	$file = "$path\carbon.data"
+	$imgName = $(Get-Date).Ticks
+	$imgPath = "$path$imgName.png"
+	# Clear
+	if(($args[0] -eq "--clear") -or ($args[1] -eq "--clear")) {
+		Remove-Item "$path/*.png"
+		return
+	}
+	# Open path
+	if(($args[0] -eq "--path") -or ($args[1] -eq "--path")) {
+		Invoke-Item $path
+		return
+	}
+	# System files
+	if (-not(Test-Path $path)) { mkdir $path > $null }
+	Set-Content $file $(Get-Clipboard) > $null
+	# API call
+	if($args[0] -eq "-i") { carbon-now.cmd $file -i -l $path -t $imgName -h}
+	else { carbon-now.cmd $file -l $path -t $imgName -h }
+	# Copy image to clipboard
+	[Reflection.Assembly]::LoadWithPartialName('System.Drawing') > $null
+	[Reflection.Assembly]::LoadWithPartialName('System.Windows.Forms') > $null
+	if (Test-Path($imgPath)) {
+		$rawImg = [System.Drawing.Image]::Fromfile("$(Get-Item($imgPath))");
+		[System.Windows.Forms.Clipboard]::SetImage($rawImg);
+	} else { Write-Output "[NOT FOUND] --> $imgPath" }
+	# Maybe you wanna open the img to see it
+	if(($args[0] -eq "-o") -or ($args[1] -eq "-o")) {
+		Start-Process $imgPath
+	}
+}
+
+function LiveNgrok {
+	$name = "LiveNgrok"
+	$job = (Get-Job LiveNgrok -ErrorAction SilentlyContinue)
+	$mayCreateJob = -not($job) -or ($job.Count -lt 1  -and  $job.State -eq "Running")
+	if($mayCreateJob){ Start-Job -name $name { & "ngrok" http 5500 } > $null }
+	& ngrok2telegram.exe
+}
+
+function CancelAllJobs {
+	Stop-Job *
+	Remove-Job *
+}
 
 # ========================================================================== #
 
 
 # PROMPT
 function Prompt {
-	# # $lastStatus = ("‼", "♥")[${?}]
+
+	# --- HORIZONTAL MODE ---
+
 	# $lastStatusBool = ${?}
 	# $lastStatusColor = ("Red", "White")[$lastStatusBool]
 	# $lastStatusStr = ("*", ">")[$lastStatusBool]
@@ -156,27 +221,26 @@ function Prompt {
 	# Write-Prompt "$lastStatusStr " -ForegroundColor $lastStatusColor
 	# return "` "
 
-	# $lastStatus = ("‼", "♥")[${?}]
-	$lastStatusBool = ${?}
-	$lastStatusColor = ("DarkRed", "DarkGreen")[$lastStatusBool]
-	$lastStatusStr = (">>", ">")[$lastStatusBool]
+	# --- VERTICAL MODE ---
+
+	$last = ${?}
+	$lastColor = ("Red", "Yellow")[$last] # F / T
+	$lastStr = ([char]8252, [char]9829)[$last] # F:‼ / T:♥
+	function __SEPARATOR__ { Write-Prompt " | " -ForegroundColor DarkGray }
 	# Pwd, where am I?
-	$pwdPath = $PWD.Path -split "\\"
-	Write-Prompt "$($pwdpath[-1])" -ForegroundColor White
-	Write-Prompt " | " -ForegroundColor DarkGray
+	Write-Prompt "`n $(($PWD.Path -split '\\')[-1])" -ForegroundColor White
+	__SEPARATOR__
 	# TimeStamp
-	$timeStamp = $(Get-Date -Format T)
-	Write-Prompt "$timeStamp" -ForegroundColor Cyan
-	Write-Prompt " | " -ForegroundColor DarkGray
+	Write-Prompt $(Get-Date -Format T) -ForegroundColor Cyan
 	# Git, is there a repository?
 	if ($gst = (Get-GitStatus)) {
-		$gitStr += "$($gst.Branch) "
 		$work = ($gst.AheadBy -or $gst.BehindBy -or $gst.HasWorking)
-		Write-Prompt $gitStr -ForegroundColor ("Green", "Magenta")[$work]
+		__SEPARATOR__
+		Write-Prompt $gst.Branch -ForegroundColor ("Green", "Magenta")[$work]
 	}
 	# Prev command works?
-	Write-Prompt "`n*---" -ForegroundColor DarkGray
-	Write-Prompt "$lastStatusStr " -ForegroundColor $lastStatusColor
+	Write-Prompt "`n $lastStr" -ForegroundColor $lastColor
+	Write-Prompt " $([char]9658)" -ForegroundColor DarkGray
 	return "` "
 }
 
