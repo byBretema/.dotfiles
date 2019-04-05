@@ -10,7 +10,7 @@
   "files.trimFinalNewlines": true,
   //
   // WINDOW
-  "window.zoomLevel": 0,
+  "window.zoomLevel": -0.33,
   "window.restoreWindows": "folders",
   "window.restoreFullscreen": true,
   "window.titleBarStyle": "custom",
@@ -20,8 +20,8 @@
   //
   // WORKBENCH
   "workbench.activityBar.visible": false,
-  "workbench.sideBar.location": "left",
-  "workbench.iconTheme": "vscode-icons",
+  "workbench.sideBar.location": "right",
+  "workbench.iconTheme": "material-icon-theme",
   "workbench.startupEditor": "welcomePage",
   "workbench.quickOpen.closeOnFocusLost": true,
   "workbench.statusBar.feedback.visible": false,
@@ -35,15 +35,18 @@
     // // 251B25
     // "editor.background": "#FEF7E7",
     // // 262026
-    // "terminal.background": "#262026",
+    // "terminal.background": "#002A38",
     // "editorGutter.background": "#FEF7E7"
     // // 3E363E
     // "tab.activeBackground": "#3E363E",
     // "breadcrumb.background": "#3E363E",
     // // 2E282E
-    // "panel.background": "#2E282E",
-    // "sideBar.background": "#2E282E",
-    // "statusBar.background": "#2E282E",
+    "panel.border": "#D76",
+    // "terminal.background": "#1E1E1E",
+    // "panel.background": "#2a2a2a",
+    // "sideBar.background": "#01FCB0",
+    // "statusBar.background": "#00202B",
+    // "statusBar.foreground": "#01FCB0"
     // "titleBar.activeBackground": "#2E282E",
     // // 2E282E tabs
     // "tab.border": "#2E282E",
@@ -78,7 +81,7 @@
   "editor.tabCompletion": "on",
   "editor.wrappingIndent": "indent",
   "editor.minimap.side": "right",
-  "editor.minimap.enabled": true,
+  "editor.minimap.enabled": false,
   "editor.minimap.renderCharacters": false,
   "editor.formatOnSave": true,
   "editor.formatOnType": true,
@@ -191,8 +194,9 @@
   "window.newWindowDimensions": "maximized",
   "window.enableMenuBarMnemonics": false,
   "window.menuBarVisibility": "hidden",
-  "workbench.colorTheme": "Monokai One Dark Vivid",
   "languageStylus.useSeparator": false,
   "go.gocodeAutoBuild": true,
-  "go.gotoSymbol.includeImports": true
+  "go.gotoSymbol.includeImports": true,
+  "workbench.colorTheme": "City Lights",
+  "liveServer.settings.donotVerifyTags": true
 }

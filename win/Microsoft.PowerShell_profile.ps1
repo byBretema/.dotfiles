@@ -198,37 +198,25 @@ function CancelAllJobs {
 
 
 # PROMPT
+$env:promptOrientation = "h";
+$env:promptNewLine = $false;
+# function togglePromptOrientation(){
+# 	$env:promptOrientation = ("v","h")[$env:promptOrientation -eq "h"];
+# }
+# function togglePrompNewLine(){
+# 	$env:promptNewLine = (-not ${env:promptNewLine})
+# }
+
 function Prompt {
-
-	# --- HORIZONTAL MODE ---
-
-	# $lastStatusBool = ${?}
-	# $lastStatusColor = ("Red", "White")[$lastStatusBool]
-	# $lastStatusStr = ("*", ">")[$lastStatusBool]
-	# # Pwd, where am I? 1/2
-	# $pwdPath = $PWD.Path -split "\\"
-	# $timeStamp = $(Get-Date -Format T)
-	# Write-Prompt "[$($pwdpath[0])\$timeStamp] " -ForegroundColor DarkGray
-	# # Git, is there a repository?
-	# if ($gst = (Get-GitStatus)) {
-	# 	$gitStr += "($($gst.Branch)) "
-	# 	$work = ($gst.AheadBy -or $gst.BehindBy -or $gst.HasWorking)
-	# 	Write-Prompt $gitStr -ForegroundColor ("Green", "Red")[$work]
-	# }
-	# # Pwd, where am I? 2/2
-	# Write-Prompt "$($pwdpath[-1]) " -ForegroundColor White
-	# # Prev command works?
-	# Write-Prompt "$lastStatusStr " -ForegroundColor $lastStatusColor
-	# return "` "
-
-	# --- VERTICAL MODE ---
 
 	$last = ${?}
 	$lastColor = ("Red", "Yellow")[$last] # F / T
 	$lastStr = ([char]8252, [char]9829)[$last] # F:‼ / T:♥
 	function __SEPARATOR__ { Write-Prompt " | " -ForegroundColor DarkGray }
 	# Pwd, where am I?
-	Write-Prompt "`n $(($PWD.Path -split '\\')[-1])" -ForegroundColor White
+	$currFolder = ($PWD.Path -split '\\')[-1]
+	$lineInit = ("","`n ")[$env:promptNewLine -eq $true]
+	Write-Prompt "$lineInit$currFolder" -ForegroundColor White
 	__SEPARATOR__
 	# TimeStamp
 	Write-Prompt $(Get-Date -Format T) -ForegroundColor Cyan
@@ -239,7 +227,12 @@ function Prompt {
 		Write-Prompt $gst.Branch -ForegroundColor ("Green", "Magenta")[$work]
 	}
 	# Prev command works?
-	Write-Prompt "`n $lastStr" -ForegroundColor $lastColor
+	if($env:promptOrientation -eq "v"){
+		Write-Prompt "`n$lastStr" -ForegroundColor $lastColor
+	} else {
+		__SEPARATOR__
+		Write-Prompt "$lastStr" -ForegroundColor $lastColor
+	}
 	Write-Prompt " $([char]9658)" -ForegroundColor DarkGray
 	return "` "
 }
