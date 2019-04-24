@@ -103,6 +103,13 @@ function gitb { if ($args[0]) { git checkout -b "$args[0]"; git push origin "$ar
 function qgfp { git init; git add -A; git commit -m "first commit"; git remote add origin $args[0]; git push -u origin master}
 function loc { if ($args[0]) { (Get-ChildItem * -recurse -include *.$($args[0]) | Get-Content | Measure-Object -Line).Lines } }
 
+function updateDotfiles {
+	pushd
+	cd $PERSONALPATH/.dotfiles
+	qgp "update"
+	popd
+}
+
 # GO
 $env:GOOS = "windows"
 $env:GOARCH = "amd64"
