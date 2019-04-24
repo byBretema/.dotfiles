@@ -10,51 +10,33 @@
   "files.trimFinalNewlines": true,
   //
   // WINDOW
-  "window.zoomLevel": -0.33,
-  "window.restoreWindows": "folders",
-  "window.restoreFullscreen": true,
+  "window.zoomLevel": 0,
   "window.titleBarStyle": "custom",
+  "window.restoreFullscreen": true,
+  "window.restoreWindows": "folders",
   "workbench.statusBar.visible": true,
   "window.openFilesInNewWindow": "on",
+  "window.menuBarVisibility": "hidden",
   "window.openFoldersInNewWindow": "on",
+  "window.enableMenuBarMnemonics": false,
+  "window.newWindowDimensions": "maximized",
   //
   // WORKBENCH
-  "workbench.activityBar.visible": false,
+  "workbench.settings.editor": "json",
   "workbench.sideBar.location": "right",
-  "workbench.iconTheme": "material-icon-theme",
+  "workbench.activityBar.visible": false,
   "workbench.startupEditor": "welcomePage",
+  "workbench.iconTheme": "material-icon-theme",
   "workbench.quickOpen.closeOnFocusLost": true,
   "workbench.statusBar.feedback.visible": false,
+  "workbench.list.keyboardNavigation": "filter",
+  "workbench.editor.highlightModifiedTabs": true,
   "workbench.commandPalette.preserveInput": true,
   "workbench.editor.enablePreviewFromQuickOpen": true,
-  "workbench.settings.editor": "json",
-  "workbench.list.keyboardNavigation": "filter",
   //
   // THEME CUSTOMIZATION
   "workbench.colorCustomizations": {
-    // // 251B25
-    // "editor.background": "#FEF7E7",
-    // // 262026
-    // "terminal.background": "#002A38",
-    // "editorGutter.background": "#FEF7E7"
-    // // 3E363E
-    // "tab.activeBackground": "#3E363E",
-    // "breadcrumb.background": "#3E363E",
-    // // 2E282E
     "panel.border": "#D76",
-    // "terminal.background": "#1E1E1E",
-    // "panel.background": "#2a2a2a",
-    // "sideBar.background": "#01FCB0",
-    // "statusBar.background": "#00202B",
-    // "statusBar.foreground": "#01FCB0"
-    // "titleBar.activeBackground": "#2E282E",
-    // // 2E282E tabs
-    // "tab.border": "#2E282E",
-    // "tab.activeBorder": "#2E282E",
-    // "tab.activeBorderTop": "#2E282E",
-    // "tab.inactiveBackground": "#2E282E",
-    // "editorGroupHeader.tabsBackground": "#2E282E",
-    // "editorGroupHeader.noTabsBackground": "#2E282E"
   },
   //
   // EDITOR
@@ -100,14 +82,15 @@
   "[html]": {
     "editor.rulers": []
   },
-  // "[javascript]": {
-  //   "editor.rulers": [120]
-  // },
-  "css.lint.compatibleVendorPrefixes": "warning",
-  "css.lint.duplicateProperties": "warning",
-  "css.lint.float": "error",
+  "[javascript]": {
+    "editor.rulers": [
+      120
+    ]
+  },
+  "languageStylus.useSeparator": false,
   //
   // LANGS::GO
+  "go.formatTool": "goimports",
   "go.lintFlags": [],
   "go.lintOnSave": "package",
   "go.vetOnSave": "package",
@@ -118,6 +101,9 @@
   "go.autocompleteUnimportedPackages": true,
   "go.useCodeSnippetsOnFunctionSuggest": true,
   "go.goroot": "~\\scoop\\apps\\go\\current",
+  "go.gocodeAutoBuild": true,
+  "go.gotoSymbol.includeImports": true,
+  "go.useLanguageServer": false,
   //
   // LANGS::PYTHON
   "python.linting.enabled": true,
@@ -136,30 +122,19 @@
   "C_Cpp.clang_format_sortIncludes": false,
   "C_Cpp.intelliSenseEngineFallback": "Enabled",
   "C_Cpp.clang_format_fallbackStyle": "LLVM",
+  "C_Cpp.updateChannel": "Insiders",
   "C_Cpp.commentContinuationPatterns": [
+    "//",
     "/**",
     "///",
-    "// [ ]",
-    "// --> [ ]"
   ],
   //
-  // LANGS::POWERSHELL
-  // "[powershell]": {
-  // 	"editor.codeLens": false
-  // },
-  // "powershell.codeFormatting.preset": "OTBS",
-  // "powershell.integratedConsole.showOnStartup": false,
-  // "powershell.powerShellExePath": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-  //
   // LANGS::CSHARP
-  "csharp.format.enable": false,
+  "csharp.format.enable": true,
   "csharp.referencesCodeLens.enabled": true,
   //
   // LANGS::GLSL
   "glsllint.glslangValidatorPath": "C:/DAC/BIN/glslangValidator.exe",
-  //
-  // LANGS::TYPESCRIPT
-  // "tslint.autoFixOnSave": true,
   //
   // GIT
   "git.autofetch": true,
@@ -175,28 +150,22 @@
   //
   // LIVE SERVER
   "liveServer.settings.donotShowInfoMsg": true,
+  "liveServer.settings.donotVerifyTags": true,
   //
-  // OTHER SETTINGS
-  "extensions.autoUpdate": true,
-  "extensions.ignoreRecommendations": false,
-  "vsicons.dontShowNewVersionMessage": true,
-  "vsicons.projectDetection.autoReload": true,
-  "[powershell]": {
-    "editor.rulers": []
-  },
+  // POLACODE
   "polacode.backgroundColor": "#ffffff",
   "polacode.borderRadius": 10,
   "polacode.outerPadding": 20,
-  "terminal.integrated.rendererType": "dom",
+  //
+  // VS CODE NEW-FEATURES
   "search.usePCRE2": true,
-  "breadcrumbs.enabled": false,
-  "workbench.editor.highlightModifiedTabs": true,
-  "window.newWindowDimensions": "maximized",
-  "window.enableMenuBarMnemonics": false,
-  "window.menuBarVisibility": "hidden",
-  "languageStylus.useSeparator": false,
-  "go.gocodeAutoBuild": true,
-  "go.gotoSymbol.includeImports": true,
+  "breadcrumbs.enabled": true,
+  "terminal.integrated.rendererType": "auto",
+  //
+  // EXTENSIONS
+  "extensions.autoUpdate": true,
+  "extensions.ignoreRecommendations": false,
+  //
+  // OTHER SETTINGS
   "workbench.colorTheme": "City Lights",
-  "liveServer.settings.donotVerifyTags": true
 }
