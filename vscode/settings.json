@@ -15,7 +15,6 @@
   "window.restoreFullscreen": true,
   "window.restoreWindows": "folders",
   "workbench.statusBar.visible": true,
-  "window.openFilesInNewWindow": "on",
   "window.menuBarVisibility": "hidden",
   "window.openFoldersInNewWindow": "on",
   "window.enableMenuBarMnemonics": false,
