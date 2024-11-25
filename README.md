@@ -1,10 +1,7 @@
-![](./pics/logo.png)
+# .dotfiles
+> My windows dotfiles with a strong linux flavor
 
-1. Download repo as zip and store it on a fix place.
-2. Run (*Read it before*) `Install.ps1`
+1. Donwload repo onto `$home\.dotfiles`
+2. Run `install.ps1`
+    1. *Read it carefully, it install some applications that you might not need*
 3. Enjoy :D
-
-> The install file, links this config files with the system config files.
-Also install `choco` (app manager) and `scoop` (tools manager) and with it,
-my favourites apps, feel free to change it to your alternatives
-(use `choco search` and `scoop search` to find your apps and tools) :D
