@@ -1,0 +1,153 @@
+# ========================================================
+
+Language: Cpp
+Standard: Latest
+
+DisableFormat: false
+BasedOnStyle: Mozilla
+
+UseTab: Never
+TabWidth: 4
+IndentWidth: 4
+AccessModifierOffset: -4
+ContinuationIndentWidth: 2
+
+ColumnLimit: 120
+MaxEmptyLinesToKeep: '3' ## !!!!
+
+# ========================================================
+
+PointerAlignment: Right
+ReferenceAlignment: Right
+
+# ========================================================
+
+AllowShortBlocksOnASingleLine: Empty
+
+AllowShortEnumsOnASingleLine: true
+AllowShortCaseLabelsOnASingleLine: true
+
+AllowShortLambdasOnASingleLine: All
+
+# AllowShortFunctionsOnASingleLine: Inline
+AllowShortFunctionsOnASingleLine: None
+
+# AllowShortLoopsOnASingleLine: true
+AllowShortLoopsOnASingleLine: false
+
+AllowShortIfStatementsOnASingleLine: Never
+
+# ========================================================
+
+ReflowComments: true
+IndentCaseLabels: true
+IndentPPDirectives: AfterHash
+IndentWrappedFunctionNames: true
+LambdaBodyIndentation: Signature
+
+# ========================================================
+
+AlignEscapedNewlines: Left
+AlignOperands: AlignAfterOperator
+# AlignArrayOfStructures: Left #Right  ## Be careful, this also affects to initializer_list as ctor
+
+AlignTrailingComments: true
+AlignAfterOpenBracket: AlwaysBreak
+AlignConsecutiveMacros: AcrossComments
+AlignConsecutiveBitFields: AcrossComments
+AlignConsecutiveAssignments: AcrossComments
+AlignConsecutiveDeclarations: AcrossComments
+
+# ========================================================
+
+AllowAllArgumentsOnNextLine: false
+PackConstructorInitializers: CurrentLine
+AllowAllParametersOfDeclarationOnNextLine: false
+
+BinPackArguments: false
+BinPackParameters: false
+
+ConstructorInitializerAllOnOneLineOrOnePerLine: true
+
+# ========================================================
+
+# braces on new line: Allman
+# braces on same line: Attach
+BreakBeforeBraces: Allman
+
+BreakAfterJavaFieldAnnotations: false
+BreakBeforeBinaryOperators: NonAssignment
+
+BreakInheritanceList: BeforeComma
+BreakConstructorInitializers: BeforeComma
+
+BreakStringLiterals: true
+BreakBeforeTernaryOperators: true
+
+AlwaysBreakAfterDefinitionReturnType: None
+AlwaysBreakAfterReturnType: None
+AlwaysBreakBeforeMultilineStrings: false
+AlwaysBreakTemplateDeclarations: true
+
+# ========================================================
+
+ShortNamespaceLines: 0
+CompactNamespaces: true
+FixNamespaceComments: true
+NamespaceIndentation: Inner
+
+# ========================================================
+
+SortIncludes: Never
+IncludeBlocks: Preserve
+SortUsingDeclarations: true
+
+# ========================================================
+
+KeepEmptyLinesAtTheStartOfBlocks: false
+
+# ========================================================
+
+JavaScriptQuotes: Single
+JavaScriptWrapImports: true
+
+# ========================================================
+
+# ctor { a, b, c };
+Cpp11BracedListStyle: false
+SpaceBeforeCpp11BracedList: true
+
+# ctor{a, b, c};
+#Cpp11BracedListStyle: true
+#SpaceBeforeCpp11BracedList: false
+
+# ========================================================
+
+SpaceAfterCStyleCast: false
+SpacesInCStyleCastParentheses: false
+
+SpaceAfterLogicalNot: false
+SpaceBeforeAssignmentOperators: true
+
+SpaceAfterTemplateKeyword: false
+
+SpaceBeforeCtorInitializerColon: true
+SpaceBeforeInheritanceColon: true
+
+SpaceBeforeParens: ControlStatements
+SpaceBeforeRangeBasedForLoopColon: true
+
+SpaceInEmptyParentheses: false
+
+SpacesBeforeTrailingComments: 2
+
+SpacesInAngles: false
+SpacesInParentheses: false
+SpacesInSquareBrackets: false
+SpacesInContainerLiterals: false
+SpacesInConditionalStatement: false
+
+# ========================================================
+
+
+...

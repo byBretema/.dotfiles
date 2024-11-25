@@ -1,216 +1,88 @@
-// Coloque sus enlaces de teclado en este archivo para sobrescribir los valores predeterminados.
+// Place your key bindings in this file to override the defaultsauto[]
 [
-	{
-		"key": "ctrl+d",
-		"command": "editor.action.deleteLines",
-		"when": "editorTextFocus && !editorReadonly"
-	},
-	{
-		"key": "ctrl+shift+k",
-		"command": "-editor.action.deleteLines",
-		"when": "editorTextFocus && !editorReadonly"
-	},
-	{
-		"key": "ctrl+right",
-		"command": "workbench.action.terminal.scrollToBottom",
-		"when": "terminalFocus"
-	},
-	{
-		"key": "ctrl+end",
-		"command": "-workbench.action.terminal.scrollToBottom",
-		"when": "terminalFocus"
-	},
-	{
-		"key": "ctrl+left",
-		"command": "workbench.action.terminal.scrollToTop",
-		"when": "terminalFocus"
-	},
-	{
-		"key": "ctrl+home",
-		"command": "-workbench.action.terminal.scrollToTop",
-		"when": "terminalFocus"
-	},
-	{
-		"key": "ctrl+shift+d",
-		"command": "editor.action.copyLinesDownAction",
-		"when": "editorTextFocus && !editorReadonly"
-	},
-	{
-		"key": "ctrl+g",
-		"command": "editor.action.addSelectionToNextFindMatch",
-		"when": "editorFocus"
-	},
-	{
-		"key": "ctrl+d",
-		"command": "-editor.action.addSelectionToNextFindMatch",
-		"when": "editorFocus"
-	},
-	{
-		"key": "ctrl+shift+g",
-		"command": "workbench.action.gotoLine"
-	},
-	{
-		"key": "ctrl+g",
-		"command": "-workbench.action.gotoLine"
-	},
-	{
-		"key": "ctrl+right",
-		"command": "cursorEnd",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "end",
-		"command": "-cursorEnd",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+shift+right",
-		"command": "cursorEndSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "shift+end",
-		"command": "-cursorEndSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+left",
-		"command": "cursorHome",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "home",
-		"command": "-cursorHome",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+shift+left",
-		"command": "cursorHomeSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "shift+home",
-		"command": "-cursorHomeSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "alt+left",
-		"command": "cursorWordStartLeft",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+left",
-		"command": "-cursorWordStartLeft",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "shift+alt+left",
-		"command": "cursorWordStartLeftSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+shift+left",
-		"command": "-cursorWordStartLeftSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "shift+alt+right",
-		"command": "cursorWordEndRightSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+shift+right",
-		"command": "-cursorWordEndRightSelect",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "alt+right",
-		"command": "cursorWordEndRight",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+right",
-		"command": "-cursorWordEndRight",
-		"when": "editorTextFocus"
-	},
-	{
-		"key": "ctrl+shift+l",
-		"command": "workbench.action.toggleMaximizedPanel"
-	},
-	{
-		"key": "ctrl+alt+l",
-		"command": "editor.action.selectHighlights",
-		"when": "editorFocus"
-	},
-	{
-		"key": "ctrl+shift+l",
-		"command": "-editor.action.selectHighlights",
-		"when": "editorFocus"
-	},
-	{
-		"key": "ctrl+shift+f5",
-		"command": "workbench.view.debug"
-	},
-	{
-		"key": "ctrl+shift+d",
-		"command": "-workbench.view.debug"
-	},
-	{
-		"key": "ctrl+shift+q",
-		"command": "workbench.action.quickOpenView"
-	},
-	{
-		"key": "ctrl+q",
-		"command": "-workbench.action.quickOpenView"
-	},
-	{
-		"key": "ctrl+q",
-		"command": "workbench.action.gotoSymbol"
-	},
-	{
-		"key": "ctrl+shift+o",
-		"command": "-workbench.action.gotoSymbol"
-	},
-	{
-		"key": "ctrl+r",
-		"command": "-workbench.action.quickOpenNavigateNextInRecentFilesPicker",
-		"when": "inQuickOpen && inRecentFilesPicker"
-	},
-	{
-		"key": "ctrl+shift+r",
-		"command": "-workbench.action.quickOpenNavigatePreviousInRecentFilesPicker",
-		"when": "inQuickOpen && inRecentFilesPicker"
-	},
-	{
-		"key": "ctrl+r shift+x",
-		"command": "-npm-script.terminate-script"
-	},
-	{
-		"key": "ctrl+r r",
-		"command": "-npm-script.rerun-last-script"
-	},
-	{
-		"key": "ctrl+r shift+r",
-		"command": "-npm-script.run"
-	},
-	{
-		"key": "ctrl+r t",
-		"command": "-npm-script.test"
-	},
-	{
-		"key": "ctrl+r l",
-		"command": "-npm-script.showOutput"
-	},
-	{
-		"key": "ctrl+k ctrl+r",
-		"command": "-workbench.action.keybindingsReference"
-	},
-	{
-		"key": "ctrl+k ctrl+r",
-		"command": "workbench.action.files.revealActiveFileInWindows"
-	},
-	{
-		"key": "ctrl+k r",
-		"command": "-workbench.action.files.revealActiveFileInWindows"
-	}
+    {
+        "key": "alt+g",
+        "command": "workbench.action.gotoLine"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "-workbench.action.gotoLine"
+    },
+    {
+        "key": "ctrl+g",
+        "command": "editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "-editor.action.addSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+d",
+        "command": "editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+k",
+        "command": "-editor.action.deleteLines",
+        "when": "textInputFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "-editor.action.copyLinesUpAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+d",
+        "command": "editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "shift+alt+down",
+        "command": "-editor.action.copyLinesDownAction",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+shift+g",
+        "command": "editor.action.moveSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "ctrl+k ctrl+d",
+        "command": "-editor.action.moveSelectionToNextFindMatch",
+        "when": "editorFocus"
+    },
+    {
+        "key": "shift+alt+up",
+        "command": "editor.action.insertCursorAbove",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "shift+alt+down",
+        "command": "editor.action.insertCursorBelow",
+        "when": "editorTextFocus"
+    },
+    {
+        "key": "ctrl+shift+7",
+        "command": "editor.action.commentLine",
+        "when": "editorTextFocus && !editorReadonly"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "-workbench.action.quickOpen"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "-workbench.action.quickOpenNavigateNextInFilePicker",
+        "when": "inFilesPicker && inQuickOpen"
+    },
+    {
+        "key": "ctrl+e",
+        "command": "workbench.action.gotoSymbol"
+    },
+    {
+        "key": "ctrl+shift+o",
+        "command": "-workbench.action.gotoSymbol"
+    }
 ]

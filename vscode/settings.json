@@ -1,170 +1,206 @@
 {
-  //
-  // FILES
-  "files.eol": "\n",
-  "files.autoSaveDelay": 500,
-  "files.insertFinalNewline": true,
-  "files.autoSave": "onFocusChange",
-  "files.trimTrailingWhitespace": true,
-  "files.hotExit": "onExitAndWindowClose",
-  "files.trimFinalNewlines": true,
-  //
-  // WINDOW
-  "window.zoomLevel": 0,
-  "window.titleBarStyle": "custom",
-  "window.restoreFullscreen": true,
-  "window.restoreWindows": "folders",
-  "workbench.statusBar.visible": true,
-  "window.menuBarVisibility": "hidden",
-  "window.openFoldersInNewWindow": "on",
-  "window.enableMenuBarMnemonics": false,
-  "window.newWindowDimensions": "maximized",
-  //
-  // WORKBENCH
-  "workbench.settings.editor": "json",
-  "workbench.sideBar.location": "right",
-  "workbench.activityBar.visible": false,
-  "workbench.startupEditor": "welcomePage",
-  "workbench.iconTheme": "material-icon-theme",
-  "workbench.quickOpen.closeOnFocusLost": true,
-  "workbench.statusBar.feedback.visible": false,
-  "workbench.list.keyboardNavigation": "filter",
-  "workbench.editor.highlightModifiedTabs": true,
-  "workbench.commandPalette.preserveInput": true,
-  "workbench.editor.enablePreviewFromQuickOpen": true,
-  //
-  // THEME CUSTOMIZATION
-  "workbench.colorCustomizations": {
-    "panel.border": "#D76",
-  },
-  //
-  // EDITOR
-  // "editor.scrollbar.horizontal": "hidden",
-  // "editor.scrollbar.vertical": "hidden",
-  "editor.overviewRulerBorder": false,
-  "editor.minimap.showSlider": "mouseover",
-  "editor.fontSize": 16,
-  "editor.fontLigatures": true,
-  "editor.fontFamily": "FIRA CODE",
-  "editor.cursorStyle": "line",
-  "editor.cursorBlinking": "phase",
-  "editor.multiCursorModifier": "ctrlCmd",
-  "editor.renderIndentGuides": true,
-  "editor.renderLineHighlight": "gutter",
-  "editor.renderWhitespace": "boundary",
-  "editor.scrollBeyondLastLine": true,
-  "editor.rulers": [
-    80,
-    120
-  ],
-  "editor.folding": true,
-  "editor.wordWrap": "on",
-  "editor.tabCompletion": "on",
-  "editor.wrappingIndent": "indent",
-  "editor.minimap.side": "right",
-  "editor.minimap.enabled": false,
-  "editor.minimap.renderCharacters": false,
-  "editor.formatOnSave": true,
-  "editor.formatOnType": true,
-  "editor.formatOnPaste": true,
-  "editor.insertSpaces": false,
-  "editor.autoClosingBrackets": "always",
-  "editor.acceptSuggestionOnEnter": "off",
-  "editor.suggest.localityBonus": true,
-  //
-  // TERMINAL
-  "terminal.integrated.fontSize": 15,
-  "terminal.integrated.cursorBlinking": true,
-  "terminal.integrated.shell.windows": "C:\\WINDOWS\\System32\\WindowsPowerShell\\v1.0\\powershell.exe",
-  //
-  // LANGS::WEB
-  "[html]": {
-    "editor.rulers": []
-  },
-  "[javascript]": {
+    //---------------------------------------------------------
+    // SECURITY
+    //---------------------------------------------------------
+    "security.workspace.trust.untrustedFiles": "open",
+    "telemetry.telemetryLevel": "off",
+    //---------------------------------------------------------
+    // SEARCH
+    //---------------------------------------------------------
+    // "search.exclude": {
+    // 	"**/Modules": true
+    // },
+    //---------------------------------------------------------
+    // FILES
+    //---------------------------------------------------------
+    "files.autoSave": "onFocusChange",
+    "files.trimTrailingWhitespace": true,
+    "files.enableTrash": true,
+    "files.eol": "\n",
+    "files.insertFinalNewline": true,
+    //---------------------------------------------------------
+    // EDITOR
+    //---------------------------------------------------------
+    "editor.formatOnSave": true,
     "editor.rulers": [
-      120
-    ]
-  },
-  "languageStylus.useSeparator": false,
-  //
-  // LANGS::GO
-  "go.formatTool": "goimports",
-  "go.lintFlags": [],
-  "go.lintOnSave": "package",
-  "go.vetOnSave": "package",
-  "go.docsTool": "gogetdoc",
-  "go.buildOnSave": "package",
-  "go.lintTool": "revive",
-  "go.gopath": "C:\\DAC\\DEV\\go",
-  "go.autocompleteUnimportedPackages": true,
-  "go.useCodeSnippetsOnFunctionSuggest": true,
-  "go.goroot": "~\\scoop\\apps\\go\\current",
-  "go.gocodeAutoBuild": true,
-  "go.gotoSymbol.includeImports": true,
-  "go.useLanguageServer": false,
-  //
-  // LANGS::PYTHON
-  "python.linting.enabled": true,
-  "python.linting.pep8Enabled": true,
-  "python.linting.flake8Enabled": true,
-  "python.linting.pylintEnabled": false,
-  "python.autoComplete.addBrackets": true,
-  "python.linting.pydocstyleEnabled": false,
-  //
-  // LANGS::C++
-  "C_Cpp.navigation.length": 80,
-  "C_Cpp.dimInactiveRegions": true,
-  "C_Cpp.clang_format_style": "file",
-  "C_Cpp.intelliSenseEngine": "Default",
-  "C_Cpp.workspaceParsingPriority": "highest",
-  "C_Cpp.clang_format_sortIncludes": false,
-  "C_Cpp.intelliSenseEngineFallback": "Enabled",
-  "C_Cpp.clang_format_fallbackStyle": "LLVM",
-  "C_Cpp.updateChannel": "Insiders",
-  "C_Cpp.commentContinuationPatterns": [
-    "//",
-    "/**",
-    "///",
-  ],
-  //
-  // LANGS::CSHARP
-  "csharp.format.enable": true,
-  "csharp.referencesCodeLens.enabled": true,
-  //
-  // LANGS::GLSL
-  "glsllint.glslangValidatorPath": "C:/DAC/BIN/glslangValidator.exe",
-  //
-  // GIT
-  "git.autofetch": true,
-  //
-  // TELEMETRY
-  "telemetry.enableTelemetry": false,
-  "telemetry.enableCrashReporter": false,
-  //
-  // PATH INTELLISENSE
-  "path-intellisense.showHiddenFiles": true,
-  "path-intellisense.extensionOnImport": true,
-  "path-intellisense.autoSlashAfterDirectory": true,
-  //
-  // LIVE SERVER
-  "liveServer.settings.donotShowInfoMsg": true,
-  "liveServer.settings.donotVerifyTags": true,
-  //
-  // POLACODE
-  "polacode.backgroundColor": "#ffffff",
-  "polacode.borderRadius": 10,
-  "polacode.outerPadding": 20,
-  //
-  // VS CODE NEW-FEATURES
-  "search.usePCRE2": true,
-  "breadcrumbs.enabled": true,
-  "terminal.integrated.rendererType": "auto",
-  //
-  // EXTENSIONS
-  "extensions.autoUpdate": true,
-  "extensions.ignoreRecommendations": false,
-  //
-  // OTHER SETTINGS
-  "workbench.colorTheme": "City Lights",
+        120
+    ],
+    "editor.fontSize": 16,
+    "editor.fontLigatures": true,
+    "editor.fontFamily": "'Victor Mono', 'FiraCode NFM Retina', 'Fira Code', Consolas, 'Courier New', monospace",
+    "editor.stickyScroll.enabled": false,
+    "editor.accessibilitySupport": "off",
+    "editor.renderWhitespace": "trailing",
+    "editor.tokenColorCustomizations": {
+        "textMateRules": [
+            {
+                "scope": "comment",
+                "settings": {
+                    "fontStyle": "italic"
+                }
+            }
+        ]
+    },
+    "editor.trimAutoWhitespace": true,
+    //---------------------------------------------------------
+    // WORKBENCH
+    //---------------------------------------------------------
+    "workbench.settings.editor": "json",
+    "workbench.iconTheme": "vscode-icons",
+    "workbench.colorCustomizations": {
+        "panel.border": "#ee8800",
+        "panel.background": "#1d1d25",
+    },
+    "workbench.preferredLightColorTheme": "Quiet Light",
+    "workbench.startupEditor": "none",
+    //---------------------------------------------------------
+    // WINDOW
+    //---------------------------------------------------------
+    "window.autoDetectColorScheme": true,
+    "window.commandCenter": true,
+    //---------------------------------------------------------
+    // TERMINAL
+    //---------------------------------------------------------
+    "terminal.integrated.shellIntegration.enabled": true,
+    "terminal.integrated.fontSize": 14,
+    "terminal.integrated.fontFamily": "'FiraCode NFM Retina'",
+    "terminal.integrated.cursorBlinking": true,
+    "terminal.integrated.profiles.windows": {
+        "Pwsh": {
+            "path": "${env:USERPROFILE}/scoop/apps/pwsh/current/pwsh.EXE",
+            "icon": "terminal-powershell",
+            "args": [
+                "-nologo"
+            ]
+        },
+    },
+    "terminal.integrated.tabs.enabled": false,
+    //---------------------------------------------------------
+    // PYTHON  (check https://aka.ms/AAlgvkb)
+    //---------------------------------------------------------
+    "python.languageServer": "Pylance",
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter",
+    },
+    "black-formatter.args": [
+        "--line-length",
+        "119"
+    ],
+    "python.formatting.provider": "black",
+    "python.formatting.blackArgs": [
+        "--line-length",
+        "120"
+    ],
+    "python.linting.enabled": true,
+    //---------------------------------------------------------
+    // CMAKE
+    //---------------------------------------------------------
+    "cmake.configureOnOpen": true,
+    "cmake.enableTraceLogging": false,
+    "cmake.revealLog": "never",
+    //---------------------------------------------------------
+    // C++
+    //---------------------------------------------------------
+    "C_Cpp.experimentalFeatures": "enabled",
+    "C_Cpp.workspaceSymbols": "Just My Code",
+    "C_Cpp.enhancedColorization": "enabled",
+    "C_Cpp.workspaceParsingPriority": "highest",
+    "C_Cpp.autocomplete": "default",
+    "C_Cpp.dimInactiveRegions": true,
+    "C_Cpp.codeFolding": "enabled",
+    "C_Cpp.default.cppStandard": "c++20",
+    "C_Cpp.clang_format_style": "file",
+    "C_Cpp.autoAddFileAssociations": true,
+    "C_Cpp.suggestSnippets": true,
+    "[cpp]": {
+        "editor.defaultFormatter": "ms-vscode.cpptools"
+    },
+    "glsllint.glslangValidatorPath": "C:/VulkanSDK/1.3.239.0/Bin/glslangValidator.exe",
+    // "glsllint.glslangValidatorArgs": "-V",
+    //---------------------------------------------------------
+    // POWERSHELL
+    //---------------------------------------------------------
+    "powershell.promptToUpdatePowerShell": false,
+    "powershell.enableReferencesCodeLens": false,
+    "powershell.integratedConsole.showOnStartup": false,
+    "powershell.integratedConsole.startInBackground": true,
+    "powershell.integratedConsole.focusConsoleOnExecute": false,
+    "powershell.integratedConsole.suppressStartupBanner": true,
+    //---------------------------------------------------------
+    // GIT
+    //---------------------------------------------------------
+    "git.mergeEditor": true,
+    "merge-conflict.autoNavigateNextConflict.enabled": true,
+    //---------------------------------------------------------
+    // WEB
+    //---------------------------------------------------------
+    "eslint.validate": [
+        "javascript",
+        "javascriptreact",
+        "astro",
+        "typescript",
+        "typescriptreact"
+    ],
+    "prettier.documentSelectors": [
+        "**/*.astro"
+    ],
+    "[astro]": {
+        "editor.defaultFormatter": "astro-build.astro-vscode"
+    },
+    // "html.format.enable": false,
+    "css.enabledLanguages": [
+        "html",
+        "astro"
+    ],
+    // "errorLens.lintFilePaths": {
+    // 	"eslint": [
+    // 		"**/*.eslintrc.{js,cjs,yaml,yml,json}",
+    // 		"**/*package.json"
+    // 	],
+    // 	"Stylelint": [
+    // 		"**/*.stylelintrc",
+    // 		"**/*.stylelintrc.{cjs,js,json,yaml,yml}",
+    // 		"**/*stylelint.config.{cjs,js}",
+    // 		"**/*package.json"
+    // 	]
+    // },
+    //---------------------------------------------------------
+    // OTHERS
+    //---------------------------------------------------------
+    "vsicons.dontShowNewVersionMessage": true,
+    "cmake.options.statusBarVisibility": "visible",
+    "zig.path": "",
+    "zig.zls.path": "c:\\Users\\camba\\AppData\\Roaming\\Code\\User\\globalStorage\\ziglang.vscode-zig\\zls_install\\zls.exe",
+    "zig.initialSetupDone": true,
+    "accessibility.signals.terminalBell": {
+        "sound": "on"
+    },
+    "terminal.integrated.enableVisualBell": true,
+    "editor.cursorSmoothCaretAnimation": "on",
+    "editor.cursorBlinking": "phase",
+    "terminal.integrated.stickyScroll.enabled": true,
+    "cmake.pinnedCommands": [
+        "workbench.action.tasks.configureTaskRunner",
+        "workbench.action.tasks.runTask"
+    ],
+    "editor.minimap.enabled": false,
+    "cmake.showOptionsMovedNotification": false,
+    "explorer.confirmDelete": false,
+    "workbench.preferredDarkColorTheme": "High Contrast Theme",
+    "todo-tree.general.tags": [
+        "BUG",
+        "HACK",
+        "FIXME",
+        "TODO",
+        "XXX",
+        "[ ]",
+        "[x]",
+        "asdfasdf"
+    ],
+    "markdown-pdf.includeDefaultStyles": true,
+    "markdown-pdf.format": "A4",
+    "markdown-pdf.displayHeaderFooter": true,
+    "markdown-pdf.headerTemplate": "<div></div>",
+    "markdown-pdf.footerTemplate": "<div style=\"font-size: 9px; margin: 0 auto;\"><span class='pageNumber'></span> / <span class='totalPages'></span> :: Daniel Camba for OMI</div>",
+    "workbench.colorTheme": "Andromeda Italic"
 }
