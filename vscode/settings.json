@@ -202,5 +202,9 @@
     "markdown-pdf.displayHeaderFooter": true,
     "markdown-pdf.headerTemplate": "<div></div>",
     "markdown-pdf.footerTemplate": "<div style=\"font-size: 9px; margin: 0 auto;\"><span class='pageNumber'></span> / <span class='totalPages'></span> :: Daniel Camba for OMI</div>",
-    "workbench.colorTheme": "Andromeda Italic"
+    "workbench.colorTheme": "Andromeda Italic",
+    "files.associations": {
+        "*.ps1": "powershell"
+    },
+    "powershell.powerShellDefaultVersion": "Windows PowerShell (x64)"
 }

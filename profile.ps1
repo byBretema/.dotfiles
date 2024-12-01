@@ -23,16 +23,7 @@ $dev_dir = path_to_unix "${env:UserProfile}/dev";
 ### PATHs
 ###############################################################################
 
-# Scoop
-Get-ChildItem "${env:userprofile}/scoop/apps/" -ErrorAction SilentlyContinue |
-ForEach-Object { "$_/current" } | ForEach-Object { $p = $_; $env:PATH += ";$p;$p/bin" }
-
-# VcPkg
-$env:VCPKG_ROOT = "${env:SystemDrive}/vcpkg";
-
 # Path
-$env:PATH += ";${env:VCPKG_ROOT}"
-$env:PATH += ";${env:userprofile}/scoop/shims"
 $env:PATH += ";${env:ProgramFiles}/starship/bin"
 $env:PATH += ";${dev_dir}/_bin/"
 $env:PATH += ";${dev_dir}/_bin/Odin"
@@ -40,10 +31,6 @@ $env:PATH = path_to_unix ${env:PATH}
 
 # Python
 $env:PYTHONPATH = path_to_unix ${env:PYTHONPATH}
-
-# PS Modules
-$env:psmodulepath += ";$env:userprofile/scoop/modules"
-$env:psmodulepath = path_to_unix ${env:psmodulepath}
 
 
 ###############################################################################
@@ -79,9 +66,6 @@ function treeup ([int]$jumps) {
 function md {
 	New-Item -ItemType Directory $args[0]; Set-Location $args[0]
 }
-
-# Choco always as admin
-function choco { "sudo `"${env:ChocolateyInstall}/bin/choco.exe`" $args" | Invoke-Expression }
 
 # Clear and list
 function k { Clear-Host; ll }
@@ -337,8 +321,6 @@ Register-ArgumentCompleter -Native -CommandName winget -ScriptBlock {
 
 Import-Module z
 Import-Module posh-git
-Import-Module scoop-completion
-Import-Module "$env:ChocolateyInstall\helpers\chocolateyProfile.psm1"
 
 
 ###############################################################################
@@ -353,12 +335,12 @@ Set-PSReadLineOption -HistoryNoDuplicates:$True  # Avoid duplicates
 ### PROMPT
 ###############################################################################
 
-$env:STARSHIP_CONFIG = path_to_unix "$home/.config/bretema/starship.toml";
+$env:STARSHIP_CONFIG = path_to_unix "${home}/.dotfiles/starship.toml";
 
 if (-not (Test-Path $env:STARSHIP_CONFIG)) {
-	$req = Invoke-WebRequest https://gist.githubusercontent.com/byBretema/e87e1d98a2b6d1aaf244c910a0d3d464/raw/;
-	$req.Content > $home/.config/bretema_starship.toml
-	New-Item -ItemType File -Path $env:STARSHIP_CONFIG
+	$req = Invoke-WebRequest "https://raw.githubusercontent.com/byBretema/.dotfiles/refs/heads/main/starship.toml";
+	$null = New-Item -ItemType File -Path $env:STARSHIP_CONFIG
+	$req.Content > $env:STARSHIP_CONFIG
 }
 
 Invoke-Expression (&starship init powershell)
