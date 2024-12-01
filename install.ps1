@@ -1,7 +1,23 @@
+#Requires -RunAsAdministrator
+
+######################################################
+### Helprs
+######################################################
+
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    $ProgressPreference = "SilentlyContinue"
+}
 
 function path_to_unix([string]$path) {
     return "$path".Replace("\", "/")
 }
+
+function unzip($path) {
+    $folder = ("$path".Replace("\", "/")) + "_unzip"
+    & "${env:ProgramFiles}/7-Zip/7zG.exe" x "$path" -o"$folder" -aou
+    explorer.exe $folder
+}
+
 
 ######################################################
 ### WINGET Packages
@@ -11,7 +27,11 @@ function install_winget($package) {
     winget install --disable-interactivity --accept-package-agreements --accept-source-agreements -e --id "$package"
 }
 
-install_winget "Microsoft.PowerShell"             # Pwsh : Powershell 7
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    install_winget "Microsoft.PowerShell" # Pwsh : Powershell 7
+    & pwsh.exe "$PSScriptRoot\install.ps1"
+    exit 0
+}
 
 # OS Utils
 #---------------------
@@ -60,9 +80,9 @@ install_winget "gsass1.NTop"                      # htop for Windows
 
 # Personal
 #---------------------
-install_winget "Apple.iCloud"                     # iCloud
 install_winget "Valve.Steam"                      # Steam
-install_winget "RazerInc.RazerInstaller"          # Razer Lights
+##install_winget "Apple.iCloud"                     # iCloud
+##install_winget "RazerInc.RazerInstaller"          # Razer Lights
 
 
 ######################################################
@@ -70,8 +90,9 @@ install_winget "RazerInc.RazerInstaller"          # Razer Lights
 ######################################################
 
 # Download to temp file
-function temp_download ([string]$url, [string]$filename, [string]$ext) {
-    $tmp_file = path_to_unix "${env:TEMP}/${filename}.${ext}";
+function download_to_temp([string]$url) {
+    $name = $url.Split("/")[-1]
+    $tmp_file = path_to_unix "${env:TEMP}/$name";
     if ($PSVersionTable.PSVersion.Major -lt 7) {
         $ProgressPreference = "SilentlyContinue"
     }
@@ -79,22 +100,16 @@ function temp_download ([string]$url, [string]$filename, [string]$ext) {
     return $tmp_file
 }
 
-$f = temp_download "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip" "FiraCode" "zip"
-unzip -o $f
-explorer.exe "$f".Trim(".zip")
-
-$f = temp_download "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip" "FiraCodeNF" "zip"
-unzip -o $f
-explorer.exe "$f".Trim(".zip")
-
-$f = temp_download "https://download.clipgrab.org/clipgrab-3.9.11-dotinstaller.exe" "ClipGrab" "exe"
-& "$f"
+unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
+unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
+unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 
 ######################################################
 ### POWERSHELL MODULES
 ######################################################
 
+Import-Module PowerShellGet
 Install-Module z -AllowClobber
 Install-Module posh-git -AllowClobber
 
@@ -142,18 +157,29 @@ install_capabilites "Language.OCR"
 ######################################################
 
 function lns ([string]$from, [string]$to) {
-    $null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
+    New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
 }
 
-# $documents = ([Environment]::GetFolderPath("MyDocuments"))
-# lns "./profile.ps1" "$documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+$script_root = path_to_unix $PSScriptRoot
 
-lns "./profile.ps1" $PROFILE
-lns "./.gitconfig" "${home}/.gitconfig"
+# Git Config
+lns "$script_root/.gitconfig" "${home}/.gitconfig"
 
+# Powershell Profile on Powershell 7.x
+$documents = ([Environment]::GetFolderPath("MyDocuments"))
+lns "$script_root/profile.ps1" "$documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+
+# VSCode Config + Extensions
 $vscode_config_path = path_to_unix "${env:APPDATA}\Code\User"
-lns "./vscode/settings.json"    "${vscode_config_path}\settings.json"
-lns "./vscode/keybindings.json" "${vscode_config_path}\keybindings.json"
+lns "$script_root/vscode/settings.json"    "${vscode_config_path}/settings.json"
+lns "$script_root/vscode/keybindings.json" "${vscode_config_path}/keybindings.json"
 
-
-lns "${home}/.tigrc" ".tigrc"
+# Windows Terminal Config
+$local_appdata_pkgs = path_to_unix "${env:LOCALAPPDATA}\Packages"
+$terminal_partial_path = "$local_appdata_pkgs/Microsoft.WindowsTerminal*"
+$terminals = (Get-ChildItem $local_appdata_pkgs -Name $terminal_partial_path)
+foreach ($terminal in $terminals) {
+    $terminal = path_to_unix $terminal
+    $settings_path = "$terminal/LocalState/settings.json"
+    lns "$script_root/terminal/settings.json" $settings_path
+}

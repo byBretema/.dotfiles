@@ -140,6 +140,11 @@ function install_exe_from_url ([string]$url, [string]$filename) {
 	& "$(download_to_temp $url $filename "exe")"
 }
 
+# Unzip
+function unzip($path) {
+	& "${env:ProgramFiles}/7-Zip/7zG.exe" x "$path" -o* -aou
+}
+
 # Open git repo on the browser
 function gitit {
 	if (-not (Test-Path "./.git")) {
