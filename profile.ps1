@@ -110,6 +110,14 @@ function bitunlock { sudo manage-bde.exe -unlock $args[0] -pw }
 ### UTILs
 ###############################################################################
 
+# Modify a property from the registry
+function modify_reg_prop([string]$Path, [string]$Name, $Value, [string]$Type = "DWord") {
+	if (-not (Test-Path $Path)) {
+		$null = New-Item -Path $Path -Force
+	}
+	$null = Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force
+}
+
 # Download to temp file
 function download_to_temp([string]$url, [string]$filename, [string]$ext) {
 	$tmp_file = path_to_unix "${env:TEMP}/${filename}.${ext}";
