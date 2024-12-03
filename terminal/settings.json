@@ -1,18 +1,20 @@
 {
     "$help": "https://aka.ms/terminal-documentation",
     "$schema": "https://aka.ms/terminal-profiles-schema",
-    "actions": [
+    "actions": 
+    [
         {
-            "command": "unbound",
-            "keys": "alt+space"
-        },
-        {
-            "command": {
+            "command": 
+            {
                 "action": "copy",
                 "singleLine": false
             },
             "id": "User.copy.644BA8F2",
             "keys": "ctrl+c"
+        },
+        {
+            "command": "unbound",
+            "keys": "alt+space"
         },
         {
             "command": "quit",
@@ -30,7 +32,8 @@
             "keys": "ctrl+v"
         },
         {
-            "command": {
+            "command": 
+            {
                 "action": "splitPane",
                 "split": "auto",
                 "splitMode": "duplicate"
@@ -49,14 +52,16 @@
             "keys": "ctrl+alt+shift+w"
         },
         {
-            "command": {
+            "command": 
+            {
                 "action": "nextTab"
             },
             "id": "User.nextTab.0",
             "keys": "ctrl+alt+right"
         },
         {
-            "command": {
+            "command": 
+            {
                 "action": "prevTab"
             },
             "id": "User.prevTab.0",
@@ -70,17 +75,21 @@
     "firstWindowPreference": "persistedWindowLayout",
     "launchMode": "maximized",
     "minimizeToNotificationArea": false,
-    "newTabMenu": [
+    "newTabMenu": 
+    [
         {
             "type": "remainingProfiles"
         }
     ],
-    "profiles": {
-        "defaults": {
+    "profiles": 
+    {
+        "defaults": 
+        {
             "adjustIndistinguishableColors": "indexed",
             "bellStyle": "window",
             "colorScheme": "One Half Dark",
-            "font": {
+            "font": 
+            {
                 "face": "FiraCode Nerd Font",
                 "size": 10,
                 "weight": "thin"
@@ -89,7 +98,8 @@
             "padding": "20",
             "useAcrylic": true
         },
-        "list": [
+        "list": 
+        [
             {
                 "commandline": "\"C:\\Program Files\\PowerShell\\7\\pwsh.exe\" -nologo",
                 "guid": "{574e775e-4f2a-5b96-ac1e-a2962a402336}",
@@ -149,10 +159,23 @@
                 "hidden": false,
                 "name": "Ubuntu",
                 "source": "CanonicalGroupLimited.Ubuntu_79rhkp1fndgsc"
+            },
+            {
+                "guid": "{e2b842ac-ddc0-583c-89ae-2891ff992499}",
+                "hidden": false,
+                "name": "Developer Command Prompt for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{78253638-679b-540b-8a12-ae8852e2686f}",
+                "hidden": false,
+                "name": "Developer PowerShell for VS 2022",
+                "source": "Windows.Terminal.VisualStudio"
             }
         ]
     },
-    "schemes": [
+    "schemes": 
+    [
         {
             "background": "#302530",
             "black": "#332B36",
