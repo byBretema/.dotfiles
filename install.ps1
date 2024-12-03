@@ -154,27 +154,153 @@ if (-not (Test-Path "$prog_files/OpenSSL-Win64")) {
 
 Write-Host "`n[registry]"
 
-function add_reg_dword ([string]$path, [string]$key, $val) {
-    $null = (REG ADD $path /v $key /t REG_DWORD /d $val /f)
+function modify_reg_prop([string]$Path, [string]$Name, $Value, [string]$Type = "DWord") {
+    if (-not (Test-Path $Path)) {
+        $null = New-Item -Path $Path -Force
+    }
+    $null = Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force
 }
 
+# Show hidden files
+Write-Host ">> Activating: Show hidden files and folders"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "Hidden" 1
 
-# Disable telemetry
-Write-Host ">> Disable telemetry"
-Set-Service DiagTrack -StartupType Disabled
-add_reg_dword "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "AllowTelemetry" 0
+# Show all extensions
+Write-Host ">> Activating: Show all files extensions"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "HideFileExt" 0
+
+# Hide search box/icon from taskbar
+Write-Host ">> Hiding: Search icon"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Search" "SearchboxTaskbarMode" 0
+
+# Hide virtual-desktops from taskbar
+Write-Host ">> Hiding: Virtual-Desktops icon"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "ShowTaskViewButton" 0
+
+# Hide widgets from taskbar
+Write-Host ">> Hiding: Widgets icon"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "TaskbarDa" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Feeds" "ShellFeedsTaskbarViewMode" 2
+modify_reg_prop "HKLM:/SOFTWARE/Microsoft/PolicyManager/default/NewsAndInterests/AllowNewsAndInterests" "value" 0
+modify_reg_prop "HKLM:/SOFTWARE/Policies/Microsoft/Dsh" "AllowNewsAndInterests" 0
+
+# Hide taskbar on non-primary screens
+Write-Host ">> Hiding: Taskbar on non-primary screens"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "MMTaskbarEnabled" 0
+
+# Hide duplicate removable drives from navigation pane of File Explorer
+Write-Host ">> Hiding: Duplicate drives"
+Remove-Item "HKLM:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Desktop/NameSpace/DelegateFolders/{F5FB2C77-0E2F-4A16-A381-3E560C68BC83}" 1>$null 2>$null
+
+# No telemetry
+Write-Host ">> Disabling: Telemetry"
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/AdvertisingInfo" "Enabled" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Privacy" "TailoredExperiencesWithDiagnosticDataEnabled" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Speech_OneCore/Settings/OnlineSpeechPrivacy" "HasAccepted" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Input/TIPC" "Enabled" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/InputPersonalization" "RestrictImplicitInkCollection" 1
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/InputPersonalization" "RestrictImplicitTextCollection" 1
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/InputPersonalization/TrainedDataStore" "HarvestContacts" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Personalization/Settings" "AcceptedPrivacyPolicy" 0
+modify_reg_prop "HKLM:/SOFTWARE/Microsoft/Windows/CurrentVersion/Policies/DataCollection" "AllowTelemetry" 0
+modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "Start_TrackProgs" 0
+
+# Enable 'end task' on taskbar
+Write-Host ">> Enabling: 'End Task' form TaskBar"
+modify_reg_prop "HKCU:/Software/Microsoft/Windows/CurrentVersion/Explorer/Advanced/TaskbarDeveloperSettings" "TaskbarEndTask" 1
 
 # Only on laptops
-$IsLaptop = ($null -ne (Get-CimInstance -Class win32_battery))
-if ($IsLaptop) {
+if ($null -ne (Get-CimInstance -Class win32_battery)) {
     # Enable 'Hibernate After'
     Write-Host ">> Enable hibernate after"
-    $power_settings_path = "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerSettings"
+    $power_settings_path = "HKLM:/SYSTEM/CurrentControlSet/Control/Power/PowerSettings"
     $key_a = "238C9FA8-0AAD-41ED-83F4-97BE242C8F20"
     $key_b = "9d7815a6-7ee4-497e-8888-515a05f02364"
-    $hibernate_path = "$power_settings_path\$key_a\$key_b"
-    add_reg_dword $hibernate_path "Attributes" 2
+    $hibernate_path = "$power_settings_path/$key_a/$key_b"
+    modify_reg_prop $hibernate_path "Attributes" 2
 }
+
+
+######################################################
+### DEFENDER EXCLUSIONS
+######################################################
+
+Write-Host "`n[defender exclusions]"
+
+# Folders
+Write-Host ">> Adding: Folders"
+$folders_to_not_scan = @(
+    "${home}/dev",
+    "${env:SystemDrive}/Vendor",
+    "${env:SystemDrive}/Qt"
+)
+
+$folders_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionPath $_ }
+
+# Processes
+Write-Host ">> Adding: Processes"
+$process_to_not_scan = @(
+    # Qt
+    "qtcreator_processlauncher.exe",
+    "qtcreator.exe",
+    "clangd.exe",
+    "clangd.exe",
+    # Shells
+    "pwsh.exe",
+    "powershell.exe",
+    "WindowsTerminal.exe",
+    "git-bash.exe",
+    "bash.exe"
+    # VS
+    "Code.exe",
+    "vshost-clr2.exe",
+    "VSInitializer.exe",
+    "VSIXInstaller.exe",
+    "VSLaunchBrowser.exe",
+    "vsn.exe",
+    "VsRegEdit.exe",
+    "VSWebHandler.exe",
+    "VSWebLauncher.exe",
+    "XDesProc.exe",
+    "Blend.exe",
+    "DDConfigCA.exe",
+    "devenv.exe",
+    "FeedbackCollector.exe",
+    "Microsoft.VisualStudio.Web.Host.exe",
+    "mspdbsrv.exe",
+    "MSTest.exe",
+    "PerfWatson2.exe",
+    "Publicize.exe",
+    "QTAgent.exe",
+    "QTAgent_35.exe",
+    "QTAgent_40.exe",
+    "QTAgent32.exe",
+    "QTAgent32_35.exe",
+    "QTAgent32_40.exe",
+    "QTDCAgent.exe",
+    "QTDCAgent32.exe",
+    "StorePID.exe",
+    "T4VSHostProcess.exe",
+    "TailoredDeploy.exe",
+    "TCM.exe",
+    "TextTransform.exe",
+    "TfsLabConfig.exe",
+    "UserControlTestContainer.exe",
+    "vb7to8.exe",
+    "VcxprojReader.exe",
+    "VsDebugWERHelper.exe",
+    "VSFinalizer.exe",
+    "VsGa.exe",
+    "VSHiveStub.exe",
+    "vshost.exe",
+    "vshost32.exe",
+    "vshost32-clr2.exe",
+    "msbuild.exe",
+    # VCS
+    "git.exe"
+)
+
+$process_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionProcess $_ }
 
 
 ######################################################
