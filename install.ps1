@@ -125,7 +125,7 @@ function download_to_temp([string]$url) {
 #unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 ## OpenSSH
-if (-not (Test-Path "$prog_files/OpenSSL-Win64")) {
+if ($(Get-Service -Name ssh-agent).Name -gt 0) {
     $openssh_msi = download_to_temp "https://github.com/PowerShell/Win32-OpenSSH/releases/download/v9.2.2.0p1-Beta/OpenSSH-Win64-v9.2.2.0.msi"
     Write-Host ">> Installing : OpenSSH"
     Start-Process msiexec.exe -Wait -ArgumentList "/i $openssh_msi /passive"
