@@ -24,6 +24,7 @@ $dev_dir = path_to_unix "${env:UserProfile}/dev";
 ###############################################################################
 
 # Path
+$env:PATH += ";${home}/.dotfiles/bin"
 $env:PATH += ";${env:ProgramFiles}/starship/bin"
 $env:PATH += ";${dev_dir}/_bin/"
 $env:PATH += ";${dev_dir}/_bin/Odin"
@@ -63,8 +64,9 @@ function treeup ([int]$jumps) {
 }
 
 # Folders creation
-function md {
-	New-Item -ItemType Directory $args[0]; Set-Location $args[0]
+function md([string]$folder_name) {
+	$null = New-Item -ItemType Directory $folder_name -Force
+	Set-Location $folder_name
 }
 
 # Clear and list
@@ -74,10 +76,7 @@ function k { Clear-Host; ll }
 Set-Alias o Start-Process
 
 # Open current dir on explorer
-function oo {
-	Param ( [Parameter(Mandatory = $false)] [string]$path = "." )
-	explorer $path
-}
+function oo([string]$path = ".") { explorer $path }
 
 # Soft/Symbolic link
 function lns([string]$from, [string]$to) {
