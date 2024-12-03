@@ -80,7 +80,9 @@ function oo {
 }
 
 # Soft/Symbolic link
-function lns ([string]$from, [string]$to) {
+function lns([string]$from, [string]$to) {
+	$to = path_to_unix $to
+	Write-Host ">> Linking : $from to $to"
 	$null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
 }
 
@@ -110,12 +112,12 @@ function bitunlock { sudo manage-bde.exe -unlock $args[0] -pw }
 ###############################################################################
 
 # Download to temp file
-function download_to_temp ([string]$url, [string]$filename, [string]$ext) {
+function download_to_temp([string]$url, [string]$filename, [string]$ext) {
 	$tmp_file = path_to_unix "${env:TEMP}/${filename}.${ext}";
 	if ($PSVersionTable.PSVersion.Major -lt 7) {
 		$ProgressPreference = "SilentlyContinue"
 	}
-	Invoke-WebRequest -URI $url -OutFile $tmp_file;
+	Invoke-WebRequest -URI $url -OutFile $tmp_file
 	return $tmp_file
 }
 
@@ -132,8 +134,8 @@ function unzip($path) {
 # Open git repo on the browser
 function gitit {
 	if (-not (Test-Path "./.git")) {
-		Write-Output "fatal: not a git repository (or any of the parent directories): .git";
-		return;
+		Write-Host "fatal: not a git repository (or any of the parent directories): .git"
+		return
 	}
 
 	$http = ((((git remote -v)[0] -Split " ")[0] -Split "`t")[1])
@@ -170,7 +172,7 @@ function tr ([string]$to, [string]$text) {
 
 # Kill processes that match the name
 function killp {
-	Get-Process "*$args*" -ErrorAction Ignore | ForEach-Object { Write-Output "$($_.Id)    $($_.ProcessName)" };
+	Get-Process "*$args*" -ErrorAction Ignore | ForEach-Object { Write-Host "$($_.Id)    $($_.ProcessName)" };
 	$toKill = Read-Host "PID to kill"
 	Stop-Process $toKill
 }
@@ -254,7 +256,7 @@ function iwinget ([string]$inName) {
 	$packages = New-Object System.Collections.Generic.List[System.Object]
 
 	if (-not ( ($it -gt -1) -and ($it -lt $lines.Length) -and $idxsOk )) {
-		Write-Output "No package found matching input criteria: '$inName'"
+		Write-Host "No package found matching input criteria: '$inName'"
 		return
 	}
 
@@ -268,7 +270,7 @@ function iwinget ([string]$inName) {
 		$pkgName = $lines[$it].Substring($nameIdx, $nameLen)
 		$pkgId = $lines[$it].Substring($idIdx, $idLen)
 		$pkgVer = $lines[$it].Substring($verIdx, $verLen)
-		Write-Output "$nStr)  ID: $pkgId | Ver: $pkgVer | Name: $pkgName"
+		Write-Host "$nStr)  ID: $pkgId | Ver: $pkgVer | Name: $pkgName"
 
 		$packages.Add($pkgId.Trim());
 	}
@@ -278,12 +280,12 @@ function iwinget ([string]$inName) {
 		$toInstallIdx = [int]$toInstall
 	}
 	catch {
-		Write-Output "Bad index '$toInstall'."
+		Write-Host "Bad index '$toInstall'."
 		return;
 	}
 
 	$p = $packages[$toInstallIdx];
-	Write-Output "!! Trying to install: '$p'"
+	Write-Host "!! Trying to install: '$p'"
 	winget install -e --id $p --accept-package-agreements --accept-source-agreements --disable-interactivity --silent
 }
 

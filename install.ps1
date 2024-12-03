@@ -30,8 +30,11 @@ Write-Host "`nSCRIPT BEGINING!`n========================================="
 
 Write-Host "`n[winget]"
 
-function install_winget($package, $name = "") {
-    Write-Host ">> Installing : $package $name"
+function install_winget([string]$package, [string]$name = "") {
+    if ($name.Length -gt 0) {
+        $name = " : $name"
+    }
+    Write-Host ">> Installing/Updating : $package$name"
     winget install --disable-interactivity --accept-package-agreements --accept-source-agreements -e --id "$package" 1>$null
 }
 
@@ -45,7 +48,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 # OS Utils
 #---------------------
 install_winget "Ditto.Ditto"                      # Ditto      : Clipboard History
-install_winget "Win.QuickLook"                    # QuickLook  : macos-like Preview
+install_winget "QL-Win.QuickLook"                    # QuickLook  : macos-like Preview
 install_winget "voidtools.Everything"             # Everything : The best file searcher
 install_winget "voidtools.Everything.Cli"         # Everything : The best file searcher
 install_winget "Flow-Launcher.Flow-Launcher"      # Laucher    : Spotlight/Alfred like
@@ -75,7 +78,6 @@ install_winget "TeamViewer.TeamViewer"            # TeamViewer
 #---------------------
 install_winget "SumatraPDF.SumatraPDF"            # Sumatra : PDF Reader
 install_winget "Brave.Brave"                      # Brave : A better Chrome
-install_winget "Zen-Team.Zen-Browser.Optimized"   # Zen Browser
 install_winget "Notion.Notion"                    # Notion
 install_winget "Obsidian.Obsidian"                # Obsidian
 
@@ -88,10 +90,12 @@ install_winget "Microsoft.VisualStudioCode"       # VS Code
 install_winget "Starship.Starship"                # Terminal prompt
 install_winget "gsass1.NTop"                      # htop for Windows
 install_winget "eza-community.eza"                # ls 2.0
+install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 
 # Personal
 #---------------------
 install_winget "Valve.Steam"                      # Steam
+install_winget "LocalSend.LocalSend"              # AirDrop wannabe
 ##install_winget "Apple.iCloud"                     # iCloud
 ##install_winget "RazerInc.RazerInstaller"          # Razer Lights
 
@@ -114,9 +118,9 @@ function download_to_temp([string]$url) {
     return $tmp_file
 }
 
-unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
-unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
-unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
+#unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
+#unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
+#unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 
 ######################################################
@@ -125,14 +129,16 @@ unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 Write-Host "`n[pwsh-modules]"
 
-Write-Host ">> Import : PowerShellGet"
-Import-Module PowerShellGet
+Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force  2>$null
 
-Write-Host ">> Installing : z"
-Install-Module z -Confirm:$False -Force -AllowClobber
+function install_module([string]$pkg) {
+    Write-Host ">> Installing : $pkg"
+    $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
+}
 
-Write-Host ">> Installing : posh-git"
-Install-Module posh-git -Confirm:$False -Force -AllowClobber
+Import-Module PowerShellGet  2>$null
+install_module z
+install_module posh-git
 
 
 ######################################################
@@ -141,7 +147,7 @@ Install-Module posh-git -Confirm:$False -Force -AllowClobber
 
 Write-Host "`n[registry]"
 
-function add_reg_dword ($path, $key, $val) {
+function add_reg_dword ([string]$path, [string]$key, $val) {
     $null = (REG ADD $path /v $key /t REG_DWORD /d $val /f)
 }
 
@@ -168,16 +174,16 @@ if ($IsLaptop) {
 
 Write-Host "`n[capabilities]"
 
-function install_capabilites($name, $filter = "") {
-    $filter = $filter.Split(",")
-    $has_filter = $filter.Length -gt 0
+function install_capabilites([string]$name, [string]$filters_by_comma = "") {
+    $filters = $filters_by_comma.Split(",")
+    $has_filter = $filters.Length -gt 0
     $caps = Get-WindowsCapability -Online | Where-Object { $_.Name -Like "*$name*" }
     foreach ($cap in $caps) {
         # Check filter
         if ($has_filter) {
             $valid = $false
-            foreach ($partial_name in $filter) {
-                $valid = $valid -or $cap.Name.Contains($partial_name)
+            foreach ($filter in $filters) {
+                $valid = $valid -or $cap.Name.Contains($filter)
             }
             if (-not $valid) {
                 continue
@@ -222,7 +228,7 @@ $local_appdata_pkgs = path_to_unix "${env:LOCALAPPDATA}\Packages"
 $terminal_partial_path = "*Microsoft.WindowsTerminal*"
 $terminals = (Get-ChildItem $local_appdata_pkgs -Name $terminal_partial_path)
 foreach ($terminal in $terminals) {
-    $terminal = path_to_unix $terminal
+    $terminal = path_to_unix "$local_appdata_pkgs\$terminal"
     $settings_path = "$terminal/LocalState/settings.json"
     lns "$script_root/terminal/settings.json" $settings_path
 }
