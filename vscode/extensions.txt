@@ -1,55 +1,57 @@
-code --install-extension 1yib.rust-bundle
-code --install-extension aster.vscode-subtitles
 code --install-extension astro-build.astro-vscode
-code --install-extension bbenoist.qml
-code --install-extension bierner.github-markdown-preview
-code --install-extension bierner.markdown-checkbox
-code --install-extension bierner.markdown-emoji
-code --install-extension bierner.markdown-footnotes
-code --install-extension bierner.markdown-mermaid
-code --install-extension bierner.markdown-preview-github-styles
-code --install-extension bierner.markdown-yaml-preamble
-code --install-extension bmcbarron.babylonjs-viewer
-code --install-extension bmewburn.vscode-intelephense-client
 code --install-extension bradlc.vscode-tailwindcss
-code --install-extension cesium.gltf-vscode
-code --install-extension cheshirekow.cmake-format
-code --install-extension chouzz.vscode-innosetup
-code --install-extension cweijan.vscode-office
-code --install-extension danielgavin.ols
-code --install-extension davidbroetje.algorithm-mnemonics-vscode
-code --install-extension dbaeumer.vscode-eslint
+code --install-extension ecmel.vscode-html-css
+code --install-extension jock.svg
+
+code --install-extension gruntfuggly.todo-tree
+code --install-extension editorconfig.editorconfig
+code --install-extension github.vscode-github-actions
+code --install-extension bierner.github-markdown-preview
+
+code --install-extension bmcbarron.babylonjs-viewer
 code --install-extension dmnsgn.vscode-wavefront
 code --install-extension dtoplak.vscode-glsllint
-code --install-extension dustypomerleau.rust-syntax
-code --install-extension ecmel.vscode-html-css
-code --install-extension editorconfig.editorconfig
-code --install-extension eliverlara.andromeda
-code --install-extension esbenp.prettier-vscode
-code --install-extension franruizsantaclara.high-contrast-theme
-code --install-extension github.vscode-github-actions
-code --install-extension grapecity.gc-excelviewer
-code --install-extension gruntfuggly.todo-tree
-code --install-extension hipstersmoothie-public.github-dark-high-contrast
-code --install-extension igorsbitnev.error-gutters
-code --install-extension ionutvmi.reg
-code --install-extension janisdd.vscode-edit-csv
-code --install-extension jock.svg
-code --install-extension jrtools.mariana
-code --install-extension lorenzopirro.zig-snippets
-code --install-extension malmaud.tmux
-code --install-extension mani-sh-reddy.mariana-refined
-code --install-extension mechatroner.rainbow-csv
-code --install-extension mightbesimon.mariana-sublime
-code --install-extension ms-python.black-formatter
+
+code --install-extension chouzz.vscode-innosetup
+
+code --install-extension aster.vscode-subtitles
+
+code --install-extension danielgavin.ols
+
 code --install-extension ms-python.debugpy
-code --install-extension ms-python.flake8
 code --install-extension ms-python.python
 code --install-extension ms-python.vscode-pylance
+code --install-extension ms-python.black-formatter
+
+code --install-extension cheshirekow.cmake-format
 code --install-extension ms-vscode.cmake-tools
 code --install-extension ms-vscode.cpptools
+code --install-extension davidbroetje.algorithm-mnemonics-vscode
+
+code --install-extension cweijan.vscode-office
+code --install-extension igorsbitnev.error-gutters
+code --install-extension grapecity.gc-excelviewer
+code --install-extension janisdd.vscode-edit-csv
+code --install-extension mechatroner.rainbow-csv
+
 code --install-extension ms-vscode.hexeditor
+
 code --install-extension ms-vscode.powershell
+
+//----------------
+//----------------
+code --install-extension dbaeumer.vscode-eslint
+code --install-extension esbenp.prettier-vscode
+
+code --install-extension cesium.gltf-vscode
+
+code --install-extension bmewburn.vscode-intelephense-client
+code --install-extension dustypomerleau.rust-syntax
+
+code --install-extension ionutvmi.reg
+//----------------
+
+
 code --install-extension pflannery.vscode-versionlens
 code --install-extension pranaygp.vscode-css-peek
 code --install-extension quicktype.quicktype
