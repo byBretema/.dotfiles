@@ -5,6 +5,7 @@
 ######################################################
 
 $script_root = $PSScriptRoot.Replace("\", "/")
+$prog_files = ${env:ProgramFiles}.Replace("\", "/")
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     $ProgressPreference = "SilentlyContinue"
@@ -18,7 +19,7 @@ function unzip($path) {
     $folder = ("$path".Replace("\", "/")) + "_unzip"
     Write-Host ">> Unzip : $folder"
     Remove-Item -Recurse $folder -Force 2>$null
-    $null = Start-Process -FilePath "${env:ProgramFiles}/7-Zip/7zG.exe" -ArgumentList "x `"$path`" -o`"$folder`" -aou" -PassThru -Wait
+    $null = Start-Process -FilePath "$prog_files/7-Zip/7zG.exe" -ArgumentList "x `"$path`" -o`"$folder`" -aou" -PassThru -Wait
     Start-Process $folder
 }
 
@@ -48,7 +49,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 # OS Utils
 #---------------------
 install_winget "Ditto.Ditto"                      # Ditto      : Clipboard History
-install_winget "QL-Win.QuickLook"                    # QuickLook  : macos-like Preview
+install_winget "QL-Win.QuickLook"                 # QuickLook  : macos-like Preview
 install_winget "voidtools.Everything"             # Everything : The best file searcher
 install_winget "voidtools.Everything.Cli"         # Everything : The best file searcher
 install_winget "Flow-Launcher.Flow-Launcher"      # Laucher    : Spotlight/Alfred like
@@ -57,7 +58,7 @@ install_winget "7zip.7zip"                        # 7Zip
 
 # 7zip : Double-Click Simply Extract
 $null = New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
-$null = New-Item -path "hkcr:\Applications\7zG.exe\shell\open\command" -value "`"${env:ProgramFiles}/7-Zip/7zG.exe`" x `"%1`" -o* -aou" -Force
+$null = New-Item -path "hkcr:\Applications\7zG.exe\shell\open\command" -value "`"$prog_files/7-Zip/7zG.exe`" x `"%1`" -o* -aou" -Force
 
 # Media
 #---------------------
@@ -90,6 +91,7 @@ install_winget "Microsoft.VisualStudioCode"       # VS Code
 install_winget "Starship.Starship"                # Terminal prompt
 install_winget "gsass1.NTop"                      # htop for Windows
 install_winget "eza-community.eza"                # ls 2.0
+install_winget "Python.Python.3.13"               # Python 3.x
 install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 
 # Personal
@@ -122,23 +124,28 @@ function download_to_temp([string]$url) {
 #unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
 #unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
+## OpenSSH
+if (-not (Test-Path "$prog_files/OpenSSL-Win64")) {
+    $openssh_msi = download_to_temp "https://github.com/PowerShell/Win32-OpenSSH/releases/download/v9.2.2.0p1-Beta/OpenSSH-Win64-v9.2.2.0.msi"
+    Write-Host ">> Installing : OpenSSH"
+    Start-Process msiexec.exe -Wait -ArgumentList "/i $openssh_msi /passive"
+}
+
 
 ######################################################
 ### POWERSHELL MODULES
 ######################################################
 
-Write-Host "`n[pwsh-modules]"
+# Write-Host "`n[pwsh-modules]"
 
-Install-PackageProvider -Name NuGet -MinimumVersion 2.8.5.201 -Force  2>$null
+# function install_module([string]$pkg) {
+#     Write-Host ">> Installing : $pkg"
+#     $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
+# }
 
-function install_module([string]$pkg) {
-    Write-Host ">> Installing : $pkg"
-    $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
-}
-
-Import-Module PowerShellGet  2>$null
-install_module z
-install_module posh-git
+# Import-Module PowerShellGet  2>$null
+# install_module z
+# install_module posh-git
 
 
 ######################################################
@@ -151,8 +158,6 @@ function add_reg_dword ([string]$path, [string]$key, $val) {
     $null = (REG ADD $path /v $key /t REG_DWORD /d $val /f)
 }
 
-$IsLaptop = ($null -ne (Get-CimInstance -Class win32_battery))
-$PowerSettingsPath = "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerSettings"
 
 # Disable telemetry
 Write-Host ">> Disable telemetry"
@@ -160,11 +165,15 @@ Set-Service DiagTrack -StartupType Disabled
 add_reg_dword "HKLM\SOFTWARE\Policies\Microsoft\Windows\DataCollection" "AllowTelemetry" 0
 
 # Only on laptops
+$IsLaptop = ($null -ne (Get-CimInstance -Class win32_battery))
 if ($IsLaptop) {
     # Enable 'Hibernate After'
     Write-Host ">> Enable hibernate after"
-    $hibernate_key = "${PowerSettingsPath}\238C9FA8-0AAD-41ED-83F4-97BE242C8F20\9d7815a6-7ee4-497e-8888-515a05f02364"
-    add_reg_dword $hibernate_key "Attributes" 2
+    $power_settings_path = "HKLM\SYSTEM\CurrentControlSet\Control\Power\PowerSettings"
+    $key_a = "238C9FA8-0AAD-41ED-83F4-97BE242C8F20"
+    $key_b = "9d7815a6-7ee4-497e-8888-515a05f02364"
+    $hibernate_path = "$power_settings_path\$key_a\$key_b"
+    add_reg_dword $hibernate_path "Attributes" 2
 }
 
 
