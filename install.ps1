@@ -92,7 +92,7 @@ install_winget "Starship.Starship"                # Terminal prompt
 install_winget "gsass1.NTop"                      # htop for Windows
 install_winget "eza-community.eza"                # ls 2.0
 install_winget "Python.Python.3.13"               # Python 3.x
-install_winget "ShiningLight.OpenSSL.Light"       # OpenSSL
+install_winget "ShiningLight.OpenSSL.Dev"         # OpenSSL
 install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 
 # Personal
@@ -126,27 +126,27 @@ function download_to_temp([string]$url) {
 #unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 ## OpenSSH
-if ($(Get-Service -Name ssh-agent).Name -gt 0) {
-    $openssh_msi = download_to_temp "https://github.com/PowerShell/Win32-OpenSSH/releases/download/v9.2.2.0p1-Beta/OpenSSH-Win64-v9.2.2.0.msi"
-    Write-Host ">> Installing : OpenSSH"
-    Start-Process msiexec.exe -Wait -ArgumentList "/i $openssh_msi /passive"
-}
+# if ($(Get-Service -Name ssh-agent).Name -lt 1) {
+#     $openssh_msi = download_to_temp "https://github.com/PowerShell/Win32-OpenSSH/releases/download/v9.2.2.0p1-Beta/OpenSSH-Win64-v9.2.2.0.msi"
+#     Write-Host ">> Installing : OpenSSH"
+#     Start-Process msiexec.exe -Wait -ArgumentList "/i $openssh_msi /passive"
+# }
 
 
 ######################################################
 ### POWERSHELL MODULES
 ######################################################
 
-# Write-Host "`n[pwsh-modules]"
+Write-Host "`n[pwsh-modules]"
 
-# function install_module([string]$pkg) {
-#     Write-Host ">> Installing : $pkg"
-#     $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
-# }
+function install_module([string]$pkg) {
+    Write-Host ">> Installing : $pkg"
+    $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
+}
 
-# Import-Module PowerShellGet  2>$null
-# install_module z
-# install_module posh-git
+Import-Module PowerShellGet  1>$null 2>$null
+install_module z
+install_module posh-git
 
 
 ######################################################
