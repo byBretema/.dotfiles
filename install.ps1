@@ -179,10 +179,8 @@ modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanc
 
 # Hide widgets from taskbar
 Write-Host ">> Hiding: Widgets icon"
-modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "TaskbarDa" 0
-modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Feeds" "ShellFeedsTaskbarViewMode" 2
 modify_reg_prop "HKLM:/SOFTWARE/Microsoft/PolicyManager/default/NewsAndInterests/AllowNewsAndInterests" "value" 0
-modify_reg_prop "HKLM:/SOFTWARE/Policies/Microsoft/Dsh" "AllowNewsAndInterests" 0
+modify_reg_prop "HKLM:/SOFTWARE/Policñies/Microsoft/Dsh" "AllowNewsAndInterests" 0
 
 # Hide taskbar on non-primary screens
 Write-Host ">> Hiding: Taskbar on non-primary screens"
