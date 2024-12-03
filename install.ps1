@@ -58,7 +58,7 @@ install_winget "7zip.7zip"                        # 7Zip
 
 # 7zip : Double-Click Simply Extract
 $null = New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
-$null = New-Item -path "hkcr:\Applications\7zG.exe\shell\open\command" -value "`"$prog_files/7-Zip/7zG.exe`" x `"%1`" -o* -aou" -Force
+$null = New-Item -path "HKCR:/Applications/7zG.exe/shell/open/command" -value "`"${env:ProgramFiles}\7-Zip\7zG.exe`" x `"%1`" -o* -aou" -Force
 
 # Media
 #---------------------
@@ -87,6 +87,7 @@ install_winget "Obsidian.Obsidian"                # Obsidian
 install_winget "Git.Git"                          # Git
 install_winget "bmatzelle.Gow"                    # Linux Aliases
 install_winget "KhronosGroup.VulkanSDK"           # Vulkan
+install_winget "Kitware.CMake"                    # CMake
 install_winget "Microsoft.VisualStudioCode"       # VS Code
 install_winget "Starship.Starship"                # Terminal prompt
 install_winget "gsass1.NTop"                      # htop for Windows
