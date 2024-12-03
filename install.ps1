@@ -92,6 +92,7 @@ install_winget "Starship.Starship"                # Terminal prompt
 install_winget "gsass1.NTop"                      # htop for Windows
 install_winget "eza-community.eza"                # ls 2.0
 install_winget "Python.Python.3.13"               # Python 3.x
+install_winget "ShiningLight.OpenSSL.Light"       # OpenSSL
 install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 
 # Personal
