@@ -25,9 +25,10 @@ $dot_dir = path_to_unix "${home}/.dotfiles";
 
 function dotfiles_sync {
 	Push-Location $dot_dir
-	git stash
+	git status -sb
+	$null = git stash
 	git pull
-	git stash pop
+	$null = git stash pop
 	git add -A
 	git commit -m "Updates"
 	git push
