@@ -28,7 +28,7 @@
 	sw    = switch
 	co    = checkout
 	cm    = commit -m
-	st    = status -sb
+	st    = status -s
 	lg    = log --graph --oneline --decorate=full
 	pur   = pull —-rebase
 	rba   = rebase --abort
