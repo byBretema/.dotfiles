@@ -1,6 +1,6 @@
 [core]
 	editor = code
-	autocrlf = true
+	autocrlf = false
 
 [color]
 	ui = true
