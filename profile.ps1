@@ -16,7 +16,28 @@ function path_to_unix([string]$path) {
 	return "$path".Replace("\", "/")
 }
 
-$dev_dir = path_to_unix "${env:UserProfile}/dev";
+$dev_dir = path_to_unix "${home}/dev";
+$dot_dir = path_to_unix "${home}/.dotfiles";
+
+###############################################################################
+### DOTFILES
+###############################################################################
+
+function dotfiles_sync {
+	Push-Location $dot_dir
+	git stash
+	git pull
+	git stash pop
+	git add -A
+	git commit -m "Updates"
+	git push
+	. $PROFILE
+	Pop-Location
+}
+
+function dotfiles_edit {
+	code $dot_dir
+}
 
 
 ###############################################################################
