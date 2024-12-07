@@ -27,11 +27,11 @@ function dotfiles_sync {
 	Push-Location $dot_dir
 	git status -s
 	$null = git stash
-	git pull
+	git pull --quiet
 	$null = git stash pop
 	git add -A
-	git commit -m "Updates" --short -q
-	git push
+	$null = git commit -m "Updates"
+	git push --quiet
 	. $PROFILE
 	Pop-Location
 }
