@@ -24,15 +24,15 @@ $dot_dir = path_to_unix "${home}/.dotfiles";
 ###############################################################################
 
 function dotfiles_sync {
+	. $PROFILE
 	Push-Location $dot_dir
 	git status -s
 	$null = git stash
 	git pull --quiet
 	$null = git stash pop
 	git add -A
-	$null = git commit -m "Updates"
+	$null = git commit -m "Updates ($([DateTimeOffset]::Now.ToUnixTimeSeconds()))"
 	git push --quiet
-	. $PROFILE
 	Pop-Location
 }
 
