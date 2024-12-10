@@ -1,6 +1,7 @@
 [core]
 	editor = code
 	autocrlf = false
+	excludesFile = ~/.gitignore
 
 [color]
 	ui = true
@@ -37,8 +38,10 @@
 	rmbr  = push origin --delete
 	rmbrl = !git branch -d "$1" && git push origin --delete "$1"
 
-	subInit = !git pull && git submodule init && git submodule update && git submodule status
-	subAdd  = !git submodule add
+	# subInit   = !git pull && git submodule init && git submodule update && git submodule status
+	subUpdate    = !git submodule update --init --recursive -j 12
+	subSetBranch = !git submodule foreach -q --recursive "git switch $1"
+	subAdd       = !git submodule add
 
 [safe]
 	directory = *
@@ -48,3 +51,5 @@
 
 [remote "origin"]
 	prune = true
+[user]
+	email = bybretema@gmail.com

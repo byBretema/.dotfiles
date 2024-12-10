@@ -1,11 +1,9 @@
 #Requires -RunAsAdministrator
 
-######################################################
-### Helprs
-######################################################
+### Helpers
+###############################################################################
 
-$script_root = $PSScriptRoot.Replace("\", "/")
-$prog_files = ${env:ProgramFiles}.Replace("\", "/")
+$script_root = $PSScriptRoot
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     $ProgressPreference = "SilentlyContinue"
@@ -16,20 +14,22 @@ function path_to_unix([string]$path) {
 }
 
 function unzip($path) {
-    $folder = ("$path".Replace("\", "/")) + "_unzip"
+    $folder = "${path}_unzip"
     Write-Host ">> Unzip : $folder"
     Remove-Item -Recurse $folder -Force 2>$null
-    $null = Start-Process -FilePath "$prog_files/7-Zip/7zG.exe" -ArgumentList "x `"$path`" -o`"$folder`" -aou" -PassThru -Wait
+    $null = Start-Process -FilePath "${env:ProgramFiles}\7-Zip\7zG.exe" -ArgumentList "x `"$path`" -o`"$folder`" -aou" -PassThru -Wait
     Start-Process $folder
 }
 
-Write-Host "`nSCRIPT BEGINING!`n========================================="
-
-######################################################
-### WINGET Packages
-######################################################
-
-Write-Host "`n[winget]"
+function download_to_temp([string]$url, [string]$name = "") {
+    if ($name.Length -lt 1) {
+        $name = $url.Split("/")[-1]
+    }
+    Write-Host ">> Downloading : $name"
+    $tmp_file = "${env:TEMP}\$name"
+    Invoke-WebRequest -UserAgent "Wget" -URI $url -OutFile $tmp_file;
+    return $tmp_file
+}
 
 function install_winget([string]$package, [string]$name = "") {
     if ($name.Length -gt 0) {
@@ -39,10 +39,74 @@ function install_winget([string]$package, [string]$name = "") {
     winget install --disable-interactivity --accept-package-agreements --accept-source-agreements -e --id "$package" 1>$null
 }
 
+function install_module([string]$pkg) {
+    Write-Host ">> Installing : $pkg"
+    $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
+}
+
+function install_capabilites([string]$name, [string]$filters_by_comma = "") {
+    $filters = $filters_by_comma.Split(",")
+    $has_filter = $filters.Length -gt 0
+    $caps = Get-WindowsCapability -Online | Where-Object { $_.Name -Like "*$name*" }
+    foreach ($cap in $caps) {
+        # Check filter
+        if ($has_filter) {
+            $valid = $false
+            foreach ($filter in $filters) {
+                $valid = $valid -or $cap.Name.Contains($filter)
+            }
+            if (-not $valid) {
+                continue
+            }
+        }
+        # Install
+        Write-Host ">> Installing : $($cap.Name)"
+        $null = $cap | Add-WindowsCapability -Online
+    }
+}
+
+function modify_reg_prop([string]$Path, [string]$Name, $Value, [string]$Type = "DWord") {
+    if (-not (Test-Path $Path)) {
+        $null = New-Item -Path $Path -Force
+    }
+    $null = Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force
+}
+
+function lns([string]$from, [string]$to) {
+    $to = path_to_unix $to
+    Write-Host ">> Linking : $from to $to"
+    $null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
+}
+
+# $global:custom_path = [Environment]::GetEnvironmentVariable('Path', "User")
+# function add_to_env_path ([string] $folder_path) {
+#     if ("$global:custom_path".Contains($folder_path)) {
+#         return
+#     }
+#     Write-Host ">> Adding to PATH : $folder_path"
+#     $env:PATH += ";$folder_path"
+#     $global:custom_path += ";$folder_path"
+#     [Environment]::SetEnvironmentVariable('Path', $global:custom_path, "User")
+# }
+
+function print_title([string]$title, [string]$subtitle = "") {
+    Write-Host "`n============================================================"
+    Write-Host ":: $title :: $subtitle"
+    Write-Host "============================================================"
+}
+
+Write-Host "`n>>> SCRIPT BEGINING <<<`n"
+
+
+### WINGET Packages
+###############################################################################
+
+print_title "Winget"
+
 if ($PSVersionTable.PSVersion.Major -lt 7) {
     install_winget "Microsoft.PowerShell" # Pwsh : Powershell 7
     sudo config --enable normal
-    & pwsh.exe "$script_root/install.ps1"
+    & pwsh.exe "$script_root\install.ps1"
     exit 0
 }
 
@@ -53,7 +117,7 @@ install_winget "QL-Win.QuickLook"                 # QuickLook  : macos-like Prev
 install_winget "voidtools.Everything"             # Everything : The best file searcher
 install_winget "voidtools.Everything.Cli"         # Everything : The best file searcher
 install_winget "Flow-Launcher.Flow-Launcher"      # Laucher    : Spotlight/Alfred like
-##install_winget "Microsoft.PowerToys"              # PowerToys
+install_winget "Microsoft.PowerToys"              # PowerToys  : FancyZones, Color Picker, OCR, ...
 install_winget "7zip.7zip"                        # 7Zip
 
 # 7zip : Double-Click Simply Extract
@@ -100,31 +164,18 @@ install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 #---------------------
 install_winget "Valve.Steam"                      # Steam
 install_winget "LocalSend.LocalSend"              # AirDrop wannabe
-##install_winget "Apple.iCloud"                     # iCloud
+install_winget "Apple.iCloud"                     # iCloud
 ##install_winget "RazerInc.RazerInstaller"          # Razer Lights
 
 
-######################################################
 ### MANUALLY : DOWNLOAD + INSTALL
-######################################################
+###############################################################################
 
-Write-Host "`n[direct-download]"
+print_title "Direct Downloads"
 
-# Download to temp file
-function download_to_temp([string]$url) {
-    $name = $url.Split("/")[-1]
-    Write-Host ">> Downloading : $name"
-    $tmp_file = path_to_unix "${env:TEMP}/$name";
-    if ($PSVersionTable.PSVersion.Major -lt 7) {
-        $ProgressPreference = "SilentlyContinue"
-    }
-    Invoke-WebRequest -URI $url -OutFile $tmp_file;
-    return $tmp_file
-}
-
-#unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
-#unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
-#unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
+unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
+unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
+unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
 
 ## OpenSSH
 # if ($(Get-Service -Name ssh-agent).Name -lt 1) {
@@ -134,34 +185,20 @@ function download_to_temp([string]$url) {
 # }
 
 
-######################################################
 ### POWERSHELL MODULES
-######################################################
+###############################################################################
 
-Write-Host "`n[pwsh-modules]"
-
-function install_module([string]$pkg) {
-    Write-Host ">> Installing : $pkg"
-    $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
-}
+print_title "Pwsh Modules"
 
 Import-Module PowerShellGet  1>$null 2>$null
 install_module z
 install_module posh-git
 
 
-######################################################
 ### REGISTRY
-######################################################
+###############################################################################
 
-Write-Host "`n[registry]"
-
-function modify_reg_prop([string]$Path, [string]$Name, $Value, [string]$Type = "DWord") {
-    if (-not (Test-Path $Path)) {
-        $null = New-Item -Path $Path -Force
-    }
-    $null = Set-ItemProperty -Path $Path -Name $Name -Type $Type -Value $Value -Force
-}
+print_title "Registry"
 
 # Show hidden files
 Write-Host ">> Activating: Show hidden files and folders"
@@ -171,7 +208,7 @@ modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanc
 Write-Host ">> Activating: Show all files extensions"
 modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "HideFileExt" 0
 
-# Hide search box/icon from taskbar
+# Hide search box or icon from taskbar
 Write-Host ">> Hiding: Search icon"
 modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Search" "SearchboxTaskbarMode" 0
 
@@ -221,18 +258,16 @@ if ($null -ne (Get-CimInstance -Class win32_battery)) {
 }
 
 
-######################################################
 ### DEFENDER EXCLUSIONS
-######################################################
+###############################################################################
 
-Write-Host "`n[defender exclusions]"
+print_title "Windows Defender Exclusions"
 
 # Folders
 Write-Host ">> Adding: Folders"
 $folders_to_not_scan = @(
-    "${home}/dev",
-    "${env:SystemDrive}/Vendor",
-    "${env:SystemDrive}/Qt"
+    "${home}\dev",
+    "${env:SystemDrive}\Qt"
 )
 
 $folders_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionPath $_ }
@@ -303,60 +338,32 @@ $process_to_not_scan = @(
 $process_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionProcess $_ }
 
 
-######################################################
 ### CAPABILITIES
-######################################################
+###############################################################################
 
-Write-Host "`n[capabilities]"
-
-function install_capabilites([string]$name, [string]$filters_by_comma = "") {
-    $filters = $filters_by_comma.Split(",")
-    $has_filter = $filters.Length -gt 0
-    $caps = Get-WindowsCapability -Online | Where-Object { $_.Name -Like "*$name*" }
-    foreach ($cap in $caps) {
-        # Check filter
-        if ($has_filter) {
-            $valid = $false
-            foreach ($filter in $filters) {
-                $valid = $valid -or $cap.Name.Contains($filter)
-            }
-            if (-not $valid) {
-                continue
-            }
-        }
-        # Install
-        Write-Host ">> Installing : $($cap.Name)"
-        $null = $cap | Add-WindowsCapability -Online
-    }
-}
+print_title "Capabilities"
 
 # Enable OCR for all available languages
 install_capabilites "Language.OCR" "en-GB,en-US,es-ES,fr-FR"
 
 
-######################################################
 ### LINKs
-######################################################
+###############################################################################
 
-Write-Host "`n[sym-links]"
-
-function lns([string]$from, [string]$to) {
-    $to = path_to_unix $to
-    Write-Host ">> Linking : $from to $to"
-    $null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
-}
+print_title "Symbolic Links"
 
 # Git Config
-lns "$script_root/.gitconfig" "${home}/.gitconfig"
+lns "$script_root\.gitconfig" "${home}\.gitconfig"
+lns "$script_root\.gitignore" "${home}\.gitignore"
 
 # Powershell Profile on Powershell 7.x
 $documents = ([Environment]::GetFolderPath("MyDocuments"))
-lns "$script_root/profile.ps1" "$documents/PowerShell/Microsoft.PowerShell_profile.ps1"
+lns "$script_root\profile.ps1" "$documents\PowerShell\Microsoft.PowerShell_profile.ps1"
 
 # VSCode Config + Extensions
 $vscode_config_path = path_to_unix "${env:APPDATA}\Code\User"
-lns "$script_root/vscode/settings.json"    "${vscode_config_path}/settings.json"
-lns "$script_root/vscode/keybindings.json" "${vscode_config_path}/keybindings.json"
+lns "$script_root\vscode\settings.json"    "${vscode_config_path}\settings.json"
+lns "$script_root\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
 
 # Windows Terminal Config
 $local_appdata_pkgs = path_to_unix "${env:LOCALAPPDATA}\Packages"
@@ -364,6 +371,6 @@ $terminal_partial_path = "*Microsoft.WindowsTerminal*"
 $terminals = (Get-ChildItem $local_appdata_pkgs -Name $terminal_partial_path)
 foreach ($terminal in $terminals) {
     $terminal = path_to_unix "$local_appdata_pkgs\$terminal"
-    $settings_path = "$terminal/LocalState/settings.json"
-    lns "$script_root/terminal/settings.json" $settings_path
+    $settings_path = "$terminal\LocalState\settings.json"
+    lns "$script_root\terminal\settings.json" $settings_path
 }

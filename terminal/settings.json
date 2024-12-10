@@ -4,6 +4,10 @@
     "actions": 
     [
         {
+            "command": "unbound",
+            "keys": "alt+space"
+        },
+        {
             "command": 
             {
                 "action": "copy",
@@ -11,10 +15,6 @@
             },
             "id": "User.copy.644BA8F2",
             "keys": "ctrl+c"
-        },
-        {
-            "command": "unbound",
-            "keys": "alt+space"
         },
         {
             "command": "quit",
@@ -171,6 +171,12 @@
                 "hidden": false,
                 "name": "Developer PowerShell for VS 2022",
                 "source": "Windows.Terminal.VisualStudio"
+            },
+            {
+                "guid": "{2c4de342-38b7-51cf-b940-2309a097f518}",
+                "hidden": true,
+                "name": "Ubuntu",
+                "source": "Windows.Terminal.Wsl"
             }
         ]
     },

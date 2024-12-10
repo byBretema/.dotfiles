@@ -1,0 +1,19 @@
+### Lovingly typoed @ByBretema
+
+### NOTES
+###############################################################################
+#!
+#! Use this file to avoid repeating gitignores between projects
+#! or to use it as template removing unneeded items
+#! or adding extra settings.
+#!
+#! Using the black-list approach, add only the files and folders
+#! you don't want to synchronize.
+#!
+
+
+### C++
+###############################################################################
+
+CMakeLists.txt.user
+build/

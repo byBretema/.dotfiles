@@ -16,8 +16,12 @@ function path_to_unix([string]$path) {
 	return "$path".Replace("\", "/")
 }
 
-$dev_dir = path_to_unix "${home}/dev";
-$dot_dir = path_to_unix "${home}/.dotfiles";
+function path_to_windows([string]$path) {
+	return "$path".Replace("/", "\")
+}
+
+$dev_dir = "${home}\dev";
+$dot_dir = "${home}\.dotfiles";
 
 ###############################################################################
 ### DOTFILES
@@ -46,22 +50,23 @@ function dotfiles_edit {
 ###############################################################################
 
 # Path
-$env:PATH += ";${home}/.dotfiles/bin"
-$env:PATH += ";${env:ProgramFiles}/starship/bin"
-$env:PATH += ";${dev_dir}/_bin/"
-$env:PATH += ";${dev_dir}/_bin/Odin"
-$env:PATH = path_to_unix ${env:PATH}
+$env:PATH += ";${home}\.dotfiles\bin"
+$env:PATH += ";${env:ProgramFiles}\starship\bin"
+$env:PATH += ";${dev_dir}\_bin\"
+$env:PATH += ";${dev_dir}\_bin\Odin"
+$env:PATH = ${env:PATH}
 
 # Python
-$env:PYTHONPATH = path_to_unix ${env:PYTHONPATH}
+$env:PYTHONPATH = ${env:PYTHONPATH}
 
+function dev { Push-Location $dev_dir }
 
 ###############################################################################
 ### ALIASes
 ###############################################################################
 
 # Discard aliases (https://github.com/bmatzelle/gow)
-@("md", "cls", "awk", "basename", "bash", "bc", "bison", "bunzip2", "bzip2", "bzip2recover", "cat", "chgrp", "chmod",
+@("md", "cls", "awk", "basename", "bc", "bison", "bunzip2", "bzip2", "bzip2recover", "cat", "chgrp", "chmod",
 	"chown", "chroot", "cksum", "clear", "cp", "csplit", "curl", "cut", "dc", "dd", "df", "diff", "diff3", "dirname",
 	"dos2unix", "du", "egrep", "env", "expand", "expr", "factor", "fgrep", "flex", "fmt", "fold", "gawk", "gfind",
 	"gow", "grep", "gsar", "gsort", "gzip", "head", "hostid", "hostname", "id", "indent", "install", "join", "jwhois",
@@ -102,7 +107,8 @@ function oo([string]$path = ".") { explorer $path }
 
 # Soft/Symbolic link
 function lns([string]$from, [string]$to) {
-	$to = path_to_unix $to
+	$from = path_to_windows $from
+	$to = path_to_windows $to
 	Write-Host ">> Linking : $from to $to"
 	$null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
 }
@@ -141,12 +147,13 @@ function modify_reg_prop([string]$Path, [string]$Name, $Value, [string]$Type = "
 }
 
 # Download to temp file
-function download_to_temp([string]$url, [string]$filename, [string]$ext) {
-	$tmp_file = path_to_unix "${env:TEMP}/${filename}.${ext}";
-	if ($PSVersionTable.PSVersion.Major -lt 7) {
-		$ProgressPreference = "SilentlyContinue"
+function download_to_temp([string]$url, [string]$name = "") {
+	if ($name.Length -lt 1) {
+		$name = $url.Split("/")[-1]
 	}
-	Invoke-WebRequest -URI $url -OutFile $tmp_file
+	Write-Host ">> Downloading : $name"
+	$tmp_file = "${env:TEMP}\$name";
+	Invoke-WebRequest -UserAgent "Wget" -URI $url -OutFile $tmp_file;
 	return $tmp_file
 }
 
@@ -366,7 +373,7 @@ Set-PSReadLineOption -HistoryNoDuplicates:$True  # Avoid duplicates
 ### PROMPT
 ###############################################################################
 
-$env:STARSHIP_CONFIG = path_to_unix "${home}/.dotfiles/starship.toml";
+$env:STARSHIP_CONFIG = "${home}\.dotfiles\starship.toml";
 
 if (-not (Test-Path $env:STARSHIP_CONFIG)) {
 	$req = Invoke-WebRequest "https://raw.githubusercontent.com/byBretema/.dotfiles/refs/heads/main/starship.toml";

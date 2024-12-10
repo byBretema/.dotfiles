@@ -63,7 +63,7 @@
     //---------------------------------------------------------
     "terminal.integrated.shellIntegration.enabled": true,
     "terminal.integrated.fontSize": 14,
-    "terminal.integrated.fontFamily": "'FiraCode NFM Retina'",
+    "terminal.integrated.fontFamily": "'FiraCode Nerd Font'",
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.profiles.windows": {
         "Pwsh": {
@@ -198,4 +198,10 @@
     "markdown-pdf.displayHeaderFooter": true,
     "markdown-pdf.headerTemplate": "<div></div>",
     "markdown-pdf.footerTemplate": "<div style=\"font-size: 9px; margin: 0 auto;\"><span class='pageNumber'></span> / <span class='totalPages'></span> :: Daniel Camba for OMI</div>",
+    "workbench.editorAssociations": {
+        "{git,gitlens,git-graph}:/**/*.{md,csv,svg}": "default"
+    },
+    "files.associations": {
+        "*.inc": "shellscript"
+    },
 }
