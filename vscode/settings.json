@@ -49,7 +49,7 @@
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorCustomizations": {
         "panel.border": "#ee8800",
-        "panel.background": "#1d1d25",
+        // "panel.background": "#1d1d25",
     },
     "workbench.preferredLightColorTheme": "Quiet Light",
     "workbench.startupEditor": "none",
@@ -204,4 +204,8 @@
     "files.associations": {
         "*.inc": "shellscript"
     },
+    "workbench.sideBar.location": "right",
+    "workbench.activityBar.location": "bottom",
+    "find-it-faster.general.useTerminalInEditor": true,
+    "workbench.preferredDarkColorTheme": "Night Owl Theme"
 }

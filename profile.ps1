@@ -186,6 +186,17 @@ function gitit {
 	}
 }
 
+# Everything Search CLI
+function ev {
+	Param
+	(
+		[Parameter(Mandatory = $true)] [string] $query,
+		[Parameter(Mandatory = $false)] [string] $ext
+	)
+	es -size -dm -sizecolor 4 -dmcolor 2 -sort path "*$query*$ext*"
+}
+
+
 # Search on Google
 function s {
 	if ($args) {
@@ -303,10 +314,16 @@ function iwinget ([string]$inName) {
 		if ($n -lt 10) { $nStr = "  " + $nStr }
 		if (($n -gt 9) -and $n -lt 100) { $nStr = " " + $nStr }
 
-		$pkgName = $lines[$it].Substring($nameIdx, $nameLen)
-		$pkgId = $lines[$it].Substring($idIdx, $idLen)
-		$pkgVer = $lines[$it].Substring($verIdx, $verLen)
-		Write-Host "$nStr)  ID: $pkgId | Ver: $pkgVer | Name: $pkgName"
+		$pkgId = $lines[$it].Substring($idIdx, $idLen).Trim()
+		$pkgName = $lines[$it].Substring($nameIdx, $nameLen).Trim()
+
+		$char_limit = 20
+		$char_limit_real = [Math]::Min($pkgName.Length, $char_limit)
+		$dots = ("...", "")[$pkgName.Length -lt $char_limit]
+		$pkgName = $pkgName.Substring(0, $char_limit_real) + $dots
+		# $pkgVer = $lines[$it].Substring($verIdx, $verLen)
+		# Write-Host "$nStr)  ID: $pkgId | Ver: $pkgVer | Name: $pkgName"
+		Write-Host "$nStr) $pkgId  ( $pkgName )"
 
 		$packages.Add($pkgId.Trim());
 	}

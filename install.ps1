@@ -104,7 +104,7 @@ Write-Host "`n>>> SCRIPT BEGINING <<<`n"
 print_title "Winget"
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    install_winget "Microsoft.PowerShell" # Pwsh : Powershell 7
+    install_winget "Microsoft.PowerShell"               # Pwsh : Powershell 7
     sudo config --enable normal
     & pwsh.exe "$script_root\install.ps1"
     exit 0
@@ -112,13 +112,14 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 # OS Utils
 #---------------------
-install_winget "Ditto.Ditto"                      # Ditto      : Clipboard History
-install_winget "QL-Win.QuickLook"                 # QuickLook  : macos-like Preview
-install_winget "voidtools.Everything"             # Everything : The best file searcher
-install_winget "voidtools.Everything.Cli"         # Everything : The best file searcher
-install_winget "Flow-Launcher.Flow-Launcher"      # Laucher    : Spotlight/Alfred like
-install_winget "Microsoft.PowerToys"              # PowerToys  : FancyZones, Color Picker, OCR, ...
-install_winget "7zip.7zip"                        # 7Zip
+install_winget "Ditto.Ditto"                            # Ditto      : Clipboard History
+install_winget "QL-Win.QuickLook"                       # QuickLook  : macos-like Preview
+install_winget "voidtools.Everything"                   # Everything : The best file searcher
+install_winget "voidtools.Everything.Cli"               #  ↪ Use 'es <query>' to use Everything Search from Terminal
+install_winget "Flow-Launcher.Flow-Launcher"            # Laucher    : Spotlight/Alfred like
+install_winget "Microsoft.PowerToys"                    # PowerToys  : FancyZones, Color Picker, OCR, ...
+install_winget "7zip.7zip"                              # 7Zip
+install_winget "Bitwarden.Bitwarden"                    # BitWarden
 
 # 7zip : Double-Click Simply Extract
 $null = New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
@@ -126,45 +127,53 @@ $null = New-Item -path "HKCR:/Applications/7zG.exe/shell/open/command" -value "`
 
 # Media
 #---------------------
-install_winget "Rufus.Rufus"                      # To burn ISOs onto USBs
-install_winget "CodecGuide.K-LiteCodecPack.Full"  # KLite
-install_winget "9NBLGGH42THS" "3D Previewer"      # 3D Previewer
-install_winget "BlenderFoundation.Blender"        # Blender
-install_winget "HandBrake.HandBrake"              # HandBrake : Video Coder
-install_winget "OBSProject.OBSStudio"             # OBS Studio
+install_winget "Rufus.Rufus"                            # To burn ISOs onto USBs
+install_winget "CodecGuide.K-LiteCodecPack.Full"        # KLite
+install_winget "9NBLGGH42THS" "3D Previewer"            # 3D Previewer
+install_winget "BlenderFoundation.Blender"              # Blender
+install_winget "HandBrake.HandBrake"                    # HandBrake : Video Coder
+install_winget "OBSProject.OBSStudio"                   # OBS Studio
 
 # Communications
 #---------------------
-install_winget "XPFCS9QJBKTHVZ" "Spark Mail"      # Spark Mail
-install_winget "Microsoft.Teams"                  # MS Teams
-install_winget "TeamViewer.TeamViewer"            # TeamViewer
+install_winget "XPFCS9QJBKTHVZ" "Spark Mail"            # Spark Mail
+install_winget "Microsoft.Teams"                        # MS Teams
+install_winget "TeamViewer.TeamViewer"                  # TeamViewer
+install_winget "9NKSQGP7F2NH" "Whatsapp"                # Whatsapp
+install_winget "SlackTechnologies.Slack"                # Slack
 
 # Information
 #---------------------
-install_winget "SumatraPDF.SumatraPDF"            # Sumatra : PDF Reader
-install_winget "Brave.Brave"                      # Brave : A better Chrome
-install_winget "Notion.Notion"                    # Notion
-install_winget "Obsidian.Obsidian"                # Obsidian
+install_winget "SumatraPDF.SumatraPDF"                  # Sumatra : PDF Reader
+install_winget "Brave.Brave"                            # Brave : A better Chrome
+install_winget "Notion.Notion"                          # Notion
+install_winget "Obsidian.Obsidian"                      # Obsidian
 
 # Dev
 #---------------------
-install_winget "Git.Git"                          # Git
-install_winget "bmatzelle.Gow"                    # Linux Aliases
-install_winget "KhronosGroup.VulkanSDK"           # Vulkan
-install_winget "Kitware.CMake"                    # CMake
-install_winget "Microsoft.VisualStudioCode"       # VS Code
-install_winget "Starship.Starship"                # Terminal prompt
-install_winget "gsass1.NTop"                      # htop for Windows
-install_winget "eza-community.eza"                # ls 2.0
-install_winget "Python.Python.3.13"               # Python 3.x
-install_winget "ShiningLight.OpenSSL.Dev"         # OpenSSL
+install_winget "Microsoft.VisualStudioCode"             # VS Code
+
+install_winget "Git.Git"                                # Git
+install_winget "bmatzelle.Gow"                          # Linux Aliases
+install_winget "gsass1.NTop"                            # htop for Windows
+install_winget "junegunn.fzf"                           # htop for Windows
+install_winget "sharkdp.bat"                            # like 'cat' but better
+install_winget "eza-community.eza"                      # ls 2.0
+
+install_winget "Starship.Starship"                      # Terminal prompt
+
+install_winget "Python.Python.3.13"                     # Python 3.x
+install_winget "ShiningLight.OpenSSL.Dev"               # OpenSSL
+
+install_winget "Kitware.CMake"                          # CMake
+install_winget "KhronosGroup.VulkanSDK"                 # Vulkan
 install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 
 # Personal
 #---------------------
-install_winget "Valve.Steam"                      # Steam
-install_winget "LocalSend.LocalSend"              # AirDrop wannabe
-install_winget "Apple.iCloud"                     # iCloud
+install_winget "Valve.Steam"                            # Steam
+install_winget "LocalSend.LocalSend"                    # AirDrop wannabe
+install_winget "9PKTQ5699M62" "iCloud"                  # iCloud
 ##install_winget "RazerInc.RazerInstaller"          # Razer Lights
 
 

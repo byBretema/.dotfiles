@@ -1,22 +1,25 @@
 format = """
 $time\
-[ · ](fg:#FFF)\
+[ · ](fg:#FFFFFF)\
 $directory\
 $git_branch$git_status\
 $docker_context\
 $cmd_duration\
-[ · ](fg:#FFF)\
 $character\
 """
 
+# Settings
+scan_timeout = 500
+command_timeout = 60000
+
 # Disable the blank line at the start of the prompt
-add_newline = false
+add_newline = true
 
 # Configure the divisor character of the prompt
 [character]
-format = "$symbol "
-error_symbol = '[❯](bold red)'     # The 'error_symbol'   segment is being set to '➜' with the color 'bold red'
-success_symbol = '[❯](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
+format = "\n $symbol "
+error_symbol = '[➡️](bold red)'     # The 'error_symbol'   segment is being set to '➜' with the color 'bold red'
+success_symbol = '[➡️](bold green)' # The 'success_symbol' segment is being set to '➜' with the color 'bold green'
 
 [directory]
 format = "[📂 $path]($style)"
@@ -29,18 +32,18 @@ truncation_symbol = "…/"
 "~/OneDrive" = "1️⃣ "
 "~/iCloudDrive" = "🍎 "
 "Documents" = "📄 "
-"Downloads" = "📥 "
+"Downloads" = "🔽 "
 "Music" = "🎵 "
 "Pictures" = "🖼️ "
 "Videos" = "📽️ "
 
 [docker_context]
 symbol = "🐳 "
-format = '[[ · ](fg:#FFF)$symbol $context]($style) $path'
+format = '[[ · ](fg:#FFFFFF)$symbol $context]($style) $path'
 
 [git_branch]
 symbol = "🐙"
-format = '[[ · ](fg:#FFF)$symbol $branch]($style)'
+format = '[[ · ](fg:#FFFFFF)$symbol $branch]($style)'
 
 [git_status]
 format = '[$all_status$ahead_behind]($style)'
@@ -50,8 +53,8 @@ behind = '⇣${count}'
 
 [time]
 disabled = false
-time_format = "%R"           # Hour:Minute Format
-format = '[⏳ $time]($style)'
+time_format = "%T"
+format = '[⏳ $time](red)'
 
 [cmd_duration]
-format = '[[ · ](fg:#FFF)⏱ $duration]($style)'
+format = '[[ · ](fg:#FFFFFF)⏱  $duration](purple)'
