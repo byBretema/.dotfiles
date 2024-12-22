@@ -38,10 +38,8 @@
 	rmbr  = push origin --delete
 	rmbrl = !git branch -d "$1" && git push origin --delete "$1"
 
-	# subInit   = !git pull && git submodule init && git submodule update && git submodule status
-	subUpdate    = !git submodule update --init --recursive -j 12
-	subSetBranch = !git submodule foreach -q --recursive "git switch $1"
 	subAdd       = !git submodule add
+	subUpdate    = !git submodule update --init --recursive -j 12
 
 [safe]
 	directory = *
@@ -51,5 +49,6 @@
 
 [remote "origin"]
 	prune = true
+
 [user]
 	email = bybretema@gmail.com

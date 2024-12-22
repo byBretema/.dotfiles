@@ -42,7 +42,7 @@ symbol = "🐳 "
 format = '[[ · ](fg:#FFFFFF)$symbol $context]($style) $path'
 
 [git_branch]
-symbol = "🐙"
+symbol = "\n🐙"
 format = '[[ · ](fg:#FFFFFF)$symbol $branch]($style)'
 
 [git_status]
@@ -57,4 +57,4 @@ time_format = "%T"
 format = '[⏳ $time](red)'
 
 [cmd_duration]
-format = '[[ · ](fg:#FFFFFF)⏱  $duration](purple)'
+format = '[[ · ](fg:#FFFFFF)⏱  $duration]($style)'

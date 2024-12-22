@@ -133,6 +133,141 @@ function noff { shutdown /a }
 function bitlock { sudo manage-bde.exe -lock $args[0] }
 function bitunlock { sudo manage-bde.exe -unlock $args[0] -pw }
 
+# Send item to Recycle Bin
+function trash {
+	param (
+		[Parameter(Mandatory = $false)] [string] $Path
+	)
+	$Path = $ExecutionContext.SessionState.Path.GetUnresolvedProviderPathFromPSPath("$Path")
+
+	$shell = New-Object -comobject "Shell.Application"
+	$item = $shell.Namespace(0).ParseName("$Path")
+	$item.InvokeVerb("delete")
+}
+
+###############################################################################
+### GIT
+###############################################################################
+
+# Open git repo on the browser
+function gitit {
+	if (-not (Test-Path "./.git")) {
+		Write-Host "fatal: not a git repository (or any of the parent directories): .git"
+		return
+	}
+
+	$http = ((((git remote -v)[0] -Split " ")[0] -Split "`t")[1])
+	$ssh = ($http -Split "@")[1].Replace(":", "/")
+
+	$ErrorActionPreference = "SilentlyContinue";
+	try {
+		Start-Process "https://$http"
+	}
+	catch {
+		Start-Process "https://$ssh"
+	}
+}
+
+# Run git command in Submodules and [Parent] in [Parallel] + It supports aliases
+function gs {
+
+	Param(
+		# Show help
+		[switch]$h,
+
+		# If active : Run only on submodules
+		[switch]$s,
+
+		# If active : Force parallel run
+		[switch]$p,
+
+		# Rest of the params
+		[parameter(ValueFromRemainingArguments)]
+		[string[]]$cmd
+	)
+
+	# Help / Ussage
+	if ($cmd.Length -lt 1 -or $h) {
+		Write-Host "`nRun git commands in submodules"
+		Write-Host "`nUsage: gs [-s] [-np] cmd..."
+		Write-Host "-s : Run only on submodules"
+		return
+	}
+
+	# Some command are worthy to run on parallel
+	$is_parallel = $p
+	if (-not $is_parallel) {
+		@("pull", "push") | ForEach-Object {
+			$is_parallel = $is_parallel -or $($cmd -contains $_)
+		}
+	}
+
+	# Commits needs to escape the string in order to work properly
+	$is_commit = $false
+	@("commit", "ac") | ForEach-Object {
+		$is_commit = $is_commit -or $($cmd -contains $_)
+	}
+	if ($is_commit) {
+		$cmd[-1] = "`'$($cmd[-1])`'"
+	}
+
+	# TUI
+	function print_submodule_output([string]$name, [string]$msg) {
+		if (-not $output) {
+			return
+		}
+		Write-Host "`n[>>] $name"
+		Write-Output $output
+	}
+	$exec_type = ('', ' in parallel')[[int][bool]::Parse($is_parallel)]
+	Write-Host "-- Attempting to run command$exec_type"
+
+	# Compose the real git command
+	$git_cmd = "git --no-pager $cmd"
+
+	# Get the list of submodules
+	$submodules = git submodule foreach --quiet --recursive 'echo $sm_path'
+	if (-not $submodules) {
+		Write-Host "Submodules not found."
+		return
+	}
+
+	# Digest sequentially
+	if (-not $is_parallel) {
+		$submodules | ForEach-Object {
+			Push-Location -Path $_
+			$output = (Invoke-Expression $git_cmd)
+			print_submodule_output $_ $output
+			Pop-Location
+		}
+	}
+
+	# Digest in parallel
+	else {
+		$jobs = @()
+		## Launch jobs
+		$submodules | ForEach-Object {
+			$jobs += Start-Job -ScriptBlock {
+				param ($submodulePath, $commandToRun)
+				Set-Location -Path $submodulePath
+				Invoke-Expression $commandToRun
+			} -Name $_ -ArgumentList $_, $git_cmd
+		}
+		## Wait/Process/Kill jobs
+		$jobs | ForEach-Object {
+			$output = Receive-Job -Job $_ -Wait -AutoRemoveJob
+			$output = ($output -join "`n")
+			print_submodule_output $_.Name $output
+		}
+	}
+
+	# Run also on parent repository
+	if (-not $s) {
+		$output = (Invoke-Expression $git_cmd)
+		print_submodule_output 'parent' $output
+	}
+}
+
 
 ###############################################################################
 ### UTILs
@@ -164,33 +299,14 @@ function install_exe_from_url ([string]$url, [string]$filename) {
 
 # Unzip
 function unzip($path) {
-	& "${env:ProgramFiles}/7-Zip/7zG.exe" x "$path" -o* -aou
-}
-
-# Open git repo on the browser
-function gitit {
-	if (-not (Test-Path "./.git")) {
-		Write-Host "fatal: not a git repository (or any of the parent directories): .git"
-		return
-	}
-
-	$http = ((((git remote -v)[0] -Split " ")[0] -Split "`t")[1])
-	$ssh = ($http -Split "@")[1].Replace(":", "/")
-
-	$ErrorActionPreference = "SilentlyContinue";
-	try {
-		Start-Process "https://$http"
-	}
-	catch {
-		Start-Process "https://$ssh"
-	}
+	& "${env:ProgramFiles}\7-Zip\7zG.exe" x "$path" -o* -aou
 }
 
 # Everything Search CLI
 function ev {
 	Param
 	(
-		[Parameter(Mandatory = $true)] [string] $query,
+		[Parameter(Mandatory = $true)]  [string] $query,
 		[Parameter(Mandatory = $false)] [string] $ext
 	)
 	es -size -dm -sizecolor 4 -dmcolor 2 -sort path "*$query*$ext*"
@@ -212,7 +328,7 @@ function tr ([string]$to, [string]$text) {
 		$Translation = $Response[0].SyncRoot | ForEach-Object { $_[0] }
 		Write-Output $Translation
 	}
- catch {
+	catch {
 		"[ERR] - Check values of | `$to = $to | `$text = $text"
 	}
 }
