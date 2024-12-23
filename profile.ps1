@@ -116,9 +116,6 @@ function lns([string]$from, [string]$to) {
 # Windows whoami
 function me { net user ${env:UserName} }
 
-# Run last command as admin
-# function aaa { sudo -plz }
-
 # Open devices manager
 function devices { mmc devmgmt.msc }
 
@@ -174,17 +171,30 @@ function gs {
 	Param(
 		# Show help
 		[switch]$h,
-
 		# If active : Run only on submodules
 		[switch]$s,
-
 		# If active : Force parallel run
 		[switch]$p,
-
 		# Rest of the params
-		[parameter(ValueFromRemainingArguments)]
-		[string[]]$cmd
+		[parameter(ValueFromRemainingArguments)] [string[]]$cmd
 	)
+
+	# Start working directory
+	$start_cwd = $($pwd.Path)
+
+	# # TUI
+	function print_submodule_output([string]$name, [string[]]$msg) {
+		if (-not $msg) {
+			return
+		}
+		$msg = ($msg -join "`n")
+		$char = "="
+		Write-Host ""
+		Write-Host $($char * 60)
+		Write-Host " *  $name".ToUpper()
+		Write-Host $($char * 60)
+		Write-Host $msg.TrimStart().TrimEnd()
+	}
 
 	# Help / Ussage
 	if ($cmd.Length -lt 1 -or $h) {
@@ -211,60 +221,60 @@ function gs {
 		$cmd[-1] = "`'$($cmd[-1])`'"
 	}
 
-	# TUI
-	function print_submodule_output([string]$name, [string]$msg) {
-		if (-not $output) {
-			return
-		}
-		Write-Host "`n[>>] $name"
-		Write-Output $output
-	}
-	$exec_type = ('', ' in parallel')[[int][bool]::Parse($is_parallel)]
-	Write-Host "-- Attempting to run command$exec_type"
-
-	# Compose the real git command
-	$git_cmd = "git --no-pager $cmd"
+	# Init message
+	Write-Host " >  Attempting to run command$(('', ' in parallel')[[int][bool]::Parse($is_parallel)])"
 
 	# Get the list of submodules
 	$submodules = git submodule foreach --quiet --recursive 'echo $sm_path'
 	if (-not $submodules) {
-		Write-Host "Submodules not found."
+		Write-Host " !  Submodules not found"
 		return
 	}
 
-	# Digest sequentially
-	if (-not $is_parallel) {
-		$submodules | ForEach-Object {
-			Push-Location -Path $_
-			$output = (Invoke-Expression $git_cmd)
-			print_submodule_output $_ $output
-			Pop-Location
+	# Compose the real git command
+	$git_cmd = "git -c color.ui=always --no-pager $cmd 2>&1"
+
+	# Start the process...
+	try {
+
+		## Digest sequentially
+		if (-not $is_parallel) {
+			$submodules | ForEach-Object {
+				Push-Location -Path $_
+				print_submodule_output $_ $(Invoke-Expression $git_cmd)
+				Pop-Location
+			}
+		}
+
+		## Digest in parallel
+		else {
+			$jobs = @()
+			### Launch jobs
+			$submodules | ForEach-Object {
+				$jobs += Start-Job -ScriptBlock {
+					param ($submodulePath, $commandToRun)
+					Set-Location -Path $submodulePath
+					Invoke-Expression $commandToRun
+				} -Name $_ -ArgumentList $_, $git_cmd
+			}
+			### Wait
+			$jobs | ForEach-Object { $null = $_ | Wait-Job }
+			### Process
+			$jobs | ForEach-Object { print_submodule_output $_.Name $(Receive-Job -Job $_) }
+			### Remove
+			$jobs | ForEach-Object { $null = $_ | Remove-Job }
+		}
+
+		## Run also on parent repository
+		if (-not $s) {
+			Set-Location $start_cwd
+			print_submodule_output "parent" $(Invoke-Expression $git_cmd)
 		}
 	}
 
-	# Digest in parallel
-	else {
-		$jobs = @()
-		## Launch jobs
-		$submodules | ForEach-Object {
-			$jobs += Start-Job -ScriptBlock {
-				param ($submodulePath, $commandToRun)
-				Set-Location -Path $submodulePath
-				Invoke-Expression $commandToRun
-			} -Name $_ -ArgumentList $_, $git_cmd
-		}
-		## Wait/Process/Kill jobs
-		$jobs | ForEach-Object {
-			$output = Receive-Job -Job $_ -Wait -AutoRemoveJob
-			$output = ($output -join "`n")
-			print_submodule_output $_.Name $output
-		}
-	}
-
-	# Run also on parent repository
-	if (-not $s) {
-		$output = (Invoke-Expression $git_cmd)
-		print_submodule_output 'parent' $output
+	# On fallback...
+	finally {
+		Set-Location $start_cwd
 	}
 }
 
