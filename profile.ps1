@@ -54,12 +54,14 @@ $env:PATH += ";${home}\.dotfiles\bin"
 $env:PATH += ";${env:ProgramFiles}\starship\bin"
 $env:PATH += ";${dev_dir}\_bin\"
 $env:PATH += ";${dev_dir}\_bin\Odin"
-$env:PATH = ${env:PATH}
 
 # Python
 $env:PYTHONPATH = ${env:PYTHONPATH}
 
 function dev { Push-Location $dev_dir }
+function omip { Push-Location "${dev_dir}\Omi\preview_emcc" }
+function omis { Push-Location "${dev_dir}\Omi\studio_engine" }
+function omic { Push-Location "${dev_dir}\Omi\_config" }
 
 ###############################################################################
 ### ALIASes
@@ -182,18 +184,23 @@ function gs {
 	# Start working directory
 	$start_cwd = $($pwd.Path)
 
-	# # TUI
+	# TUI
 	function print_submodule_output([string]$name, [string[]]$msg) {
-		if (-not $msg) {
-			return
-		}
+
+		$msg = $msg.Replace("No stash entries found." , "")  # stash pop
+		$msg = $msg.Replace("No local changes to save", "")  # stash 'push'
+		$msg = $msg.Replace("Everything up-to-date"   , "")  # push
+		$msg = $msg.Replace("Already up to date."   , "")  # pull
+
+		if (-not $msg) { return }
 		$msg = ($msg -join "`n")
+
 		$char = "="
 		Write-Host ""
 		Write-Host $($char * 60)
 		Write-Host " *  $name".ToUpper()
 		Write-Host $($char * 60)
-		Write-Host $msg.TrimStart().TrimEnd()
+		Write-Host $msg.TrimStart("`n").TrimEnd("`n")
 	}
 
 	# Help / Ussage
@@ -222,7 +229,7 @@ function gs {
 	}
 
 	# Init message
-	Write-Host " >  Attempting to run command$(('', ' in parallel')[[int][bool]::Parse($is_parallel)])"
+	# Write-Host " >  Attempting to run command$(('', ' in parallel')[[int][bool]::Parse($is_parallel)])"
 
 	# Get the list of submodules
 	$submodules = git submodule foreach --quiet --recursive 'echo $sm_path'

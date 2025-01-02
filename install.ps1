@@ -110,16 +110,22 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     exit 0
 }
 
-# OS Utils
+# OS Tweaks
 #---------------------
-install_winget "Ditto.Ditto"                            # Ditto      : Clipboard History
-install_winget "QL-Win.QuickLook"                       # QuickLook  : macos-like Preview
+install_winget "Nilesoft.Shell"                         # NShell : Custom right-click menu
+install_winget "Ditto.Ditto"                            # Ditto : Clipboard History
+install_winget "QL-Win.QuickLook"                       # QuickLook : macos-like Preview
 install_winget "voidtools.Everything"                   # Everything : The best file searcher
 install_winget "voidtools.Everything.Cli"               #  ↪ Use 'es <query>' to use Everything Search from Terminal
-install_winget "Flow-Launcher.Flow-Launcher"            # Laucher    : Spotlight/Alfred like
-install_winget "Microsoft.PowerToys"                    # PowerToys  : FancyZones, Color Picker, OCR, ...
-install_winget "7zip.7zip"                              # 7Zip
+install_winget "Flow-Launcher.Flow-Launcher"            # Laucher : Spotlight/Alfred like
+install_winget "Microsoft.PowerToys"                    # PowerToys : FancyZones, Color Picker, OCR, ...
+install_winget "9P8LTPGCBZXD" "WinToys"                 # WinToys : Settings Dashboard
+
+# OS Utils
+#---------------------
 install_winget "Bitwarden.Bitwarden"                    # BitWarden
+install_winget "7zip.7zip"                              # 7Zip
+install_winget "ShareX.ShareX"                          # Better screenshots
 
 # 7zip : Double-Click Simply Extract
 $null = New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
@@ -128,7 +134,7 @@ $null = New-Item -path "HKCR:/Applications/7zG.exe/shell/open/command" -value "`
 # Media
 #---------------------
 install_winget "Rufus.Rufus"                            # To burn ISOs onto USBs
-install_winget "CodecGuide.K-LiteCodecPack.Full"        # KLite
+install_winget "CodecGuide.K-LiteCodecPack.Full"        # KLite video code pack
 install_winget "9NBLGGH42THS" "3D Previewer"            # 3D Previewer
 install_winget "BlenderFoundation.Blender"              # Blender
 install_winget "HandBrake.HandBrake"                    # HandBrake : Video Coder
