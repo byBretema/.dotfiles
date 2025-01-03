@@ -51,6 +51,8 @@ function dotfiles_edit {
 
 # Path
 $env:PATH += ";${home}\.dotfiles\bin"
+$env:PATH += ";${dev_dir}\Omi\_config\bin\"
+$env:PATH += ";${dev_dir}\Omi\_config\bin\tp_tools\scripts"
 $env:PATH += ";${env:ProgramFiles}\starship\bin"
 $env:PATH += ";${dev_dir}\_bin\"
 $env:PATH += ";${dev_dir}\_bin\Odin"
@@ -59,6 +61,7 @@ $env:PATH += ";${dev_dir}\_bin\Odin"
 $env:PYTHONPATH = ${env:PYTHONPATH}
 
 function dev { Push-Location $dev_dir }
+function omi { Push-Location "${dev_dir}\Omi" }
 function omip { Push-Location "${dev_dir}\Omi\preview_emcc" }
 function omis { Push-Location "${dev_dir}\Omi\studio_engine" }
 function omic { Push-Location "${dev_dir}\Omi\_config" }
@@ -187,13 +190,16 @@ function gs {
 	# TUI
 	function print_submodule_output([string]$name, [string[]]$msg) {
 
+		if (-not $msg) { return }  # Avoid null inputs
+
 		$msg = $msg.Replace("No stash entries found." , "")  # stash pop
 		$msg = $msg.Replace("No local changes to save", "")  # stash 'push'
 		$msg = $msg.Replace("Everything up-to-date"   , "")  # push
-		$msg = $msg.Replace("Already up to date."   , "")  # pull
+		$msg = $msg.Replace("Already up to date."   , "")    # pull
 
-		if (-not $msg) { return }
-		$msg = ($msg -join "`n")
+		if (-not $msg) { return }  # Avoid show on empty results
+
+		$msg = ($msg -join "`n")  # Join array as a paragraph
 
 		$char = "="
 		Write-Host ""
@@ -228,18 +234,15 @@ function gs {
 		$cmd[-1] = "`'$($cmd[-1])`'"
 	}
 
-	# Init message
-	# Write-Host " >  Attempting to run command$(('', ' in parallel')[[int][bool]::Parse($is_parallel)])"
+	# Compose the real git command
+	$git_cmd = "git -c color.ui=always --no-pager $cmd 2>&1"
 
 	# Get the list of submodules
-	$submodules = git submodule foreach --quiet --recursive 'echo $sm_path'
+	$submodules = (Get-ChildItem . -Directory).Name | Where-Object { Test-Path "$($_)\.git" }
 	if (-not $submodules) {
 		Write-Host " !  Submodules not found"
 		return
 	}
-
-	# Compose the real git command
-	$git_cmd = "git -c color.ui=always --no-pager $cmd 2>&1"
 
 	# Start the process...
 	try {
@@ -273,7 +276,7 @@ function gs {
 		}
 
 		## Run also on parent repository
-		if (-not $s) {
+		if ((-not $s) -and (Test-Path ".git")) {
 			Set-Location $start_cwd
 			print_submodule_output "parent" $(Invoke-Expression $git_cmd)
 		}
