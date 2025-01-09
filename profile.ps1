@@ -50,12 +50,15 @@ function dotfiles_edit {
 ###############################################################################
 
 # Path
-$env:PATH += ";${home}\.dotfiles\bin"
-$env:PATH += ";${dev_dir}\Omi\_config\bin\"
-$env:PATH += ";${dev_dir}\Omi\_config\bin\tp_tools\scripts"
-$env:PATH += ";${env:ProgramFiles}\starship\bin"
-$env:PATH += ";${dev_dir}\_bin\"
-$env:PATH += ";${dev_dir}\_bin\Odin"
+$env:PATH = ";$env:PATH"
+$env:PATH = ";$env:PATH;${home}\.dotfiles\bin"
+$env:PATH = ";$env:PATH;${dev_dir}\Omi\_config\bin\"
+$env:PATH = ";$env:PATH;${dev_dir}\Omi\_config\bin\tp_tools\scripts"
+$env:PATH = ";$env:PATH;${env:ProgramFiles}\starship\bin"
+$env:PATH = ";$env:PATH;${dev_dir}\_bin\"
+$env:PATH = ";$env:PATH;${dev_dir}\_bin\Odin"
+$env:PATH = ";$env:PATH;${env:ProgramFiles}\Git\usr\bin"
+$env:PATH = ";$env:PATH;${env:ProgramFiles}\Git\bin"
 
 # Python
 $env:PYTHONPATH = ${env:PYTHONPATH}
@@ -197,7 +200,11 @@ function gs {
 		$msg = $msg.Replace("Everything up-to-date"   , "")  # push
 		$msg = $msg.Replace("Already up to date."   , "")    # pull
 
-		if (-not $msg) { return }  # Avoid show on empty results
+		if ((-not $msg) `
+				-or $msg.Contains("nothing to commit, working tree clean") ` # commit
+		) {
+			return;
+		}
 
 		$msg = ($msg -join "`n")  # Join array as a paragraph
 
