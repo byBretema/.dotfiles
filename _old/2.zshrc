@@ -1,5 +1,5 @@
 
-# Written with <3 by Daniel (@byBretema)
+# Written with <3 @byBretema
 
 
 ###############################################################################
@@ -69,7 +69,7 @@ setopt list_ambiguous           # complete until it gets ambiguous.
 setopt completealiases          # complete alisases.
 setopt complete_in_word         # allow completion from within a word/phrase.
 
-# Bullshit
+# Unset
 unsetopt hup                    # no hup signal at shell exit.
 unsetopt beep                   # no bell on error.
 unsetopt bg_nice                # no lower prio for background jobs.
