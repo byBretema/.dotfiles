@@ -2,13 +2,21 @@
 
 
 ###############################################################################
-### P10K
+### OH-MY-ZSH / PLUGINS
 ###############################################################################
-if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
-  source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
-fi
-source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
-[[ ! -f ~/.p10k.zsh ]] || source ~/.p10k.zsh
+
+export ZSH="/usr/share/oh-my-zsh"
+export FZF_BASE=/usr/share/fzf
+
+DISABLE_MAGIC_FUNCTIONS="true"
+ENABLE_CORRECTION="true"
+COMPLETION_WAITING_DOTS="true"
+plugins=(git fzf extract)
+source $ZSH/oh-my-zsh.sh
+
+source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
+source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
 
 ###############################################################################
@@ -17,25 +25,23 @@ source /usr/share/zsh-theme-powerlevel10k/powerlevel10k.zsh-theme
 
 autoload -U colors && colors								# colors
 autoload -U zsh-mime-setup && zsh-mime-setup				# run all as executable.
-# autoload -U select-word-style && select-word-style bash		# ctrl+w del words.
+autoload -U select-word-style && select-word-style bash		# ctrl+w del words.
 
 
 ###############################################################################
 ### SETTINGS
 ###############################################################################
 
-# Plugins
-#------------------
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
-plugins=(git fzf extract)
-export FZF_BASE=/usr/share/fzf
+# # Key Bindings
+# #------------------
+# bindkey '\e[1;5C' forward-word		# C-Right
+# bindkey '\e[1;5D' backward-word		# C-Left
+# bindkey '^R'      history-incremental-pattern-search-backward
 
 # History
 #------------------
 ## Sync history between shells
-export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"  
+# export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 ## Don't add certain commands to the history file.
 export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
 ## Ignore commands that start with spaces and duplicates.
@@ -101,52 +107,59 @@ setopt complete_in_word         # allow completion from within a word/phrase.
 unsetopt hup                    # no hup signal at shell exit.
 unsetopt beep                   # no bell on error.
 unsetopt bg_nice                # no lower prio for background jobs.
-unsetopt clobber                # must use >| to truncate existing files.
+unsetopt clobber                # must use >! or >| to truncate existing files.
 unsetopt list_beep              # no bell on ambiguous completion.
 unsetopt hist_beep              # no bell on error in history.
 unsetopt ignore_eof             # do not exit on end-of-file.
 unsetopt rm_star_silent         # confirmation for `rm *' or `rm path/*'.
 unsetopt hist_ignore_space      # ignore space prefixed commands.
+unsetopt MULTIBYTE              # allow modern stuff
 
 
-###############################################################################
-### AUTO COMPLETE
-###############################################################################
+# ###############################################################################
+# ### AUTO COMPLETE
+# ###############################################################################
 
-autoload -U compinit -d && compinit
+# autoload -U compinit -d && compinit
 
-## Basics
-zstyle ':completion:*' menu select=2                       # menu if items > 2
-zstyle ':completion::complete:*' use-cache on              # use cache
-zstyle ':completion:*' cache-path ~/.zsh/cache             # cache path
-zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}      # colorz !
-zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # ignore case
-zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
+# # Basics
+# zstyle ':completion:*' menu select=2                       # menu if items > 2
+# zstyle ':completion::complete:*' use-cache on              # use cache
+# zstyle ':completion:*' cache-path $HOME/.zsh/cache             # cache path
+# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}      # colorz !
+# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # ignore case
+# zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
 
-## Sections
-# zstyle ':completion:*:messages' format $'\e[37m%d'
-zstyle ':completion:*:manuals' separate-sections true
-# zstyle ':completion:*:descriptions' format $'\e[37m%d'
+# # Sections
+# zstyle ':completion:*:manuals' separate-sections true
+# # zstyle ':completion:*:messages' format $'\e[37m%d'
+# # zstyle ':completion:*:descriptions' format $'\e[37m%d'
 
 
 ###############################################################################
 ### GLOBAL VARS
 ###############################################################################
 
-export dev_dir="~/dev"
-export dot_dir="~/.dotfiles"
+export dev_dir="$HOME/dev"
+export dot_dir="$HOME/.dotfiles"
 
 
 ###############################################################################
 ### PATH
 ###############################################################################
 
-PATH="$PATH:~/dev/omi/_bin/tp_tools/scripts"
+export PATH="$PATH:$HOME/dev/omi/_bin/tp_tools/scripts"
+export PATH="$PATH:$HOME/dev/omi/emsdk"
 
 
 ###############################################################################
 ### ALIASES
 ###############################################################################
+
+# Shell
+#------------------
+alias zr="source $HOME/.zshrc"
+alias ze="xdg-open $HOME/.zshrc"
 
 # Utils
 #------------------
@@ -158,10 +171,13 @@ alias tree="eza -Ta --icons always --git -s type"
 
 # Apps
 #------------------
-alias code="vscodium"
+### alias code="vscodium"
 
 # System
 #------------------
+## Clipboard
+alias pbcopy="xclip -selection clipboard"
+alias pbpaste="xclip -selection clipboard -o"
 ## Kernel info
 alias jctl="journalctl"
 alias qctl="journalctl -p 3 -xb"
@@ -169,7 +185,7 @@ alias qctl="journalctl -p 3 -xb"
 # Arch
 #------------------
 ## Paru
-alias paru="paru --bottomup"
+alias parub="paru --bottomup"
 ## Recent installed packages
 alias pm_rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 ## Cleanup orphaned packages
@@ -211,20 +227,20 @@ function dotfiles_edit() {
 ###############################################################################
 
 # Open git repo on the browser
-# function gitit {
-# 	if [ ! -d "./.git" ]; then
-# 		echo "fatal: not a git repository"
-# 		return
-# 	fi
+function gitit {
+	if [ ! -d "./.git" ]; then
+		echo "fatal: not a git repository"
+		return
+	fi
 
-# 	url=$(git remote -v | head -n 1 | awk '{print $2}')
-# 	if [[ $url == *@* ]]; then
-# 		ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
-# 		brave $ssh   ## mime_open ??
-# 	else
-# 		brave $url
-# 	fi
-# }
+	url=$(git remote -v | head -n 1 | awk '{print $2}')
+	if [[ $url == *@* ]]; then
+		ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
+		xdg-open $ssh
+	else
+		xdg-open $url
+	fi
+}
 
 
 ###############################################################################
@@ -237,14 +253,14 @@ function k() {
 	ll
 }
 
-# Open current dir on explorer
+# Open current dir on file-explorer
 function oo() {
-	dolphin $1 &
+	xdg-open $1
 }
 
 # A safe 'rm' alternative
 # function rr() {
-# 	mv $* ~/.Trash/
+# 	mv $* $HOME/.Trash/
 # }
 
 # Create a folder and enter
@@ -265,6 +281,26 @@ function net {
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
 }
 
+# Search on Google
+function s {
+	brave "https://www.google.com/search?q=$($* -join '+')"
+}
+
+# Translatation CLI
+function tr () {
+	local to="$1"
+    local text="$2"
+
+	uri="https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$($to)&dt=t&q=$text"
+	response=$(curl -A "Wget" -o "$uri")
+	# ??? translation = $Response[0].SyncRoot | ForEach-Object { $_[0] }
+	echo "$translation"
+}
+
+function nvidia_status()
+{
+	bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status
+}
 
 ###############################################################################
 ### REMOTE WORK UTILITIES
@@ -275,3 +311,19 @@ function omi_set_online {
 	nohup tandem </dev/null >/dev/null 2>&1 &; disown
 	nohup tailscale-systray </dev/null >/dev/null 2>&1 &; disown
 }
+
+
+###############################################################################
+### PROMPT
+###############################################################################
+
+export STARSHIP_CONFIG=$HOME/.dotfiles/starship.toml
+eval "$(starship init zsh)"
+
+
+###############################################################################
+### HAPPY COPY PASTE
+###############################################################################
+
+# source $HOME/.dotfiles/zsh/zsh-shift-select.plugin.zsh
+stty intr '^X'

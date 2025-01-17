@@ -1,4 +1,3 @@
-a5hk.night-coder
 ancientlord.nightowl-theme
 astro-build.astro-vscode
 bierner.github-markdown-preview
@@ -33,7 +32,6 @@ ms-python.python
 ms-python.vscode-pylance
 ms-vscode.cmake-tools
 ms-vscode.cpptools
-ms-vscode.powershell
 pranaygp.vscode-css-peek
 quicktype.quicktype
 reignofwebber.c-cpp-definition-generator

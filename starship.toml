@@ -1,7 +1,7 @@
 format = """
-$time\
-[ at ](fg:teal)\
 $directory\
+[ at ](teal)\
+$time\
 $git_branch$git_status\
 $docker_context\
 $cmd_duration\
@@ -15,12 +15,16 @@ command_timeout = 60000
 # Disable the blank line at the start of the prompt
 add_newline = true
 
+# Create a fake right_prompt
+[fill]
+symbol = ' '
+
 # Configure the divisor character of the prompt
 [character]
-format = "\n $symbol "
+format = "\n$symbol "
 
 [directory]
-format = "[$path ]($style)"
+format = "[$path]($style)"
 # truncation_length = 3
 # truncation_symbol = "…/"
 
@@ -52,7 +56,7 @@ format = "[$path ]($style)"
 [time]
 disabled = false
 time_format = "%T"
-format = '[$time](red)'
+format = '[$time ]($style)'
 
 [cmd_duration]
 format = '[[ · ](fg:#FFFFFF)⏱  $duration]($style)'

@@ -178,7 +178,7 @@ install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
 # Personal
 #---------------------
 install_winget "Valve.Steam"                            # Steam
-install_winget "LocalSend.LocalSend"                    # AirDrop wannabe
+install_winget "LocalSend.LocalSenpad"                    # AirDrop wannabe
 install_winget "9PKTQ5699M62" "iCloud"                  # iCloud
 ##install_winget "RazerInc.RazerInstaller"          # Razer Lights
 

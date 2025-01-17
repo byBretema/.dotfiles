@@ -204,8 +204,8 @@
     "files.associations": {
         "*.inc": "shellscript"
     },
-    "workbench.sideBar.location": "right",
     "workbench.activityBar.location": "bottom",
     "find-it-faster.general.useTerminalInEditor": true,
-    "workbench.preferredDarkColorTheme": "Night Owl Theme"
+    "workbench.preferredDarkColorTheme": "Abyss",
+    "window.customTitleBarVisibility": "auto"
 }
