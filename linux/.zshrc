@@ -205,7 +205,7 @@ alias pm_update="sudo pacman -Syu"
 ###############################################################################
 
 function dotfiles_sync() {
-	source "$dot_dir/.zshrc"
+	source "$dot_dir/linux/.zshrc"
 	pushd $dot_dir
 	git status -s
 	git stash > /dev/null
@@ -214,7 +214,7 @@ function dotfiles_sync() {
 	git add -A
 	git commit -m "Updates ($(date +%s))" > /dev/null
 	git push --quiet
-	popd
+	popd  2> /dev/null
 }
 
 function dotfiles_edit() {
@@ -300,16 +300,6 @@ function tr () {
 function nvidia_status()
 {
 	bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status
-}
-
-###############################################################################
-### REMOTE WORK UTILITIES
-###############################################################################
-
-function omi_set_online {
-	nohup slack </dev/null >/dev/null 2>&1 &; disown
-	nohup tandem </dev/null >/dev/null 2>&1 &; disown
-	nohup tailscale-systray </dev/null >/dev/null 2>&1 &; disown
 }
 
 
