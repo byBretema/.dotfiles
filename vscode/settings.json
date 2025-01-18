@@ -206,6 +206,6 @@
     },
     "workbench.activityBar.location": "bottom",
     "find-it-faster.general.useTerminalInEditor": true,
-    "workbench.preferredDarkColorTheme": "Abyss",
+    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
     "window.customTitleBarVisibility": "auto"
 }
