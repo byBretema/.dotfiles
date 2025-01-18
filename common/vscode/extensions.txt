@@ -11,7 +11,6 @@ bmcbarron.babylonjs-viewer
 bradlc.vscode-tailwindcss
 cheshirekow.cmake-format
 chouzz.vscode-innosetup
-cweijan.vscode-office
 danielgavin.ols
 davidbroetje.algorithm-mnemonics-vscode
 ddh4r4m.night-hacker-dark-theme

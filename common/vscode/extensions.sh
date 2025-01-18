@@ -1,7 +1,10 @@
 #!/bin/bash
 set -u
 
-extensions="./extensions.txt"
+script=$(readlink -f "$0")
+scriptpath=$(dirname "$script")
+
+extensions="$scriptpath/extensions.txt"
 
 # Arguments
 #----------------------------
