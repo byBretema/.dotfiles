@@ -1,12 +1,20 @@
 # .dotfiles
-> My Windows dotfiles with a strong Linux flavor
+
+> dotfiles for Linux (CachyOS + Zsh) and Windows (Pure PowerShell 7 + Strong Linux vibes)
 
 - Donwload repo onto `$home\.dotfiles`
+- *Read `linxu/install.sh` or `windows/install.ps1` carefully, then:*
 
-- *Read `install.ps1` it carefully, then:*
-```Powershell
+#### Linux
+```bash
+    chsh -s /usr/bin/zsh
+    ./linux/install.sh -u -i -l
+```
+
+#### Windows
+```powershell
     Set-ExecutionPolicy Bypass -Scope Process
-    ./install.ps1
+    ./windows/install.ps1
 ```
 
 - Enjoy :D
