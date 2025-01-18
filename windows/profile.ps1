@@ -533,7 +533,7 @@ Set-PSReadLineOption -HistoryNoDuplicates:$True  # Avoid duplicates
 ### PROMPT
 ###############################################################################
 
-$env:STARSHIP_CONFIG = "${home}\.dotfiles\starship.toml";
+$env:STARSHIP_CONFIG = "${home}\.dotfiles\common\starship.toml";
 
 if (-not (Test-Path $env:STARSHIP_CONFIG)) {
 	$req = Invoke-WebRequest "https://raw.githubusercontent.com/byBretema/.dotfiles/refs/heads/main/starship.toml";

@@ -1,7 +1,7 @@
 #desktop-notifications = false
 #app-notifications = false
 
-keybind = ctrl+c=copy_to_clipboard
+#keybind = ctrl+c=copy_to_clipboard
 keybind = ctrl+v=paste_from_clipboard
 
 clipboard-read = allow

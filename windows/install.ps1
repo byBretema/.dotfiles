@@ -368,17 +368,18 @@ install_capabilites "Language.OCR" "en-GB,en-US,es-ES,fr-FR"
 print_title "Symbolic Links"
 
 # Git Config
-lns "$script_root\.gitconfig" "${home}\.gitconfig"
-lns "$script_root\.gitignore" "${home}\.gitignore"
+lns "$script_root\..\common\.gitconfig" "${home}\.gitconfig"
+lns "$script_root\..\common\.gitignore" "${home}\.gitignore"
+
+# VSCode Config + Extensions
+$vscode_config_path = path_to_unix "${env:APPDATA}\Code\User"
+lns "$script_root\..\common\vscode\settings.json"    "${vscode_config_path}\settings.json"
+lns "$script_root\..\common\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
 
 # Powershell Profile on Powershell 7.x
 $documents = ([Environment]::GetFolderPath("MyDocuments"))
 lns "$script_root\profile.ps1" "$documents\PowerShell\Microsoft.PowerShell_profile.ps1"
 
-# VSCode Config + Extensions
-$vscode_config_path = path_to_unix "${env:APPDATA}\Code\User"
-lns "$script_root\vscode\settings.json"    "${vscode_config_path}\settings.json"
-lns "$script_root\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
 
 # Windows Terminal Config
 $local_appdata_pkgs = path_to_unix "${env:LOCALAPPDATA}\Packages"

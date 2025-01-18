@@ -317,7 +317,7 @@ function omi_set_online {
 ### PROMPT
 ###############################################################################
 
-export STARSHIP_CONFIG=$HOME/.dotfiles/starship.toml
+export STARSHIP_CONFIG=$HOME/.dotfiles/common/starship.toml
 eval "$(starship init zsh)"
 
 
@@ -326,4 +326,4 @@ eval "$(starship init zsh)"
 ###############################################################################
 
 # source $HOME/.dotfiles/zsh/zsh-shift-select.plugin.zsh
-stty intr '^X'
+# stty intr '^X'
