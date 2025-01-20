@@ -97,7 +97,7 @@ unsetopt MULTIBYTE              # allow modern stuff
 
 # Shell
 #------------------
-alias zr="source $HOME/.zshrc"
+alias zr="source $HOME/.zshrc && source $HOME/.zshenv"
 alias ze="xdg-open $HOME/.zshrc"
 
 # Utils
@@ -143,8 +143,8 @@ alias pm_update="sudo pacman -Syu"
 ###############################################################################
 
 function dotfiles_sync {
-	source "$dot_dir/linux/.zshrc"
-	pushd $dot_dir
+	zr
+	pushd $HOME/.dotfiles
 	git status -s
 	git stash > /dev/null
 	git pull --quiet
@@ -156,7 +156,7 @@ function dotfiles_sync {
 }
 
 function dotfiles_edit {
-	code $dot_dir
+	code $HOME/.dotfiles
 }
 
 
@@ -178,6 +178,99 @@ function gitit {
 	else
 		xdg-open $url
 	fi
+}
+
+# Run commands on submodules
+
+function gs() {
+    local show_help=0
+    local only_submodules=0
+    local force_parallel=0
+    local cmd=()
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+        case $1 in
+            -h|--help)
+				show_help=1
+				shift;;
+            -s|--submodules)
+				only_submodules=1
+				shift;;
+            -p|--parallel)
+				force_parallel=1
+				shift;;
+            -sp|-ps)
+				only_submodules=1
+				force_parallel=1
+				shift;;
+            *)
+				cmd+=("$1");
+				shift;;
+        esac
+    done
+
+    # Print help if needed
+    if [[ ${#cmd[@]} -lt 1 || $show_help == 1 ]]; then
+        echo -e "\nRun git commands in submodules"
+        echo -e "\nUsage: gs [-s] [-p] cmd..."
+        echo "-s, --submodules : Run only on submodules"
+        echo "-p, --parallel   : Force to run in parallel"
+        return
+    fi
+
+	# Determine if the command should run in parallel
+    local is_parallel=$force_parallel
+    if [[ $is_parallel == 0 ]]; then
+        for parallel_cmd in pull push; do
+            if [[ " ${cmd[1]} " == *" $parallel_cmd "* ]]; then
+                is_parallel=1
+                break
+            fi
+        done
+    fi
+
+	# Escape commit messages
+    local is_commit=0
+    for commit_cmd in commit ac; do
+        if [[ " ${cmd[1]} " == *" $commit_cmd "* ]]; then
+            is_commit=1
+            break
+        fi
+    done
+    if [[ $is_commit == 1 ]]; then
+        cmd[-1]="\"${cmd[-1]}\""
+    fi
+
+	# Recover quotes
+	cmd="git -c color.ui=always --no-pager $cmd 2>&1"
+
+	line_sep="; "
+	[[ $is_parallel == 1 ]] && line_sep="\n"
+
+	dir_cmd=""
+	for i in */ ; do
+		if [[ -e "$i/.git" ]]; then
+			dir=$(basename $i)
+			dir=${(qq)dir}
+			dir_cmd+="pushd ${dir}; $cmd | __gs_output_format $dir; popd$line_sep"
+		fi
+	done
+
+	if [[ $is_parallel == 1 ]]; then
+		echo "$dir_cmd" | parallel -j`nproc` {1}
+	else
+		eval "$dir_cmd"
+	fi
+
+	# # Debug
+	# echo "\n\n============================================="
+	# echo "show_help       = $show_help"
+	# echo "only_submodules = $only_submodules"
+	# echo "force_parallel  = $force_parallel"
+	# echo "is_parallel     = $is_parallel"
+	# echo "is_commit       = $is_commit"
+	# echo "cmd             = $cmd"
 }
 
 

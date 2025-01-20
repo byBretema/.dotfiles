@@ -201,7 +201,7 @@ function gs {
 		$msg = $msg.Replace("Already up to date."   , "")    # pull
 
 		if ((-not $msg) `
-				-or $msg.Contains("nothing to commit, working tree clean") ` # commit
+				-or $msg.Contains("nothing to commit, working tree clean") ` # commit / status
 		) {
 			return;
 		}

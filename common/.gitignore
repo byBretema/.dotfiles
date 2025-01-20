@@ -17,3 +17,4 @@
 
 CMakeLists.txt.user
 build/
+*.pro.user

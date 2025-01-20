@@ -49,33 +49,33 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "\n### [ INSTALL / UPDATE APPS ]"
 
-    extra_v3="cachyos-extra-v3"
-    core_v3="cachyos-core-v3"
-
     paru --noconfirm --needed -Sy \
-        aur/ulauncher \
-        $core_v3/net-tools \
-        extra/zsh-autosuggestions \
-        extra/zsh-syntax-highlighting \
-        extra/zsh-history-substring-search \
-        aur/logiops \
-        aur/balena-etcher \
-        $extra_v3/f3d \
-        $extra_v3/blender \
-        $extra_v3/obs-studio \
-        $extra_v3/handbrake \
-        $extra_v3/thunderbird \
-        aur/teamviewer \
-        aur/slack-desktop \
-        aur/brave-bin \
-        aur/notion-app-electron \
-        extra/obsidian \
-        $extra_v3/cmake \
-        $extra_v3/starship \
-        $extra_v3/lazygit \
-        aur/visual-studio-code-bin \
-        $extra_v3/bitwarden \
-        aur/localsend-bin
+        logiops \
+        net-tools \
+        git \
+        lazygit \
+        zellij \
+        starship \
+        zsh-autosuggestions \
+        zsh-syntax-highlighting \
+        zsh-history-substring-search \
+        cmake \
+        cppman \
+        visual-studio-code-bin \
+        f3d \
+        blender \
+        handbrake \
+        bitwarden \
+        obs-studio \
+        thunderbird \
+        obsidian \
+        brave-bin \
+        ulauncher \
+        teamviewer \
+        balena-etcher \
+        slack-desktop \
+        localsend-bin \
+        notion-app-electron
 
 fi
 
@@ -89,6 +89,7 @@ if [[ $do_links -eq 1 ]]; then
     echo "\n### [ LINK CONFIG FILES ] - $scriptpath"
 
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
+    ln -srf $scriptpath/.zshenv $HOME/.zshenv
     ln -srf $scriptpath/ghostty/config $HOME/.config/ghostty
 
     ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig
