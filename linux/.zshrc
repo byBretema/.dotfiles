@@ -1,17 +1,23 @@
+#!/usr/bin/env zsh
+
 # Lovingly typ(o)ed @byBretema
 
-
 ###############################################################################
-### OH-MY-ZSH / PLUGINS
+### OH-MY-ZSH / PLUGINS / MODULES
 ###############################################################################
 
 export ZSH="/usr/share/oh-my-zsh"
 export FZF_BASE=/usr/share/fzf
+
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 DISABLE_MAGIC_FUNCTIONS="true"
+DISABLE_AUTO_TITLE=true
 ENABLE_CORRECTION="true"
+DISABLE_LS_COLORS="true"
+HIST_STAMPS="dd.mm.yyyy"
 COMPLETION_WAITING_DOTS="true"
+
 plugins=(git fzf extract)
 source $ZSH/oh-my-zsh.sh
 
@@ -19,34 +25,7 @@ source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zs
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-
-###############################################################################
-### MODULES
-###############################################################################
-
-autoload -U colors && colors								# colors
-autoload -U zsh-mime-setup && zsh-mime-setup				# run all as executable.
-autoload -U select-word-style && select-word-style bash		# ctrl+w del words.
-
-
-###############################################################################
-### SETTINGS
-###############################################################################
-
-# # Key Bindings
-# #------------------
-# bindkey '\e[1;5C' forward-word		# C-Right
-# bindkey '\e[1;5D' backward-word		# C-Left
-# bindkey '^R'      history-incremental-pattern-search-backward
-
-# History
-#------------------
-### Sync history between shells
-# export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
-## Don't add certain commands to the history file.
-export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
-## Ignore commands that start with spaces and duplicates.
-export HISTCONTROL=ignoreboth
+autoload -U colors && colors
 
 
 ###############################################################################
@@ -112,32 +91,6 @@ unsetopt hist_ignore_space      # ignore space prefixed commands.
 unsetopt MULTIBYTE              # allow modern stuff
 
 
-# ###############################################################################
-# ### AUTO COMPLETE
-# ###############################################################################
-
-# autoload -U compinit -d && compinit
-
-# # Basics
-# zstyle ':completion:*' menu select=2                       # menu if items > 2
-# zstyle ':completion::complete:*' use-cache on              # use cache
-# zstyle ':completion:*' cache-path $HOME/.zsh/cache             # cache path
-# zstyle ':completion:*' list-colors ${(s.:.)LS_COLORS}      # colorz !
-# zstyle ':completion:*' matcher-list 'm:{a-zA-Z}={A-Za-z}'  # ignore case
-# zstyle ':completion:*::::' completer _expand _complete _ignored _approximate
-
-# # Sections
-# zstyle ':completion:*:manuals' separate-sections true
-# # zstyle ':completion:*:messages' format $'\e[37m%d'
-# # zstyle ':completion:*:descriptions' format $'\e[37m%d'
-
-
-###############################################################################
-### GLOBAL VARS# # Less (colorize)
-# #------------------
-# export LESS_TERMCAP_md="$(tput bold 2> /dev/null; tput setaf 2 2> /dev/null)"
-# export LESS_TERMCAP_me="$(tput sgr0 2> /dev/null)"
-
 ###############################################################################
 ### ALIASES
 ###############################################################################
@@ -150,14 +103,12 @@ alias ze="xdg-open $HOME/.zshrc"
 # Utils
 #------------------
 alias aaa="sudo !!"
+alias wii="which !!"
 alias fff="fzf"
 alias l="eza -a  --icons always --git -s type"
 alias ll="eza -la --icons always --git -s type"
-alias tree="eza -Ta --icons always --git -s type"
-
-# Apps
-#------------------
-### alias code="vscodium"
+alias lll="eza -Ta --icons always --git -s type"
+alias trash="rr"
 
 # System
 #------------------
@@ -171,7 +122,8 @@ alias qctl="journalctl -p 3 -xb"
 # Arch
 #------------------
 ## Paru
-alias parub="paru --bottomup"
+alias pm="paru --bottomup"
+alias pmy="paru --bottomup --noconfirm"
 ## Recent installed packages
 alias pm_rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 ## Cleanup orphaned packages
@@ -190,7 +142,7 @@ alias pm_update="sudo pacman -Syu"
 ### DOTFILES
 ###############################################################################
 
-function dotfiles_sync() {
+function dotfiles_sync {
 	source "$dot_dir/linux/.zshrc"
 	pushd $dot_dir
 	git status -s
@@ -203,7 +155,7 @@ function dotfiles_sync() {
 	popd  2> /dev/null
 }
 
-function dotfiles_edit() {
+function dotfiles_edit {
 	code $dot_dir
 }
 
@@ -233,31 +185,19 @@ function gitit {
 ### OTHER UTILITIES
 ###############################################################################
 
-# Clear and list
-function k() {
-	clear
-	ll
-}
+function k { clear; ll; }  # Clear and list
 
-# Open current dir on file-explorer
-function oo() {
-	xdg-open $1
-}
+function oo { xdg-open $1; }  # Open with default application
 
-# A safe 'rm' alternative
-function rr() {
-	gio trash $*
-}
-alias trash="rr"
+function md { mkdir -p $1; cd $1; }  # Create a folder and enter
 
-# Create a folder and enter
-function md() {
-	mkdir -p $1
-	cd $1
-}
+function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
 
-# Quick info and check of your net status
-function net {
+function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
+
+function nvidia_status { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
+
+function net {   # Quick info and check of your net status
 	public=$(curl -s icanhazip.com)
 	echo "$fg[blue]Public$fg[white]: $fg[cyan]$public"
 	private=$(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)
@@ -266,27 +206,6 @@ function net {
 	echo "$fg[blue]8.8.8.8 $fg[white]=> $fg[cyan]$avg8888"
 	avgDotES=$(ping -qc 5 google.es | sed -n 5p | awk -F"/" '{print $5" ms"}')
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
-}
-
-# Search on Google
-function s {
-	brave "https://www.google.com/search?q=$($* -join '+')"
-}
-
-# Translatation CLI
-function tr () {
-	local to="$1"
-    local text="$2"
-
-	uri="https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=$($to)&dt=t&q=$text"
-	response=$(curl -A "Wget" -o "$uri")
-	# ??? translation = $Response[0].SyncRoot | ForEach-Object { $_[0] }
-	echo "$translation"
-}
-
-function nvidia_status()
-{
-	bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status
 }
 
 
@@ -304,4 +223,11 @@ eval "$(starship init zsh)"
 
 # Only on Ghostty, change interruption signal from Ctrl+C to Ctrl+X
 # So you can bind Ctrl+C to normal copy
-if [[ -n ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi
+if [[ ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi
+
+
+###############################################################################
+### SOURCE PRIVATE STUFF
+###############################################################################
+
+source $HOME/dev/.private.zsh
