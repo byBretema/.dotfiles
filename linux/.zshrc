@@ -7,6 +7,7 @@
 
 export ZSH="/usr/share/oh-my-zsh"
 export FZF_BASE=/usr/share/fzf
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 DISABLE_MAGIC_FUNCTIONS="true"
 ENABLE_CORRECTION="true"
@@ -40,17 +41,12 @@ autoload -U select-word-style && select-word-style bash		# ctrl+w del words.
 
 # History
 #------------------
-## Sync history between shells
+### Sync history between shells
 # export PROMPT_COMMAND="history -a; $PROMPT_COMMAND"
 ## Don't add certain commands to the history file.
 export HISTIGNORE="&:[bf]g:c:clear:history:exit:q:pwd:* --help"
 ## Ignore commands that start with spaces and duplicates.
 export HISTCONTROL=ignoreboth
-
-# Less (colorize)
-#------------------
-export LESS_TERMCAP_md="$(tput bold 2> /dev/null; tput setaf 2 2> /dev/null)"
-export LESS_TERMCAP_me="$(tput sgr0 2> /dev/null)"
 
 
 ###############################################################################
@@ -137,20 +133,10 @@ unsetopt MULTIBYTE              # allow modern stuff
 
 
 ###############################################################################
-### GLOBAL VARS
-###############################################################################
-
-export dev_dir="$HOME/dev"
-export dot_dir="$HOME/.dotfiles"
-
-
-###############################################################################
-### PATH
-###############################################################################
-
-export PATH="$PATH:$HOME/dev/omi/_bin/tp_tools/scripts"
-export PATH="$PATH:$HOME/dev/omi/emsdk"
-
+### GLOBAL VARS# # Less (colorize)
+# #------------------
+# export LESS_TERMCAP_md="$(tput bold 2> /dev/null; tput setaf 2 2> /dev/null)"
+# export LESS_TERMCAP_me="$(tput sgr0 2> /dev/null)"
 
 ###############################################################################
 ### ALIASES
@@ -259,9 +245,10 @@ function oo() {
 }
 
 # A safe 'rm' alternative
-# function rr() {
-# 	mv $* $HOME/.Trash/
-# }
+function rr() {
+	gio trash $*
+}
+alias trash="rr"
 
 # Create a folder and enter
 function md() {
@@ -315,5 +302,6 @@ eval "$(starship init zsh)"
 ### HAPPY COPY PASTE
 ###############################################################################
 
-# source $HOME/.dotfiles/zsh/zsh-shift-select.plugin.zsh
-# stty intr '^X'
+# Only on Ghostty, change interruption signal from Ctrl+C to Ctrl+X
+# So you can bind Ctrl+C to normal copy
+if [[ -n ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi

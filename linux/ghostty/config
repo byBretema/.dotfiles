@@ -1,8 +1,14 @@
-#desktop-notifications = false
-#app-notifications = false
 
-#keybind = ctrl+c=copy_to_clipboard
+window-decoration = false
+window-height=4000
+window-width=4000
+
+keybind = ctrl+c=copy_to_clipboard
 keybind = ctrl+v=paste_from_clipboard
+
+keybind = ctrl+alt+shift+r=reload_config
+keybind = ctrl+alt+shift+f=toggle_fullscreen
+keybind = ctrl+alt+shift+d=toggle_window_decorations
 
 clipboard-read = allow
 clipboard-write = allow
