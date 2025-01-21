@@ -11,17 +11,19 @@ do_links=0
 do_update=0
 do_install=0
 do_fonts=0
+do_code_extensions=0
 do_qt_themes=0
 
 OPTIND=1
-while getopts "uilft" opt; do
+while getopts "luifet" opt; do
     case $opt in
         l) do_links=1;;
         u) do_update=1;;
         i) do_install=1;;
         f) do_fonts=1;;
+        e) do_code_extensions=1;;
         t) do_qt_themes=1;;
-        *) echo "Usage: install.sh [-l] [-u] [-i] [-f]"; exit 1;;
+        *) echo "Usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"; exit 1;;
     esac
 done
 shift $((OPTIND-1))
@@ -41,7 +43,7 @@ scriptpath=$(dirname "$script")
 
 if [[ $do_links -eq 1 ]]; then
 
-    echo "\n### [ LINK CONFIG FILES ] - $scriptpath"
+    echo "### [ LINKING CONFIG FILES ] - $scriptpath"
 
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
     ln -srf $scriptpath/.zshenv $HOME/.zshenv
@@ -64,7 +66,7 @@ fi
 
 if [[ $do_update -eq 1 ]]; then
 
-    echo "\n### [ UPDATE SYSTEM ]"
+    echo "### [ UPDATING SYSTEM ]"
 
     paru --noconfirm -Syu  # Trigger updates
 
@@ -77,7 +79,7 @@ fi
 
 if [[ $do_install -eq 1 ]]; then
 
-    echo "\n### [ INSTALL / UPDATE APPS ]"
+    echo "### [ INSTALLING / UPDATING APPS ]"
 
     paru --noconfirm --needed -Sy \
         logiops \
@@ -116,6 +118,8 @@ fi
 
 if [[ $do_fonts -eq 1 ]]; then
 
+    echo "### [ INSTALLING FONTS ]"
+
     function install_font()
     {
         local url=$1
@@ -145,10 +149,25 @@ fi
 
 
 ###############################################################################
+### INSTALL VSCODE EXTENSIONS
+###############################################################################
+
+if [[ $do_code_extensions -eq 1 ]]; then
+
+    echo "### [ INSTALLING VSCODE EXTENSIONS]"
+
+    $scriptpath/../common/vscode/extensions.sh -i
+
+fi
+
+
+###############################################################################
 ### QT CREATOR THEME
 ###############################################################################
 
 if [[ $do_qt_themes -eq 1 ]]; then
+
+    echo "### [ INSTALLING / LINKING QT CREATOR THEMES ]"
 
     qtcs_dir="$HOME/.config/QtProject/qtcreator/styles"
     mkdir -p $qtcs_dir
