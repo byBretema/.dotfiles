@@ -45,7 +45,8 @@ if [[ $do_links -eq 1 ]]; then
 
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
     ln -srf $scriptpath/.zshenv $HOME/.zshenv
-    ln -srf $scriptpath/ghostty/config $HOME/.config/ghostty
+    ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
+    ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
 
     ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig
     ln -srf $scriptpath/../common/.gitignore $HOME/.gitignore

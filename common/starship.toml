@@ -3,22 +3,18 @@ $directory\
 $time\
 $git_branch$git_status\
 $cmd_duration\
+$docker_context\
 $character\
 """
-# $docker_context\
 
-# Settings
 scan_timeout = 500
 command_timeout = 60000
 
-# Disable the blank line at the start of the prompt
 add_newline = true
 
-# Create a fake right_prompt
 [fill]
 symbol = ' '
 
-# Configure the divisor character of the prompt
 [character]
 format = "\n$symbol "
 
