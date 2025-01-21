@@ -38,8 +38,8 @@
 	rmbr  = push origin --delete
 	rmbrl = !git branch -d "$1" && git push origin --delete "$1"
 
-	subAdd       = !git submodule add
-	subUpdate    = !git submodule update --init --recursive -j 12
+	subAdd = !git submodule add
+	subUpdate = !git submodule update --init --recursive -j 12
 
 [safe]
 	directory = *
@@ -51,4 +51,10 @@
 	prune = true
 
 [user]
+	name = byBretema
 	email = bybretema@gmail.com
+
+[pager]
+    diff = "ov -F --section-delimiter '^diff' --section-header"
+    log = "ov -F --section-delimiter '^commit' --section-header-num 3"
+    show = "ov -F --header 3"

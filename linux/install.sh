@@ -91,6 +91,7 @@ if [[ $do_install -eq 1 ]]; then
         zsh-autosuggestions \
         zsh-syntax-highlighting \
         zsh-history-substring-search \
+        gdb \
         cmake \
         cppman \
         visual-studio-code-bin \
@@ -108,6 +109,9 @@ if [[ $do_install -eq 1 ]]; then
         slack-desktop \
         localsend-bin \
         notion-app-electron
+
+        # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
+        ov --completion zsh > /usr/share/zsh/site-functions/_ov
 
 fi
 
