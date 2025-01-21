@@ -53,7 +53,7 @@
   <style name="JsGlobalVar" foreground="#ebdbb2" italic="true"/>
   <style name="QmlStateName" foreground="#b8bb26" bold="true"/>
   <style name="Binding" foreground="#fb4934"/>
-  <style name="DisabledCode" foreground="#7c6f64"/>
+  <style name="DisabledCode" foreground="#4f595b" background="#252a2b"/>
   <style name="AddedLine" foreground="#282828" background="#b8bb26"/>
   <style name="RemovedLine" foreground="#282828" background="#fb4934"/>
   <style name="DiffFile" foreground="#282828" background="#fabd2f"/>
