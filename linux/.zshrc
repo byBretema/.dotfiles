@@ -102,12 +102,10 @@ alias ze="xdg-open $HOME/.zshrc"
 
 # Utils
 #------------------
-alias aaa="sudo !!"
-alias wii="which !!"
-alias fff="fzf"
 alias l="eza -a  --icons always --git -s type"
 alias ll="eza -la --icons always --git -s type"
 alias lll="eza -Ta --icons always --git -s type"
+alias fff="fzf"
 alias trash="rr"
 
 # System

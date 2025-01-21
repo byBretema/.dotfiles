@@ -27,7 +27,8 @@
     ],
     "editor.fontSize": 16,
     "editor.fontLigatures": true,
-    "editor.fontFamily": "'Victor Mono', 'FiraCode NFM Retina', 'Fira Code', Consolas, 'Courier New', monospace",
+    // "editor.fontFamily": "'Victor Mono'",
+    "editor.fontFamily": "'Fira Code'",
     "editor.stickyScroll.enabled": false,
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
@@ -49,9 +50,10 @@
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorCustomizations": {
         "panel.border": "#ee8800",
-        // "panel.background": "#1d1d25",
+        "panel.background": "#191C1D", // GruvBox Dark Hard
+        "terminal.background": "#191C1D" // GruvBox Dark Hard
     },
-    "workbench.preferredLightColorTheme": "Quiet Light",
+    "workbench.preferredLightColorTheme": "Gruvbox Light Soft",
     "workbench.startupEditor": "none",
     //---------------------------------------------------------
     // WINDOW
@@ -72,7 +74,7 @@
             "args": [
                 "-nologo"
             ]
-        },
+        }
     },
     "terminal.integrated.tabs.enabled": false,
     //---------------------------------------------------------
@@ -80,7 +82,7 @@
     //---------------------------------------------------------
     "python.languageServer": "Pylance",
     "[python]": {
-        "editor.defaultFormatter": "ms-python.black-formatter",
+        "editor.defaultFormatter": "ms-python.black-formatter"
     },
     "black-formatter.args": [
         "--line-length",
@@ -147,25 +149,12 @@
     "[astro]": {
         "editor.defaultFormatter": "astro-build.astro-vscode"
     },
-    // "html.format.enable": false,
     "css.enabledLanguages": [
         "html",
         "astro"
     ],
-    // "errorLens.lintFilePaths": {
-    // 	"eslint": [
-    // 		"**/*.eslintrc.{js,cjs,yaml,yml,json}",
-    // 		"**/*package.json"
-    // 	],
-    // 	"Stylelint": [
-    // 		"**/*.stylelintrc",
-    // 		"**/*.stylelintrc.{cjs,js,json,yaml,yml}",
-    // 		"**/*stylelint.config.{cjs,js}",
-    // 		"**/*package.json"
-    // 	]
-    // },
     //---------------------------------------------------------
-    // OTHERS
+    // DYNAMICS OR NOT CATEGORIZED
     //---------------------------------------------------------
     "vsicons.dontShowNewVersionMessage": true,
     "cmake.options.statusBarVisibility": "visible",

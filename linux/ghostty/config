@@ -24,6 +24,7 @@ window-padding-balance = true
 #background-blur-radius = 15
 
 font-size = 14
+font-family = "FiraCode Nerd Font"
 mouse-hide-while-typing = true
 
 theme = GruvboxDarkHard
