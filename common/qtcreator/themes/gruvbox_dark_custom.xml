@@ -28,7 +28,7 @@
   <style name="Field" foreground="#83a598"/>
   <style name="Static" foreground="#d3869b"/>
   <style name="VirtualMethod" foreground="#b8bb26" bold="true" italic="true"/>
-  <style name="Function" foreground="#b8bb26" bold="true"/>
+  <style name="Function" foreground="#fabd2f" bold="true"/>
   <style name="Keyword" foreground="#fb4934"/>
   <style name="PrimitiveType" foreground="#fe8019"/>
   <style name="Operator" foreground="#ebdbb2"/>
@@ -39,7 +39,7 @@
   <style name="Label" foreground="#fb4934"/>
   <style name="Attribute" foreground="#808000"/>
   <style name="Comment" foreground="#5d544a" italic="true"/>
-  <style name="Doxygen.Comment" foreground="#fe8019"/>
+  <style name="Doxygen.Comment" foreground="#7f7265"/>
   <style name="Doxygen.Tag" foreground="#ebdbb2" bold="true"/>
   <style name="VisualWhitespace" foreground="#303030"/>
   <style name="QmlLocalId" foreground="#b8bb26" bold="true" italic="true"/>
