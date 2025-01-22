@@ -111,7 +111,7 @@ if [[ $do_install -eq 1 ]]; then
         notion-app-electron
 
         # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
-        ov --completion zsh > /usr/share/zsh/site-functions/_ov
+        # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
 
 fi
 

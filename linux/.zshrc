@@ -122,7 +122,7 @@ alias qctl="journalctl -p 3 -xb"
 ## Paru
 alias pm="paru --bottomup"
 alias pmy="paru --bottomup --noconfirm"
-## Recent installed packages
+## Recent installed packages  (from CachyOS default zsh config)
 alias pm_rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
 ## Cleanup orphaned packages
 alias pm_clean_orphan="sudo pacman -Rsn (pacman -Qtdq)"
@@ -179,7 +179,6 @@ function gitit {
 }
 
 # Run commands on submodules
-
 function gs() {
     local show_help=0
     local only_submodules=0
@@ -219,46 +218,38 @@ function gs() {
 
 	# Determine if the command should run in parallel
     local is_parallel=$force_parallel
-    if [[ $is_parallel == 0 ]]; then
-        for parallel_cmd in pull push; do
-            if [[ " ${cmd[1]} " == *" $parallel_cmd "* ]]; then
-                is_parallel=1
-                break
-            fi
-        done
-    fi
+	[[ " ${cmd[1]} " == *" pull "* ]] && is_parallel=1
+	[[ " ${cmd[1]} " == *" push "* ]] && is_parallel=1
 
-	# Escape commit messages
-    local is_commit=0
-    for commit_cmd in commit ac; do
-        if [[ " ${cmd[1]} " == *" $commit_cmd "* ]]; then
-            is_commit=1
-            break
-        fi
-    done
-    if [[ $is_commit == 1 ]]; then
+	# Escape message
+    local escape_last=0
+	[[ " ${cmd[1]}  " == *" ac "* ]] && escape_last=1
+	[[ " ${cmd[-2]} " == *" -m "* ]] && escape_last=1
+    if [[ $escape_last == 1 ]]; then
         cmd[-1]="\"${cmd[-1]}\""
     fi
 
 	# Recover quotes
 	cmd="git -c color.ui=always --no-pager $cmd 2>&1"
 
+	# Generate command list
 	line_sep="; "
 	[[ $is_parallel == 1 ]] && line_sep="\n"
 
-	dir_cmd=""
+	cmd_list=""
 	for i in */ ; do
 		if [[ -e "$i/.git" ]]; then
 			dir=$(basename $i)
 			dir=${(qq)dir}
-			dir_cmd+="pushd ${dir}; $cmd | __gs_output_format $dir; popd$line_sep"
+			cmd_list+="pushd ${dir}; $cmd | __gs_output_format $dir; popd$line_sep"
 		fi
 	done
 
+	# Execute command list
 	if [[ $is_parallel == 1 ]]; then
-		echo "$dir_cmd" | parallel -j`nproc` {1}
+		echo "$cmd_list" | parallel -j`nproc` {1}
 	else
-		eval "$dir_cmd"
+		eval "$cmd_list"
 	fi
 
 	# # Debug
@@ -267,10 +258,10 @@ function gs() {
 	# echo "only_submodules = $only_submodules"
 	# echo "force_parallel  = $force_parallel"
 	# echo "is_parallel     = $is_parallel"
-	# echo "is_commit       = $is_commit"
+	# echo "escape_last     = $escape_last"
 	# echo "cmd             = $cmd"
 }
-
+alias gsdiff="gs diff | ov -F --section-delimiter '^diff' --section-header"
 
 ###############################################################################
 ### OTHER UTILITIES
@@ -280,11 +271,11 @@ function k { clear; ll; }  # Clear and list
 
 function oo { xdg-open $1; }  # Open with default application
 
-function md { mkdir -p $1; cd $1; }  # Create a folder and enter
-
-function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
+function mkcd { mkdir -p $1; cd $1; }  # Create a folder and enter
 
 function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
+
+function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
 
 function nvidia_status { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
 
@@ -298,6 +289,8 @@ function net {   # Quick info and check of your net status
 	avgDotES=$(ping -qc 5 google.es | sed -n 5p | awk -F"/" '{print $5" ms"}')
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
 }
+
+function dev() { cd $HOME/dev/; }
 
 
 ###############################################################################
