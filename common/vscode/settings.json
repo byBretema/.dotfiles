@@ -27,8 +27,8 @@
     ],
     "editor.fontSize": 16,
     "editor.fontLigatures": true,
-    // "editor.fontFamily": "'Victor Mono'",
     "editor.fontFamily": "'Fira Code'",
+    // "editor.fontFamily": "'Victor Mono'",
     "editor.stickyScroll.enabled": false,
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
@@ -43,6 +43,9 @@
         ]
     },
     "editor.trimAutoWhitespace": true,
+    "editor.semanticTokenColorCustomizations": {
+        "enabled": true
+    },
     //---------------------------------------------------------
     // WORKBENCH
     //---------------------------------------------------------
@@ -196,5 +199,8 @@
     "workbench.activityBar.location": "bottom",
     "find-it-faster.general.useTerminalInEditor": true,
     "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
-    "window.customTitleBarVisibility": "auto"
+    "[markdown]": {
+        "diffEditor.ignoreTrimWhitespace": true
+    },
+    "window.menuBarVisibility": "toggle"
 }

@@ -36,5 +36,5 @@ function __gs_output_format() {
     echo '=============================='
     echo '-> '${dir:u}
     echo '=============================='
-    echo $msg
+    echo -n $msg
 }

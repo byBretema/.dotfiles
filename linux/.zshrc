@@ -92,48 +92,51 @@ unsetopt MULTIBYTE              # allow modern stuff
 
 
 ###############################################################################
-### ALIASES
+### ALIASES  (Remember to always define alias between SINGLE quotes, yvm)
 ###############################################################################
 
 # Shell
 #------------------
-alias zr="source $HOME/.zshrc && source $HOME/.zshenv"
-alias ze="xdg-open $HOME/.zshrc"
+alias zr='source $HOME/.zshrc && source $HOME/.zshenv'
+alias ze='xdg-open $HOME/.zshrc'
 
 # Utils
 #------------------
-alias l="eza -a  --icons always --git -s type"
-alias ll="eza -la --icons always --git -s type"
-alias lll="eza -Ta --icons always --git -s type"
-alias fff="fzf"
-alias trash="rr"
+alias l='eza -a  --icons always --git -s type'
+alias ll='eza -la --icons always --git -s type'
+alias lll='eza -Ta --icons always --git -s type'
+alias fff='fzf --preview="bat --color=always {}"'
+alias ffc='code $(fzf -m --preview="bat --color=always {}")'
+alias aaa='sudo !!'
+alias wii='which !!'
+alias trash='rr'
 
 # System
 #------------------
 ## Clipboard
-alias pbcopy="xclip -selection clipboard"
-alias pbpaste="xclip -selection clipboard -o"
+alias pbcopy='xclip -selection clipboard'
+alias pbpaste='xclip -selection clipboard -o'
 ## Kernel info
-alias jctl="journalctl"
-alias qctl="journalctl -p 3 -xb"
+alias jctl='journalctl'
+alias qctl='journalctl -p 3 -xb'
 
 # Arch
 #------------------
 ## Paru
-alias pm="paru --bottomup"
-alias pmy="paru --bottomup --noconfirm"
+alias pm='paru --bottomup'
+alias pmy='paru --bottomup --noconfirm'
 ## Recent installed packages  (from CachyOS default zsh config)
-alias pm_rip="expac --timefmt='%Y-%m-%d %T' '%l\t%n %v' | sort | tail -200 | nl"
+alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
 ## Cleanup orphaned packages
-alias pm_clean_orphan="sudo pacman -Rsn (pacman -Qtdq)"
+alias pm_clean_orphan='sudo pacman -Rsn (pacman -Qtdq)'
 ## Cleanup cache
-alias pm_clean_cache="sudo pacman -Scc"
+alias pm_clean_cache='sudo pacman -Scc'
 ## Unlock pacman DB
-alias pm_unlock="sudo rm /var/lib/pacman/db.lck"
+alias pm_unlock='sudo rm /var/lib/pacman/db.lck'
 ## Remove package recursive and don't save
-alias pm_remove="sudo pacman -Rsn"
+alias pm_remove='sudo pacman -Rsn'
 ## Update everything
-alias pm_update="sudo pacman -Syu"
+alias pm_update='sudo pacman -Syu'
 
 
 ###############################################################################
@@ -179,6 +182,7 @@ function gitit {
 }
 
 # Run commands on submodules
+## Depends on '__gs_output_format' to be defined in .zshenv
 function gs() {
     local show_help=0
     local only_submodules=0
@@ -262,6 +266,7 @@ function gs() {
 	# echo "cmd             = $cmd"
 }
 alias gsdiff="gs diff | ov -F --section-delimiter '^diff' --section-header"
+
 
 ###############################################################################
 ### OTHER UTILITIES
