@@ -143,7 +143,7 @@ alias pm_update='sudo pacman -Syu'
 ### DOTFILES
 ###############################################################################
 
-function dotfiles_sync {
+function dfs {
 	zr
 	pushd $HOME/.dotfiles
 	git status -s
@@ -156,7 +156,7 @@ function dotfiles_sync {
 	popd  2> /dev/null
 }
 
-function dotfiles_edit {
+function dfe {
 	code $HOME/.dotfiles
 }
 
@@ -185,38 +185,26 @@ function gitit {
 ## Depends on '__gs_output_format' to be defined in .zshenv
 function gs() {
     local show_help=0
-    local only_submodules=0
+    local only_if_changes=0
     local force_parallel=0
     local cmd=()
 
     # Parse arguments
     while [[ $# -gt 0 ]]; do
         case $1 in
-            -h|--help)
-				show_help=1
-				shift;;
-            -s|--submodules)
-				only_submodules=1
-				shift;;
-            -p|--parallel)
-				force_parallel=1
-				shift;;
-            -sp|-ps)
-				only_submodules=1
-				force_parallel=1
-				shift;;
-            *)
-				cmd+=("$1");
-				shift;;
+            -h) show_help=1; shift;;
+            -c) only_if_changes=1; shift;;
+            -p) force_parallel=1; shift;;
+            *)  cmd+=("$1"); shift;;
         esac
     done
 
     # Print help if needed
     if [[ ${#cmd[@]} -lt 1 || $show_help == 1 ]]; then
         echo -e "\nRun git commands in submodules"
-        echo -e "\nUsage: gs [-s] [-p] cmd..."
-        echo "-s, --submodules : Run only on submodules"
-        echo "-p, --parallel   : Force to run in parallel"
+        echo -e "\nUsage: gs [-p] cmd..."
+        echo "-p : Force to run in parallel"
+        echo "-c : Only if a changes are present"
         return
     fi
 
@@ -233,27 +221,20 @@ function gs() {
         cmd[-1]="\"${cmd[-1]}\""
     fi
 
-	# Recover quotes
-	cmd="git -c color.ui=always --no-pager $cmd 2>&1"
-
 	# Generate command list
-	line_sep="; "
-	[[ $is_parallel == 1 ]] && line_sep="\n"
-
 	cmd_list=""
 	for i in */ ; do
-		if [[ -e "$i/.git" ]]; then
-			dir=$(basename $i)
-			dir=${(qq)dir}
-			cmd_list+="pushd ${dir}; $cmd | __gs_output_format $dir; popd$line_sep"
+		i=$(echo $i | tr -d '/')
+		if [[ -e "$i/.git" ]] && { [[ $only_if_changes -ne 1 || $(git -C "$i" status --porcelain=1 | wc -l) -gt 0 ]] }; then
+			cmd_list+="git -C $i -c color.ui=always --no-pager $cmd 2>&1 | __gs_output_format $i\n"
 		fi
 	done
 
 	# Execute command list
 	if [[ $is_parallel == 1 ]]; then
-		echo "$cmd_list" | parallel -j`nproc` {1}
+		printf "$cmd_list" | parallel -j`nproc` {1}
 	else
-		eval "$cmd_list"
+		eval "$(printf "$cmd_list")"
 	fi
 
 	# # Debug

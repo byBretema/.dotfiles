@@ -13,7 +13,6 @@ function __gs_output_format() {
     fi
     local dir=$1; shift
 
-
     # Pipeline support
     local msg=""
     if [[ -p /dev/stdin ]]; then
