@@ -22,12 +22,13 @@ function __gs_output_format() {
     fi
 
     # Don't print on certain outputs (no changes, no entries, already up to date, ...)
-    [[ -z "$msg" ||
-       "$msg" =~ "No stash entries found." ||
-       "$msg" =~ "No local changes to save" ||
-       "$msg" =~ "Everything up-to-date" ||
-       "$msg" =~ "Already up to date." ||
-       "$msg" =~ "nothing to commit, working tree clean"
+    [[ -z "$msg"                                        ||  ## empty msg
+       "$msg" =~ "No stash entries found."              ||  ## stash pop
+       "$msg" =~ "No local changes to save"             ||  ## stash push
+       "$msg" =~ "Everything up-to-date"                ||  ## push
+       "$msg" =~ "Already up to date."                  ||  ## pull
+       "$msg" =~ "Updated 0 paths from the index"       ||  ## checkout .
+       "$msg" =~ "nothing to commit, working tree clean"    ## status / commit
     ]] && return
 
     # Print
