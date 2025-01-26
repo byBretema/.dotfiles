@@ -185,6 +185,7 @@ function gitit {
 ## Depends on '__gs_output_format' to be defined in .zshenv
 function gs() {
     local show_help=0
+    local only_in_submodules=0
     local only_if_changes=0
     local force_parallel=0
     local cmd=()
@@ -193,6 +194,7 @@ function gs() {
     while [[ $# -gt 0 ]]; do
         case $1 in
             -h) show_help=1; shift;;
+            -s) only_in_submodules=1; shift;;
             -c) only_if_changes=1; shift;;
             -p) force_parallel=1; shift;;
             *)  cmd+=("$1"); shift;;
@@ -203,6 +205,7 @@ function gs() {
     if [[ ${#cmd[@]} -lt 1 || $show_help == 1 ]]; then
         echo -e "\nRun git commands in submodules"
         echo -e "\nUsage: gs [-p] cmd..."
+        echo "-s : Run only in submodules"
         echo "-p : Force to run in parallel"
         echo "-c : Only if a changes are present"
         return
@@ -237,6 +240,11 @@ function gs() {
 		eval "$(printf "$cmd_list")"
 	fi
 
+	# Run on super-repo too
+	if [[ $only_in_submodules == 0 ]]; then
+		git -c color.ui=always --no-pager $cmd 2>&1 | __gs_output_format "Super :: $(basename $PWD)"
+	fi
+
 	# # Debug
 	# echo "\n\n============================================="
 	# echo "show_help       = $show_help"
@@ -263,8 +271,6 @@ function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
 
 function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
 
-function nvidia_status { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
-
 function net {   # Quick info and check of your net status
 	public=$(curl -s icanhazip.com)
 	echo "$fg[blue]Public$fg[white]: $fg[cyan]$public"
@@ -277,6 +283,50 @@ function net {   # Quick info and check of your net status
 }
 
 function dev() { cd $HOME/dev/; }
+
+# grep + find
+function __frep() {
+	show_usage() {
+        echo -e "\nRun grep over files in given path"
+        echo -e "\n  Usage: frep dir searh-term"
+	}
+	# Get type
+    if [[ $# -lt 1 ]]; then echo "-- Bad type"; return; fi
+    local type=$1; shift
+	# Get dir
+    if [[ $# -lt 1 ]]; then show_usage; return; fi
+    local dir=$1; shift
+    if [[ ! -e $dir ]]; then echo "-- Bad dir"; return; fi
+	# Get search term
+    if [[ $# -lt 1 ]]; then show_usage; return; fi
+    local search_term=$*;
+
+	find $dir -type $type -exec grep --color=always "$*" {} ';'
+}
+alias frepf='__frep f'
+alias frepd='__frep d'
+
+
+###############################################################################
+### HARDWARE UTILITIES
+###############################################################################
+
+function nvstatus { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
+
+function nvinfo {
+	echo "- Prime on = $__NV_PRIME_RENDER_OFFLOAD"
+	echo "- VK layer = $__VK_LAYER_NV_optimus"
+	echo "- Vendor   = $__GLX_VENDOR_LIBRARY_NAME"
+}
+
+function gov_performance() {
+	echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+}
+function gov_powersave() {
+	echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
+}
+
+### powerprofilesctl list
 
 
 ###############################################################################

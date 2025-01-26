@@ -19,7 +19,7 @@ symbol = ' '
 format = "\n$symbol "
 
 [directory]
-truncation_length = 0
+truncation_length = 2
 truncate_to_repo = false
 # truncation_symbol = "…/"
 
