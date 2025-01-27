@@ -153,7 +153,7 @@ function dfs {
 	git add -A
 	git commit -m "Updates ($(date +%s))" > /dev/null
 	git push --quiet
-	popd  2> /dev/null
+	popd || :
 }
 
 function dfe {
