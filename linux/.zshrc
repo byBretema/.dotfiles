@@ -144,7 +144,6 @@ alias pm_update='sudo pacman -Syu'
 ###############################################################################
 
 function dfs {
-	zr
 	pushd $HOME/.dotfiles
 	git status -s
 	git stash > /dev/null
@@ -153,9 +152,8 @@ function dfs {
 	git add -A
 	git commit -m "Updates ($(date +%s))" > /dev/null
 	git push --quiet
-	popd || :
+	popd  2> /dev/null || :
 }
-
 
 function dfe {
 	code $HOME/.dotfiles
