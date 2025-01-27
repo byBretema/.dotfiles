@@ -114,6 +114,7 @@ Theme=Papirus-Dark
 [KDE]
 LookAndFeelPackage=org.kde.breezedark.desktop
 ShowDeleteCommand=false
+widgetStyle=Breeze
 
 [KFileDialog Settings]
 Allow Expansion=false
@@ -139,7 +140,7 @@ View Style=DetailTree
 Dialog Size=600,480
 
 [Locale]
-BinaryUnitDialect=1
+BinaryUnitDialect[$d]
 
 [PreviewSettings]
 EnableRemoteFolderThumbnail=false
@@ -160,8 +161,8 @@ WhatsThis=
 activeBackground=26,28,32
 activeBlend=30,32,36
 activeForeground=211,218,227
+frame=240,140,60
 inactiveBackground=30,32,36
 inactiveBlend=30,32,36
 inactiveForeground=102,106,115
-frame=240,140,60
 inactiveFrame=60,140,240
