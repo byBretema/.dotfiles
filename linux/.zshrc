@@ -156,6 +156,7 @@ function dfs {
 	popd || :
 }
 
+
 function dfe {
 	code $HOME/.dotfiles
 }
