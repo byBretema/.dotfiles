@@ -50,6 +50,7 @@ if [[ $do_links -eq 1 ]]; then
 
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
     ln -srf $scriptpath/.zshenv $HOME/.zshenv
+
     ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
 
     ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig
@@ -59,6 +60,7 @@ if [[ $do_links -eq 1 ]]; then
     ln -srf $scriptpath/../common/vscode/settings.json    "$code_path/settings.json"
     ln -srf $scriptpath/../common/vscode/keybindings.json "$code_path/keybindings.json"
 
+    ln -srf $scriptpath/kde/kdeglobals $HOME/.config/kdeglobals
 fi
 
 
