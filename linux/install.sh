@@ -12,7 +12,7 @@ do_update=0
 do_install=0
 do_fonts=0
 do_code_extensions=0
-do_qt_themes=0
+do_themes=0
 
 OPTIND=1
 while getopts "luifet" opt; do
@@ -22,7 +22,7 @@ while getopts "luifet" opt; do
         i) do_install=1;;
         f) do_fonts=1;;
         e) do_code_extensions=1;;
-        t) do_qt_themes=1;;
+        t) do_themes=1;;
         *) echo "Usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"; exit 1;;
     esac
 done
@@ -110,8 +110,11 @@ if [[ $do_install -eq 1 ]]; then
         localsend-bin \
         notion-app-electron
 
-        # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
-        # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
+    # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
+    # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
+
+    # Enable pacman cache cleaner task
+    sudo systemctl enable paccache.timer
 
 fi
 
@@ -166,34 +169,21 @@ fi
 
 
 ###############################################################################
-### QT CREATOR THEME
+### APPS THEMES
 ###############################################################################
 
-if [[ $do_qt_themes -eq 1 ]]; then
+if [[ $do_themes -eq 1 ]]; then
 
-    echo "### [ INSTALLING / LINKING QT CREATOR THEMES ]"
+    echo "### [ INSTALLING / LINKING THEMES ]"
 
+    # Qt Creator (https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator)
     qtcs_dir="$HOME/.config/QtProject/qtcreator/styles"
     mkdir -p $qtcs_dir
+    ln -snfr "$scriptpath/../common/qtcreator/themes/gruvbox_dark_custom.xml" "$qtcs_dir/gruvbox_dark_custom.xml"
+    ln -snfr "$scriptpath/../common/qtcreator/themes/monokai_dark_custom.xml" "$qtcs_dir/monokai_dark_custom.xml"
 
-    function install_theme()
-    {
-        local url=$1; shift
-
-        if [[ $# -lt 1 ]]; then
-            local filename=$(basename "$url")
-        else
-            local filename=$1; shift
-        fi
-
-        curl -fsSL "$url" -o "$qtcs_dir/$filename"
-    }
-
-    # install_theme "https://raw.githubusercontent.com/konchunas/gruvbox-qtcreator/refs/heads/master/gruvbox-dark.xml" "gruvbox-dark-2.xml"
-    # install_theme "https://raw.githubusercontent.com/morhetz/gruvbox-contrib/refs/heads/master/qtcreator/gruvbox-dark.xml"
-    # install_theme https://raw.githubusercontent.com/morhetz/gruvbox-contrib/refs/heads/master/qtcreator/gruvbox-light.xml
-
-    ln -srf "$scriptpath/../common/qtcreator/themes/gruvbox_dark_custom.xml" "$qtcs_dir/gruvbox_dark_custom.xml"
-    ln -srf "$scriptpath/../common/qtcreator/themes/monokai_dark_custom.xml" "$qtcs_dir/monokai_dark_custom.xml"
-
+    # Ulauncher (https://github.com/gustavothecoder/ulauncher-gruvbox-material)
+    ulauncher_dir="$HOME/.config/ulauncher/user-themes"
+    mkdir -p $ulauncher_dir
+    ln -snfr $scriptpath/themes/ulauncher/gruvbox-material-dark-hard/ $ulauncher_dir
 fi
