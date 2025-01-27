@@ -45,9 +45,11 @@ if [[ $do_links -eq 1 ]]; then
 
     echo "### [ LINKING CONFIG FILES ] - $scriptpath"
 
+    ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
+    ln -srf $scriptpath/alacritty.toml $HOME/.config/alacritty/alacritty.toml
+
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
     ln -srf $scriptpath/.zshenv $HOME/.zshenv
-    ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
     ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
 
     ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig

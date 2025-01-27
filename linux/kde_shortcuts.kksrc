@@ -10,7 +10,7 @@ Switch to Next Keyboard Layout=Meta+Alt+K
 AboutApp=
 AboutKDE=
 Activate Next Tab=Ctrl+PgDown; Ctrl+]
-Activate Previous Tab=Ctrl+PgUp; Ctrl+[
+Activate Previous Tab=Ctrl+[; Ctrl+PgUp
 ActualSize=Ctrl+0
 AddBookmark=Ctrl+B
 Back=Alt+Left; Back
@@ -40,7 +40,7 @@ FindPrev=Shift+F3
 FitToHeight=
 FitToPage=
 FitToWidth=
-Forward=Alt+Right; Forward
+Forward=Forward; Alt+Right
 ForwardWord=Ctrl+Right
 FullScreen=
 Goto=
@@ -67,7 +67,7 @@ PrintPreview=
 Prior=PgUp
 Quit=Ctrl+Q
 Redo=Ctrl+Shift+Z
-Reload=Refresh; F5
+Reload=F5; Refresh
 RenameFile=F2; Ctrl+Return
 Replace=Ctrl+R
 ReportBug=
@@ -77,7 +77,7 @@ RotateUp=Up
 Save=Ctrl+S
 SaveAs=Ctrl+Shift+S
 SelectAll=Ctrl+A
-ShowHideHiddenFiles=Alt+.; Ctrl+H
+ShowHideHiddenFiles=Ctrl+H; Alt+.
 ShowMenubar=Ctrl+Shift+F10
 ShowStatusbar=
 ShowToolbar=
@@ -89,11 +89,11 @@ Undo=Ctrl+Z
 Up=Alt+Up
 WhatsThis=
 Zoom=
-ZoomIn=Ctrl++; Ctrl+=
+ZoomIn=Ctrl+=; Ctrl++
 ZoomOut=Ctrl+-
 
 [kaccess][Global Shortcuts]
-Toggle Screen Reader On and Off=Meta+Alt+S
+Toggle Screen Reader On and Off=
 
 [kcm_touchpad][Global Shortcuts]
 Disable Touchpad=
@@ -113,7 +113,7 @@ mute=Volume Mute
 [ksmserver][Global Shortcuts]
 Halt Without Confirmation=
 Lock Session=Screensaver
-Log Out=Ctrl+Alt+Del; Meta+º
+Log Out=Meta+º; Ctrl+Alt+Del
 Log Out Without Confirmation=
 LogOut=
 Reboot=
@@ -122,36 +122,38 @@ Shut Down=
 
 [kwin][Global Shortcuts]
 Activate Window Demanding Attention=Meta+Ctrl+A
+ClearLastMouseMark=Meta+Shift+F12
+ClearMouseMarks=Meta+Shift+F11
 Cube=
 Cycle Overview=
 Cycle Overview Opposite=
 Decrease Opacity=
 Edit Tiles=
 Expose=
-ExposeAll=Meta+Tab
+ExposeAll=
 ExposeClass=
 ExposeClassCurrentDesktop=
 Grid View=
 Increase Opacity=
 Kill Window=Meta+Ctrl+Esc
-KrohnkiteBTreeLayout=
+KrohnkiteBTreeLayout=Meta+B
 KrohnkiteColumnsLayout=
-KrohnkiteDecrease=
-KrohnkiteFloatAll=Meta+Shift+F
+KrohnkiteDecrease=Meta+D
+KrohnkiteFloatAll=
 KrohnkiteFloatingLayout=
-KrohnkiteFocusDown=Meta+Down; Meta+J
-KrohnkiteFocusLeft=Meta+Left; Meta+H
+KrohnkiteFocusDown=Meta+J; Meta+Down
+KrohnkiteFocusLeft=Meta+H; Meta+Left
 KrohnkiteFocusNext=Meta+.
 KrohnkiteFocusPrev=Meta+,
-KrohnkiteFocusRight=Meta+Right; Meta+L
-KrohnkiteFocusUp=Meta+Up; Meta+K
+KrohnkiteFocusRight=Meta+L; Meta+Right
+KrohnkiteFocusUp=Meta+K; Meta+Up
 KrohnkiteGrowHeight=Meta+Ctrl+J
 KrohnkiteIncrease=Meta+I
 KrohnkiteMonocleLayout=Meta+M
 KrohnkiteNextLayout=Meta+\\
-KrohnkitePreviousLayout=Meta+|
-KrohnkiteQuarterLayout=Meta+Q
-KrohnkiteRotate=
+KrohnkitePreviousLayout=Meta+Alt+º
+KrohnkiteQuarterLayout=
+KrohnkiteRotate=Meta+R
 KrohnkiteRotatePart=
 KrohnkiteSetMaster=Meta+Return
 KrohnkiteShiftDown=Meta+Shift+J
@@ -160,16 +162,22 @@ KrohnkiteShiftRight=Meta+Shift+L
 KrohnkiteShiftUp=Meta+Shift+K
 KrohnkiteShrinkHeight=Meta+Ctrl+K
 KrohnkiteShrinkWidth=Meta+Ctrl+H
-KrohnkiteSpiralLayout=
+KrohnkiteSpiralLayout=Meta+S
 KrohnkiteSpreadLayout=
 KrohnkiteStackedLayout=
 KrohnkiteStairLayout=
-KrohnkiteTileLayout=
-KrohnkiteToggleFloat=Meta+F
+KrohnkiteTileLayout=Meta+T
+KrohnkiteToggleFloat=
 KrohnkiteTreeColumnLayout=
 KrohnkitegrowWidth=Meta+Ctrl+L
 Move Tablet to Next Output=
-Overview=
+MoveMouseToCenter=Meta+F6
+MoveMouseToFocus=Meta+F5
+MoveZoomDown=
+MoveZoomLeft=
+MoveZoomRight=
+MoveZoomUp=
+Overview=Meta+Tab
 Setup Window Shortcut=
 Show Desktop=Meta+Ctrl+Shift+D
 Switch One Desktop Down=Meta+Ctrl+Down
@@ -216,24 +224,26 @@ Switch to Screen Above=
 Switch to Screen Below=
 Switch to Screen to the Left=
 Switch to Screen to the Right=
+Toggle=Meta+Ctrl+Alt+P
 Toggle Night Color=
 Toggle Window Raise/Lower=
+ToggleMouseClick=Meta+*
 Walk Through Windows=Alt+Tab
 Walk Through Windows (Reverse)=
 Walk Through Windows Alternative=
 Walk Through Windows Alternative (Reverse)=
-Walk Through Windows of Current Application=Alt+Shift+Tab; Alt+`
+Walk Through Windows of Current Application=Alt+`; Alt+Shift+Tab
 Walk Through Windows of Current Application (Reverse)=Alt+~
 Walk Through Windows of Current Application Alternative=
 Walk Through Windows of Current Application Alternative (Reverse)=
 Window Above Other Windows=
 Window Below Other Windows=
-Window Close=Alt+F4
+Window Close=Alt+F4; Meta+Q
 Window Fullscreen=Meta+Ctrl+Shift+F
 Window Grow Horizontal=
 Window Grow Vertical=
 Window Lower=
-Window Maximize=Meta+Ctrl+F; Meta+Shift+Up; Meta+PgUp
+Window Maximize=Meta+PgUp; Meta+Ctrl+F; Meta+Shift+Up
 Window Maximize Horizontal=
 Window Maximize Vertical=
 Window Minimize=Meta+PgDown
@@ -300,7 +310,7 @@ Window to Screen 5=
 Window to Screen 6=
 Window to Screen 7=
 view_actual_size=Meta+0
-view_zoom_in=Meta++; Meta+=
+view_zoom_in=Meta+=; Meta++
 view_zoom_out=Meta+-
 
 [mediacontrol][Global Shortcuts]
@@ -316,9 +326,17 @@ stopmedia=Media Stop
 [org.kde.dolphin.desktop][Global Shortcuts]
 _launch=Meta+E
 
+[org.kde.konsole.desktop][Global Shortcuts]
+NewTab=
+NewWindow=
+_launch=Ctrl+Alt+T
+
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=
-_launch=Search; Alt+F2
+_launch=Alt+F2; Search
+
+[org.kde.kscreen.desktop][Global Shortcuts]
+ShowOSD=Meta+P; Display
 
 [org.kde.plasma-systemmonitor.desktop][Global Shortcuts]
 _launch=Meta+Esc
@@ -327,16 +345,16 @@ _launch=Meta+Esc
 _launch=Meta+Ctrl+Alt+Shift+Space
 
 [org.kde.spectacle.desktop][Global Shortcuts]
-ActiveWindowScreenShot=Meta+Print
+ActiveWindowScreenShot=
 CurrentMonitorScreenShot=
-FullScreenScreenShot=Shift+Print
+FullScreenScreenShot=
 OpenWithoutScreenshot=
-RecordRegion=Meta+Shift+R; Meta+R
-RecordScreen=Meta+Alt+R
-RecordWindow=Meta+Ctrl+R
-RectangularRegionScreenShot=Meta+Shift+Print
-WindowUnderCursorScreenShot=Meta+Ctrl+Print
-_launch=Print; Meta+Shift+S
+RecordRegion=Meta+Shift+R
+RecordScreen=
+RecordWindow=
+RectangularRegionScreenShot=Meta+Shift+S
+WindowUnderCursorScreenShot=
+_launch=Meta+Alt+S
 
 [org_kde_powerdevil][Global Shortcuts]
 Decrease Keyboard Brightness=
@@ -351,7 +369,7 @@ PowerOff=
 Sleep=
 Toggle Keyboard Backlight=
 Turn Off Screen=
-powerProfile=Meta+B
+powerProfile=
 
 [plasmashell][Global Shortcuts]
 activate application launcher=
@@ -374,7 +392,7 @@ activate widget 4=
 activate widget 57=
 activate widget 67=
 activate widget 77=
-activate widget 90=Meta+S
+activate widget 90=
 activate widget 95=Meta+A
 clear-history=
 clipboard_action=Meta+Ctrl+X
