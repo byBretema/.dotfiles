@@ -2,6 +2,10 @@
 switch-to-activity-be89e5be-7fc8-4ab0-a8da-3d98bbdd9f30=
 switch-to-activity-ed9574be-2cf4-450a-9988-e7089f6fa053=
 
+[Alacritty.desktop][Global Shortcuts]
+New=Meta+º
+_launch=
+
 [KDE Keyboard Layout Switcher][Global Shortcuts]
 Switch to Last-Used Keyboard Layout=Meta+Alt+L
 Switch to Next Keyboard Layout=Meta+Alt+K
@@ -10,7 +14,7 @@ Switch to Next Keyboard Layout=Meta+Alt+K
 AboutApp=
 AboutKDE=
 Activate Next Tab=Ctrl+PgDown; Ctrl+]
-Activate Previous Tab=Ctrl+[; Ctrl+PgUp
+Activate Previous Tab=Ctrl+PgUp; Ctrl+[
 ActualSize=Ctrl+0
 AddBookmark=Ctrl+B
 Back=Alt+Left; Back
@@ -47,7 +51,7 @@ Goto=
 GotoLine=Ctrl+G
 GotoPage=
 Help=
-Home=Alt+Home; Home Page
+Home=Home Page; Alt+Home
 KeyBindings=Ctrl+,
 Mail=
 MoveToTrash=Del
@@ -58,7 +62,7 @@ Open=Ctrl+O
 OpenContextMenu=Shift+F10
 OpenMainMenu=F10
 OpenRecent=
-Paste=Ctrl+V; Shift+Ins
+Paste=Shift+Ins; Ctrl+V
 Paste Selection=Ctrl+Shift+Ins
 Preferences=Ctrl+Shift+,
 PrevCompletion=Ctrl+Up
@@ -107,13 +111,13 @@ decrease_volume_small=Shift+Volume Down
 increase_microphone_volume=Microphone Volume Up
 increase_volume=Volume Up
 increase_volume_small=Shift+Volume Up
-mic_mute=Meta+Volume Mute; Microphone Mute
+mic_mute=Microphone Mute; Meta+Volume Mute
 mute=Volume Mute
 
 [ksmserver][Global Shortcuts]
 Halt Without Confirmation=
 Lock Session=Screensaver
-Log Out=Meta+º; Ctrl+Alt+Del
+Log Out=Meta+Alt+Esc
 Log Out Without Confirmation=
 LogOut=
 Reboot=
@@ -140,12 +144,12 @@ KrohnkiteBTreeLayout=Meta+B
 KrohnkiteColumnsLayout=
 KrohnkiteDecrease=Meta+D
 KrohnkiteFloatAll=
-KrohnkiteFloatingLayout=
+KrohnkiteFloatingLayout=Meta+F
 KrohnkiteFocusDown=Meta+J; Meta+Down
-KrohnkiteFocusLeft=Meta+H; Meta+Left
-KrohnkiteFocusNext=Meta+.
+KrohnkiteFocusLeft=Meta+Left; Meta+H
+KrohnkiteFocusNext=Alt+Tab; Meta+.
 KrohnkiteFocusPrev=Meta+,
-KrohnkiteFocusRight=Meta+L; Meta+Right
+KrohnkiteFocusRight=Meta+Right; Meta+L
 KrohnkiteFocusUp=Meta+K; Meta+Up
 KrohnkiteGrowHeight=Meta+Ctrl+J
 KrohnkiteIncrease=Meta+I
@@ -209,9 +213,9 @@ Switch to Desktop 7=
 Switch to Desktop 8=
 Switch to Desktop 9=
 Switch to Next Desktop=
-Switch to Next Screen=
+Switch to Next Screen=Meta+Ctrl+Shift+Right
 Switch to Previous Desktop=
-Switch to Previous Screen=
+Switch to Previous Screen=Meta+Ctrl+Shift+Left
 Switch to Screen 0=
 Switch to Screen 1=
 Switch to Screen 2=
@@ -228,12 +232,12 @@ Toggle=Meta+Ctrl+Alt+P
 Toggle Night Color=
 Toggle Window Raise/Lower=
 ToggleMouseClick=Meta+*
-Walk Through Windows=Alt+Tab
+Walk Through Windows=
 Walk Through Windows (Reverse)=
 Walk Through Windows Alternative=
 Walk Through Windows Alternative (Reverse)=
-Walk Through Windows of Current Application=Alt+`; Alt+Shift+Tab
-Walk Through Windows of Current Application (Reverse)=Alt+~
+Walk Through Windows of Current Application=
+Walk Through Windows of Current Application (Reverse)=
 Walk Through Windows of Current Application Alternative=
 Walk Through Windows of Current Application Alternative (Reverse)=
 Window Above Other Windows=
@@ -243,7 +247,7 @@ Window Fullscreen=Meta+Ctrl+Shift+F
 Window Grow Horizontal=
 Window Grow Vertical=
 Window Lower=
-Window Maximize=Meta+PgUp; Meta+Ctrl+F; Meta+Shift+Up
+Window Maximize=Meta+PgUp; Meta+Shift+Up; Meta+Ctrl+F
 Window Maximize Horizontal=
 Window Maximize Vertical=
 Window Minimize=Meta+PgDown
@@ -298,9 +302,9 @@ Window to Desktop 7=
 Window to Desktop 8=
 Window to Desktop 9=
 Window to Next Desktop=
-Window to Next Screen=
+Window to Next Screen=Meta+Shift+Right
 Window to Previous Desktop=
-Window to Previous Screen=
+Window to Previous Screen=Meta+Shift+Left
 Window to Screen 0=
 Window to Screen 1=
 Window to Screen 2=
@@ -310,7 +314,7 @@ Window to Screen 5=
 Window to Screen 6=
 Window to Screen 7=
 view_actual_size=Meta+0
-view_zoom_in=Meta+=; Meta++
+view_zoom_in=Meta++; Meta+=
 view_zoom_out=Meta+-
 
 [mediacontrol][Global Shortcuts]
@@ -333,10 +337,10 @@ _launch=Ctrl+Alt+T
 
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=
-_launch=Alt+F2; Search
+_launch=Search; Alt+F2
 
 [org.kde.kscreen.desktop][Global Shortcuts]
-ShowOSD=Meta+P; Display
+ShowOSD=Display; Meta+P
 
 [org.kde.plasma-systemmonitor.desktop][Global Shortcuts]
 _launch=Meta+Esc
@@ -391,6 +395,7 @@ activate widget 32=
 activate widget 4=
 activate widget 57=
 activate widget 67=
+activate widget 7=
 activate widget 77=
 activate widget 90=
 activate widget 95=Meta+A
@@ -405,7 +410,7 @@ previous activity=Meta+Shift+A
 repeat_action=
 show dashboard=Ctrl+F12
 show-barcode=
-show-on-mouse-pos=Ctrl+<; Meta+V
+show-on-mouse-pos=Meta+V; Ctrl+<
 stop current activity=
 switch to next activity=
 switch to previous activity=

@@ -260,7 +260,7 @@ function gs() {
 	fi
 
 	# Run on super-repo too
-	if [[ $only_in_submodules == 0 ]]; then
+	if [[ $only_in_submodules == 0 ]] && [[ -e ".git" ]]; then
 		git -c color.ui=always --no-pager $cmd 2>&1 | __gs_output_format "Super :: $(basename $PWD)"
 	fi
 

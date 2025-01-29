@@ -133,7 +133,7 @@ Sort by=Name
 Sort directories first=true
 Sort hidden files last=false
 Sort reversed=false
-Speedbar Width=140
+Speedbar Width=181
 View Style=DetailTree
 
 [KShortcutsDialog Settings]
