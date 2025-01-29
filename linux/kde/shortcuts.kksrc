@@ -17,7 +17,7 @@ Activate Next Tab=Ctrl+PgDown; Ctrl+]
 Activate Previous Tab=Ctrl+PgUp; Ctrl+[
 ActualSize=Ctrl+0
 AddBookmark=Ctrl+B
-Back=Alt+Left; Back
+Back=Back; Alt+Left
 BackwardWord=Ctrl+Left
 Begin=Ctrl+Home
 BeginningOfLine=Home
@@ -25,7 +25,7 @@ Clear=
 Close=Ctrl+W
 ConfigureNotifications=
 ConfigureToolbars=
-Copy=Ctrl+Ins; Ctrl+C
+Copy=Ctrl+C; Ctrl+Ins
 CreateFolder=Ctrl+Shift+N
 Cut=Ctrl+X
 DeleteFile=Shift+Del
@@ -44,7 +44,7 @@ FindPrev=Shift+F3
 FitToHeight=
 FitToPage=
 FitToWidth=
-Forward=Forward; Alt+Right
+Forward=Alt+Right; Forward
 ForwardWord=Ctrl+Right
 FullScreen=
 Goto=
@@ -62,7 +62,7 @@ Open=Ctrl+O
 OpenContextMenu=Shift+F10
 OpenMainMenu=F10
 OpenRecent=
-Paste=Shift+Ins; Ctrl+V
+Paste=Ctrl+V; Shift+Ins
 Paste Selection=Ctrl+Shift+Ins
 Preferences=Ctrl+Shift+,
 PrevCompletion=Ctrl+Up
@@ -72,7 +72,7 @@ Prior=PgUp
 Quit=Ctrl+Q
 Redo=Ctrl+Shift+Z
 Reload=F5; Refresh
-RenameFile=F2; Ctrl+Return
+RenameFile=Ctrl+Return; F2
 Replace=Ctrl+R
 ReportBug=
 Revert=
@@ -111,13 +111,13 @@ decrease_volume_small=Shift+Volume Down
 increase_microphone_volume=Microphone Volume Up
 increase_volume=Volume Up
 increase_volume_small=Shift+Volume Up
-mic_mute=Microphone Mute; Meta+Volume Mute
+mic_mute=Meta+Volume Mute; Microphone Mute
 mute=Volume Mute
 
 [ksmserver][Global Shortcuts]
 Halt Without Confirmation=
 Lock Session=Screensaver
-Log Out=Meta+Alt+Esc
+Log Out=Meta+Esc
 Log Out Without Confirmation=
 LogOut=
 Reboot=
@@ -145,12 +145,12 @@ KrohnkiteColumnsLayout=
 KrohnkiteDecrease=Meta+D
 KrohnkiteFloatAll=
 KrohnkiteFloatingLayout=Meta+F
-KrohnkiteFocusDown=Meta+J; Meta+Down
+KrohnkiteFocusDown=Meta+Down; Meta+J
 KrohnkiteFocusLeft=Meta+Left; Meta+H
-KrohnkiteFocusNext=Alt+Tab; Meta+.
+KrohnkiteFocusNext=Meta+.; Alt+Tab
 KrohnkiteFocusPrev=Meta+,
 KrohnkiteFocusRight=Meta+Right; Meta+L
-KrohnkiteFocusUp=Meta+K; Meta+Up
+KrohnkiteFocusUp=Meta+Up; Meta+K
 KrohnkiteGrowHeight=Meta+Ctrl+J
 KrohnkiteIncrease=Meta+I
 KrohnkiteMonocleLayout=Meta+M
@@ -247,7 +247,7 @@ Window Fullscreen=Meta+Ctrl+Shift+F
 Window Grow Horizontal=
 Window Grow Vertical=
 Window Lower=
-Window Maximize=Meta+PgUp; Meta+Shift+Up; Meta+Ctrl+F
+Window Maximize=Meta+Shift+Up; Meta+PgUp; Meta+Ctrl+F
 Window Maximize Horizontal=
 Window Maximize Vertical=
 Window Minimize=Meta+PgDown
@@ -337,13 +337,13 @@ _launch=Ctrl+Alt+T
 
 [org.kde.krunner.desktop][Global Shortcuts]
 RunClipboard=
-_launch=Search; Alt+F2
+_launch=Alt+F2; Search
 
 [org.kde.kscreen.desktop][Global Shortcuts]
-ShowOSD=Display; Meta+P
+ShowOSD=Meta+P; Display
 
 [org.kde.plasma-systemmonitor.desktop][Global Shortcuts]
-_launch=Meta+Esc
+_launch=Meta+Alt+Esc
 
 [org.kde.plasma.emojier.desktop][Global Shortcuts]
 _launch=Meta+Ctrl+Alt+Shift+Space
