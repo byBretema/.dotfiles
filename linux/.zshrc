@@ -13,12 +13,12 @@ export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 DISABLE_MAGIC_FUNCTIONS="true"
 DISABLE_AUTO_TITLE=true
-ENABLE_CORRECTION="true"
+# ENABLE_CORRECTION="true"
 DISABLE_LS_COLORS="true"
 HIST_STAMPS="dd.mm.yyyy"
 COMPLETION_WAITING_DOTS="true"
 
-plugins=(git fzf extract)
+plugins=(git fzf extract zsh-interactive-cd)
 source $ZSH/oh-my-zsh.sh
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
@@ -38,9 +38,9 @@ setopt interactive_comments     # allow comments please.
 
 # Auto
 #------------------
-setopt correct                  # try to correct spelling of commands.
+# setopt correct                  # try to correct spelling of commands.
 setopt auto_name_dirs           # use exported name of dirs.
-setopt auto_remove_slash        # self explicit.
+setopt auto_remove_slash        # remove slash at the end i.e: my/cool/path/ -> my/cool/path
 
 # Cd
 #------------------
@@ -55,7 +55,7 @@ setopt extended_glob            # activate complex pattern globbing.
 setopt auto_pushd               # make cd push old dir in dir stack.
 setopt pushd_silent             # no dir stack after pushd or popd.
 setopt pushd_to_home            # `pushd` = `pushd $HOME`.
-# setopt pushd_ignore_dups        # [this breaks some scripts] no duplicates in dir stack.
+setopt pushd_ignore_dups        # no duplicates in dir stack.
 
 # History
 #------------------
@@ -236,11 +236,12 @@ function gs() {
 	[[ " ${cmd[1]} " == *" push "* ]] && is_parallel=1
 
 	# Escape message
+	local cmd_not_escaped=(${cmd[@]})
     local escape_last=0
 	[[ " ${cmd[1]}  " == *" ac "* ]] && escape_last=1
 	[[ " ${cmd[-2]} " == *" -m "* ]] && escape_last=1
     if [[ $escape_last == 1 ]]; then
-        cmd[-1]="\"${cmd[-1]}\""
+        cmd[-1]=${(qq)cmd[-1]}
     fi
 
 	# Generate command list
@@ -254,14 +255,14 @@ function gs() {
 
 	# Execute command list
 	if [[ $is_parallel == 1 ]]; then
-		printf "$cmd_list" | parallel -j`nproc` {1}
+		printf "$cmd_list" | parallel -j$(nproc) {1}
 	else
 		eval "$(printf "$cmd_list")"
 	fi
 
 	# Run on super-repo too
 	if [[ $only_in_submodules == 0 ]] && [[ -e ".git" ]]; then
-		git -c color.ui=always --no-pager $cmd 2>&1 | __gs_output_format "Super :: $(basename $PWD)"
+		git -c color.ui=always --no-pager $cmd_not_escaped 2>&1 | __gs_output_format "Super :: $(basename $PWD)"
 	fi
 
 	# # Debug
@@ -290,7 +291,10 @@ function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
 
 function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
 
-function net {   # Quick info and check of your net status
+function dev() { cd $HOME/dev; }
+
+# Quick info and check of your net status
+function net {
 	public=$(curl -s icanhazip.com)
 	echo "$fg[blue]Public$fg[white]: $fg[cyan]$public"
 	private=$(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)
@@ -301,9 +305,7 @@ function net {   # Quick info and check of your net status
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
 }
 
-function dev() { cd $HOME/dev/; }
-
-# grep + find
+# Util for grep + find
 function __frep() {
 	show_usage() {
         echo -e "\nRun grep over files in given path"
@@ -320,7 +322,7 @@ function __frep() {
     if [[ $# -lt 1 ]]; then show_usage; return; fi
     local search_term=$*;
 
-	find $dir -type $type -exec grep --color=always "$*" {} ';'
+	find $dir -type $type -exec grep -H --color=always "$*" {} ';'
 }
 alias frepf='__frep f'
 alias frepd='__frep d'
@@ -332,12 +334,9 @@ alias frepd='__frep d'
 
 function nvstatus { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
 
-function nvinfo {
-	echo "- Prime on = $__NV_PRIME_RENDER_OFFLOAD"
-	echo "- VK layer = $__VK_LAYER_NV_optimus"
-	echo "- Vendor   = $__GLX_VENDOR_LIBRARY_NAME"
+function gov_info() {
+	cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
-
 function gov_performance() {
 	echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
@@ -345,7 +344,38 @@ function gov_powersave() {
 	echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
 
-### powerprofilesctl list
+function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
+{
+	lines=(
+		"__NV_PRIME_RENDER_OFFLOAD=1"
+		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
+		"__VK_LAYER_NV_optimus=NVIDIA_only"
+		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
+	)
+
+	env_file="/etc/environment"
+	temp_file=$(mktemp)
+
+	# Toggle
+	while IFS= read -r line; do
+		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
+			if [[ ! $line =~ ^# ]]; then
+				line="#$line"
+			else
+				line="${line:1}"
+			fi
+			echo "$line"
+		fi
+		echo "$line" >> "$temp_file"
+	done < "$env_file"
+
+	sudo mv "$temp_file" "$env_file"
+	echo "\n[ Remeber to re-login to apply the changes ! ]"
+}
+function gpu_get_default()
+{
+	glxinfo | grep "OpenGL renderer"
+}
 
 
 ###############################################################################

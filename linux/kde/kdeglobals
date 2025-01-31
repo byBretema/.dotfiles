@@ -102,7 +102,7 @@ History Items[$e]=file:$HOME/Downloads/Sweet-transparent-toolbar,file:$HOME/Down
 
 [General]
 AccentColor=233,100,58
-BrowserApplication=brave-browser.desktop
+BrowserApplication=google-chrome.desktop
 ColorSchemeHash=82c61764abe68b92a1d698164f6567540f5d3731
 LastUsedCustomAccentColor=233,100,58
 TerminalApplication=ghostty

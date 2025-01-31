@@ -86,10 +86,9 @@ if [[ $do_install -eq 1 ]]; then
     echo "### [ INSTALLING / UPDATING APPS ]"
 
     paru --noconfirm --needed -Sy \
-        logiops \
-        net-tools \
         git \
         lazygit \
+        lf \
         zellij \
         starship \
         zsh-autosuggestions \
@@ -98,6 +97,7 @@ if [[ $do_install -eq 1 ]]; then
         gdb \
         cmake \
         cppman \
+        neovim \
         visual-studio-code-bin \
         f3d \
         blender \
@@ -106,12 +106,12 @@ if [[ $do_install -eq 1 ]]; then
         obs-studio \
         thunderbird \
         obsidian \
-        brave-bin \
         ulauncher \
         teamviewer \
         balena-etcher \
         slack-desktop \
         localsend-bin \
+        google-chrome \
         notion-app-electron
 
     # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
