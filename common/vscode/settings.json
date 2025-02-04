@@ -196,11 +196,12 @@
     "files.associations": {
         "*.inc": "shellscript"
     },
-    "workbench.activityBar.location": "bottom",
     "find-it-faster.general.useTerminalInEditor": true,
     "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
     "[markdown]": {
         "diffEditor.ignoreTrimWhitespace": true
     },
-    "window.menuBarVisibility": "toggle"
+    "window.menuBarVisibility": "toggle",
+    "workbench.activityBar.location": "bottom",
+    "window.customTitleBarVisibility": "auto"
 }

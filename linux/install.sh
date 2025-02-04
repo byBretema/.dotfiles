@@ -33,8 +33,7 @@ shift $((OPTIND-1))
 ### VARIABLES
 ###############################################################################
 
-script=$(readlink -f "$0")
-scriptpath=$(dirname "$script")
+scriptpath=$(dirname "$(readlink -f "$0")")
 
 
 ###############################################################################
@@ -45,21 +44,31 @@ if [[ $do_links -eq 1 ]]; then
 
     echo "### [ LINKING CONFIG FILES ] - $scriptpath"
 
+    # Terminal emulators
     ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
     ln -srf $scriptpath/alacritty.toml $HOME/.config/alacritty/alacritty.toml
 
+    # Zsh
     ln -srf $scriptpath/.zshrc $HOME/.zshrc
     ln -srf $scriptpath/.zshenv $HOME/.zshenv
 
-    ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
-
+    # Git
     ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig
     ln -srf $scriptpath/../common/.gitignore $HOME/.gitignore
 
+    # Code
     code_path="$HOME/.config/Code/User"
     ln -srf $scriptpath/../common/vscode/settings.json    "$code_path/settings.json"
     ln -srf $scriptpath/../common/vscode/keybindings.json "$code_path/keybindings.json"
 
+    # Tmux
+    if [[ ! -d $HOME/.config/tmux/plugins/tpm ]]; then
+        git clone https://github.com/tmux-plugins/tpm $HOME/.config/tmux/plugins/tpm
+    fi
+    ln -srf $scriptpath/tmux.conf $HOME/.config/tmux/tmux.conf
+    ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
+
+    # Kde stuff
     ln -srf $scriptpath/kde/kdeglobals $HOME/.config/kdeglobals
 fi
 
@@ -90,6 +99,7 @@ if [[ $do_install -eq 1 ]]; then
         lazygit \
         lf \
         zellij \
+        superfile-bin \
         starship \
         zsh-autosuggestions \
         zsh-syntax-highlighting \
@@ -98,13 +108,14 @@ if [[ $do_install -eq 1 ]]; then
         cmake \
         cppman \
         neovim \
+        zed \
         visual-studio-code-bin \
         f3d \
         blender \
         handbrake \
         bitwarden \
         obs-studio \
-        thunderbird \
+        zathura \
         obsidian \
         ulauncher \
         teamviewer \

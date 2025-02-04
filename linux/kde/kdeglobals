@@ -107,6 +107,14 @@ ColorSchemeHash=82c61764abe68b92a1d698164f6567540f5d3731
 LastUsedCustomAccentColor=233,100,58
 TerminalApplication=ghostty
 TerminalService=com.mitchellh.ghostty.desktop
+XftAntialias=true
+XftHintStyle=hintfull
+XftSubPixel=rgb
+fixed=Fira Code Retina,10,-1,5,450,0,0,0,0,0,0,0,0,0,0,1,Regular
+font=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+menuFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+smallestReadableFont=Inter,8,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
+toolBarFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 
 [Icons]
 Theme=Papirus-Dark
@@ -136,6 +144,10 @@ Sort reversed=false
 Speedbar Width=181
 View Style=DetailTree
 
+[KScreen]
+ScaleFactor=1.5
+ScreenScaleFactors=eDP-2=1.5;DP-3=1.5;HDMI-2=1.5;DP-4=1.5;HDMI-3=1.5;HDMI-1-0=1.5;DP-1-0=1.5;DP-1-1=1.5;DP-1-2=1.5;DP-1-3=1.5;DP-1-4=1.5;
+
 [KShortcutsDialog Settings]
 Dialog Size=600,480
 
@@ -160,6 +172,7 @@ WhatsThis=
 [WM]
 activeBackground=26,28,32
 activeBlend=30,32,36
+activeFont=Inter,10,-1,5,400,0,0,0,0,0,0,0,0,0,0,1
 activeForeground=211,218,227
 frame=240,140,60
 inactiveBackground=30,32,36

@@ -102,8 +102,8 @@ alias ze='xdg-open $HOME/.zshrc'
 
 # Utils
 #------------------
-alias l='eza -a  --icons always --git -s type'
-alias ll='eza -la --icons always --git -s type'
+alias l='eza -a  --icons always --git -s type --hyperlink'
+alias ll='eza -la --icons always --git -s type --no-user --hyperlink'
 alias lll='eza -Ta --icons always --git -s type'
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'
@@ -124,7 +124,7 @@ alias qctl='journalctl -p 3 -xb'
 #------------------
 ## Paru
 alias pm='paru --bottomup'
-alias pmy='paru --bottomup --noconfirm'
+alias pmy='paru --bottomup --noconfirm -Sy'
 ## Recent installed packages  (from CachyOS default zsh config)
 alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
 ## Cleanup orphaned packages
@@ -317,7 +317,7 @@ function __frep() {
 	# Get dir
     if [[ $# -lt 1 ]]; then show_usage; return; fi
     local dir=$1; shift
-    if [[ ! -e $dir ]]; then echo "-- Bad dir"; return; fi
+    if [[ ! -d $dir ]]; then echo "-- Bad dir"; return; fi
 	# Get search term
     if [[ $# -lt 1 ]]; then show_usage; return; fi
     local search_term=$*;
@@ -344,34 +344,34 @@ function gov_powersave() {
 	echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 }
 
-function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
-{
-	lines=(
-		"__NV_PRIME_RENDER_OFFLOAD=1"
-		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
-		"__VK_LAYER_NV_optimus=NVIDIA_only"
-		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
-	)
+# function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
+# {
+# 	lines=(
+# 		"__NV_PRIME_RENDER_OFFLOAD=1"
+# 		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
+# 		"__VK_LAYER_NV_optimus=NVIDIA_only"
+# 		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
+# 	)
 
-	env_file="/etc/environment"
-	temp_file=$(mktemp)
+# 	env_file="/etc/environment"
+# 	temp_file=$(mktemp)
 
-	# Toggle
-	while IFS= read -r line; do
-		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
-			if [[ ! $line =~ ^# ]]; then
-				line="#$line"
-			else
-				line="${line:1}"
-			fi
-			echo "$line"
-		fi
-		echo "$line" >> "$temp_file"
-	done < "$env_file"
+# 	# Toggle
+# 	while IFS= read -r line; do
+# 		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
+# 			if [[ ! $line =~ ^# ]]; then
+# 				line="#$line"
+# 			else
+# 				line="${line:1}"
+# 			fi
+# 			echo "$line"
+# 		fi
+# 		echo "$line" >> "$temp_file"
+# 	done < "$env_file"
 
-	sudo mv "$temp_file" "$env_file"
-	echo "\n[ Remeber to re-login to apply the changes ! ]"
-}
+# 	sudo mv "$temp_file" "$env_file"
+# 	echo "\n[ Remeber to re-login to apply the changes ! ]"
+# }
 function gpu_get_default()
 {
 	glxinfo | grep "OpenGL renderer"
