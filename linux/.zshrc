@@ -102,9 +102,10 @@ alias ze='xdg-open $HOME/.zshrc'
 
 # Utils
 #------------------
-alias l='eza -a  --icons always --git -s type --hyperlink'
-alias ll='eza -la --icons always --git -s type --no-user --hyperlink'
-alias lll='eza -Ta --icons always --git -s type'
+alias l='eza -a --icons always --git -s type --hyperlink'
+alias L='l -1'
+alias ll='l -l --no-user'
+alias lll='l -T'
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'
 alias aaa='sudo !!'

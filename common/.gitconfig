@@ -43,6 +43,15 @@
 
 [safe]
 	directory = *
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
+	directory = studio_engine
 
 [credential]
 	helper = manager-core
