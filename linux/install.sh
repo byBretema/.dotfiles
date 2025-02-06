@@ -97,19 +97,23 @@ if [[ $do_install -eq 1 ]]; then
     paru --noconfirm --needed -Sy \
         git \
         lazygit \
-        lf \
-        zellij \
+        superfile-bin \
+        tmux \
+        neovim \
         superfile-bin \
         starship \
         zsh-autosuggestions \
         zsh-syntax-highlighting \
         zsh-history-substring-search \
+        inter-font\
+        uv \
         gdb \
         cmake \
+        vulkan-devel \
         cppman \
-        neovim \
         zed \
         visual-studio-code-bin \
+        copyq \
         f3d \
         blender \
         handbrake \
