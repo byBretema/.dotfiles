@@ -161,7 +161,6 @@ MaximumRemoteSize=0
 [Shortcuts]
 Close=Ctrl+W
 Cut=Ctrl+X
-FullScreen=
 Help=
 KeyBindings=Ctrl+,
 OpenContextMenu=Shift+F10

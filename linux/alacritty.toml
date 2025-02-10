@@ -4,7 +4,7 @@ TERM = "xterm-256color"
 [window]
 padding = { x=24, y=0 }
 dynamic_padding = true
-opacity = 0.85
+# opacity = 1.0
 blur = true
 
 [scrolling]
