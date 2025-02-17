@@ -43,15 +43,6 @@
 
 [safe]
 	directory = *
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
-	directory = studio_engine
 
 [credential]
 	helper = manager-core
@@ -63,7 +54,7 @@
 	name = byBretema
 	email = bybretema@gmail.com
 
-[pager]
-    diff = "ov -F --section-delimiter '^diff' --section-header"
-    log = "ov -F --section-delimiter '^commit' --section-header-num 3"
-    show = "ov -F --header 3"
+# [pager]
+#     diff = "ov -F --section-delimiter '^diff' --section-header"
+#     log = "ov -F --section-delimiter '^commit' --section-header-num 3"
+#     show = "ov -F --header 3"

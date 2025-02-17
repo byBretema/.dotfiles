@@ -23,6 +23,7 @@
     //---------------------------------------------------------
     // "editor.formatOnSave": true,
     "editor.rulers": [
+        80,
         120
     ],
     "editor.fontSize": 16,
