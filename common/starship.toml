@@ -22,6 +22,7 @@ format = "\n$symbol "
 truncation_length = 2
 truncate_to_repo = false
 # truncation_symbol = "…/"
+# format = "\n[$path]($style)"
 
 [time]
 disabled = false
@@ -30,3 +31,6 @@ time_format = "%T"
 
 [cmd_duration]
 format = '[[· ](teal)$duration]($style)'
+
+# [git_branch]
+# format = "\n[$branch ]($style)"

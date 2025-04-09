@@ -21,11 +21,11 @@
     //---------------------------------------------------------
     // EDITOR
     //---------------------------------------------------------
-    "editor.formatOnSave": true,
-    "editor.rulers": [
-        80,
-        120
-    ],
+    // "editor.formatOnSave": true,
+    // "editor.rulers": [
+    //     80,
+    //     120
+    // ],
     "editor.fontSize": 16,
     "editor.fontLigatures": true,
     "editor.fontFamily": "'Fira Code'",
@@ -47,15 +47,18 @@
     "editor.semanticTokenColorCustomizations": {
         "enabled": true
     },
+    "editor.scrollbar.vertical": "hidden",
+    "editor.minimap.autohide": true,
+    "editor.scrollbar.verticalScrollbarSize": 0,
     //---------------------------------------------------------
     // WORKBENCH
     //---------------------------------------------------------
     "workbench.settings.editor": "json",
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorCustomizations": {
+        // "editorGutter.background": "#141421",
+        "editorGutter.background": "#1d1f20",
         "panel.border": "#ee8800",
-        "panel.background": "#191C1D", // GruvBox Dark Hard
-        "terminal.background": "#191C1D" // GruvBox Dark Hard
     },
     "workbench.preferredLightColorTheme": "Gruvbox Light Soft",
     "workbench.startupEditor": "none",
@@ -65,11 +68,12 @@
     "window.autoDetectColorScheme": true,
     "window.commandCenter": true,
     //---------------------------------------------------------
-    // TERMINAL
+    // TERMINALS
     //---------------------------------------------------------
     "terminal.integrated.shellIntegration.enabled": true,
     "terminal.integrated.fontSize": 14,
     "terminal.integrated.fontFamily": "'FiraCode Nerd Font'",
+    "terminal.integrated.fontLigatures": true,
     "terminal.integrated.cursorBlinking": true,
     "terminal.integrated.profiles.windows": {
         "Pwsh": {
@@ -173,7 +177,6 @@
         "workbench.action.tasks.configureTaskRunner",
         "workbench.action.tasks.runTask"
     ],
-    "editor.minimap.enabled": false,
     "cmake.showOptionsMovedNotification": false,
     "explorer.confirmDelete": false,
     "todo-tree.general.tags": [
@@ -204,5 +207,6 @@
     },
     "window.menuBarVisibility": "toggle",
     "workbench.activityBar.location": "bottom",
-    "window.customTitleBarVisibility": "auto"
+    "window.customTitleBarVisibility": "auto",
+    "workbench.editor.enablePreview": false
 }

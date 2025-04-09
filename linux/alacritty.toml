@@ -2,19 +2,17 @@
 TERM = "xterm-256color"
 
 [window]
-# padding = { x = 24, y = 0 } # wayland
-# dynamic_padding = true # wayland
-padding = { x = 4, y = 4 } # x11
-# opacity = 0.9
-blur = true # wayland or macos
+padding = { x = 12, y = 12 }
+# opacity = 0.6
+# blur = true # wayland-kde or macos
+decorations = "None"
 
 [scrolling]
 history = 100000
 
 [font]
 normal = { family = "FiraCode Nerd Font", style = "Regular" }
-# size = 12 # wayland
-size = 6 # x11 (?)
+size = 12
 
 [bell]
 animation = "Ease"

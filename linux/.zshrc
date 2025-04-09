@@ -195,7 +195,7 @@ function gitit {
 	url=$(git remote -v | head -n 1 | awk '{print $2}')
 	if [[ $url == *@* ]]; then
 		ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
-		xdg-open $ssh
+		xdg-open "https://$ssh"
 	else
 		xdg-open $url
 	fi
