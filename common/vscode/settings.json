@@ -57,7 +57,7 @@
     "workbench.iconTheme": "vscode-icons",
     "workbench.colorCustomizations": {
         // "editorGutter.background": "#141421",
-        "editorGutter.background": "#1d1f20",
+        // "editorGutter.background": "#1d1f20",
         "panel.border": "#ee8800",
     },
     "workbench.preferredLightColorTheme": "Gruvbox Light Soft",
@@ -201,12 +201,12 @@
         "*.inc": "shellscript"
     },
     "find-it-faster.general.useTerminalInEditor": true,
-    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
     "[markdown]": {
         "diffEditor.ignoreTrimWhitespace": true
     },
     "window.menuBarVisibility": "toggle",
     "workbench.activityBar.location": "bottom",
     "window.customTitleBarVisibility": "auto",
-    "workbench.editor.enablePreview": false
+    "workbench.editor.enablePreview": false,
+    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard"
 }
