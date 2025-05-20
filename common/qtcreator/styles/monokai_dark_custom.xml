@@ -41,7 +41,7 @@
   <style name="Comment" foreground="#8bffb0" italic="true"/>
   <style name="Doxygen.Comment" foreground="#8bffb0" italic="true"/>
   <style name="Doxygen.Tag" foreground="#808080" bold="true" italic="true"/>
-  <style name="VisualWhitespace" foreground="#15dfb3"/>
+  <style name="VisualWhitespace" foreground="#303030"/>
   <style name="QmlLocalId" foreground="#4bec9c" italic="true"/>
   <style name="QmlExternalId" foreground="#906bff" italic="true" underlineStyle="SingleUnderline"/>
   <style name="QmlTypeId" foreground="#ff9bff" bold="true"/>
@@ -70,8 +70,6 @@
   <style name="LogCommitHash" foreground="#ff0000"/>
   <style name="LogCommitSubject"/>
   <style name="LogDecoration" foreground="#ff00ff"/>
-  <style name="Info" underlineColor="#262088" underlineStyle="DashUnderline"/>
-  <style name="InfoContext" underlineColor="#262088" underlineStyle="DotLine"/>
   <style name="Warning" underlineColor="#ffbe00" underlineStyle="SingleUnderline"/>
   <style name="WarningContext" underlineColor="#ffbe00" underlineStyle="DotLine"/>
   <style name="Error" underlineColor="#ff0000" underlineStyle="SingleUnderline"/>
@@ -90,4 +88,5 @@
   <style name="CocoNotCoveredInfo" foreground="#ff0000"/>
   <style name="CocoCoveredInfo" foreground="#00ff00"/>
   <style name="CocoManuallyValidatedInfo" foreground="#0000ff"/>
+  <style name="LastStyleSentinel" underlineColor="#262088" underlineStyle="DotLine"/>
 </style-scheme>

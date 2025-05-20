@@ -60,7 +60,7 @@
         // "editorGutter.background": "#1d1f20",
         "panel.border": "#ee8800",
     },
-    "workbench.preferredLightColorTheme": "Gruvbox Light Soft",
+    "workbench.preferredLightColorTheme": "Catppuccin Latte",
     "workbench.startupEditor": "none",
     //---------------------------------------------------------
     // WINDOW

@@ -195,14 +195,18 @@ if [[ $do_themes -eq 1 ]]; then
 
     echo "### [ INSTALLING / LINKING THEMES ]"
 
-    # Qt Creator (https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator)
-    qtcs_dir="$HOME/.config/QtProject/qtcreator/styles"
-    mkdir -p $qtcs_dir
-    ln -snfr "$scriptpath/../common/qtcreator/themes/gruvbox_dark_custom.xml" "$qtcs_dir/gruvbox_dark_custom.xml"
-    ln -snfr "$scriptpath/../common/qtcreator/themes/monokai_dark_custom.xml" "$qtcs_dir/monokai_dark_custom.xml"
+    # Qt Creator
+    qt_styles="$HOME/.config/QtProject/qtcreator/styles"
+    mkdir -p $qt_styles
+    # https://github.com/byBretema/qt_monokai
+    ln -snfr "$scriptpath/../common/qtcreator/styles/monokai_dark_custom.xml" "$qt_styles/monokai_dark_custom.xml"
+    # https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator
+    ln -snfr "$scriptpath/../common/qtcreator/styles/gruvbox_dark_custom.xml" "$qt_styles/gruvbox_dark_custom.xml"
+    # https://github.com/catppuccin/qtcreator
+    ln -snfr "$scriptpath/../common/qtcreator/styles/catppuccin_latte.xml" "$qt_styles/catppuccin_latte.xml"
 
-    # Ulauncher (https://github.com/gustavothecoder/ulauncher-gruvbox-material)
-    ulauncher_dir="$HOME/.config/ulauncher/user-themes"
-    mkdir -p $ulauncher_dir
-    ln -snfr $scriptpath/themes/ulauncher/gruvbox-material-dark-hard/ $ulauncher_dir
+    # # Ulauncher (https://github.com/gustavothecoder/ulauncher-gruvbox-material)
+    # ulauncher_dir="$HOME/.config/ulauncher/user-themes"
+    # mkdir -p $ulauncher_dir
+    # ln -snfr $scriptpath/themes/ulauncher/gruvbox-material-dark-hard/ $ulauncher_dir
 fi
