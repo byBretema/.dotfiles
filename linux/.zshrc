@@ -400,7 +400,7 @@ eval "$(starship init zsh)"
 
 # Only on Ghostty, change interruption signal from Ctrl+C to Ctrl+X
 # So you can bind Ctrl+C to normal copy
-if [[ ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi
+# if [[ ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi
 
 
 ###############################################################################

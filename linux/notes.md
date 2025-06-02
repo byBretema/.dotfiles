@@ -23,7 +23,7 @@ sudo chattr +i ~/.config/autostart/electron.desktop  # avoid any app to modify t
     sudo paru -S kwin-scripts-krohnkite-git
     ```
 - Option 2: Install Krohnkite from KWin Scripts UI
-    ![](https://i.imgur.com/HEPxEcr.png)
+    ![](./doc/imgs/krohnkite.png)
 
 ### Config
 
@@ -37,5 +37,5 @@ sudo chattr +i ~/.config/autostart/electron.desktop  # avoid any app to modify t
     inactiveFrame=60,140,240
     ```
 4. Go to `Colors & Themes > Window Decorations > [edit] Breeze` and apply below config
-    ![](https://i.imgur.com/2XTyUja.png)
+    ![](./doc/imgs/kde_window_decorations.png)
 

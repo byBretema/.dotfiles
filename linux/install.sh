@@ -66,7 +66,6 @@ if [[ $do_links -eq 1 ]]; then
         git clone https://github.com/tmux-plugins/tpm $HOME/.config/tmux/plugins/tpm
     fi
     ln -srf $scriptpath/tmux.conf $HOME/.config/tmux/tmux.conf
-    ln -srf $scriptpath/zellij.kdl $HOME/.config/zellij/config.kdl
 
     # Kde stuff
     ln -srf $scriptpath/kde/kdeglobals $HOME/.config/kdeglobals
