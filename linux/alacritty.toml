@@ -22,6 +22,11 @@ duration = 500
 style = { shape = "Block", blinking = "Always" }
 vi_mode_style = { shape = "Underline", blinking = "Off" }
 
+# [general]
+# import = [
+#     "~/.config/alacritty/themes/themes/{theme}.toml"
+# ]
+
 # Gruvbox Dark Hard  (https://github.com/alacritty/alacritty-theme/blob/master/themes/gruvbox_dark.toml)
 ###############################################################################
 # [colors]

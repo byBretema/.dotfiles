@@ -28,12 +28,13 @@
     // ],
     "editor.fontSize": 16,
     "editor.fontLigatures": true,
-    "editor.fontFamily": "'Fira Code'",
-    // "editor.fontFamily": "'Victor Mono'",
+    // "editor.fontFamily": "'Fira Code'",
+    "editor.fontFamily": "'Victor Mono'",
     "editor.stickyScroll.enabled": false,
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
     "editor.tokenColorCustomizations": {
+        // "comments": "#F0D",
         "textMateRules": [
             {
                 "scope": "comment",
@@ -61,6 +62,7 @@
         "panel.border": "#ee8800",
     },
     "workbench.preferredLightColorTheme": "Catppuccin Latte",
+    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
     "workbench.startupEditor": "none",
     //---------------------------------------------------------
     // WINDOW
@@ -89,6 +91,8 @@
     // PYTHON  (check https://aka.ms/AAlgvkb)
     //---------------------------------------------------------
     "python.languageServer": "Pylance",
+    "python.analysis.extraPaths": ["$HOME/dev/omi/d/studio_engine/omi_blender/src/resources", "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"],
+    "python.autoComplete.extraPaths": ["$HOME/dev/omi/d/studio_engine/omi_blender/src/resources", "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
@@ -208,5 +212,5 @@
     "workbench.activityBar.location": "bottom",
     "window.customTitleBarVisibility": "auto",
     "workbench.editor.enablePreview": false,
-    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard"
+    "python.analysis.typeCheckingMode": "strict",
 }
