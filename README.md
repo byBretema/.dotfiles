@@ -21,3 +21,11 @@
     ./windows/install.ps1
 ```
 
+---
+
+#### Notes
+
+- SSH Gen Key
+```bash
+ssh-keygen -t ed25519 -C "your_email@example.com"
+```
