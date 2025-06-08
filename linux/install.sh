@@ -44,6 +44,10 @@ if [[ $do_links -eq 1 ]]; then
 
     echo "### [ LINKING CONFIG FILES ] - $scriptpath"
 
+    mkdir -p $HOME/.config
+    mkdir -p $HOME/.config/ghostty
+    mkdir -p $HOME/.config/alacritty
+
     # Terminal emulators
     ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
     ln -srf $scriptpath/alacritty.toml $HOME/.config/alacritty/alacritty.toml
@@ -58,14 +62,16 @@ if [[ $do_links -eq 1 ]]; then
 
     # Code
     code_path="$HOME/.config/Code/User"
+    mkdir -p $code_path
     ln -srf $scriptpath/../common/vscode/settings.json    "$code_path/settings.json"
     ln -srf $scriptpath/../common/vscode/keybindings.json "$code_path/keybindings.json"
 
     # Tmux
-    if [[ ! -d $HOME/.config/tmux/plugins/tpm ]]; then
-        git clone https://github.com/tmux-plugins/tpm $HOME/.config/tmux/plugins/tpm
+    tmux_path="$HOME/.config/tmux"
+    if [[ ! -d "$tmux_path/plugins/tpm" ]]; then
+        git clone https://github.com/tmux-plugins/tpm "$tmux_path/plugins/tpm"
     fi
-    ln -srf $scriptpath/tmux.conf $HOME/.config/tmux/tmux.conf
+    ln -srf $scriptpath/tmux.conf $tmux_path/tmux.conf
 
     # Kde stuff
     ln -srf $scriptpath/kde/kdeglobals $HOME/.config/kdeglobals
@@ -93,40 +99,40 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "### [ INSTALLING / UPDATING APPS ]"
 
-    paru --noconfirm --needed -Sy \
-        git \
-        lazygit \
-        superfile-bin \
-        tmux \
-        neovim \
-        superfile-bin \
-        starship \
-        zsh-autosuggestions \
-        zsh-syntax-highlighting \
-        zsh-history-substring-search \
-        inter-font\
-        uv \
-        gdb \
-        cmake \
-        vulkan-devel \
-        cppman \
-        zed \
-        visual-studio-code-bin \
-        copyq \
-        f3d \
-        blender \
-        handbrake \
-        bitwarden \
-        obs-studio \
-        zathura \
-        obsidian \
-        ulauncher \
-        teamviewer \
-        balena-etcher \
-        slack-desktop \
-        localsend-bin \
-        google-chrome \
-        notion-app-electron
+   # paru -Sy --noconfirm --needed \
+    paru -Sy --noconfirm --needed git
+    paru -Sy --noconfirm --needed lazygit
+    paru -Sy --noconfirm --needed superfile-bin
+    paru -Sy --noconfirm --needed tmux
+    paru -Sy --noconfirm --needed neovim
+    paru -Sy --noconfirm --needed superfile-bin
+    paru -Sy --noconfirm --needed starship
+    paru -Sy --noconfirm --needed zsh-autosuggestions
+    paru -Sy --noconfirm --needed zsh-syntax-highlighting
+    paru -Sy --noconfirm --needed zsh-history-substring-search
+    paru -Sy --noconfirm --needed inter-font
+    paru -Sy --noconfirm --needed uv
+    paru -Sy --noconfirm --needed gdb
+    paru -Sy --noconfirm --needed cmake
+    paru -Sy --noconfirm --needed vulkan-devel
+    paru -Sy --noconfirm --needed cppman
+    paru -Sy --noconfirm --needed zed
+    paru -Sy --noconfirm --needed visual-studio-code-bin
+    paru -Sy --noconfirm --needed copyq
+    paru -Sy --noconfirm --needed f3d
+    paru -Sy --noconfirm --needed blender
+    paru -Sy --noconfirm --needed handbrake
+    paru -Sy --noconfirm --needed bitwarden
+    paru -Sy --noconfirm --needed obs-studio
+    paru -Sy --noconfirm --needed zathura
+    paru -Sy --noconfirm --needed obsidian
+    paru -Sy --noconfirm --needed ulauncher
+    paru -Sy --noconfirm --needed teamviewer
+    paru -Sy --noconfirm --needed balena-etcher
+    paru -Sy --noconfirm --needed slack-desktop
+    paru -Sy --noconfirm --needed localsend-bin
+    paru -Sy --noconfirm --needed google-chrome
+    paru -Sy --noconfirm --needed notion-app-electron
 
     # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
     # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
@@ -157,8 +163,10 @@ if [[ $do_fonts -eq 1 ]]; then
         curl -fsSL "$url" -o "$font_zip"
         unzip -q "$font_zip" -d "$font_extracted"
 
+        fonts_path="$HOME/.local/share/fonts/"
+	mkdir -p $fonts_path
         find "$font_extracted" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
-            cp "$font" "$HOME/.local/share/fonts/" || echo "[x] Failed to install: $(basename "$font")"
+	    cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
         done
 
         rm -rf "$temp_dir"
