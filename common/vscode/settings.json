@@ -62,7 +62,6 @@
         "panel.border": "#ee8800",
     },
     "workbench.preferredLightColorTheme": "Catppuccin Latte",
-    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
     "workbench.startupEditor": "none",
     //---------------------------------------------------------
     // WINDOW
@@ -213,4 +212,5 @@
     "window.customTitleBarVisibility": "auto",
     "workbench.editor.enablePreview": false,
     "python.analysis.typeCheckingMode": "strict",
+    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
 }

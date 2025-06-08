@@ -42,7 +42,7 @@ scriptpath=$(dirname "$(readlink -f "$0")")
 
 if [[ $do_links -eq 1 ]]; then
 
-    echo "### [ LINKING CONFIG FILES ] - $scriptpath"
+    echo "\n### [ LINKING CONFIG FILES ] - $scriptpath"
 
     mkdir -p $HOME/.config
     mkdir -p $HOME/.config/ghostty
@@ -84,7 +84,7 @@ fi
 
 if [[ $do_update -eq 1 ]]; then
 
-    echo "### [ UPDATING SYSTEM ]"
+    echo "\n### [ UPDATING SYSTEM ]"
 
     paru --noconfirm -Syu  # Trigger updates
 
@@ -97,42 +97,39 @@ fi
 
 if [[ $do_install -eq 1 ]]; then
 
-    echo "### [ INSTALLING / UPDATING APPS ]"
+    echo "\n### [ INSTALLING / UPDATING APPS ]"
 
-   # paru -Sy --noconfirm --needed \
-    paru -Sy --noconfirm --needed git
-    paru -Sy --noconfirm --needed lazygit
-    paru -Sy --noconfirm --needed superfile-bin
-    paru -Sy --noconfirm --needed tmux
-    paru -Sy --noconfirm --needed neovim
-    paru -Sy --noconfirm --needed superfile-bin
-    paru -Sy --noconfirm --needed starship
-    paru -Sy --noconfirm --needed zsh-autosuggestions
-    paru -Sy --noconfirm --needed zsh-syntax-highlighting
-    paru -Sy --noconfirm --needed zsh-history-substring-search
-    paru -Sy --noconfirm --needed inter-font
-    paru -Sy --noconfirm --needed uv
-    paru -Sy --noconfirm --needed gdb
-    paru -Sy --noconfirm --needed cmake
-    paru -Sy --noconfirm --needed vulkan-devel
-    paru -Sy --noconfirm --needed cppman
-    paru -Sy --noconfirm --needed zed
-    paru -Sy --noconfirm --needed visual-studio-code-bin
-    paru -Sy --noconfirm --needed copyq
-    paru -Sy --noconfirm --needed f3d
-    paru -Sy --noconfirm --needed blender
-    paru -Sy --noconfirm --needed handbrake
-    paru -Sy --noconfirm --needed bitwarden
-    paru -Sy --noconfirm --needed obs-studio
-    paru -Sy --noconfirm --needed zathura
-    paru -Sy --noconfirm --needed obsidian
-    paru -Sy --noconfirm --needed ulauncher
-    paru -Sy --noconfirm --needed teamviewer
-    paru -Sy --noconfirm --needed balena-etcher
-    paru -Sy --noconfirm --needed slack-desktop
-    paru -Sy --noconfirm --needed localsend-bin
-    paru -Sy --noconfirm --needed google-chrome
-    paru -Sy --noconfirm --needed notion-app-electron
+    paru -S --needed --noconfirm --skipreview git
+    paru -S --needed --noconfirm --skipreview lazygit
+    paru -S --needed --noconfirm --skipreview tmux
+    paru -S --needed --noconfirm --skipreview neovim
+    paru -S --needed --noconfirm --skipreview yazi
+    paru -S --needed --noconfirm --skipreview starship
+    paru -S --needed --noconfirm --skipreview zsh-autosuggestions
+    paru -S --needed --noconfirm --skipreview zsh-syntax-highlighting
+    paru -S --needed --noconfirm --skipreview zsh-history-substring-search
+    paru -S --needed --noconfirm --skipreview inter-font
+    paru -S --needed --noconfirm --skipreview uv
+    paru -S --needed --noconfirm --skipreview gdb
+    paru -S --needed --noconfirm --skipreview cmake
+    paru -S --needed --noconfirm --skipreview vulkan-devel
+    paru -S --needed --noconfirm --skipreview aur/cppman
+    paru -S --needed --noconfirm --skipreview visual-studio-code-bin
+    paru -S --needed --noconfirm --skipreview copyq
+    paru -S --needed --noconfirm --skipreview f3d
+    paru -S --needed --noconfirm --skipreview blender
+    paru -S --needed --noconfirm --skipreview handbrake
+    paru -S --needed --noconfirm --skipreview bitwarden
+    paru -S --needed --noconfirm --skipreview obs-studio
+    paru -S --needed --noconfirm --skipreview zathura
+    paru -S --needed --noconfirm --skipreview obsidian
+    paru -S --needed --noconfirm --skipreview ulauncher
+    paru -S --needed --noconfirm --skipreview teamviewer
+    paru -S --needed --noconfirm --skipreview balena-etcher
+    paru -S --needed --noconfirm --skipreview slack-desktop
+    paru -S --needed --noconfirm --skipreview localsend-bin
+    paru -S --needed --noconfirm --skipreview google-chrome
+    paru -S --needed --noconfirm --skipreview notion-app-electron
 
     # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
     # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
@@ -149,7 +146,7 @@ fi
 
 if [[ $do_fonts -eq 1 ]]; then
 
-    echo "### [ INSTALLING FONTS ]"
+    echo "\n### [ INSTALLING FONTS ]"
 
     function install_font()
     {
@@ -187,7 +184,7 @@ fi
 
 if [[ $do_code_extensions -eq 1 ]]; then
 
-    echo "### [ INSTALLING VSCODE EXTENSIONS]"
+    echo "\n### [ INSTALLING VSCODE EXTENSIONS]"
 
     $scriptpath/../common/vscode/extensions.sh -i
 
@@ -200,7 +197,7 @@ fi
 
 if [[ $do_themes -eq 1 ]]; then
 
-    echo "### [ INSTALLING / LINKING THEMES ]"
+    echo "\n### [ INSTALLING / LINKING THEMES ]"
 
     # Qt Creator
     qt_styles="$HOME/.config/QtProject/qtcreator/styles"
