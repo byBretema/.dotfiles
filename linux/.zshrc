@@ -129,7 +129,7 @@ alias pmy='paru --bottomup --noconfirm -Sy'
 ## Recent installed packages  (from CachyOS default zsh config)
 alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
 ## Cleanup orphaned packages
-alias pm_clean_orphan='sudo pacman -Rsn (pacman -Qtdq)'
+# alias pm_clean_orphan='sudo pacman -Rsn (pacman -Qtdq)'
 ## Cleanup cache
 alias pm_clean_cache='sudo pacman -Scc'
 ## Unlock pacman DB
@@ -137,7 +137,7 @@ alias pm_unlock='sudo rm /var/lib/pacman/db.lck'
 ## Remove package recursive and don't save
 alias pm_remove='sudo pacman -Rsn'
 ## Update everything
-alias pm_update='sudo pacman -Syu'
+alias pm_update='paru -Syu'
 
 
 ###############################################################################

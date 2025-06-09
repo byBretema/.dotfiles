@@ -211,6 +211,6 @@
     "workbench.activityBar.location": "bottom",
     "window.customTitleBarVisibility": "auto",
     "workbench.editor.enablePreview": false,
-    "python.analysis.typeCheckingMode": "strict",
-    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
+    "python.analysis.typeCheckingMode": "standard",
+    "workbench.preferredDarkColorTheme": "Catppuccin Mocha"
 }
