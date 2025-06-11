@@ -102,14 +102,15 @@ alias ze='xdg-open $HOME/.zshrc'
 
 # Utils
 #------------------
+alias h='history'
 alias l='eza -a --icons always --git -s type --hyperlink'
 alias L='l -1'
 alias ll='l -l --no-user'
 alias lll='l -T'
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'
-alias aaa='sudo !!'
-alias wii='which !!'
+alias aaa='sudo $(fc -ln | tail -1)'
+alias wii='which $(fc -ln | tail -1)'
 alias trash='rr'
 
 # System
@@ -194,10 +195,8 @@ function dfe {
 
 # Open git repo on the browser
 function gitit {
-	if [ ! -d "./.git" ]; then
-		echo "fatal: not a git repository"
-		return
-	fi
+
+	if ! git remote -v > /dev/null 2>&1; then echo "-- Not a repo."; return; fi
 
 	url=$(git remote -v | head -n 1 | awk '{print $2}')
 	if [[ $url == *@* ]]; then
@@ -208,81 +207,17 @@ function gitit {
 	fi
 }
 
-# Run commands on submodules
-## Depends on '__gs_output_format' to be defined in .zshenv
-function gs() {
-    local show_help=0
-    local only_in_submodules=0
-    local only_if_changes=0
-    local force_parallel=0
-    local cmd=()
+git_remove_branch_local_and_remote() {
 
-    # Parse arguments
-    while [[ $# -gt 0 ]]; do
-        case $1 in
-            -h) show_help=1; shift;;
-            -s) only_in_submodules=1; shift;;
-            -c) only_if_changes=1; shift;;
-            -p) force_parallel=1; shift;;
-            *)  cmd+=("$1"); shift;;
-        esac
-    done
+	local_delete_flag="-d"
+    if [[ $# -gt 1 && $1 -eq "-f" ]]; then local_delete_flag="-D"; fi
 
-    # Print help if needed
-    if [[ ${#cmd[@]} -lt 1 || $show_help == 1 ]]; then
-        echo -e "\nRun git commands in submodules"
-        echo -e "\nUsage: gs [-p] cmd..."
-        echo "-s : Run only in submodules"
-        echo "-p : Force to run in parallel"
-        echo "-c : Only if a changes are present"
-        return
-    fi
+    if [[ $# -lt 1 ]]; then echo "'branch_name' is mandatory"; return; fi
+    local branch_name=$1; shift
 
-	# Determine if the command should run in parallel
-    local is_parallel=$force_parallel
-	[[ " ${cmd[1]} " == *" pull "* ]] && is_parallel=1
-	[[ " ${cmd[1]} " == *" push "* ]] && is_parallel=1
-
-	# Escape message
-	local cmd_not_escaped=(${cmd[@]})
-    local escape_last=0
-	[[ " ${cmd[1]}  " == *" ac "* ]] && escape_last=1
-	[[ " ${cmd[-2]} " == *" -m "* ]] && escape_last=1
-    if [[ $escape_last == 1 ]]; then
-        cmd[-1]=${(qq)cmd[-1]}
-    fi
-
-	# Generate command list
-	cmd_list=""
-	for i in */ ; do
-		i=$(echo $i | tr -d '/')
-		if [[ -e "$i/.git" ]] && { [[ $only_if_changes -ne 1 || $(git -C "$i" status --porcelain=1 | wc -l) -gt 0 ]] }; then
-			cmd_list+="git -C $i -c color.ui=always --no-pager $cmd 2>&1 | __gs_output_format $i\n"
-		fi
-	done
-
-	# Execute command list
-	if [[ $is_parallel == 1 ]]; then
-		printf "$cmd_list" | parallel -j$(nproc) {1}
-	else
-		eval "$(printf "$cmd_list")"
-	fi
-
-	# Run on super-repo too
-	if [[ $only_in_submodules == 0 ]] && [[ -e ".git" ]]; then
-		git -c color.ui=always --no-pager $cmd_not_escaped 2>&1 | __gs_output_format "Super :: $(basename $PWD)"
-	fi
-
-	# # Debug
-	# echo "\n\n============================================="
-	# echo "show_help       = $show_help"
-	# echo "only_submodules = $only_submodules"
-	# echo "force_parallel  = $force_parallel"
-	# echo "is_parallel     = $is_parallel"
-	# echo "escape_last     = $escape_last"
-	# echo "cmd             = $cmd"
+	git branch $local_delete_flag $branch_name
+	git push origin --delete $branch_name
 }
-alias gsdiff="gs diff | ov -F --section-delimiter '^diff' --section-header"
 
 
 ###############################################################################

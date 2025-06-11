@@ -99,10 +99,12 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / UPDATING APPS ]"
 
+    paru -S --needed --noconfirm --skipreview ghostty
     paru -S --needed --noconfirm --skipreview git
     paru -S --needed --noconfirm --skipreview lazygit
     paru -S --needed --noconfirm --skipreview tmux
     paru -S --needed --noconfirm --skipreview neovim
+    paru -S --needed --noconfirm --skipreview evil-helix-bin
     paru -S --needed --noconfirm --skipreview yazi
     paru -S --needed --noconfirm --skipreview starship
     paru -S --needed --noconfirm --skipreview zsh-autosuggestions
@@ -113,7 +115,7 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview gdb
     paru -S --needed --noconfirm --skipreview cmake
     paru -S --needed --noconfirm --skipreview vulkan-devel
-    paru -S --needed --noconfirm --skipreview aur/cppman
+    paru -S --needed --noconfirm --skipreview cppman
     paru -S --needed --noconfirm --skipreview visual-studio-code-bin
     paru -S --needed --noconfirm --skipreview copyq
     paru -S --needed --noconfirm --skipreview f3d
@@ -121,7 +123,7 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview handbrake
     paru -S --needed --noconfirm --skipreview bitwarden
     paru -S --needed --noconfirm --skipreview obs-studio
-    paru -S --needed --noconfirm --skipreview zathura
+    paru -S --needed --noconfirm --skipreview zathura #pdf
     paru -S --needed --noconfirm --skipreview obsidian
     paru -S --needed --noconfirm --skipreview ulauncher
     paru -S --needed --noconfirm --skipreview teamviewer

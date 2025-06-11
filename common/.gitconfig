@@ -27,6 +27,7 @@
 	acp   = !git add -A && git commit -m "$1" && git push
 	sc    = switch -c
 	sw    = switch
+	sww   = !_b=$(git branch | fzf) && git sw "${_b#* }"
 	co    = checkout
 	cm    = commit -m
 	st    = status -s
