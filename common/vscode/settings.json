@@ -212,6 +212,9 @@
     "window.customTitleBarVisibility": "auto",
     "workbench.editor.enablePreview": false,
     "python.analysis.typeCheckingMode": "standard",
+<<<<<<< Updated upstream
     "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
     "workbench.sideBar.location": "right"
+=======
+>>>>>>> Stashed changes
 }
