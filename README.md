@@ -27,7 +27,9 @@
 
 - SSH Gen Key
 ```bash
-ssh-keygen -t ed25519 -C "your_email@example.com"
+ssh-keygen -t ed25519
+paru -S --needed --noconfirm xclip
+cat .ssh/id_ed25519.pub | xclip -selection c
 ```
 
 ---
