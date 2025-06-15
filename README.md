@@ -23,19 +23,19 @@
 
 ---
 
-#### Notes
-
-- SSH Gen Key
-```bash
-ssh-keygen -t ed25519
-paru -S --needed --noconfirm xclip
-cat .ssh/id_ed25519.pub | xclip -selection c
-```
-
----
-
 #### ToDo
 
 - [ ] Move to `common` folder, configs of: alacritty, ghostty, tmux
     - [ ] Update the `install` scripts.
 - [ ] Try to update the windows scripts.
+
+---
+
+#### Helpers
+
+##### SSH KeyGen
+```bash
+ssh-keygen -t ed25519
+paru -S --needed --noconfirm xclip
+cat .ssh/id_ed25519.pub | xclip -selection c
+```
