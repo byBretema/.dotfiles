@@ -99,6 +99,9 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / UPDATING APPS ]"
 
+    paru -S --needed --noconfirm --skipreview zsh
+    chsh -s /usr/bin/zsh
+
     paru -S --needed --noconfirm --skipreview ghostty
     paru -S --needed --noconfirm --skipreview git
     paru -S --needed --noconfirm --skipreview lazygit

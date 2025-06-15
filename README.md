@@ -29,3 +29,11 @@
 ```bash
 ssh-keygen -t ed25519 -C "your_email@example.com"
 ```
+
+---
+
+#### ToDo
+
+- [ ] Move to `common` folder, configs of: alacritty, ghostty, tmux
+    - [ ] Update the `install` scripts.
+- [ ] Try to update the windows scripts.
