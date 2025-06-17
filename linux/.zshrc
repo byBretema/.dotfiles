@@ -120,8 +120,8 @@ alias trash='rr'
 # System
 #------------------
 ## Clipboard
-alias pbcopy='xclip -selection clipboard'
-alias pbpaste='xclip -selection clipboard -o'
+alias pbcopy='xclip -selection c'
+alias pbpaste='xclip -selection c -o'
 ## Kernel info
 alias jctl='journalctl'
 alias qctl='journalctl -p 3 -xb'
