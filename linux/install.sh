@@ -110,9 +110,12 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview evil-helix-bin
     paru -S --needed --noconfirm --skipreview yazi
     paru -S --needed --noconfirm --skipreview starship
+    paru -S --needed --noconfirm --skipreview carapace
+
     paru -S --needed --noconfirm --skipreview zsh-autosuggestions
     paru -S --needed --noconfirm --skipreview zsh-syntax-highlighting
     paru -S --needed --noconfirm --skipreview zsh-history-substring-search
+
     paru -S --needed --noconfirm --skipreview inter-font
     paru -S --needed --noconfirm --skipreview uv
     paru -S --needed --noconfirm --skipreview gdb

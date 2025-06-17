@@ -6,11 +6,10 @@
 ### OH-MY-ZSH / PLUGINS / MODULES
 ###############################################################################
 
-export ZSH="/usr/share/oh-my-zsh"
 export FZF_BASE=/usr/share/fzf
-
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
+export ZSH="/usr/share/oh-my-zsh"
 DISABLE_MAGIC_FUNCTIONS="true"
 DISABLE_AUTO_TITLE=true
 # ENABLE_CORRECTION="true"
@@ -24,6 +23,11 @@ source $ZSH/oh-my-zsh.sh
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+
+# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
+# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
+# source <(carapace _carapace)
+# zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
 
 autoload -U colors && colors
 
@@ -334,16 +338,11 @@ eval "$(starship init zsh)"
 
 
 ###############################################################################
-### HAPPY COPY PASTE
-###############################################################################
-
-# Only on Ghostty, change interruption signal from Ctrl+C to Ctrl+X
-# So you can bind Ctrl+C to normal copy
-# if [[ ${GHOSTTY_RESOURCES_DIR+x} ]]; then stty intr '^X'; fi
-
-
-###############################################################################
 ### SOURCE PRIVATE STUFF
 ###############################################################################
 
-source $HOME/dev/.private.zsh
+if [[ -f $HOME/dev/.private.zsh ]]; then
+	source $HOME/dev/.private.zsh
+else
+	echo "-- Remember to get your .private.zsh file"
+fi
