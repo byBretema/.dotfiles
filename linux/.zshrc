@@ -101,7 +101,7 @@ unsetopt MULTIBYTE              # allow modern stuff
 
 # Shell
 #------------------
-alias zr='source $HOME/.zshrc && source $HOME/.zshenv'
+alias zr='source $HOME/.zshrc'
 alias ze='xdg-open $HOME/.zshrc'
 
 # Utils
@@ -227,6 +227,9 @@ git_remove_branch_local_and_remote() {
 	git push origin --delete $branch_name
 }
 
+gitsw() {
+	echo $(git branch -a | fzf) | sed -E 's/^remotes\/origin\///; s/^\*\ //' | xargs git switch
+}
 
 ###############################################################################
 ### OTHER UTILITIES
@@ -234,13 +237,14 @@ git_remove_branch_local_and_remote() {
 
 function k { clear; ll; }  # Clear and list
 
-function oo { xdg-open $1; }  # Open with default application
+function o { xdg-open $1 &; }  # Open with default application
+function oo { xdg-open . &; }  # Open with default application
 
 function mkcd { mkdir -p $1; cd $1; }  # Create a folder and enter
 
 function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
 
-function s { oo "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
+function s { o "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
 
 function dev() { cd $HOME/dev; }
 
