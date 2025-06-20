@@ -9,12 +9,14 @@ bierner.markdown-preview-github-styles
 bierner.markdown-yaml-preamble
 bmcbarron.babylonjs-viewer
 bradlc.vscode-tailwindcss
+catppuccin.catppuccin-vsc
 cheshirekow.cmake-format
 chouzz.vscode-innosetup
 danielgavin.ols
 davidbroetje.algorithm-mnemonics-vscode
 ddh4r4m.night-hacker-dark-theme
 dmnsgn.vscode-wavefront
+docker.docker
 dtoplak.vscode-glsllint
 ecmel.vscode-html-css
 editorconfig.editorconfig
@@ -23,7 +25,9 @@ grapecity.gc-excelviewer
 gruntfuggly.todo-tree
 janisdd.vscode-edit-csv
 jdinhlife.gruvbox
+jeff-hykin.better-cpp-syntax
 jock.svg
+malmaud.tmux
 mechatroner.rainbow-csv
 ms-azuretools.vscode-docker
 ms-python.black-formatter
