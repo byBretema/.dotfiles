@@ -55,11 +55,9 @@
     // WORKBENCH
     //---------------------------------------------------------
     "workbench.settings.editor": "json",
-    "workbench.iconTheme": "vscode-icons",
+    "workbench.iconTheme": "catppuccin-mocha",
     "workbench.colorCustomizations": {
-        // "editorGutter.background": "#141421",
-        // "editorGutter.background": "#1d1f20",
-        "panel.border": "#ee8800",
+        "panel.border": "#ee8800"
     },
     "workbench.preferredLightColorTheme": "Catppuccin Latte",
     "workbench.startupEditor": "none",
@@ -212,7 +210,7 @@
     "window.customTitleBarVisibility": "auto",
     "workbench.editor.enablePreview": false,
     "python.analysis.typeCheckingMode": "standard",
-    "workbench.preferredDarkColorTheme": "Catppuccin Mocha",
     "workbench.sideBar.location": "right",
-    "editor.minimap.enabled": false
+    "editor.minimap.enabled": false,
+    "workbench.preferredDarkColorTheme": "Catppuccin Mocha"
 }

@@ -7,9 +7,10 @@
 ###############################################################################
 
 export FZF_BASE=/usr/share/fzf
-export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 export ZSH="/usr/share/oh-my-zsh"
+export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
+
 DISABLE_MAGIC_FUNCTIONS="true"
 DISABLE_AUTO_TITLE=true
 # ENABLE_CORRECTION="true"
