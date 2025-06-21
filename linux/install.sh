@@ -102,14 +102,33 @@ if [[ $do_install -eq 1 ]]; then
     chsh -s /usr/bin/zsh
 
     paru -S --needed --noconfirm --skipreview ghostty
+    paru -S --needed --noconfirm --skipreview carapace
+    paru -S --needed --noconfirm --skipreview mprocs
+
     paru -S --needed --noconfirm --skipreview git
+    paru -S --needed --noconfirm --skipreview gitui
     paru -S --needed --noconfirm --skipreview lazygit
+    paru -S --needed --noconfirm --skipreview git-delta
+
     paru -S --needed --noconfirm --skipreview tmux
     paru -S --needed --noconfirm --skipreview neovim
     paru -S --needed --noconfirm --skipreview evil-helix-bin
+
     paru -S --needed --noconfirm --skipreview yazi
+    paru -S --needed --noconfirm --skipreview ncspot
     paru -S --needed --noconfirm --skipreview starship
-    paru -S --needed --noconfirm --skipreview carapace
+    paru -S --needed --noconfirm --skipreview presenterm
+
+    paru -S --needed --noconfirm --skipreview fd
+    paru -S --needed --noconfirm --skipreview fzf
+    paru -S --needed --noconfirm --skipreview eza
+    paru -S --needed --noconfirm --skipreview dua
+    paru -S --needed --noconfirm --skipreview dust
+    paru -S --needed --noconfirm --skipreview kondo
+    paru -S --needed --noconfirm --skipreview ripgrep
+    paru -S --needed --noconfirm --skipreview hyperfine
+    paru -S --needed --noconfirm --skipreview ripgrep-all
+    paru -S --needed --noconfirm --skipreview fselect-bin
 
     paru -S --needed --noconfirm --skipreview oh-my-zsh-git
     paru -S --needed --noconfirm --skipreview zsh-autosuggestions
@@ -140,7 +159,7 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview handbrake
     paru -S --needed --noconfirm --skipreview obs-studio
 
-    paru -S --needed --noconfirm --skipreview zathura #pdf
+    paru -S --needed --noconfirm --skipreview zathura
     paru -S --needed --noconfirm --skipreview obsidian
 
     paru -S --needed --noconfirm --skipreview tigervnc

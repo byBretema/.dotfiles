@@ -97,13 +97,19 @@ unsetopt MULTIBYTE              # allow modern stuff
 
 
 ###############################################################################
-### ALIASES  (Remember to always define alias between SINGLE quotes, yvm)
+### ALIASES  (Remember to define alias between SINGLE quotes)
 ###############################################################################
 
 # Shell
 #------------------
 alias zr='source $HOME/.zshrc'
 alias ze='xdg-open $HOME/.zshrc'
+
+# Langs
+#------------------
+alias py="python"
+alias py3="python3"
+alias py310="python310"
 
 # Utils
 #------------------
@@ -131,8 +137,8 @@ alias qctl='journalctl -p 3 -xb'
 #------------------
 ## Paru
 alias pm='paru --bottomup'
-alias pmy='paru --bottomup --noconfirm'
-alias pmm='paru --bottomup --noconfirm --skipreview'
+alias pmy='pm --noconfirm'
+alias pmm='pm --noconfirm --skipreview'
 alias pi='paru'
 alias piy='paru --noconfirm -S'
 alias pii='paru --noconfirm --skipreview -S'
