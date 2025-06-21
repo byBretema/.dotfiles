@@ -45,11 +45,13 @@ if [[ $do_links -eq 1 ]]; then
     echo "\n### [ LINKING CONFIG FILES ] - $scriptpath"
 
     mkdir -p $HOME/.config
-    mkdir -p $HOME/.config/ghostty
-    mkdir -p $HOME/.config/alacritty
 
-    # Terminal emulators
+    # Ghostty
+    mkdir -p $HOME/.config/ghostty
     ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
+
+    # Alacritty
+    mkdir -p $HOME/.config/alacritty
     ln -srf $scriptpath/alacritty.toml $HOME/.config/alacritty/alacritty.toml
 
     # Zsh
@@ -72,9 +74,6 @@ if [[ $do_links -eq 1 ]]; then
         git clone https://github.com/tmux-plugins/tpm "$tmux_path/plugins/tpm"
     fi
     ln -srf $scriptpath/tmux.conf $tmux_path/tmux.conf
-
-    # Kde stuff
-    ln -srf $scriptpath/kde/kdeglobals $HOME/.config/kdeglobals
 fi
 
 
@@ -112,32 +111,43 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview starship
     paru -S --needed --noconfirm --skipreview carapace
 
+    paru -S --needed --noconfirm --skipreview oh-my-zsh-git
     paru -S --needed --noconfirm --skipreview zsh-autosuggestions
     paru -S --needed --noconfirm --skipreview zsh-syntax-highlighting
     paru -S --needed --noconfirm --skipreview zsh-history-substring-search
 
     paru -S --needed --noconfirm --skipreview inter-font
+
     paru -S --needed --noconfirm --skipreview uv
+    paru -S --needed --noconfirm --skipreview python
+    paru -S --needed --noconfirm --skipreview python310
+
     paru -S --needed --noconfirm --skipreview gdb
     paru -S --needed --noconfirm --skipreview cmake
-    paru -S --needed --noconfirm --skipreview vulkan-devel
     paru -S --needed --noconfirm --skipreview cppman
-    paru -S --needed --noconfirm --skipreview visual-studio-code-bin
+    paru -S --needed --noconfirm --skipreview vulkan-devel
+
     paru -S --needed --noconfirm --skipreview copyq
-    paru -S --needed --noconfirm --skipreview f3d
-    paru -S --needed --noconfirm --skipreview blender
-    paru -S --needed --noconfirm --skipreview handbrake
     paru -S --needed --noconfirm --skipreview bitwarden
-    paru -S --needed --noconfirm --skipreview obs-studio
-    paru -S --needed --noconfirm --skipreview zathura #pdf
-    paru -S --needed --noconfirm --skipreview obsidian
-    paru -S --needed --noconfirm --skipreview ulauncher
-    paru -S --needed --noconfirm --skipreview teamviewer
-    paru -S --needed --noconfirm --skipreview balena-etcher
     paru -S --needed --noconfirm --skipreview slack-desktop
-    paru -S --needed --noconfirm --skipreview localsend-bin
     paru -S --needed --noconfirm --skipreview google-chrome
     paru -S --needed --noconfirm --skipreview notion-app-electron
+    paru -S --needed --noconfirm --skipreview visual-studio-code-bin
+
+    paru -S --needed --noconfirm --skipreview f3d
+    paru -S --needed --noconfirm --skipreview blender
+
+    paru -S --needed --noconfirm --skipreview handbrake
+    paru -S --needed --noconfirm --skipreview obs-studio
+
+    paru -S --needed --noconfirm --skipreview zathura #pdf
+    paru -S --needed --noconfirm --skipreview obsidian
+
+    paru -S --needed --noconfirm --skipreview tigervnc
+    paru -S --needed --noconfirm --skipreview teamviewer
+
+    paru -S --needed --noconfirm --skipreview balena-etcher
+    paru -S --needed --noconfirm --skipreview localsend-bin
 
     # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
     # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
@@ -169,7 +179,7 @@ if [[ $do_fonts -eq 1 ]]; then
         unzip -q "$font_zip" -d "$font_extracted"
 
         fonts_path="$HOME/.local/share/fonts/"
-	mkdir -p $fonts_path
+	    mkdir -p $fonts_path
         find "$font_extracted" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
 	    cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
         done
@@ -194,7 +204,7 @@ if [[ $do_code_extensions -eq 1 ]]; then
 
     echo "\n### [ INSTALLING VSCODE EXTENSIONS]"
 
-    $scriptpath/../common/vscode/extensions.sh -i
+    python $scriptpath/../common/vscode/extensions.py -i
 
 fi
 
@@ -210,15 +220,11 @@ if [[ $do_themes -eq 1 ]]; then
     # Qt Creator
     qt_styles="$HOME/.config/QtProject/qtcreator/styles"
     mkdir -p $qt_styles
-    # https://github.com/byBretema/qt_monokai
+    #-- https://github.com/byBretema/qt_monokai
     ln -snfr "$scriptpath/../common/qtcreator/styles/monokai_dark_custom.xml" "$qt_styles/monokai_dark_custom.xml"
-    # https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator
+    #-- https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator
     ln -snfr "$scriptpath/../common/qtcreator/styles/gruvbox_dark_custom.xml" "$qt_styles/gruvbox_dark_custom.xml"
-    # https://github.com/catppuccin/qtcreator
+    #-- https://github.com/catppuccin/qtcreator
     ln -snfr "$scriptpath/../common/qtcreator/styles/catppuccin_latte.xml" "$qt_styles/catppuccin_latte.xml"
 
-    # # Ulauncher (https://github.com/gustavothecoder/ulauncher-gruvbox-material)
-    # ulauncher_dir="$HOME/.config/ulauncher/user-themes"
-    # mkdir -p $ulauncher_dir
-    # ln -snfr $scriptpath/themes/ulauncher/gruvbox-material-dark-hard/ $ulauncher_dir
 fi
