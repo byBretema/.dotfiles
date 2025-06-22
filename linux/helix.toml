@@ -1,0 +1,21 @@
+theme = "catppuccin_mocha"
+
+[editor]
+line-number = "relative"
+mouse = true
+
+[editor.cursor-shape]
+insert = "bar"
+normal = "block"
+select = "underline"
+
+[keys.normal.g]
+a = "code_action" # Maps `ga` to show possible code actions
+
+[keys.insert.j]
+k = "normal_mode" # Maps `jk` to exit insert mode
+j = "normal_mode" # Maps `jj` to exit insert mode
+
+[keys.insert.k]
+j = "normal_mode" # Maps `kj` to exit insert mode
+k = "normal_mode" # Maps `kk` to exit insert mode

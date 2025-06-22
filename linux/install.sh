@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -u
 shopt -s xpg_echo
 
 
@@ -7,15 +6,20 @@ shopt -s xpg_echo
 ### ARGUMENTS
 ###############################################################################
 
-do_links=0
-do_update=0
-do_install=0
-do_fonts=0
-do_code_extensions=0
-do_themes=0
+show_usage() {
+    echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"
+    echo "\nManage configs and system apps, fonts, themes...\n"
+    echo "options:"
+    echo "  -l  --  Link dotfiles"
+    echo "  -u  --  Update system"
+    echo "  -i  --  Install listed apps"
+    echo "  -f  --  Install fonts"
+    echo "  -e  --  Install code extensions"
+    echo "  -t  --  Link themes for different apps"
+}
 
 OPTIND=1
-while getopts "luifet" opt; do
+while getopts "luifeth" opt; do
     case $opt in
         l) do_links=1;;
         u) do_update=1;;
@@ -23,7 +27,7 @@ while getopts "luifet" opt; do
         f) do_fonts=1;;
         e) do_code_extensions=1;;
         t) do_themes=1;;
-        *) echo "Usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"; exit 1;;
+        *) show_usage; exit 1;;
     esac
 done
 shift $((OPTIND-1))
@@ -67,6 +71,10 @@ if [[ $do_links -eq 1 ]]; then
     mkdir -p $code_path
     ln -srf $scriptpath/../common/vscode/settings.json    "$code_path/settings.json"
     ln -srf $scriptpath/../common/vscode/keybindings.json "$code_path/keybindings.json"
+
+    # Helix
+    ln -srf $scriptpath/helix.toml $HOME/.config/helix/config.toml
+
 
     # Tmux
     tmux_path="$HOME/.config/tmux"

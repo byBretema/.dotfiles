@@ -189,7 +189,7 @@ export MICRO_TRUECOLOR=1
 ### DOTFILES
 ###############################################################################
 
-function dfs {
+dfs() {
 	pushd $HOME/.dotfiles
 	git status -s
 	git stash > /dev/null
@@ -201,9 +201,11 @@ function dfs {
 	popd  2> /dev/null || :
 }
 
-function dfe {
-	code $HOME/.dotfiles
-}
+dfce() { python3 $HOME/.dotfiles/common/vscode/extensions.py $@; }
+
+dfe() { code $HOME/.dotfiles; }
+
+dfi() { $HOME/.dotfiles/linux/install.sh $@; }
 
 
 ###############################################################################
