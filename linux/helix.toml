@@ -19,3 +19,6 @@ j = "normal_mode" # Maps `jj` to exit insert mode
 [keys.insert.k]
 j = "normal_mode" # Maps `kj` to exit insert mode
 k = "normal_mode" # Maps `kk` to exit insert mode
+
+[editor.file-picker]
+hidden = false

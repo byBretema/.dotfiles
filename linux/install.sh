@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+set -eEu -o pipefail
 shopt -s xpg_echo
 
 
@@ -17,6 +18,13 @@ show_usage() {
     echo "  -e  --  Install code extensions"
     echo "  -t  --  Link themes for different apps"
 }
+
+do_links=0
+do_update=0
+do_install=0
+do_fonts=0
+do_code_extensions=0
+do_themes=0
 
 OPTIND=1
 while getopts "luifeth" opt; do
@@ -75,7 +83,6 @@ if [[ $do_links -eq 1 ]]; then
     # Helix
     ln -srf $scriptpath/helix.toml $HOME/.config/helix/config.toml
 
-
     # Tmux
     tmux_path="$HOME/.config/tmux"
     if [[ ! -d "$tmux_path/plugins/tpm" ]]; then
@@ -107,11 +114,13 @@ if [[ $do_install -eq 1 ]]; then
     echo "\n### [ INSTALLING / UPDATING APPS ]"
 
     paru -S --needed --noconfirm --skipreview zsh
-    chsh -s /usr/bin/zsh
+    if [[ "$SHELL" != *zsh ]]; then
+        chsh -s /usr/bin/zsh
+    fi
 
     paru -S --needed --noconfirm --skipreview ghostty
     paru -S --needed --noconfirm --skipreview carapace
-    paru -S --needed --noconfirm --skipreview mprocs
+    paru -S --needed --noconfirm --skipreview mprocs-bin
 
     paru -S --needed --noconfirm --skipreview git
     paru -S --needed --noconfirm --skipreview gitui
@@ -128,17 +137,24 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview presenterm
 
     paru -S --needed --noconfirm --skipreview fd
+    paru -S --needed --noconfirm --skipreview jq
     paru -S --needed --noconfirm --skipreview fzf
     paru -S --needed --noconfirm --skipreview eza
     paru -S --needed --noconfirm --skipreview dua
     paru -S --needed --noconfirm --skipreview dust
+    paru -S --needed --noconfirm --skipreview 7zip
     paru -S --needed --noconfirm --skipreview kondo
+    paru -S --needed --noconfirm --skipreview resvg
+    paru -S --needed --noconfirm --skipreview xclip
+    paru -S --needed --noconfirm --skipreview zoxide
     paru -S --needed --noconfirm --skipreview ripgrep
+    paru -S --needed --noconfirm --skipreview poppler
     paru -S --needed --noconfirm --skipreview hyperfine
     paru -S --needed --noconfirm --skipreview ripgrep-all
     paru -S --needed --noconfirm --skipreview fselect-bin
+    paru -S --needed --noconfirm --skipreview imagemagick
 
-    paru -S --needed --noconfirm --skipreview oh-my-zsh-git
+    paru -S --needed --noconfirm --skipreview oh-my-zsh-git # TODO : Try to remove this zsh deps
     paru -S --needed --noconfirm --skipreview zsh-autosuggestions
     paru -S --needed --noconfirm --skipreview zsh-syntax-highlighting
     paru -S --needed --noconfirm --skipreview zsh-history-substring-search
@@ -158,12 +174,14 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview bitwarden
     paru -S --needed --noconfirm --skipreview slack-desktop
     paru -S --needed --noconfirm --skipreview google-chrome
+    paru -S --needed --noconfirm --skipreview zen-browser-bin
     paru -S --needed --noconfirm --skipreview notion-app-electron
     paru -S --needed --noconfirm --skipreview visual-studio-code-bin
 
     paru -S --needed --noconfirm --skipreview f3d
     paru -S --needed --noconfirm --skipreview blender
 
+    paru -S --needed --noconfirm --skipreview mpv
     paru -S --needed --noconfirm --skipreview handbrake
     paru -S --needed --noconfirm --skipreview obs-studio
 
@@ -206,9 +224,10 @@ if [[ $do_fonts -eq 1 ]]; then
         unzip -q "$font_zip" -d "$font_extracted"
 
         fonts_path="$HOME/.local/share/fonts/"
-	    mkdir -p $fonts_path
+        mkdir -p $fonts_path
+
         find "$font_extracted" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
-	    cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
+            cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
         done
 
         rm -rf "$temp_dir"
@@ -253,5 +272,10 @@ if [[ $do_themes -eq 1 ]]; then
     ln -snfr "$scriptpath/../common/qtcreator/styles/gruvbox_dark_custom.xml" "$qt_styles/gruvbox_dark_custom.xml"
     #-- https://github.com/catppuccin/qtcreator
     ln -snfr "$scriptpath/../common/qtcreator/styles/catppuccin_latte.xml" "$qt_styles/catppuccin_latte.xml"
+
+    # Yazi
+    yazi_path="$HOME/.config/yazi"
+    mkdir -p $yazi_path
+    wget -P "${yazi_path}/theme.toml" "https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml" 
 
 fi
