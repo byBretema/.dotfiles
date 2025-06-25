@@ -231,15 +231,24 @@ git_remove_branch_local_and_remote() {
 	local_delete_flag="-d"
     if [[ $# -gt 1 && $1 -eq "-f" ]]; then local_delete_flag="-D"; fi
 
-    if [[ $# -lt 1 ]]; then echo "'branch_name' is mandatory"; return; fi
-    local branch_name=$1; shift
+	branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf)
+	branch=$(echo $branch | sed -E 's/^\*?[ ]*//; s/[ ]*$//')
 
-	git branch $local_delete_flag $branch_name
-	git push origin --delete $branch_name
+	if [[ ! -n "$branch" ]]; then echo "-- No branch selected."; return; fi
+
+	echo ">>> Deleting local, sure? [y/N]"
+	read sure
+	if [[ $sure != "y" && sure != "Y" ]]; then return; fi
+	git branch $local_delete_flag $branch
+
+	echo ">>> Deleting remote, sure? [y/N]"
+	read sure
+	if [[ $sure != "y" && sure != "Y" ]]; then return; fi
+	git push origin --delete $branch
 }
 
 gitsw() {
-	echo $(git branch -a | fzf) | sed -E 's/^remotes\/origin\///; s/^\*\ //' | xargs git switch
+	echo $(git branch -a | fzf) | sed -E 's/^remotes\/origin\///; s/^\*?[ ]*//' | xargs git switch
 }
 
 ###############################################################################

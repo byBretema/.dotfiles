@@ -107,7 +107,7 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
     install_winget "Microsoft.PowerShell"               # Pwsh : Powershell 7
     sudo config --enable normal
     & pwsh.exe "$script_root\install.ps1"
-    exit 0
+    return
 }
 
 # OS Tweaks

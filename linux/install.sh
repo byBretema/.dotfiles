@@ -35,7 +35,7 @@ while getopts "luifeth" opt; do
         f) do_fonts=1;;
         e) do_code_extensions=1;;
         t) do_themes=1;;
-        *) show_usage; exit 1;;
+        *) show_usage; return;;
     esac
 done
 shift $((OPTIND-1))
@@ -276,6 +276,6 @@ if [[ $do_themes -eq 1 ]]; then
     # Yazi
     yazi_path="$HOME/.config/yazi"
     mkdir -p $yazi_path
-    wget -P "${yazi_path}/theme.toml" "https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml" 
+    wget -P "${yazi_path}/theme.toml" "https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml"
 
 fi
