@@ -4,8 +4,7 @@ shopt -s xpg_echo
 
 
 ###############################################################################
-### ARGUMENTS
-###############################################################################
+### ARGs
 
 show_usage() {
     echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"
@@ -42,59 +41,64 @@ shift $((OPTIND-1))
 
 
 ###############################################################################
-### VARIABLES
-###############################################################################
+## VARs
 
-scriptpath=$(dirname "$(readlink -f "$0")")
+script_path=$(dirname "$(readlink -f "$0")")
+my_configs="$script_path/../configs"
+config_path="$HOME/.config"
 
 
 ###############################################################################
-### LINK CONFIG FILES
+## FOLDERS
+
+mkdir_ret() { mkdir -p "$1" >/dev/null 2>&1; echo "$1"; }
+mkdir -p "$config_path"
+
+
 ###############################################################################
+## LINK CONFIG FILES
 
 if [[ $do_links -eq 1 ]]; then
 
-    echo "\n### [ LINKING CONFIG FILES ] - $scriptpath"
-
-    mkdir -p $HOME/.config
-
-    # Ghostty
-    mkdir -p $HOME/.config/ghostty
-    ln -srf $scriptpath/ghostty.cfg $HOME/.config/ghostty/config
-
-    # Alacritty
-    mkdir -p $HOME/.config/alacritty
-    ln -srf $scriptpath/alacritty.toml $HOME/.config/alacritty/alacritty.toml
+    echo "\n### [ LINKING CONFIG FILES ] - $script_path"
 
     # Zsh
-    ln -srf $scriptpath/.zshrc $HOME/.zshrc
-    ln -srf $scriptpath/.zshenv $HOME/.zshenv
+    ln -srf "$script_path/.zshrc" "$HOME/.zshrc"
+    ln -srf "$script_path/.zshenv" "$HOME/.zshenv"
 
     # Git
-    ln -srf $scriptpath/../common/.gitconfig $HOME/.gitconfig
-    ln -srf $scriptpath/../common/.gitignore $HOME/.gitignore
+    ln -srf "$my_configs/.gitconfig" "$HOME/.gitconfig"
+    ln -srf "$my_configs/.gitignore" "$HOME/.gitignore"
+
+    # Ghostty
+    dst_path=$(mkdir_ret "$config_path/ghostty")
+    ln -srf "$my_configs/ghostty.conf" "$dst_path/config"
+
+    # Alacritty
+    dst_path=$(mkdir_ret "$config_path/alacritty")
+    ln -srf "$my_configs/alacritty.toml" "$dst_path/alacritty.toml"
 
     # Code
-    code_path="$HOME/.config/Code/User"
-    mkdir -p $code_path
-    ln -srf $scriptpath/../common/vscode/settings.json    "$code_path/settings.json"
-    ln -srf $scriptpath/../common/vscode/keybindings.json "$code_path/keybindings.json"
+    dst_path=$(mkdir_ret "$config_path/Code/User")
+    ln -srf "$my_configs/vscode/settings.json"    "$dst_path/settings.json"
+    ln -srf "$my_configs/vscode/keybindings.json" "$dst_path/keybindings.json"
 
     # Helix
-    ln -srf $scriptpath/helix.toml $HOME/.config/helix/config.toml
+    dst_path=$(mkdir_ret "$config_path/helix")
+    ln -srf "$my_configs/helix.toml" "$dst_path/config.toml"
 
     # Tmux
-    tmux_path="$HOME/.config/tmux"
-    if [[ ! -d "$tmux_path/plugins/tpm" ]]; then
-        git clone https://github.com/tmux-plugins/tpm "$tmux_path/plugins/tpm"
+    dst_path=$(mkdir_ret "$config_path/tmux")
+    if [[ ! -d "$dst_path/plugins/tpm" ]]; then
+        git clone "https://github.com/tmux-plugins/tpm" "$dst_path/plugins/tpm"
     fi
-    ln -srf $scriptpath/tmux.conf $tmux_path/tmux.conf
+    ln -srf "$my_configs/tmux.conf" "$dst_path/tmux.conf"
+
 fi
 
 
 ###############################################################################
-### UPDATE SYSTEM
-###############################################################################
+## UPDATE SYSTEM
 
 if [[ $do_update -eq 1 ]]; then
 
@@ -106,8 +110,7 @@ fi
 
 
 ###############################################################################
-### INSTALL / UPDATE APPS
-###############################################################################
+## INSTALL / UPDATE APPS
 
 if [[ $do_install -eq 1 ]]; then
 
@@ -115,7 +118,7 @@ if [[ $do_install -eq 1 ]]; then
 
     paru -S --needed --noconfirm --skipreview zsh
     if [[ "$SHELL" != *zsh ]]; then
-        chsh -s /usr/bin/zsh
+        chsh -s "/usr/bin/zsh"
     fi
 
     paru -S --needed --noconfirm --skipreview ghostty
@@ -140,7 +143,7 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview jq
     paru -S --needed --noconfirm --skipreview fzf
     paru -S --needed --noconfirm --skipreview eza
-    paru -S --needed --noconfirm --skipreview dua
+    paru -S --needed --noconfirm --skipreview dua-cli
     paru -S --needed --noconfirm --skipreview dust
     paru -S --needed --noconfirm --skipreview 7zip
     paru -S --needed --noconfirm --skipreview kondo
@@ -194,9 +197,6 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview balena-etcher
     paru -S --needed --noconfirm --skipreview localsend-bin
 
-    # TODO: Check docs of 'ov' pager : https://noborus.github.io/ov/index.html
-    # run as su: ov --completion zsh > /usr/share/zsh/site-functions/_ov
-
     # Enable pacman cache cleaner task
     sudo systemctl enable paccache.timer
 
@@ -204,8 +204,7 @@ fi
 
 
 ###############################################################################
-### INSTALL FONTS
-###############################################################################
+## INSTALL FONTS
 
 if [[ $do_fonts -eq 1 ]]; then
 
@@ -223,8 +222,7 @@ if [[ $do_fonts -eq 1 ]]; then
         curl -fsSL "$url" -o "$font_zip"
         unzip -q "$font_zip" -d "$font_extracted"
 
-        fonts_path="$HOME/.local/share/fonts/"
-        mkdir -p $fonts_path
+        fonts_path=$(mkdir_ret "$HOME/.local/share/fonts")
 
         find "$font_extracted" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
             cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
@@ -243,43 +241,33 @@ fi
 
 
 ###############################################################################
-### INSTALL VSCODE EXTENSIONS
-###############################################################################
+## INSTALL VSCODE EXTENSIONS
 
 if [[ $do_code_extensions -eq 1 ]]; then
 
     echo "\n### [ INSTALLING VSCODE EXTENSIONS]"
 
-    python $scriptpath/../common/vscode/extensions.py -i
+    python "$my_configs/vscode/extensions.py" -i
 
 fi
 
 
 ###############################################################################
-### APPS THEMES
-###############################################################################
+## APPS THEMES
 
 if [[ $do_themes -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / LINKING THEMES ]"
 
-    # Qt Creator
-    qt_styles="$HOME/.config/QtProject/qtcreator/styles"
-    mkdir -p $qt_styles
-    #-- https://github.com/byBretema/qt_monokai
-    ln -snfr "$scriptpath/../common/qtcreator/styles/monokai_dark_custom.xml" "$qt_styles/monokai_dark_custom.xml"
-    #-- https://github.com/morhetz/gruvbox-contrib/tree/master/qtcreator
-    ln -snfr "$scriptpath/../common/qtcreator/styles/gruvbox_dark_custom.xml" "$qt_styles/gruvbox_dark_custom.xml"
-    #-- https://github.com/catppuccin/qtcreator
-    ln -snfr "$scriptpath/../common/qtcreator/styles/catppuccin_latte.xml" "$qt_styles/catppuccin_latte.xml"
+    #--------------------------------------------------------------------------
+    #-- Qt Creator
+    dst_path=$(mkdir_ret "$config_path/QtProject/qtcreator/styles")
+    ln -srf "$my_configs/qtcreator/themes/monokai_dark.xml"     "$dst_path/monokai_dark_t.xml"
+    ln -srf "$my_configs/qtcreator/themes/gruvbox_dark.xml"     "$dst_path/gruvbox_dark_t.xml"
+    ln -srf "$my_configs/qtcreator/themes/catppuccin_latte.xml" "$dst_path/catppuccin_latte_t.xml"
 
-    # Yazi
-    yazi_path="$HOME/.config/yazi"
-    mkdir -p $yazi_path
-<<<<<<< Updated upstream
-    wget -P "${yazi_path}/theme.toml" "https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml"
-=======
-    curl -s --progress-bar -o "$HOME/.config/yazi/theme.toml" https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml
->>>>>>> Stashed changes
-
+    #--------------------------------------------------------------------------
+    #-- Yazi
+    dst_path=$(mkdir_ret "$config_path/yazi")
+    ln -srf "$my_configs/yazi/themes/gruvbox_dark.toml" "$dst_path/theme.toml"
 fi

@@ -10,28 +10,23 @@
 #### Linux
 
 ```bash
-    chsh -s /usr/bin/zsh  # Sets ZSH as your default shell  (might need a logout to be applied)
-    ./linux/install.sh -u -i -l
+./linux/install.sh -u -i -l
 ```
 
 #### Windows
+> Actually outdated
 
 ```powershell
-    Set-ExecutionPolicy Bypass -Scope Process  # Allows unsigned scripts on current terminal
-    ./windows/install.ps1
+Set-ExecutionPolicy Bypass -Scope Process  # Allows unsigned scripts on current terminal
+./windows/install.ps1
 ```
-
----
 
 #### ToDo
 
-- [ ] Move to `common` folder, configs of: alacritty, ghostty, tmux
-    - [ ] Update the `install` scripts.
 - [ ] Try to update the windows scripts.
 
----
 
-#### Helpers
+#### HELPERS
 
 ##### SSH KeyGen
 ```bash

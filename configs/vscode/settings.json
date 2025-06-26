@@ -55,7 +55,7 @@
     // WORKBENCH
     //---------------------------------------------------------
     "workbench.settings.editor": "json",
-    "workbench.iconTheme": "catppuccin-mocha",
+    "workbench.iconTheme": "gruvbox-icon-theme",
     "workbench.colorCustomizations": {
         "panel.border": "#ee8800"
     },
@@ -212,5 +212,6 @@
     "python.analysis.typeCheckingMode": "standard",
     "workbench.sideBar.location": "right",
     "editor.minimap.enabled": false,
-    "workbench.preferredDarkColorTheme": "Catppuccin Mocha"
+    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
+    "vsicons.presets.hideFolders": true
 }
