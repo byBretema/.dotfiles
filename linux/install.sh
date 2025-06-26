@@ -267,7 +267,7 @@ if [[ $do_themes -eq 1 ]]; then
     ln -srf "$my_configs/qtcreator/themes/catppuccin_latte.xml" "$dst_path/catppuccin_latte_t.xml"
 
     #--------------------------------------------------------------------------
-    #-- Yazi
+    #-- Yazi  (https://github.com/yazi-rs/flavors/blob/main/themes.md)
     dst_path=$(mkdir_ret "$config_path/yazi")
     ln -srf "$my_configs/yazi/themes/gruvbox_dark.toml" "$dst_path/theme.toml"
 fi
