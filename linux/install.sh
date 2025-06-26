@@ -276,6 +276,10 @@ if [[ $do_themes -eq 1 ]]; then
     # Yazi
     yazi_path="$HOME/.config/yazi"
     mkdir -p $yazi_path
+<<<<<<< Updated upstream
     wget -P "${yazi_path}/theme.toml" "https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml"
+=======
+    curl -s --progress-bar -o "$HOME/.config/yazi/theme.toml" https://github.com/catppuccin/yazi/raw/main/themes/mocha/catppuccin-mocha-flamingo.toml
+>>>>>>> Stashed changes
 
 fi
