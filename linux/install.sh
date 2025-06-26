@@ -194,7 +194,7 @@ if [[ $do_install -eq 1 ]]; then
     paru -S --needed --noconfirm --skipreview tigervnc
     paru -S --needed --noconfirm --skipreview teamviewer
 
-    paru -S --needed --noconfirm --skipreview balena-etcher
+    # paru -S --needed --noconfirm --skipreview balena-etcher
     paru -S --needed --noconfirm --skipreview localsend-bin
 
     # Enable pacman cache cleaner task
