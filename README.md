@@ -24,6 +24,7 @@ Set-ExecutionPolicy Bypass -Scope Process  # Allows unsigned scripts on current 
 #### ToDo
 
 - [ ] Try to update the windows scripts.
+- [ ] https://github.com/shapeshed/dotfiles/blob/main/local/bin/toggle-theme
 
 
 #### HELPERS

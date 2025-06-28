@@ -162,6 +162,7 @@ alias pm_update='paru -Syu'
 ###############################################################################
 
 PATH="$PATH:$HOME/.local/bin"
+PATH="$PATH:$HOME/.dotfiles/linux/bin"
 
 
 ###############################################################################
@@ -251,6 +252,33 @@ git_remove_branch_local_and_remote() {
 gitsw() {
 	echo $(git branch -a | fzf) | sed -E 's/^remotes\/origin\///; s/^\*?[ ]*//' | xargs git switch
 }
+
+###############################################################################
+### TMUX
+###############################################################################
+
+__tm_popup() {
+	num=$1; shift
+	name="popup_$num"
+
+	width=${2:-80%}
+	height=${2:-80%}
+
+	curr="$(tmux display-message -p -F '#{session_name}')"
+	echo ">>> $curr"
+
+	if [[ $curr == $name ]];then
+		tmux detach-client
+		return;
+	fi
+
+	tmux popup -d '#{pane_current_path}' -xC -yC -w$width -h$height -E "tmux attach -t $name || tmux new -s $name"
+}
+tm_popup_1() { __tm_popup "1"; }
+tm_popup_2() { __tm_popup "2"; }
+tm_popup_3() { __tm_popup "3"; }
+tm_popup_4() { __tm_popup "4"; }
+
 
 ###############################################################################
 ### OTHER UTILITIES
