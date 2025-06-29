@@ -28,8 +28,8 @@
     // ],
     "editor.fontSize": 16,
     "editor.fontLigatures": true,
-    // "editor.fontFamily": "'Fira Code'",
-    "editor.fontFamily": "'Victor Mono'",
+    "editor.fontFamily": "'Fira Code'",
+    // "editor.fontFamily": "'Victor Mono'",
     "editor.stickyScroll.enabled": false,
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
@@ -88,8 +88,14 @@
     // PYTHON  (check https://aka.ms/AAlgvkb)
     //---------------------------------------------------------
     "python.languageServer": "Pylance",
-    "python.analysis.extraPaths": ["$HOME/dev/omi/d/studio_engine/omi_blender/src/resources", "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"],
-    "python.autoComplete.extraPaths": ["$HOME/dev/omi/d/studio_engine/omi_blender/src/resources", "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"],
+    "python.analysis.extraPaths": [
+        "$HOME/dev/omi/d/studio_engine/omi_blender/src/resources",
+        "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"
+    ],
+    "python.autoComplete.extraPaths": [
+        "$HOME/dev/omi/d/studio_engine/omi_blender/src/resources",
+        "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"
+    ],
     "[python]": {
         "editor.defaultFormatter": "ms-python.black-formatter"
     },
