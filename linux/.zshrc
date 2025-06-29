@@ -238,14 +238,12 @@ git_remove_branch_local_and_remote() {
 
 	if [[ ! -n "$branch" ]]; then echo "-- No branch selected."; return; fi
 
-	echo ">>> Deleting local, sure? [y/N]"
-	read sure
-	if [[ $sure != "y" && sure != "Y" ]]; then return; fi
+	read -p ">>> Deleting local, sure? [y/N] " -n 1 -r; echo
+	if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
 	git branch $local_delete_flag $branch
 
-	echo ">>> Deleting remote, sure? [y/N]"
-	read sure
-	if [[ $sure != "y" && sure != "Y" ]]; then return; fi
+	read -p ">>> Deleting remote, sure? [y/N] " -n 1 -r; echo
+	if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
 	git push origin --delete $branch
 }
 
