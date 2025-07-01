@@ -358,7 +358,7 @@ function gpu_get_default()
 ### PROMPT
 ###############################################################################
 
-export STARSHIP_CONFIG=$HOME/.dotfiles/common/starship.toml
+export STARSHIP_CONFIG=$HOME/.dotfiles/configs/starship.toml
 eval "$(starship init zsh)"
 
 

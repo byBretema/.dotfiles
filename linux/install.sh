@@ -63,7 +63,7 @@ if [[ $do_links -eq 1 ]]; then
     echo "\n### [ LINKING CONFIG FILES ] - $script_path"
 
     # Zsh
-    ln -srf "$script_path/.zshrc" "$HOME/.zshrc"
+    ln -srf "$script_path/.zshrc"  "$HOME/.zshrc"
     ln -srf "$script_path/.zshenv" "$HOME/.zshenv"
 
     # Git
@@ -116,90 +116,25 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / UPDATING APPS ]"
 
-    paru -S --needed --noconfirm --skipreview zsh
+    while IFS= read -r line; do
+        pkg=${line//[^a-zA-Z0-9_-]/}
+        if [[ -n $pkg ]] && [[ $line != \#* ]]; then
+            paru -S --needed --noconfirm --skipreview $pkg
+        fi
+    done < "$script_path/pacman_list.conf"
+
+    while IFS= read -r line; do
+        pkg=${line//[^a-zA-Z0-9.]/}
+        if [[ -n $pkg ]] && [[ $line != \#* ]]; then
+            flatpak -y install $pkg
+        fi
+    done < "$script_path/flatpak_list.conf"
+    flatpak update
+
+
     if [[ "$SHELL" != *zsh ]]; then
         chsh -s "/usr/bin/zsh"
     fi
-
-    paru -S --needed --noconfirm --skipreview ghostty
-    paru -S --needed --noconfirm --skipreview carapace
-    paru -S --needed --noconfirm --skipreview mprocs-bin
-
-    paru -S --needed --noconfirm --skipreview git
-    paru -S --needed --noconfirm --skipreview gitui
-    paru -S --needed --noconfirm --skipreview lazygit
-    paru -S --needed --noconfirm --skipreview git-delta
-
-    paru -S --needed --noconfirm --skipreview tmux
-    paru -S --needed --noconfirm --skipreview neovim
-    paru -S --needed --noconfirm --skipreview evil-helix-bin
-
-    paru -S --needed --noconfirm --skipreview yazi
-    paru -S --needed --noconfirm --skipreview ncspot
-    paru -S --needed --noconfirm --skipreview starship
-    paru -S --needed --noconfirm --skipreview presenterm
-
-    paru -S --needed --noconfirm --skipreview fd
-    paru -S --needed --noconfirm --skipreview jq
-    paru -S --needed --noconfirm --skipreview fzf
-    paru -S --needed --noconfirm --skipreview eza
-    paru -S --needed --noconfirm --skipreview dua-cli
-    paru -S --needed --noconfirm --skipreview dust
-    paru -S --needed --noconfirm --skipreview 7zip
-    paru -S --needed --noconfirm --skipreview kondo
-    paru -S --needed --noconfirm --skipreview resvg
-    paru -S --needed --noconfirm --skipreview xclip
-    paru -S --needed --noconfirm --skipreview zoxide
-    paru -S --needed --noconfirm --skipreview ripgrep
-    paru -S --needed --noconfirm --skipreview poppler
-    paru -S --needed --noconfirm --skipreview hyperfine
-    paru -S --needed --noconfirm --skipreview ripgrep-all
-    paru -S --needed --noconfirm --skipreview fselect-bin
-    paru -S --needed --noconfirm --skipreview imagemagick
-
-    paru -S --needed --noconfirm --skipreview oh-my-zsh-git # TODO : Try to remove this zsh deps
-    paru -S --needed --noconfirm --skipreview zsh-autosuggestions
-    paru -S --needed --noconfirm --skipreview zsh-syntax-highlighting
-    paru -S --needed --noconfirm --skipreview zsh-history-substring-search
-
-    paru -S --needed --noconfirm --skipreview inter-font
-
-    paru -S --needed --noconfirm --skipreview uv
-    paru -S --needed --noconfirm --skipreview python
-    paru -S --needed --noconfirm --skipreview python310
-
-    paru -S --needed --noconfirm --skipreview gdb
-    paru -S --needed --noconfirm --skipreview cmake
-    paru -S --needed --noconfirm --skipreview cppman
-    paru -S --needed --noconfirm --skipreview vulkan-devel
-
-    paru -S --needed --noconfirm --skipreview copyq
-    paru -S --needed --noconfirm --skipreview bitwarden
-    paru -S --needed --noconfirm --skipreview slack-desktop
-    paru -S --needed --noconfirm --skipreview google-chrome
-    paru -S --needed --noconfirm --skipreview zen-browser-bin
-    paru -S --needed --noconfirm --skipreview notion-app-electron
-    paru -S --needed --noconfirm --skipreview visual-studio-code-bin
-
-    paru -S --needed --noconfirm --skipreview f3d
-    paru -S --needed --noconfirm --skipreview blender
-
-    paru -S --needed --noconfirm --skipreview mpv
-    paru -S --needed --noconfirm --skipreview handbrake
-    paru -S --needed --noconfirm --skipreview obs-studio
-
-    paru -S --needed --noconfirm --skipreview zathura
-    paru -S --needed --noconfirm --skipreview obsidian
-
-    paru -S --needed --noconfirm --skipreview tigervnc
-    paru -S --needed --noconfirm --skipreview teamviewer
-
-    # paru -S --needed --noconfirm --skipreview balena-etcher
-    paru -S --needed --noconfirm --skipreview localsend-bin
-
-    # Enable pacman cache cleaner task
-    sudo systemctl enable paccache.timer
-
 fi
 
 
@@ -217,14 +152,14 @@ if [[ $do_fonts -eq 1 ]]; then
 
         temp_dir=$(mktemp -d)
         font_zip="$temp_dir/$filename"
-        font_extracted="$temp_dir/${filename}_extracted"
+        font_unzip="$temp_dir/${filename}_unzip"
 
         curl -fsSL "$url" -o "$font_zip"
-        unzip -q "$font_zip" -d "$font_extracted"
+        unzip -q "$font_zip" -d "$font_unzip"
 
         fonts_path=$(mkdir_ret "$HOME/.local/share/fonts")
 
-        find "$font_extracted" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
+        find "$font_unzip" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
             cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
         done
 
