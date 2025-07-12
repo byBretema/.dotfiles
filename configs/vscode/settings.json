@@ -217,7 +217,7 @@
     "workbench.editor.enablePreview": false,
     "python.analysis.typeCheckingMode": "standard",
     "workbench.sideBar.location": "right",
-    "editor.minimap.enabled": false,
     "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
-    "vsicons.presets.hideFolders": true
+    "vsicons.presets.hideFolders": true,
+    "fiveServer.navigate": true
 }
