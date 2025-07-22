@@ -133,6 +133,12 @@ alias pbpaste='xclip -selection c -o'
 ## Kernel info
 alias jctl='journalctl'
 alias qctl='journalctl -p 3 -xb'
+## Systemctl
+alias ssctl='sudo systemctl'
+alias ssctl_off='ssctl disable'
+alias ssctl_on='ssctl enable'
+alias ssctl_start='ssctl start'
+alias ssctl_stop='ssctl start'
 
 # Arch
 #------------------
@@ -155,6 +161,10 @@ alias pm_unlock='sudo rm /var/lib/pacman/db.lck'
 alias pm_remove='sudo pacman -Rsn'
 ## Update everything
 alias pm_update='paru -Syu'
+
+# Tools
+#------------------
+alias hx='helix'
 
 
 ###############################################################################

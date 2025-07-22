@@ -31,7 +31,8 @@
 	co    = checkout
 	cm    = commit -m
 	st    = status -s
-	lg    = log --graph --oneline --decorate=full
+	lol   = log --graph --oneline --decorate=full
+	lg    = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
 	pur   = pull —-rebase
 	rba   = rebase --abort
 	rmbl  = branch -d
