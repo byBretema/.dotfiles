@@ -13,8 +13,48 @@ select = "underline"
 [keys.normal.g]
 a = "code_action" # Maps `ga` to show possible code actions
 
-[keys.insert.j]
-k = "normal_mode" # Maps `jk` to exit insert mode
+# [keys.insert.j]
+# k = "normal_mode" # Maps `jk` to exit insert mode
 
 [editor.file-picker]
 hidden = false
+
+[keys.select]
+"A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
+"A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
+
+[keys.normal]
+"A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
+"A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
+"C-*" = "@miw<A-*>"
+"C-g" = [
+    ":write-all",
+    ":insert-output lazygit >/dev/tty",
+    ":redraw",
+    ":reload-all"
+]
+# "C-r" = [
+#     ":write-all",
+#     ":insert-output scooter >/dev/tty",
+#     ":redraw",
+#     ":reload-all"
+# ]
+"C-f" = [
+    ":e <C-r> %%"
+]
+
+[keys.insert]
+"A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
+"A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
+"C-ñ" = [ "normal_mode" ]
+
+[keys.normal.space]
+"o" = [
+  ":sh rm -f /tmp/helix_yazi_link",
+  ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/helix_yazi_link",
+  ":insert-output echo \"x1b[?1049h\" > /dev/tty",
+  ":open %sh{cat /tmp/helix_yazi_link}",
+  ":redraw",
+  ":set mouse false",
+  ":set mouse true",
+]

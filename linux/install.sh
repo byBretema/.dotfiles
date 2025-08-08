@@ -6,6 +6,9 @@ shopt -s xpg_echo
 ###############################################################################
 ### ARGs
 
+#------------------------------------------------------
+#--- Help
+
 show_usage() {
     echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"
     echo "\nManage configs and system apps, fonts, themes...\n"
@@ -18,12 +21,18 @@ show_usage() {
     echo "  -t  --  Link themes for different apps"
 }
 
+#------------------------------------------------------
+#--- Default Values
+
 do_links=0
 do_update=0
 do_install=0
 do_fonts=0
 do_code_extensions=0
 do_themes=0
+
+#------------------------------------------------------
+#--- Argparse
 
 OPTIND=1
 while getopts "luifeth" opt; do
@@ -116,6 +125,7 @@ if [[ $do_install -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / UPDATING APPS ]"
 
+    # Install pacman packages
     while IFS= read -r line; do
         pkg=${line//[^a-zA-Z0-9_-]/}
         if [[ -n $pkg ]] && [[ $line != \#* ]]; then
@@ -123,6 +133,7 @@ if [[ $do_install -eq 1 ]]; then
         fi
     done < "$script_path/pacman_list.conf"
 
+    # Install flatpaks
     while IFS= read -r line; do
         pkg=${line//[^a-zA-Z0-9.]/}
         if [[ -n $pkg ]] && [[ $line != \#* ]]; then
@@ -131,9 +142,15 @@ if [[ $do_install -eq 1 ]]; then
     done < "$script_path/flatpak_list.conf"
     flatpak update
 
-
+    # Change shell to ZSH
     if [[ "$SHELL" != *zsh ]]; then
         chsh -s "/usr/bin/zsh"
+    fi
+
+    # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
+    ncspot_entry="0.0.0.0 apresolve.spotify.com"; 
+    if ! grep -qFx "$ncspot_entry" /etc/hosts; then 
+        echo "$ncspot_entry" | sudo tee -a /etc/hosts > /dev/null
     fi
 fi
 
@@ -194,15 +211,15 @@ if [[ $do_themes -eq 1 ]]; then
 
     echo "\n### [ INSTALLING / LINKING THEMES ]"
 
-    #--------------------------------------------------------------------------
-    #-- Qt Creator
+    #------------------------------------------------------
+    #--- Qt Creator
     dst_path=$(mkdir_ret "$config_path/QtProject/qtcreator/styles")
     ln -srf "$my_configs/qtcreator/themes/monokai_dark.xml"     "$dst_path/monokai_dark_t.xml"
     ln -srf "$my_configs/qtcreator/themes/gruvbox_dark.xml"     "$dst_path/gruvbox_dark_t.xml"
     ln -srf "$my_configs/qtcreator/themes/catppuccin_latte.xml" "$dst_path/catppuccin_latte_t.xml"
 
-    #--------------------------------------------------------------------------
-    #-- Yazi  (https://github.com/yazi-rs/flavors/blob/main/themes.md)
+    #------------------------------------------------------
+    #--- Yazi  (https://github.com/yazi-rs/flavors/blob/main/themes.md)
     dst_path=$(mkdir_ret "$config_path/yazi")
     ln -srf "$my_configs/yazi/themes/gruvbox_dark.toml" "$dst_path/theme.toml"
 fi

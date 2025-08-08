@@ -165,6 +165,8 @@ alias pm_update='paru -Syu'
 # Tools
 #------------------
 alias hx='helix'
+alias qc='qtcreator'
+alias qcc='qtcreator >/dev/null 2>&1 &'
 
 
 ###############################################################################
@@ -229,9 +231,9 @@ function gitit {
 
 	if ! git remote -v > /dev/null 2>&1; then echo "-- Not a repo."; return; fi
 
-	url=$(git remote -v | head -n 1 | awk '{print $2}')
+	local url=$(git remote -v | head -n 1 | awk '{print $2}')
 	if [[ $url == *@* ]]; then
-		ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
+		local ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
 		xdg-open "https://$ssh"
 	else
 		xdg-open $url
@@ -240,19 +242,19 @@ function gitit {
 
 git_remove_branch_local_and_remote() {
 
-	local_delete_flag="-d"
-    if [[ $# -gt 1 && $1 -eq "-f" ]]; then local_delete_flag="-D"; fi
+	local local_delete_flag="-d"
+	if [[ $# -gt 1 && $1 -eq "-f" ]]; then local_delete_flag="-D"; fi
 
-	branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf)
-	branch=$(echo $branch | sed -E 's/^\*?[ ]*//; s/[ ]*$//')
+	local branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf)
+	local branch=$(echo $branch | sed -E 's/^\*?[ ]*//; s/[ ]*$//')
 
 	if [[ ! -n "$branch" ]]; then echo "-- No branch selected."; return; fi
 
-	read -p ">>> Deleting local, sure? [y/N] " -n 1 -r; echo
+	read -k 1 -r "?@ Deleting local, sure? [y/N] "; echo
 	if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
 	git branch $local_delete_flag $branch
 
-	read -p ">>> Deleting remote, sure? [y/N] " -n 1 -r; echo
+	read -k 1 -r "?@ Deleting remote, sure? [y/N] "; echo
 	if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
 	git push origin --delete $branch
 }
@@ -281,13 +283,13 @@ function dev() { cd $HOME/dev; }
 
 # Quick info and check of your net status
 function net {
-	public=$(curl -s icanhazip.com)
+	local public=$(curl -s icanhazip.com)
 	echo "$fg[blue]Public$fg[white]: $fg[cyan]$public"
-	private=$(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)
+	local private=$(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)
 	echo "$fg[blue]Private$fg[white]: $fg[cyan]$private"
-	avg8888=$(ping -qc 5 8.8.8.8 | sed -n 5p | awk -F"/" '{print $5" ms"}')
+	local avg8888=$(ping -qc 5 8.8.8.8 | sed -n 5p | awk -F"/" '{print $5" ms"}')
 	echo "$fg[blue]8.8.8.8 $fg[white]=> $fg[cyan]$avg8888"
-	avgDotES=$(ping -qc 5 google.es | sed -n 5p | awk -F"/" '{print $5" ms"}')
+	local avgDotES=$(ping -qc 5 google.es | sed -n 5p | awk -F"/" '{print $5" ms"}')
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
 }
 
@@ -312,6 +314,23 @@ function __frep() {
 }
 alias frepf='__frep f'
 alias frepd='__frep d'
+
+
+###############################################################################
+### LANGS
+###############################################################################
+
+g++run() {
+	if [[ $# -lt 1 ]]; then echo "-- File required"; return; fi
+    local filepath=$(realpath $1); shift
+	local bin_name=$(mktemp -u XXXXXXXXXX)
+
+	g++ --std=c++23 $filepath -o $bin_name && "./$bin_name"
+
+	if [[ -f "./$bin_name" ]]; then
+		rm "./$bin_name"
+	fi
+}
 
 
 ###############################################################################
