@@ -103,6 +103,12 @@ if [[ $do_links -eq 1 ]]; then
     fi
     ln -srf "$my_configs/tmux.conf" "$dst_path/tmux.conf"
 
+    # caps2esc
+    dst_path="/etc/udevmon.yaml"
+    sudo ln -srf "$script_path/assets/caps2esc/udevmon.yaml" "$dst_path"
+    dst_path="/etc/systemd/system/udevmon.service"
+    sudo ln -srf "$script_path/assets/caps2esc/udevmon.service" "$dst_path"
+    sudo systemctl enable --now udevmon.service
 fi
 
 
@@ -152,6 +158,7 @@ if [[ $do_install -eq 1 ]]; then
     if ! grep -qFx "$ncspot_entry" /etc/hosts; then 
         echo "$ncspot_entry" | sudo tee -a /etc/hosts > /dev/null
     fi
+
 fi
 
 
@@ -167,17 +174,17 @@ if [[ $do_fonts -eq 1 ]]; then
         local url=$1
         local filename=$(basename "$1")
 
-        temp_dir=$(mktemp -d)
-        font_zip="$temp_dir/$filename"
-        font_unzip="$temp_dir/${filename}_unzip"
+        local temp_dir=$(mktemp -d)
+        local font_zip="$temp_dir/$filename"
+        local font_unzip="$temp_dir/${filename}_unzip"
 
         curl -fsSL "$url" -o "$font_zip"
         unzip -q "$font_zip" -d "$font_unzip"
 
-        fonts_path=$(mkdir_ret "$HOME/.local/share/fonts")
+        local fonts_path=$(mkdir_ret "$HOME/.local/share/fonts")
 
         find "$font_unzip" -type f -name "*.ttf" -o -name "*.otf" | while read font; do
-            cp "$font" $fonts_path || echo "[x] Failed to install: $(basename "$font")"
+            cp "$font" "$fonts_path" || echo "[x] Failed to install: $(basename "$font")"
         done
 
         rm -rf "$temp_dir"
