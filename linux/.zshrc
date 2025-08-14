@@ -325,7 +325,7 @@ g++run() {
     local filepath=$(realpath $1); shift
 	local bin_name=$(mktemp -u XXXXXXXXXX)
 
-	g++ --std=c++23 $filepath -o $bin_name && "./$bin_name"
+	g++ --std=c++20 $filepath -o $bin_name && "./$bin_name"
 
 	if [[ -f "./$bin_name" ]]; then
 		rm "./$bin_name"

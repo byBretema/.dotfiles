@@ -2,27 +2,28 @@
 set -eEu -o pipefail
 shopt -s xpg_echo
 
+bbMark="\n@ bb : "
 
 ###############################################################################
-### ARGs
+# ARGs
+###############################################################################
 
-#------------------------------------------------------
-#--- Help
+#--- Help -------------------------------------------------
 
 show_usage() {
-    echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-t]"
+    echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-a]"
     echo "\nManage configs and system apps, fonts, themes...\n"
     echo "options:"
-    echo "  -l  --  Link dotfiles"
+    echo "  -l  --  Link configs / themes"
     echo "  -u  --  Update system"
     echo "  -i  --  Install listed apps"
     echo "  -f  --  Install fonts"
     echo "  -e  --  Install code extensions"
-    echo "  -t  --  Link themes for different apps"
+    echo "  -a  --  All"
+    # echo "  -t  --  Link themes for different apps"
 }
 
-#------------------------------------------------------
-#--- Default Values
+#--- Default Values ---------------------------------------
 
 do_links=0
 do_update=0
@@ -31,11 +32,10 @@ do_fonts=0
 do_code_extensions=0
 do_themes=0
 
-#------------------------------------------------------
-#--- Argparse
+#--- Argparse ---------------------------------------------
 
 OPTIND=1
-while getopts "luifeth" opt; do
+while getopts "hluifea" opt; do
     case $opt in
         l) do_links=1;;
         u) do_update=1;;
@@ -43,14 +43,23 @@ while getopts "luifeth" opt; do
         f) do_fonts=1;;
         e) do_code_extensions=1;;
         t) do_themes=1;;
-        *) show_usage; return;;
+        a)
+            do_links=1
+            do_update=1
+            do_install=1
+            do_fonts=1
+            do_code_extensions=1
+            do_themes=1
+        ;;
+        *) show_usage; exit 1;;
     esac
 done
 shift $((OPTIND-1))
 
 
 ###############################################################################
-## VARs
+# VARs
+###############################################################################
 
 script_path=$(dirname "$(readlink -f "$0")")
 my_configs="$script_path/../configs"
@@ -58,18 +67,20 @@ config_path="$HOME/.config"
 
 
 ###############################################################################
-## FOLDERS
+# FOLDERS
+###############################################################################
 
 mkdir_ret() { mkdir -p "$1" >/dev/null 2>&1; echo "$1"; }
 mkdir -p "$config_path"
 
 
 ###############################################################################
-## LINK CONFIG FILES
+# LINK CONFIG FILES
+###############################################################################
 
 if [[ $do_links -eq 1 ]]; then
 
-    echo "\n### [ LINKING CONFIG FILES ] - $script_path"
+    echo "${bbMark}Linking config files"
 
     # Zsh
     ln -srf "$script_path/.zshrc"  "$HOME/.zshrc"
@@ -94,7 +105,8 @@ if [[ $do_links -eq 1 ]]; then
 
     # Helix
     dst_path=$(mkdir_ret "$config_path/helix")
-    ln -srf "$my_configs/helix.toml" "$dst_path/config.toml"
+    ln -srf "$my_configs/helix/config.toml" "$dst_path/config.toml"
+    ln -srf "$my_configs/helix/languages.toml" "$dst_path/languages.toml"
 
     # Tmux
     dst_path=$(mkdir_ret "$config_path/tmux")
@@ -108,16 +120,32 @@ if [[ $do_links -eq 1 ]]; then
     sudo ln -srf "$script_path/assets/caps2esc/udevmon.yaml" "$dst_path"
     dst_path="/etc/systemd/system/udevmon.service"
     sudo ln -srf "$script_path/assets/caps2esc/udevmon.service" "$dst_path"
-    sudo systemctl enable --now udevmon.service
+    sudo systemctl enable udevmon.service
+    sudo systemctl start  udevmon.service
+
+
+    echo "${bbMark}Linking Themes"
+
+    # Qt Creator
+    dst_path=$(mkdir_ret "$config_path/QtProject/qtcreator/styles")
+    ln -srf "$my_configs/qtcreator/themes/monokai_dark.xml"     "$dst_path/monokai_dark_t.xml"
+    ln -srf "$my_configs/qtcreator/themes/gruvbox_dark.xml"     "$dst_path/gruvbox_dark_t.xml"
+    ln -srf "$my_configs/qtcreator/themes/catppuccin_latte.xml" "$dst_path/catppuccin_latte_t.xml"
+
+    # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
+    dst_path=$(mkdir_ret "$config_path/yazi")
+    ln -srf "$my_configs/yazi/themes/gruvbox_dark.toml" "$dst_path/theme.toml"
+
 fi
 
 
 ###############################################################################
-## UPDATE SYSTEM
+# UPDATE SYSTEM
+###############################################################################
 
 if [[ $do_update -eq 1 ]]; then
 
-    echo "\n### [ UPDATING SYSTEM ]"
+    echo "${bbMark}Updating system"
 
     paru --noconfirm -Syu  # Trigger updates
 
@@ -125,11 +153,12 @@ fi
 
 
 ###############################################################################
-## INSTALL / UPDATE APPS
+# INSTALL / UPDATE APPS
+###############################################################################
 
 if [[ $do_install -eq 1 ]]; then
 
-    echo "\n### [ INSTALLING / UPDATING APPS ]"
+    echo "${bbMark}Installing / updating apps"
 
     # Install pacman packages
     while IFS= read -r line; do
@@ -154,8 +183,8 @@ if [[ $do_install -eq 1 ]]; then
     fi
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
-    ncspot_entry="0.0.0.0 apresolve.spotify.com"; 
-    if ! grep -qFx "$ncspot_entry" /etc/hosts; then 
+    ncspot_entry="0.0.0.0 apresolve.spotify.com";
+    if ! grep -qFx "$ncspot_entry" /etc/hosts; then
         echo "$ncspot_entry" | sudo tee -a /etc/hosts > /dev/null
     fi
 
@@ -163,11 +192,12 @@ fi
 
 
 ###############################################################################
-## INSTALL FONTS
+# INSTALL FONTS
+###############################################################################
 
 if [[ $do_fonts -eq 1 ]]; then
 
-    echo "\n### [ INSTALLING FONTS ]"
+    echo "${bbMark}Installing fonts"
 
     function install_font()
     {
@@ -200,33 +230,24 @@ fi
 
 
 ###############################################################################
-## INSTALL VSCODE EXTENSIONS
+# INSTALL VSCODE EXTENSIONS
+###############################################################################
 
 if [[ $do_code_extensions -eq 1 ]]; then
 
-    echo "\n### [ INSTALLING VSCODE EXTENSIONS]"
+    echo "${bbMark}Installing vscode extensions"
 
     python "$my_configs/vscode/extensions.py" -i
 
 fi
 
 
-###############################################################################
-## APPS THEMES
+# ###############################################################################
+# # APPS THEMES
+# ###############################################################################
 
-if [[ $do_themes -eq 1 ]]; then
+# if [[ $do_themes -eq 1 ]]; then
 
-    echo "\n### [ INSTALLING / LINKING THEMES ]"
+#     echo "${bbMark}Installing Themes"
 
-    #------------------------------------------------------
-    #--- Qt Creator
-    dst_path=$(mkdir_ret "$config_path/QtProject/qtcreator/styles")
-    ln -srf "$my_configs/qtcreator/themes/monokai_dark.xml"     "$dst_path/monokai_dark_t.xml"
-    ln -srf "$my_configs/qtcreator/themes/gruvbox_dark.xml"     "$dst_path/gruvbox_dark_t.xml"
-    ln -srf "$my_configs/qtcreator/themes/catppuccin_latte.xml" "$dst_path/catppuccin_latte_t.xml"
-
-    #------------------------------------------------------
-    #--- Yazi  (https://github.com/yazi-rs/flavors/blob/main/themes.md)
-    dst_path=$(mkdir_ret "$config_path/yazi")
-    ln -srf "$my_configs/yazi/themes/gruvbox_dark.toml" "$dst_path/theme.toml"
-fi
+# fi
