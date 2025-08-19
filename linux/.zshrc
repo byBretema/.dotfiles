@@ -165,8 +165,7 @@ alias pm_update='paru -Syu'
 # Tools
 #------------------
 alias hx='helix'
-alias qc='qtcreator'
-alias qcc='qtcreator >/dev/null 2>&1 &'
+qc() { qtcreator $* >/dev/null 2>&1 & }
 
 
 ###############################################################################

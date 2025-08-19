@@ -41,7 +41,7 @@
   <style name="Comment" foreground="#5d544a" italic="true"/>
   <style name="Doxygen.Comment" foreground="#7f7265"/>
   <style name="Doxygen.Tag" foreground="#ebdbb2" bold="true"/>
-  <style name="VisualWhitespace" foreground="#303030"/>
+  <style name="VisualWhitespace" foreground="#b5835a"/>
   <style name="QmlLocalId" foreground="#b8bb26" bold="true" italic="true"/>
   <style name="QmlExternalId" foreground="#d3869b" italic="true"/>
   <style name="QmlTypeId" foreground="#fabd2f"/>
@@ -70,6 +70,8 @@
   <style name="LogCommitHash" foreground="#ff0000"/>
   <style name="LogCommitSubject"/>
   <style name="LogDecoration" foreground="#ff00ff"/>
+  <style name="Info" underlineColor="#262088" underlineStyle="DashUnderline"/>
+  <style name="InfoContext" underlineColor="#262088" underlineStyle="DotLine"/>
   <style name="Warning" underlineColor="#ffbe00" underlineStyle="SingleUnderline"/>
   <style name="WarningContext" underlineColor="#ffbe00" underlineStyle="DotLine"/>
   <style name="Error" underlineColor="#ff0000" underlineStyle="SingleUnderline"/>
