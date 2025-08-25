@@ -221,6 +221,8 @@ dfe() { code $HOME/.dotfiles; }
 
 dfi() { $HOME/.dotfiles/linux/install.sh $@; }
 
+dff() { cd $HOME/.dotfiles; }
+
 
 ###############################################################################
 ### GIT
