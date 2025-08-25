@@ -18,7 +18,8 @@ DISABLE_LS_COLORS="true"
 HIST_STAMPS="dd.mm.yyyy"
 COMPLETION_WAITING_DOTS="true"
 
-plugins=(git fzf extract zsh-interactive-cd)
+# plugins=(git fzf extract zsh-interactive-cd)
+plugins=(fzf extract zsh-interactive-cd)
 source $ZSH/oh-my-zsh.sh
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
