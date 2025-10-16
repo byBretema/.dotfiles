@@ -322,15 +322,31 @@ alias frepd='__frep d'
 ### LANGS
 ###############################################################################
 
-g++run() {
-	if [[ $# -lt 1 ]]; then echo "-- File required"; return; fi
+cpprun() {
+	usage() { echo "usage: cpprun <std_version> <filepath>"; }
+
+	if [[ $# -lt 2 ]]; then 
+		usage
+		return
+	fi
+
+    local stdver=$1; shift
     local filepath=$(realpath $1); shift
-	local bin_name=$(mktemp -u XXXXXXXXXX)
 
-	g++ --std=c++20 $filepath -o $bin_name && "./$bin_name"
+	if [[ ! -f "$filepath" ]]; then
+		usage
+		echo "\n- error: <filepath> was not found."
+		return
+	fi
 
-	if [[ -f "./$bin_name" ]]; then
-		rm "./$bin_name"
+	local bin_path="/tmp/cpprun/"
+	mkdir -p $bin_path
+	local bin_name=$(mktemp -u "$bin_path/XXXXXXXXXX")
+
+	g++ --std="c++$stdver" $filepath -o $bin_name && "$bin_name"
+
+	if [[ -f "$bin_name" ]]; then
+		rm "$bin_name"
 	fi
 }
 
