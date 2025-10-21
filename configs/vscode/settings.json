@@ -55,7 +55,7 @@
         "enabled": true
     },
     "editor.scrollbar.vertical": "hidden",
-    "editor.minimap.autohide": true,
+    "editor.minimap.autohide": "mouseover",
     "editor.scrollbar.verticalScrollbarSize": 0,
     "editor.cursorSmoothCaretAnimation": "on",
     "editor.cursorBlinking": "phase",
