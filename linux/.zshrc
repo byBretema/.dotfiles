@@ -167,6 +167,7 @@ alias pm_update='paru -Syu'
 #------------------
 alias hx='helix'
 qc() { qtcreator $* >/dev/null 2>&1 & }
+alias yyy='yazi'
 
 
 ###############################################################################

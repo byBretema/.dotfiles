@@ -240,14 +240,3 @@ if [[ $do_code_extensions -eq 1 ]]; then
     python "$my_configs/vscode/extensions.py" -i
 
 fi
-
-
-# ###############################################################################
-# # APPS THEMES
-# ###############################################################################
-
-# if [[ $do_themes -eq 1 ]]; then
-
-#     echo "${bbMark}Installing Themes"
-
-# fi
