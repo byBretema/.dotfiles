@@ -31,7 +31,7 @@
         100,
         120,
     ],
-    "editor.fontSize": 16,
+    "editor.fontSize": 15,
     "editor.fontLigatures": true,
     "editor.fontFamily": "'Fira Code'",
     // "editor.fontFamily": "'Victor Mono'",
