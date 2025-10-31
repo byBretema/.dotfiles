@@ -6,18 +6,19 @@ theme = "gruvbox_dark_hard"
 ################################################################################
 
 [editor]
-line-number = "relative"
-mouse = true
-bufferline = "multiple"
-color-modes = true
+mouse = true  # 'true' to ensure scroll doesn't break the buffer
 true-color = true
+color-modes = true
+bufferline = "multiple"
+line-number = "relative"
+scroll-lines = 1
 
 [editor.soft-wrap]
 enable = true
 
 [editor.indent-guides]
 render = true
-character = "|" # Some characters that work well: "▏", "┆", "┊", "⸽"
+character = "┆" # Some c haracters that work well: "▏", "┆", "┊", "⸽"
 skip-levels = 1
 
 [editor.cursor-shape]
@@ -31,43 +32,79 @@ hidden = false
 [editor.lsp]
 display-inlay-hints = true
 
+
 ################################################################################
 # KEYMAPs
 ################################################################################
 
-#--- Normal -----------------------------------------------
 
+#--- Normal --------------------------------------------------------------------
 [keys.normal]
+
+# Use 'esc' to unselect multiple cursors
+"esc" = ["collapse_selection", "keep_primary_selection"]
+
+# Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
 "A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
-"C-*" = "@miw<A-*>"
+
+# VSCode like select next ocurrence (Normal)
+"C-d" = ["keep_primary_selection", "move_prev_word_start", "move_next_word_end", "search_selection", "select_mode"]
+
+# Reload all files (maybe edited in other editor)
+"C-r" = [":reload-all"]
+
+# Opens git-ui
 "C-g" = [
     ":write-all",
     ":insert-output gitui >/dev/tty",
     ":redraw",
     ":reload-all"
 ]
+
+# Classic save
+"C-s" = ":write"
+
+# Classic save-all
+"C-S-s" = ":write-all"
+
+# Close the buffer
+"C-q" = ":buffer-close"
+
+# Toggle comments
+"C-c" = ["toggle_comments", "move_visual_line_down"]
+
+# Go next/prev paragraph
+"}" = "goto_next_paragraph"
+"{" = "goto_prev_paragraph"
+
+# Add new line pressing enter
+"ret" = ["open_below", "normal_mode"]
+
+# Scooter for symbol rename (?)
 # "C-r" = [
 #     ":write-all",
 #     ":insert-output scooter >/dev/tty",
 #     ":redraw",
 #     ":reload-all"
 # ]
+
 # "C-f" = [
 #     ":e <C-r> %%"
 # ]
-"C-s" = ":w" # Maps Ctrl-s to the typable command :w which is an alias for :write (save file)
-"C-q" = ":bc" 
-"C-c" = ["toggle_comments", "move_visual_line_down"]
-"ret" = ["goto_word"] # Enter = gw
-"}" = "goto_next_paragraph"
-"{" = "goto_prev_paragraph"
-"S-ret" = ["open_below", "normal_mode"] # Maps the enter key to open_below then re-enter normal mode
 
+
+#--- Normal.g ------------------------------------------------------------------
 [keys.normal.g]
-a = "code_action" # Maps `ga` to show possible code actions
 
+# Show possible code actions
+a = "code_action"
+
+
+#--- Normal.space --------------------------------------------------------------
 [keys.normal.space]
+
+# Opens YAZI explorer
 "o" = [
   ":write-all",
   ":sh rm -f /tmp/helix_yazi_link",
@@ -78,24 +115,28 @@ a = "code_action" # Maps `ga` to show possible code actions
   ":set mouse false",
   ":set mouse true",
 ]
+
+# Global search
 " " = "global_search"
 
-#--- Select -----------------------------------------------
 
-
-
-
-# [keys.insert.j]
-# k = "normal_mode" # Maps `jk` to exit insert mode
-
+#--- Select --------------------------------------------------------------------
 [keys.select]
+
+# Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
 "A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
 
+# VSCode like select next ocurrence (Select)
+"C-d" = ["search_selection", "extend_search_next"]
 
+
+#--- Insert --------------------------------------------------------------------
 [keys.insert]
+
+# Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
 "A-k" = [ "extend_to_line_bounds", "delete_selection", "move_line_up", "paste_before" ]
-"C-ñ" = [ "normal_mode" ]
 
-
+# VSCode like select next ocurrence (Insert)
+"C-d" = ["keep_primary_selection", "move_prev_word_start", "move_next_word_end", "search_selection", "select_mode"]
