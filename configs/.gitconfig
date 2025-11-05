@@ -1,14 +1,22 @@
 [core]
-	# editor = code
+	pager = delta
+	editor = helix
 	autocrlf = false
 	excludesFile = ~/.gitignore
 
 [color]
 	ui = true
 
+[interactive]
+    diffFilter = delta --color-only
+
 [push]
 	default = simple
 	autoSetupRemote = true
+
+[merge]
+	#ff = false  # https://stackoverflow.com/a/14865661
+	conflictstyle = zdiff3
 
 [advice]
 	detachedHead = false
@@ -23,22 +31,24 @@
 	process  = git-lfs filter-process
 
 [alias]
+	st    = status -s
+	cm    = commit -m
+
+	co    = checkout
+	br    = branch
+
+	sw    = switch
+	sc    = switch -c
+	sww   = !bname=$(git branch | fzf) && git sw "${bname#* }"
+
+	lol   = log --graph --pretty=oneline --decorate=full --all
+	lg    = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all
+
 	ac    = !git add -A && git commit -m
 	acp   = !git add -A && git commit -m "$1" && git push
-	sc    = switch -c
-	sw    = switch
-	sww   = !bname=$(git branch | fzf) && git sw "${bname#* }"
-	co    = checkout
-	cm    = commit -m
-	st    = status -s
-	lol   = log --graph --oneline --decorate=full
-	lg    = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative
+
 	pur   = pull —-rebase
 	rba   = rebase --abort
-	rmbl  = branch -d
-	rmbL  = branch -D
-	rmbr  = push origin --delete
-	rmbrl = !git branch -d "$1" && git push origin --delete "$1"
 
 	subAdd = !git submodule add
 	subUpdate = !git submodule update --init --recursive -j 12
@@ -56,6 +66,11 @@
 	name = ByBretema
 	email = bybretema@gmail.com
 
+
+[delta]
+	navigate = true
+	line-numbers = true
+	# side-by-side = true
 # [pager]
 #     diff = "ov -F --section-delimiter '^diff' --section-header"
 #     log = "ov -F --section-delimiter '^commit' --section-header-num 3"
