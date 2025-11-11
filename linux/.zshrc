@@ -116,7 +116,8 @@ alias py310="python310"
 #------------------
 alias h='history'
 alias l='eza -a --icons always --git -s type --hyperlink'
-alias L='l -1'
+alias L='eza -a --git -s type --hyperlink'
+alias l1='l -1'
 alias ll='l -l --no-user'
 alias lt='l -T'
 alias lt1='l -T --level=1'
@@ -174,8 +175,9 @@ alias yyy='yazi'
 ### PATHS
 ###############################################################################
 
-PATH="$PATH:$HOME/.local/bin"
-PATH="$PATH:$HOME/.dotfiles/linux/bin"
+PATH="$HOME/.local/bin:$PATH"
+PATH="$HOME/.dotfiles/linux/bin:$PATH"
+PATH="$HOME/dev/omi/d/studio_engine:$PATH"
 
 
 ###############################################################################
