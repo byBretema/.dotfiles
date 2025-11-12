@@ -176,9 +176,8 @@ alias yyy='yazi'
 ###############################################################################
 
 PATH="$HOME/.local/bin:$PATH"
-PATH="$HOME/.dotfiles/linux/bin:$PATH"
-PATH="$HOME/dev/omi/d/studio_engine:$PATH"
 
+DOTFILES="$HOME/.dotfiles"
 
 ###############################################################################
 ### EXPORTS
@@ -207,7 +206,7 @@ export MICRO_TRUECOLOR=1
 ###############################################################################
 
 dfs() {
-	pushd $HOME/.dotfiles
+	pushd "$DOTFILES"
 	git status -s
 	git stash > /dev/null
 	git pull --quiet
@@ -217,14 +216,12 @@ dfs() {
 	git push --quiet
 	popd  2> /dev/null || :
 }
+dfce() { python3 $DOTFILES/common/vscode/extensions.py $@; }
+dfe() { code $DOTFILES; }
+dfi() { $DOTFILES/linux/install.sh $@; }
+dff() { cd $DOTFILES; }
 
-dfce() { python3 $HOME/.dotfiles/common/vscode/extensions.py $@; }
-
-dfe() { code $HOME/.dotfiles; }
-
-dfi() { $HOME/.dotfiles/linux/install.sh $@; }
-
-dff() { cd $HOME/.dotfiles; }
+source "$DOTFILES/scripts/cpprun.sh"
 
 
 ###############################################################################
@@ -298,46 +295,26 @@ function net {
 	echo "$fg[blue]Google.es $fg[white]=> $fg[cyan]$avgDotES"
 }
 
-# Util for grep + find
-function __frep() {
-	show_usage() {
-        echo -e "\nRun grep over files in given path"
-        echo -e "\n  Usage: frep dir searh-term"
-	}
-	# Get type
-    if [[ $# -lt 1 ]]; then echo "-- Bad type"; return; fi
-    local type=$1; shift
-	# Get dir
-    if [[ $# -lt 1 ]]; then show_usage; return; fi
-    local dir=$1; shift
-    if [[ ! -d $dir ]]; then echo "-- Bad dir"; return; fi
-	# Get search term
-    if [[ $# -lt 1 ]]; then show_usage; return; fi
-    local search_term=$*;
 
-	find $dir -type $type -exec grep -H --color=always "$*" {} ';'
-}
-alias frepf='__frep f'
-alias frepd='__frep d'
 
 
 ###############################################################################
-### LANGS
+### CPP
 ###############################################################################
 
 cpprun() {
-	usage() { echo "usage: cpprun <std_version> <filepath>"; }
-
-	if [[ $# -lt 2 ]]; then 
-		usage
+	if [[ $# -lt 4 ]]; then 
+		echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"
 		return
 	fi
 
+    local compiler=$1; shift
     local stdver=$1; shift
     local filepath=$(realpath $1); shift
+    local usage_msg=$1; shift
 
 	if [[ ! -f "$filepath" ]]; then
-		usage
+		echo $usage_msg
 		echo "\n- error: <filepath> was not found."
 		return
 	fi
@@ -346,11 +323,15 @@ cpprun() {
 	mkdir -p $bin_path
 	local bin_name=$(mktemp -u "$bin_path/XXXXXXXXXX")
 
-	g++ --std="c++$stdver" $filepath -o $bin_name && "$bin_name"
+	"$compiler" --std="c++$stdver" $filepath -o $bin_name && "$bin_name"
 
 	if [[ -f "$bin_name" ]]; then
 		rm "$bin_name"
 	fi
+}
+
+g++run() {
+	cpprun "g++" "usage: g++run <std_version> <filepath>" $*
 }
 
 
@@ -408,7 +389,7 @@ function gpu_get_default()
 ### PROMPT
 ###############################################################################
 
-export STARSHIP_CONFIG=$HOME/.dotfiles/configs/starship.toml
+export STARSHIP_CONFIG=$DOTFILES/configs/starship.toml
 eval "$(starship init zsh)"
 
 

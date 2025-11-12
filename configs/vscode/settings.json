@@ -217,8 +217,7 @@
     "find-it-faster.general.useTerminalInEditor": true,
     "[dynamic csv]": {
         "editor.inlayHints.maximumLength": 0
-    },
-    "editor.minimap.enabled": false
+    }
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED
     //--------------------------------------------------------------------------
