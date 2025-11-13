@@ -13,88 +13,81 @@ export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
 DISABLE_MAGIC_FUNCTIONS="true"
 DISABLE_AUTO_TITLE=true
-# ENABLE_CORRECTION="true"
 DISABLE_LS_COLORS="true"
 HIST_STAMPS="dd.mm.yyyy"
 COMPLETION_WAITING_DOTS="true"
 
-# plugins=(git fzf extract zsh-interactive-cd)
-plugins=(fzf extract zsh-interactive-cd)
+plugins=(git fzf extract zsh-interactive-cd)
 source $ZSH/oh-my-zsh.sh
 
 source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
 source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
 source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
 
-# export CARAPACE_BRIDGES='zsh,fish,bash,inshellisense' # optional
-# zstyle ':completion:*' format $'\e[2;37mCompleting %d\e[m'
-# source <(carapace _carapace)
-# zstyle ':completion:*:git:*' group-order 'main commands' 'alias commands' 'external commands'
-
 autoload -U colors && colors
 
 
-###############################################################################
-### OPTIONS
-###############################################################################
+# ###############################################################################
+# ### OPTIONS
+# ###############################################################################
 
-# Mix
-#------------------
-setopt interactive_comments     # allow comments please.
+# # Mix
+# #------------------
+# setopt interactive_comments     # allow comments please.
 
-# Auto
-#------------------
-# setopt correct                  # try to correct spelling of commands.
-setopt auto_name_dirs           # use exported name of dirs.
-setopt auto_remove_slash        # remove slash at the end i.e: my/cool/path/ -> my/cool/path
+# # Auto
+# #------------------
+# # setopt correct                  # try to correct spelling of commands.
+# setopt auto_name_dirs           # use exported name of dirs.
+# setopt auto_remove_slash        # remove slash at the end i.e: my/cool/path/ -> my/cool/path
 
-# Cd
-#------------------
-setopt auto_cd                  # if command is a path, cd into it.
-setopt cdablevars               # if cd a var whose value is a valid directory.
-setopt chase_links              # resolve symlinks.
-setopt glob_dots                # include dotfiles in globbing.
-setopt extended_glob            # activate complex pattern globbing.
+# # Cd
+# #------------------
+# setopt auto_cd                  # if command is a path, cd into it.
+# setopt cdablevars               # if cd a var whose value is a valid directory.
+# setopt chase_links              # resolve symlinks.
+# setopt glob_dots                # include dotfiles in globbing.
+# setopt extended_glob            # activate complex pattern globbing.
 
-# Pushd
-#------------------
-setopt auto_pushd               # make cd push old dir in dir stack.
-setopt pushd_silent             # no dir stack after pushd or popd.
-setopt pushd_to_home            # `pushd` = `pushd $HOME`.
-setopt pushd_ignore_dups        # no duplicates in dir stack.
+# # Pushd
+# #------------------
+# setopt auto_pushd               # make cd push old dir in dir stack.
+# setopt pushd_silent             # no dir stack after pushd or popd.
+# setopt pushd_to_home            # `pushd` = `pushd $HOME`.
+# setopt pushd_ignore_dups        # no duplicates in dir stack.
 
-# History
-#------------------
-setopt bang_hist                # !keyword.
-setopt hist_verify              # show before executing history commands.
-setopt share_history            # share hist between sessions.
-setopt append_history           # append.
-setopt extended_history         # timestamps on history.
-setopt hist_reduce_blanks       # trim blanks.
-setopt inc_append_history       # add commands as they are typed.
-setopt hist_ignore_all_dups     # no duplicate.
+# # History
+# #------------------
+# setopt bang_hist                # !keyword.
+# setopt hist_verify              # show before executing history commands.
+# setopt share_history            # share hist between sessions.
+# setopt append_history           # append.
+# setopt extended_history         # timestamps on history.
+# setopt hist_reduce_blanks       # trim blanks.
+# setopt inc_append_history       # add commands as they are typed.
+# setopt hist_ignore_all_dups     # no duplicate.
 
-# Completion
-#------------------
-setopt correct                  # spelling correction for commands.
-setopt hash_list_all            # hash everything before completion.
-setopt always_to_end            # go to word-end if cursor its in the middle.
-setopt list_ambiguous           # complete until it gets ambiguous.
-setopt completealiases          # complete alisases.
-setopt complete_in_word         # allow completion from within a word/phrase.
+# # Completion
+# #------------------
+# setopt correct                  # spelling correction for commands.
+# setopt hash_list_all            # hash everything before completion.
+# setopt always_to_end            # go to word-end if cursor its in the middle.
+# setopt list_ambiguous           # complete until it gets ambiguous.
+# setopt completealiases          # complete alisases.
+# setopt complete_in_word         # allow completion from within a word/phrase.
 
-# Unset
-#------------------
-unsetopt hup                    # no hup signal at shell exit.
-unsetopt beep                   # no bell on error.
-unsetopt bg_nice                # no lower prio for background jobs.
-unsetopt clobber                # must use >! or >| to truncate existing files.
-unsetopt list_beep              # no bell on ambiguous completion.
-unsetopt hist_beep              # no bell on error in history.
-unsetopt ignore_eof             # do not exit on end-of-file.
-unsetopt rm_star_silent         # confirmation for `rm *' or `rm path/*'.
-unsetopt hist_ignore_space      # ignore space prefixed commands.
-unsetopt MULTIBYTE              # allow modern stuff
+# # Unset
+# #------------------
+# unsetopt hup                    # no hup signal at shell exit.
+# unsetopt beep                   # no bell on error.
+# unsetopt bg_nice                # no lower prio for background jobs.
+# unsetopt clobber                # must use >! or >| to truncate existing files.
+# unsetopt list_beep              # no bell on ambiguous completion.
+# unsetopt hist_beep              # no bell on error in history.
+# unsetopt ignore_eof             # do not exit on end-of-file.
+# unsetopt rm_star_silent         # confirmation for `rm *' or `rm path/*'.
+# unsetopt hist_ignore_space      # ignore space prefixed commands.
+# unsetopt MULTIBYTE              # allow modern stuff
 
 
 ###############################################################################
@@ -221,8 +214,6 @@ dfe() { code $DOTFILES; }
 dfi() { $DOTFILES/linux/install.sh $@; }
 dff() { cd $DOTFILES; }
 
-source "$DOTFILES/scripts/cpprun.sh"
-
 
 ###############################################################################
 ### GIT
@@ -275,13 +266,14 @@ function k { clear; ll; }  # Clear and list
 function o { xdg-open $1 &; }  # Open with default application
 function oo { xdg-open . &; }  # Open with default application
 
+function dev() { cd $HOME/dev; }
+function lab() { cd $HOME/dev/_lab; }
+
 function mkcd { mkdir -p $1; cd $1; }  # Create a folder and enter
 
 function rr { gio trash $*; }  # Send to trash / A safe 'rm' alternative
 
 function s { o "https://www.google.com/search?q=$($* -join '+')"; }  # Search on Google w/ default browser
-
-function dev() { cd $HOME/dev; }
 
 # Quick info and check of your net status
 function net {
@@ -296,8 +288,6 @@ function net {
 }
 
 
-
-
 ###############################################################################
 ### CPP
 ###############################################################################
@@ -309,9 +299,9 @@ cpprun() {
 	fi
 
     local compiler=$1; shift
+    local usage_msg=$1; shift
     local stdver=$1; shift
     local filepath=$(realpath $1); shift
-    local usage_msg=$1; shift
 
 	if [[ ! -f "$filepath" ]]; then
 		echo $usage_msg
@@ -339,50 +329,15 @@ g++run() {
 ### HARDWARE UTILITIES
 ###############################################################################
 
-function nvstatus { bat /sys/bus/pci/devices/0000:01:00.0/power/runtime_status; }
+nvstatus() { bat "/sys/bus/pci/devices/0000:01:00.0/power/runtime_status"; }
 
-function gov_info() {
-	cat /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-}
-function gov_performance() {
-	echo performance | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-}
-function gov_powersave() {
-	echo powersave | sudo tee /sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
-}
+GOVERNOR_PATH="/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+gov_info() { cat "$GOVERNOR_PATH"; }
+gov_performance() {echo performance | sudo tee "$GOVERNOR_PATH"; }
+gov_powersave() { echo powersave | sudo tee "$GOVERNOR_PATH"; }
 
-# function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
-# {
-# 	lines=(
-# 		"__NV_PRIME_RENDER_OFFLOAD=1"
-# 		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
-# 		"__VK_LAYER_NV_optimus=NVIDIA_only"
-# 		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
-# 	)
-
-# 	env_file="/etc/environment"
-# 	temp_file=$(mktemp)
-
-# 	# Toggle
-# 	while IFS= read -r line; do
-# 		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
-# 			if [[ ! $line =~ ^# ]]; then
-# 				line="#$line"
-# 			else
-# 				line="${line:1}"
-# 			fi
-# 			echo "$line"
-# 		fi
-# 		echo "$line" >> "$temp_file"
-# 	done < "$env_file"
-
-# 	sudo mv "$temp_file" "$env_file"
-# 	echo "\n[ Remeber to re-login to apply the changes ! ]"
-# }
-function gpu_get_default()
-{
-	glxinfo | grep "OpenGL renderer"
-}
+gpu_toggle() { python "$DOTFILES/linux/scripts/gpu_toggle.py"; }
+gpu_get_default() { glxinfo | grep "OpenGL renderer"; }
 
 
 ###############################################################################
