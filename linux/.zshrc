@@ -109,16 +109,21 @@ alias py310="python310"
 #------------------
 alias h='history'
 alias l='eza -a --icons always --git -s type --hyperlink'
-alias L='eza -a --git -s type --hyperlink'
+alias L='eza -a --git -s'
 alias l1='l -1'
 alias ll='l -l --no-user'
 alias lt='l -T'
-alias lt1='l -T --level=1'
+alias L1='L -1'
+alias Ll='L -l --no-user'
+alias Lt='L -T'
+ltx() { lvl=$1;shift; l -T --level=$lvl $*; }
+Ltx() { lvl=$1;shift; L -T --level=$lvl $*; }
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'
 alias aaa='sudo $(fc -ln | tail -1)'
 alias wii='which $(fc -ln | tail -1)'
 alias trash='rr'
+alias ccd='cd $(L1 -scr -r | fzf)'
 
 # System
 #------------------
@@ -171,6 +176,7 @@ alias yyy='yazi'
 PATH="$HOME/.local/bin:$PATH"
 
 DOTFILES="$HOME/.dotfiles"
+PATH="$DOTFILES/linux/scripts:$PATH"
 
 ###############################################################################
 ### EXPORTS

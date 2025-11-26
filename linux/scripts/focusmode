@@ -1,0 +1,30 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+MODES=(
+    "WORK"
+    "LIFE"
+)
+mode=$(printf "%s\n" "${MODES[@]}" | fzf)
+
+echo "-- Focus mode set to: ${mode}"
+
+op="rm"
+suffix=""
+
+if [[ "${mode}" == "WORK" ]]; then
+    op="add"
+    suffix="::1"
+fi
+
+TO_BLOCK=(
+    "youtube.com"
+    "reddit.com"
+    "x.com"
+    "linkedin.com"
+)
+for domain in "${TO_BLOCK[@]}"; do
+    sudo hostess "${op}" "${domain}" "${suffix}"
+    sudo hostess "${op}" "www.${domain}" "${suffix}"
+done
