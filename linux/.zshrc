@@ -342,8 +342,78 @@ gov_info() { cat "$GOVERNOR_PATH"; }
 gov_performance() {echo performance | sudo tee "$GOVERNOR_PATH"; }
 gov_powersave() { echo powersave | sudo tee "$GOVERNOR_PATH"; }
 
+<<<<<<< Updated upstream
 gpu_toggle() { python "$DOTFILES/linux/scripts/gpu_toggle.py"; }
 gpu_get_default() { glxinfo | grep "OpenGL renderer"; }
+||||||| Stash base
+# function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
+# {
+# 	lines=(
+# 		"__NV_PRIME_RENDER_OFFLOAD=1"
+# 		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
+# 		"__VK_LAYER_NV_optimus=NVIDIA_only"
+# 		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
+# 	)
+
+# 	env_file="/etc/environment"
+# 	temp_file=$(mktemp)
+
+# 	# Toggle
+# 	while IFS= read -r line; do
+# 		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
+# 			if [[ ! $line =~ ^# ]]; then
+# 				line="#$line"
+# 			else
+# 				line="${line:1}"
+# 			fi
+# 			echo "$line"
+# 		fi
+# 		echo "$line" >> "$temp_file"
+# 	done < "$env_file"
+
+# 	sudo mv "$temp_file" "$env_file"
+# 	echo "\n[ Remeber to re-login to apply the changes ! ]"
+# }
+function gpu_get_default()
+{
+	glxinfo | grep "OpenGL renderer"
+}
+=======
+##### https://download.nvidia.com/XFree86/Linux-x86_64/440.64/README/primerenderoffload.html
+
+# function gpu_toggle_discrete_only()  # FIXME : Toggle is not working yet
+# {
+# 	lines=(
+# 		"__NV_PRIME_RENDER_OFFLOAD=1"
+# 		"__GLX_VENDOR_LIBRARY_NAME=nvidia"
+# 		"__VK_LAYER_NV_optimus=NVIDIA_only"
+# 		"VK_ICD_FILENAMES=/usr/share/vulkan/icd.d/nvidia_icd.json"
+# 	)
+
+# 	env_file="/etc/environment"
+# 	temp_file=$(mktemp)
+
+# 	# Toggle
+# 	while IFS= read -r line; do
+# 		if [[ " ${lines[@]} " =~ " ${line} " ]] || [[ " ${lines[@]} " =~ " ${line:1} " ]]; then
+# 			if [[ ! $line =~ ^# ]]; then
+# 				line="#$line"
+# 			else
+# 				line="${line:1}"
+# 			fi
+# 			echo "$line"
+# 		fi
+# 		echo "$line" >> "$temp_file"
+# 	done < "$env_file"
+
+# 	sudo mv "$temp_file" "$env_file"
+# 	echo "\n[ Remeber to re-login to apply the changes ! ]"
+# }
+function gpu_get_default()
+{
+	glxinfo | grep "OpenGL renderer"
+}
+>>>>>>> Stashed changes
 
 
 ###############################################################################
