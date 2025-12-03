@@ -20,7 +20,6 @@ show_usage() {
     echo "  -f  --  Install fonts"
     echo "  -e  --  Install code extensions"
     echo "  -a  --  All"
-    # echo "  -t  --  Link themes for different apps"
 }
 
 #--- Default Values ---------------------------------------
@@ -30,7 +29,6 @@ do_update=0
 do_install=0
 do_fonts=0
 do_code_extensions=0
-do_themes=0
 
 #--- Argparse ---------------------------------------------
 
@@ -49,7 +47,6 @@ while getopts "hluifea" opt; do
             do_install=1
             do_fonts=1
             do_code_extensions=1
-            do_themes=1
         ;;
         *) show_usage; exit 1;;
     esac
@@ -81,6 +78,9 @@ mkdir -p "$config_path"
 if [[ $do_links -eq 1 ]]; then
 
     echo "${bbMark}Linking config files"
+
+    # Fish
+    ln -srf "$script_path/.fishrc"  "$HOME/.config/fish/config.fish"
 
     # Zsh
     ln -srf "$script_path/.zshrc"  "$HOME/.zshrc"
@@ -177,10 +177,10 @@ if [[ $do_install -eq 1 ]]; then
     done < "$script_path/flatpak_list.conf"
     flatpak update
 
-    # Change shell to ZSH
-    if [[ "$SHELL" != *zsh ]]; then
-        chsh -s "/usr/bin/zsh"
-    fi
+    # # Change shell to ZSH
+    # if [[ "$SHELL" != *zsh ]]; then
+    #     chsh -s "/usr/bin/zsh"
+    # fi
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
     ncspot_entry="0.0.0.0 apresolve.spotify.com";

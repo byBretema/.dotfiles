@@ -1,12 +1,11 @@
 #!/usr/bin/env bash
 set -eEu -o pipefail
-shopt -s xpg_echo
 
 MODES=(
     "WORK"
     "LIFE"
 )
-mode=$(printf "%s\n" "${MODES[@]}" | fzf)
+mode=$(printf "%s\n" "${MODES[@]}" | fzf_h "Choose one mode")
 
 echo "-- Focus mode set to: ${mode}"
 

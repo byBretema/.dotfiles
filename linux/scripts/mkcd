@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+mkdir -p $1;
+pushd $1

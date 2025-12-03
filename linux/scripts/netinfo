@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+echo "Public  => $(curl -s icanhazip.com)"
+echo "Private => $(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)"
+echo "8.8.8.8 => $(ping -qc 5 8.8.8.8 | sed -n 5p | awk -F"/" '{print $5" ms"}')"
+echo "Google  => $(ping -qc 5 'google.es' | sed -n 5p | awk -F"/" '{print $5" ms"}')"

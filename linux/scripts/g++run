@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+cpprun "g++" "usage: g++run <std_version> <filepath>" $@

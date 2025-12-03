@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+echo "Renderer  => $(glxinfo | grep "OpenGL renderer")"
+echo "NV Status => $(cat "/sys/bus/pci/devices/0000:01:00.0/power/runtime_status")"

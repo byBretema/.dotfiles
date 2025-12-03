@@ -65,7 +65,7 @@
     // WORKBENCH
     //--------------------------------------------------------------------------
     "workbench.settings.editor": "json",
-    "workbench.iconTheme": "icons",
+    "workbench.iconTheme": "chalice-icon-theme",
     "workbench.colorCustomizations": {
         "panel.border": "#ee8800"
     },
@@ -76,15 +76,11 @@
     "workbench.sideBar.location": "right",
     "workbench.editor.enablePreview": false,
     "workbench.activityBar.location": "bottom",
-    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
+    "workbench.preferredDarkColorTheme": "chalice-color-theme-dark",
     "workbench.preferredLightColorTheme": "Gruvbox Light Hard",
-    //--------------------------------------------------------------------------
-    // WINDOW
-    //--------------------------------------------------------------------------
-    "window.autoDetectColorScheme": true,
     "window.commandCenter": true,
     "window.menuBarVisibility": "toggle",
-    "window.customTitleBarVisibility": "auto",
+    "window.customTitleBarVisibility": "windowed",
     //--------------------------------------------------------------------------
     // TERMINALS
     //--------------------------------------------------------------------------
@@ -217,7 +213,10 @@
     "find-it-faster.general.useTerminalInEditor": true,
     "[dynamic csv]": {
         "editor.inlayHints.maximumLength": 0
-    }
+    },
+    "editor.bracketPairColorization.enabled": false,
+    "workbench.colorTheme": "Alabaster Dark",
+    "window.autoDetectHighContrast": false
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED
     //--------------------------------------------------------------------------

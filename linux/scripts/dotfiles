@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+ACTIONS=(
+    "VSCODE EXTENSIONS  [@args]"
+    "EDIT"
+    "RUN  [@args]"
+    "SYNC"
+)
+action=$(printf "%s\n" "${ACTIONS[@]}" | fzf_h "Choose an action")
+
+if [[ "${action}" == "SYNC" ]]; then
+
+	pushd "$DOTFILES"
+	git status -s
+	git stash > /dev/null
+	git pull --quiet
+	git stash pop > /dev/null
+	git add -A
+	git commit -m "Updates ($(date +%s))" > /dev/null
+	git push --quiet
+	popd  2> /dev/null || :
+
+elif [[ "${action}" == "EDIT" ]]; then
+
+    code $DOTFILES;
+
+elif [[ "${action}" == "VSCODE EXTENSIONS  [@args]" ]]; then
+
+    python "$DOTFILES/common/vscode/extensions.py" $@
+
+elif [[ "${action}" == "RUN  [@args]" ]]; then
+
+    "$DOTFILES/linux/install.sh" $@
+
+fi

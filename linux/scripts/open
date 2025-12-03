@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+MODES=(
+    "SHOW LOG"
+    "SILENT"
+    "HOLD"
+)
+mode=$(printf "%s\n" "${MODES[@]}" | fzf_h "Choose one mode")
+
+if [[ "${mode}" == "WITH LOG" ]]; then
+
+    xdg-open $1 &
+
+elif [[ "${mode}" == "SILENT" ]]; then
+
+    xdg-open $1 >/dev/null 2>&1 &
+
+elif [[ "${mode}" == "SILENT" ]]; then
+
+    xdg-open $1
+
+fi
