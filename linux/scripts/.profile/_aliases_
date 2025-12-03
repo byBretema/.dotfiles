@@ -31,6 +31,7 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+alias cdomi='cd $(omi -f)'
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
@@ -39,6 +40,9 @@ alias ffc='code $(fzf -m --preview="bat --color=always {}")'
 # On prev command
 alias aaa='sudo $(fc -ln | tail -1)'
 alias wii='which $(fc -ln | tail -1)'
+
+# On last return
+# alias cdd='which $(fc -ln | tail -1)'
 
 # System
 alias pbcopy='xclip -selection c'

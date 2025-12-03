@@ -3,17 +3,18 @@
 #-------------------------------------------------------------------------------
 # Common setup "Shell-Agnostic"  (Part 1)
 
-PATH="$HOME/.local/bin:$PATH"
-
 DOTFILES_SCRIPTS="$HOME/.dotfiles/linux/scripts"
-PATH="$DOTFILES_SCRIPTS:$PATH"
-source "$DOTFILES_SCRIPTS/_exports_"
+PATH="$DOTFILES_SCRIPTS/bash:$PATH"
+
+source "$DOTFILES_SCRIPTS/.profile/_exports_"
+
+PATH="$HOME/.local/bin:$PATH"
+PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 
 
 #-------------------------------------------------------------------------------
 # Plugins
 
-export FZF_BASE=/usr/share/fzf
 export ZSH="/usr/share/oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
 
@@ -35,6 +36,17 @@ autoload -U colors && colors
 #-------------------------------------------------------------------------------
 # Common setup "Shell-Agnostic"  (Part 2)
 
+#... Prompt
 eval "$(starship init zsh)"
-source "$DOTFILES_SCRIPTS/_aliases_"
+
+#... Aliases
 alias configreload='source $HOME/.zshrc'
+source "$DOTFILES_SCRIPTS/.profile/_aliases_"
+
+#... External Profile / Binaries
+
+OMI_SCRIPTS="$HOME/omi/scripts"
+PATH="$OMI_SCRIPTS/bash:$PATH"
+
+OMI_PROFILE="$OMI_SCRIPTS/_exports_"
+if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi

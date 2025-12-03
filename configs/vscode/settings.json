@@ -215,7 +215,7 @@
         "editor.inlayHints.maximumLength": 0
     },
     "editor.bracketPairColorization.enabled": false,
-    "workbench.colorTheme": "Alabaster Dark",
+    "workbench.colorTheme": "Alabaster (Dark Modern)",
     "window.autoDetectHighContrast": false
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED
