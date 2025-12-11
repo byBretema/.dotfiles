@@ -1,5 +1,10 @@
 #!/usr/bin/env bash
-source "${0%/*}/__common__"source "${0%/*}/__common__"
+source "${0%/*}/__common__"
+
+
+################################################################################
+### Actions
+################################################################################
 
 sync() {
 	pushd "${DOTFILES}"
@@ -11,12 +16,61 @@ sync() {
 	git commit -m "Updates ($(date +%s))" > /dev/null
 	git push --quiet
 	popd  2> /dev/null || :
+	exit 0
 }
+
+edit() {
+	code "${DOTFILES}"
+	exit 0
+}
+
+run() {
+	"${DOTFILES}/linux/install.sh" "$@"
+	exit 0
+}
+
+vscode_extensions() {
+	python "$DOTFILES/common/vscode/extensions.py" "$@"
+	exit 0
+}
+
+
+################################################################################
+### Parse args
+################################################################################
+
+usage() {
+	echo "-e | --edit   Edit dotfiles"
+	echo "-s | --sync   Sync dotfiles"
+	echo "-r | --run    Run dotfiles \"manager\""
+	echo "-v | --vscode Manage VSCode extensions"
+	echo "-h | --help   Show this message"
+	echo "--            Extra args after this"
+	exit 1
+}
+
+
+while [[ "${#}" > 0 ]]; do
+  case "${1}" in
+    -e | --edit    ) shift; edit              ;;
+    -s | --sync    ) shift; sync              ;;
+    -r | --run     ) shift; run               ;;
+    -v | --vscode  ) shift; vscode_extensions ;;
+    -h | --help    ) shift; usage             ;;
+    --             ) shift; break             ;;
+    *              )        break             ;;
+  esac
+done
+
+
+################################################################################
+### Interactive
+################################################################################
 
 OPTIONS=( "Edit" "Sync" "Run" "VSCode" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose an action")
 
+[[ "${option}" == "Edit"   ]] && edit
 [[ "${option}" == "Sync"   ]] && sync
-[[ "${option}" == "Edit"   ]] && code "${DOTFILES}"
-[[ "${option}" == "Run"    ]] && "${DOTFILES}/linux/install.sh" "$@"
-[[ "${option}" == "VSCode" ]] && python "$DOTFILES/common/vscode/extensions.py" "$@"
+[[ "${option}" == "Run"    ]] && run
+[[ "${option}" == "VSCode" ]] && vscode_extensions

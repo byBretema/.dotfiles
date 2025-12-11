@@ -216,8 +216,9 @@
     },
     "editor.bracketPairColorization.enabled": false,
     "workbench.colorTheme": "Alabaster (Dark Modern)",
-    "window.autoDetectHighContrast": false
+    "window.autoDetectHighContrast": false,
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED
     //--------------------------------------------------------------------------
+    "shellformat.path": "/usr/bin/shfmt",
 }

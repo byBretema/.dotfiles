@@ -37,8 +37,8 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
-alias ccd..='..; ccd'
-alias cdomi='cd $(omi -d)'
+alias omid='cd $(omi -d)'
+alias omis='cd $(omi -s)'
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'

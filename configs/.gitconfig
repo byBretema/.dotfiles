@@ -47,7 +47,7 @@
 	ac    = !git add -A && git commit -m
 	acp   = !git add -A && git commit -m "$1" && git push
 
-	pur   = pull —-rebase
+	pur   = pull --rebase
 	rba   = rebase --abort
 
 	subAdd = !git submodule add
