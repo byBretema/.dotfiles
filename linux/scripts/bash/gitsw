@@ -1,10 +1,11 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"
+guard__is_git
 
 branch=$(git branch -a | fzf_h "Choose one branch")
 
-echo "$branch" | \
+echo "${branch}" | \
 sed -E 's/^remotes\/origin\///' | \
 sed -E 's/^\*?[ ]*//' | \
+sed -E 's/^\+?[ ]*//' | \
 xargs git switch

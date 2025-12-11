@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"
 
-python "$DOTFILES/linux/scripts/gpu_toggle.py"
+python "${DOTFILES}/linux/scripts/gpu_toggle.py"

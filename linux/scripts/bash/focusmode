@@ -1,21 +1,16 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
+source "${0%/*}/__common__"
 
-MODES=(
+OPTIONS=(
     "WORK"
     "LIFE"
 )
-mode=$(printf "%s\n" "${MODES[@]}" | fzf_h "Choose one mode")
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
 
-echo "-- Focus mode set to: ${mode}"
+log_info "Focus mode set to: ${option}"
 
-op="rm"
-suffix=""
-
-if [[ "${mode}" == "WORK" ]]; then
-    op="add"
-    suffix="::1"
-fi
+op="rm"; suffix=""
+[[ "${option}" == "WORK" ]] && { op="add"; suffix="::1" }
 
 TO_BLOCK=(
     "youtube.com"

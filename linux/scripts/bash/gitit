@@ -1,17 +1,12 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
-
-if ! git remote -v > /dev/null 2>&1; then 
-    echo "-- Not a repo."
-    exit 1
-fi
+source "${0%/*}/__common__"
+guard__is_git
 
 url=$(git remote -v | head -n 1 | awk '{print $2}')
 
-if [[ $url == *@* ]]; then
-    ssh=$(echo $url | awk -F'@' '{print $2}' | sed 's/:/\//')
+if [[ "${url}" == *@* ]]; then
+    ssh=$(echo "${url}" | awk -F'@' '{print $2}' | sed 's/:/\//')
     xdg-open "https://${ssh}"  >/dev/null 2>&1 &
 else
-    xdg-open "$url"  >/dev/null 2>&1 &
+    xdg-open "${url}"  >/dev/null 2>&1 &
 fi

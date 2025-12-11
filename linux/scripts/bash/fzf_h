@@ -1,14 +1,5 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+set -eEu -o pipefail; shopt -s xpg_echo
 
-
-if [ -z "$1" ]; then
-    echo "-- Header message expected" >&2
-    return 1
-fi
-
-header="$1"
-shift
-
-fzf --header "${header}:" --layout=reverse
+[[ -z "${1}" ]] && header="Choose one" || { header="$1"; shift; }
+fzf -1 --header "${header}:" --layout=reverse

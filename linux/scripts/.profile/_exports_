@@ -21,3 +21,5 @@ export FZF_BASE="/usr/share/fzf"
 export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export DOTFILES="$HOME/.dotfiles"
+
+export QT_QPA_PLATFORM=xcb

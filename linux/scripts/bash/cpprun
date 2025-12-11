@@ -1,16 +1,15 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"
 
 if [[ $# -lt 4 ]]; then 
     echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"
     return
 fi
 
-compiler=$1; shift
-usage_msg=$1; shift
-stdver=$1; shift
-filepath=$(realpath $1); shift
+compiler="$1"; shift
+usage_msg="$1"; shift
+stdver="$1"; shift
+filepath=$(realpath "$1"); shift
 
 if [[ ! -f "$filepath" ]]; then
     echo $usage_msg

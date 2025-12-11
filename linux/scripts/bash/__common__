@@ -1,0 +1,14 @@
+
+set -eEu -o pipefail
+shopt -s xpg_echo
+
+log_header() { printf "@ \033[0;33m%s\033[0m\n" "$1"; }
+log_info  () { printf ">> \033[0;35m%s\033[0m\n" "$1"; }
+log_error () { printf "E · \033[1;31m%s\033[0m\n" "$1"; }
+error_exit() { log_error "${1}"; exit 1; }
+
+guard__is_git() {
+    if ! git rev-parse --is-inside-work-tree > /dev/null 2>&1; then
+        error_exit "Not a repo";
+    fi
+}

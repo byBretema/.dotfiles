@@ -1,26 +1,11 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
-
-ACTIONS=(
-    "GET"
-    "SET POWERSAVE"
-    "SET PERFORMANCE"
-)
-action=$(printf "%s\n" "${ACTIONS[@]}" | fzf_h "Choose one action")
+source "${0%/*}/__common__"
 
 GOVERNOR_PATH="/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
 
-if [[ "${action}" == "GET" ]]; then
+OPTIONS=( "Get" "Set: PowerSave" "Set: Performance" )
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one action")
 
-    cat "$GOVERNOR_PATH"
-
-elif [[ "${action}" == "SET POWERSAVE" ]]; then
-
-    echo powersave | sudo tee "$GOVERNOR_PATH"
-
-elif [[ "${action}" == "SET PERFORMANCE" ]]; then
-
-    echo performance | sudo tee "$GOVERNOR_PATH"
-
-fi
+[[ "${option}" == "Get"              ]] && cat "$GOVERNOR_PATH"
+[[ "${option}" == "Set: PowerSave"   ]] && echo powersave   | sudo tee "$GOVERNOR_PATH"
+[[ "${option}" == "Set: Performance" ]] && echo performance | sudo tee "$GOVERNOR_PATH"

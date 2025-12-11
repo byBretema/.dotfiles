@@ -1,19 +1,17 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"
+guard__is_git
 
 local_delete_flag="-d"
-if [[ $# -gt 1 && $1 -eq "-f" ]]; then local_delete_flag="-D"; fi
+[[ "$#" > 1 && "$1" == "-f" ]] && local_delete_flag="-D"
 
 branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf_h "Choose one branch")
-branch=$(echo $branch | sed -E 's/^\*?[ ]*//; s/[ ]*$//')
+branch=$(echo "${branch}" | sed -E 's/^\*?[ ]*//; s/^\+?[ ]*//; s/[ ]*$//')
 
-if [[ ! -n "$branch" ]]; then echo "-- No branch selected."; return; fi
+[[ -z "${branch}" ]] && { echo "-- No branch selected."; exit 1; }
 
 read -k 1 -r "?@ Deleting local, sure? [y/N] "; echo
-if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
-git branch $local_delete_flag $branch
+[[ $REPLY =~ ^[Yy]$ ]] && git branch $local_delete_flag $branch
 
 read -k 1 -r "?@ Deleting remote, sure? [y/N] "; echo
-if [[ ! $REPLY =~ ^[Yy]$ ]] then return; fi
-git push origin --delete $branch
+[[ $REPLY =~ ^[Yy]$ ]] && git push origin --delete $branch

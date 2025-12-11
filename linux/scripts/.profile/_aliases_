@@ -1,6 +1,7 @@
 
 # Tools
 alias hx='helix'
+alias qc='qtcreator >/dev/null 2>&1 &'
 
 # Langs
 alias py="python"
@@ -17,12 +18,16 @@ alias L1='L -1'
 alias Ll='L -l --no-user'
 alias Lt='L -T'
 alias k='clear && ll'
-# ltx() { lvl=$1;shift; l -T --level=$lvl $*; }
-# Ltx() { lvl=$1;shift; L -T --level=$lvl $*; }
+alias lt1='l -T --level=1'
+alias Lt1='L -T --level=1'
+alias lt2='l -T --level=2'
+alias Lt2='L -T --level=2'
+alias lt3='l -T --level=3'
+alias Lt3='L -T --level=3'
 
 # Nav
 alias h='history'
-alias ccd='cd $(L1 -scr -r | fzf)'
+alias ccd='cd $(L1 -scr -r | fzf_h "Choose one folder")'
 alias dev='cd $HOME/dev'
 alias lab='cd $HOME/dev/_lab'
 alias oo='xdg-open . >/dev/null 2>&1 &'
@@ -31,7 +36,9 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
-alias cdomi='cd $(omi -f)'
+
+alias ccd..='..; ccd'
+alias cdomi='cd $(omi -d)'
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'

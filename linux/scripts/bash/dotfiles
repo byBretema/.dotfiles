@@ -1,18 +1,8 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"source "${0%/*}/__common__"
 
-ACTIONS=(
-    "VSCODE EXTENSIONS  [@args]"
-    "EDIT"
-    "RUN  [@args]"
-    "SYNC"
-)
-action=$(printf "%s\n" "${ACTIONS[@]}" | fzf_h "Choose an action")
-
-if [[ "${action}" == "SYNC" ]]; then
-
-	pushd "$DOTFILES"
+sync() {
+	pushd "${DOTFILES}"
 	git status -s
 	git stash > /dev/null
 	git pull --quiet
@@ -21,17 +11,12 @@ if [[ "${action}" == "SYNC" ]]; then
 	git commit -m "Updates ($(date +%s))" > /dev/null
 	git push --quiet
 	popd  2> /dev/null || :
+}
 
-elif [[ "${action}" == "EDIT" ]]; then
+OPTIONS=( "Edit" "Sync" "Run" "VSCode" )
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose an action")
 
-    code $DOTFILES;
-
-elif [[ "${action}" == "VSCODE EXTENSIONS  [@args]" ]]; then
-
-    python "$DOTFILES/common/vscode/extensions.py" $@
-
-elif [[ "${action}" == "RUN  [@args]" ]]; then
-
-    "$DOTFILES/linux/install.sh" $@
-
-fi
+[[ "${option}" == "Sync"   ]] && sync
+[[ "${option}" == "Edit"   ]] && code "${DOTFILES}"
+[[ "${option}" == "Run"    ]] && "${DOTFILES}/linux/install.sh" "$@"
+[[ "${option}" == "VSCode" ]] && python "$DOTFILES/common/vscode/extensions.py" "$@"

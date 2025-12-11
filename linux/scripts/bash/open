@@ -1,24 +1,9 @@
 #!/usr/bin/env bash
-set -eEu -o pipefail
-shopt -s xpg_echo
+source "${0%/*}/__common__"
 
-MODES=(
-    "SHOW LOG"
-    "SILENT"
-    "HOLD"
-)
-mode=$(printf "%s\n" "${MODES[@]}" | fzf_h "Choose one mode")
+OPTIONS=( "Detached" "Silent" "Hold" )
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
 
-if [[ "${mode}" == "WITH LOG" ]]; then
-
-    xdg-open $1 &
-
-elif [[ "${mode}" == "SILENT" ]]; then
-
-    xdg-open $1 >/dev/null 2>&1 &
-
-elif [[ "${mode}" == "SILENT" ]]; then
-
-    xdg-open $1
-
-fi
+[[ "${option}" == "Detached" ]] && xdg-open $1 &
+[[ "${option}" == "Silent"   ]] && xdg-open $1 >/dev/null 2>&1 &
+[[ "${option}" == "Hold"     ]] && xdg-open $1
