@@ -7,32 +7,21 @@ source "${0%/*}/__common__"
 ################################################################################
 
 sync() {
-	pushd "${DOTFILES}"
-	git status -s
-	git stash > /dev/null
-	git pull --quiet
-	git stash pop > /dev/null
-	git add -A
-	git commit -m "Updates ($(date +%s))" > /dev/null
-	git push --quiet
-	popd  2> /dev/null || :
-	exit 0
+  pushd "${DOTFILES}"
+  git status -s
+  git stash > /dev/null
+  git pull --quiet
+  git stash pop > /dev/null
+  git add -A
+  git commit -m "Updates ($(date +%s))" > /dev/null
+  git push --quiet
+  popd  2> /dev/null || :
+  exit 0
 }
 
-edit() {
-	code "${DOTFILES}"
-	exit 0
-}
-
-run() {
-	"${DOTFILES}/linux/install.sh" "$@"
-	exit 0
-}
-
-vscode_extensions() {
-	python "$DOTFILES/common/vscode/extensions.py" "$@"
-	exit 0
-}
+edit()              { code "${DOTFILES}"; }
+run()               { "${DOTFILES}/linux/install.sh" "$@"; }
+vscode_extensions() { python "$DOTFILES/common/vscode/extensions.py" "$@"; }
 
 
 ################################################################################
@@ -40,25 +29,26 @@ vscode_extensions() {
 ################################################################################
 
 usage() {
-	echo "-e | --edit   Edit dotfiles"
-	echo "-s | --sync   Sync dotfiles"
-	echo "-r | --run    Run dotfiles \"manager\""
-	echo "-v | --vscode Manage VSCode extensions"
-	echo "-h | --help   Show this message"
-	echo "--            Extra args after this"
-	exit 1
+  echo "Usage $(basename $0) [options]:"
+  echo ""
+  echo "-e | --edit   Edit dotfiles"
+  echo "-s | --sync   Sync dotfiles"
+  echo "-r | --run    Run dotfiles \"manager\""
+  echo "-v | --vscode Manage VSCode extensions"
+  echo "-h | --help   Show this message"
+  echo "--            Extra args after this"
+  exit 1
 }
-
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
-    -e | --edit    ) shift; edit              ;;
-    -s | --sync    ) shift; sync              ;;
-    -r | --run     ) shift; run               ;;
-    -v | --vscode  ) shift; vscode_extensions ;;
-    -h | --help    ) shift; usage             ;;
-    --             ) shift; break             ;;
-    *              )        break             ;;
+    -e | --edit    ) shift; edit                   ; exit 0 ;;
+    -s | --sync    ) shift; sync                   ; exit 0 ;;
+    -r | --run     ) shift; run               "$@" ; exit 0 ;;
+    -v | --vscode  ) shift; vscode_extensions "$@" ; exit 0 ;;
+    -h | --help    ) shift; usage ;;
+    --             ) shift; break ;;
+    *              ) break;;
   esac
 done
 
@@ -70,7 +60,7 @@ done
 OPTIONS=( "Edit" "Sync" "Run" "VSCode" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose an action")
 
-[[ "${option}" == "Edit"   ]] && edit
-[[ "${option}" == "Sync"   ]] && sync
-[[ "${option}" == "Run"    ]] && run
-[[ "${option}" == "VSCode" ]] && vscode_extensions
+[[ "${option}" == "Edit"   ]] && edit                   ; exit 0
+[[ "${option}" == "Sync"   ]] && sync                   ; exit 0
+[[ "${option}" == "Run"    ]] && run               "$@" ; exit 0
+[[ "${option}" == "VSCode" ]] && vscode_extensions "$@" ; exit 0

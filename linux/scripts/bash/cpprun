@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 source "${0%/*}/__common__"
 
-if [[ $# -lt 4 ]]; then 
-    echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"
-    return
+if [[ $# -lt 4 ]]; then
+  echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"
+  return
 fi
 
 compiler="$1"; shift
@@ -12,9 +12,9 @@ stdver="$1"; shift
 filepath=$(realpath "$1"); shift
 
 if [[ ! -f "$filepath" ]]; then
-    echo $usage_msg
-    echo "\n- error: <filepath> was not found."
-    return
+  echo $usage_msg
+  echo "\n- error: <filepath> was not found."
+  return
 fi
 
 bin_path="/tmp/cpprun/"
@@ -24,5 +24,5 @@ bin_name=$(mktemp -u "$bin_path/XXXXXXXXXX")
 "$compiler" --std="c++$stdver" $filepath -o $bin_name && "$bin_name"
 
 if [[ -f "$bin_name" ]]; then
-    rm "$bin_name"
+  rm "$bin_name"
 fi

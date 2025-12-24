@@ -1,9 +1,48 @@
 #!/usr/bin/env bash
 source "${0%/*}/__common__"
 
-OPTIONS=( "Detached" "Silent" "Hold" )
+
+################################################################################
+### Actions
+################################################################################
+
+silent()   { xdg-open "$1" >/dev/null 2>&1 &; exit 0; }
+detached() { xdg-open "$1" &                ; exit 0; }
+block()    { xdg-open "$1"                  ; exit 0; }
+
+
+################################################################################
+### Parse args
+################################################################################
+
+usage() {
+  echo "-s | --silent     No log, no block"
+  echo "-d | --detached   Log, no block"
+  echo "-b | --block      Log and block"
+  echo "-h | --help       Show this message"
+  echo "--                Extra args after this"
+  exit 1
+}
+
+while [[ "${#}" > 0 ]]; do
+  case "${1}" in
+    -s | --silent   ) shift; silent   "$@" ;;
+    -d | --detached ) shift; detached "$@" ;;
+    -b | --block    ) shift; block    "$@" ;;
+    -h | --help     ) shift; usage ;;
+    --              ) shift; break ;;
+    *               ) break ;;
+  esac
+done
+
+
+################################################################################
+### Interactive
+################################################################################
+
+OPTIONS=( "Silent" "Detached" "Block" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
 
-[[ "${option}" == "Detached" ]] && xdg-open $1 &
-[[ "${option}" == "Silent"   ]] && xdg-open $1 >/dev/null 2>&1 &
-[[ "${option}" == "Hold"     ]] && xdg-open $1
+[[ "${option}" == "Silent"   ]] && silent "$@"
+[[ "${option}" == "Detached" ]] && detached "$@"
+[[ "${option}" == "Block"    ]] && block "$@"

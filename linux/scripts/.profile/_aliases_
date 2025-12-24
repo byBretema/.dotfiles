@@ -1,7 +1,7 @@
 
 # Tools
 alias hx='helix'
-alias qc='qtcreator >/dev/null 2>&1 &'
+alias qc='qtcreator >/dev/null'
 
 # Langs
 alias py="python"
@@ -30,7 +30,7 @@ alias h='history'
 alias ccd='cd $(L1 -scr -r | fzf_h "Choose one folder")'
 alias dev='cd $HOME/dev'
 alias lab='cd $HOME/dev/_lab'
-alias oo='xdg-open . >/dev/null 2>&1 &'
+alias oo='xdg-open . >/dev/null'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -39,6 +39,8 @@ alias ......='cd ../../../../..'
 
 alias omid='cd $(omi -d)'
 alias omis='cd $(omi -s)'
+
+alias gittop='cd $(git -C "" rev-parse --show-toplevel 2>/dev/null)'
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
@@ -52,10 +54,11 @@ alias wii='which $(fc -ln | tail -1)'
 # alias cdd='which $(fc -ln | tail -1)'
 
 # System
-alias pbcopy='xclip -selection c'
+alias pbcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*\$//' | xclip -selection c"
 alias pbpaste='xclip -selection c -o'
 alias rr='gio trash'
 alias trash='gio trash'
+# alias pwdcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*$//' | pbcopy"
 
 # Kernel info
 alias jctl='journalctl'

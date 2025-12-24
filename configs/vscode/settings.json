@@ -221,4 +221,5 @@
     // DYNAMIC / USORTED
     //--------------------------------------------------------------------------
     "shellformat.path": "/usr/bin/shfmt",
+    "bashBeautify.tabSize": 2
 }

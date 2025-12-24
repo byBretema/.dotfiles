@@ -2,8 +2,8 @@
 source "${0%/*}/__common__"
 
 OPTIONS=(
-    "WORK"
-    "LIFE"
+  "WORK"
+  "LIFE"
 )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
 
@@ -13,12 +13,12 @@ op="rm"; suffix=""
 [[ "${option}" == "WORK" ]] && { op="add"; suffix="::1" }
 
 TO_BLOCK=(
-    "youtube.com"
-    "reddit.com"
-    "x.com"
-    "linkedin.com"
+  "youtube.com"
+  "reddit.com"
+  "x.com"
+  "linkedin.com"
 )
 for domain in "${TO_BLOCK[@]}"; do
-    sudo hostess "${op}" "${domain}" "${suffix}"
-    sudo hostess "${op}" "www.${domain}" "${suffix}"
+  sudo hostess "${op}" "${domain}" "${suffix}"
+  sudo hostess "${op}" "www.${domain}" "${suffix}"
 done

@@ -47,11 +47,17 @@
 	ac    = !git add -A && git commit -m
 	acp   = !git add -A && git commit -m "$1" && git push
 
-	pur   = pull --rebase
+	rb    = pull --rebase
 	rba   = rebase --abort
+
+	wl = worktree list
+	wa = worktree add
+	wr = worktree remove
+	wp = worktree prune
 
 	subAdd = !git submodule add
 	subUpdate = !git submodule update --init --recursive -j 12
+
 
 [safe]
 	directory = *

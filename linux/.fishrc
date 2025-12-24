@@ -12,12 +12,12 @@ set -p PATH "$HOME/.local/bin"
 set -p PATH "$HOME/Qt/Tools/QtCreator/bin"
 
 
-#-------------------------------------------------------------------------------
-# Plugins
+# #-------------------------------------------------------------------------------
+# # Plugins
 
-source "$HOME/.dotfiles/linux/assets/done.fish"
-set -U __done_min_cmd_duration 10000
-set -U __done_notification_urgency_level low
+# source "$HOME/.dotfiles/linux/assets/done.fish"
+# set -U __done_min_cmd_duration 10000
+# set -U __done_notification_urgency_level low
 
 
 #-------------------------------------------------------------------------------

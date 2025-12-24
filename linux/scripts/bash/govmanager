@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
 source "${0%/*}/__common__"
 
-GOVERNOR_PATH="/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor"
+GOVERNOR_PATH=/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 OPTIONS=( "Get" "Set: PowerSave" "Set: Performance" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one action")
 
-[[ "${option}" == "Get"              ]] && cat "$GOVERNOR_PATH"
-[[ "${option}" == "Set: PowerSave"   ]] && echo powersave   | sudo tee "$GOVERNOR_PATH"
-[[ "${option}" == "Set: Performance" ]] && echo performance | sudo tee "$GOVERNOR_PATH"
+[[ "${option}" == "${OPTIONS[0]}" ]] && cat ${GOVERNOR_PATH}
+[[ "${option}" == "${OPTIONS[1]}" ]] && echo powersave   | sudo tee ${GOVERNOR_PATH}
+[[ "${option}" == "${OPTIONS[2]}" ]] && echo performance | sudo tee ${GOVERNOR_PATH}
