@@ -77,7 +77,3 @@
 	navigate = true
 	line-numbers = true
 	# side-by-side = true
-# [pager]
-#     diff = "ov -F --section-delimiter '^diff' --section-header"
-#     log = "ov -F --section-delimiter '^commit' --section-header-num 3"
-#     show = "ov -F --header 3"
