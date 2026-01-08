@@ -1,7 +1,8 @@
 #!/usr/bin/env zsh
 
-#-------------------------------------------------------------------------------
-# Common setup "Shell-Agnostic"  (Part 1)
+################################################################################
+##                 Common setup "Shell-Agnostic"  (Part 1)                    ##
+################################################################################
 
 DOTFILES_SCRIPTS="$HOME/.dotfiles/linux/scripts"
 PATH="$DOTFILES_SCRIPTS/bash:$PATH"
@@ -12,8 +13,9 @@ PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 
 
-#-------------------------------------------------------------------------------
-# Plugins
+################################################################################
+##                                  Plugins                                   ##
+################################################################################
 
 export ZSH="/usr/share/oh-my-zsh"
 export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
@@ -33,17 +35,18 @@ source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring
 autoload -U colors && colors
 
 
-#-------------------------------------------------------------------------------
-# Common setup "Shell-Agnostic"  (Part 2)
+################################################################################
+##                     Common setup "Shell-Agnostic"  (Part 2)                ##
+################################################################################
 
-#... Prompt
+# Prompt
 eval "$(starship init zsh)"
 
-#... Aliases
+# Aliases
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/.profile/_aliases_"
 
-#... External Profile / Binaries
+# External Profile / Binaries
 
 OMI_SCRIPTS="$HOME/omi/scripts"
 PATH="$OMI_SCRIPTS/bash:$PATH"

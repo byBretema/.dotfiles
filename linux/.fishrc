@@ -1,7 +1,9 @@
 #!/usr/bin/env fish
 
-#-------------------------------------------------------------------------------
-# Common setup "Shell-Agnostic"  (Part 1)
+
+################################################################################
+##                 Common setup "Shell-Agnostic"  (Part 1)                    ##
+################################################################################
 
 set DOTFILES_SCRIPTS "$HOME/.dotfiles/linux/scripts"
 set -p PATH "$DOTFILES_SCRIPTS/bash"
@@ -12,31 +14,37 @@ set -p PATH "$HOME/.local/bin"
 set -p PATH "$HOME/Qt/Tools/QtCreator/bin"
 
 
-# #-------------------------------------------------------------------------------
-# # Plugins
+################################################################################
+##                                  Plugins                                   ##
+################################################################################
+
+set fish_greeting ""
 
 # source "$HOME/.dotfiles/linux/assets/done.fish"
 # set -U __done_min_cmd_duration 10000
 # set -U __done_notification_urgency_level low
 
 
-#-------------------------------------------------------------------------------
-# Format man pages
+################################################################################
+##                                 Man pages                                  ##
+################################################################################
+
 set -x MANROFFOPT "-c"
 set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 
-#-------------------------------------------------------------------------------
-# Common setup "Shell-Agnostic"  (Part 2)
+################################################################################
+##                     Common setup "Shell-Agnostic"  (Part 2)                ##
+################################################################################
 
-#... Prompt
+# Prompt
 starship init fish | source
 
-#... Aliases
+# Aliases
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/.profile/_aliases_"
 
-#... External Profile / Binaries
+# External Profile / Binaries
 
 set OMI_SCRIPTS "$HOME/omi/scripts"
 set -p PATH "$OMI_SCRIPTS/bash"

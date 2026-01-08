@@ -115,6 +115,10 @@ if [[ $do_links -eq 1 ]]; then
     fi
     ln -srf "$my_configs/tmux.conf" "$dst_path/tmux.conf"
 
+    # Flameshot
+    dst_path=$(mkdir_ret "$config_path/flameshot")
+    ln -srf "$my_configs/flameshot.ini" "$dst_path/flameshot.ini"
+
     # caps2esc
     dst_path="/etc/udevmon.yaml"
     sudo ln -srf "$script_path/assets/caps2esc/udevmon.yaml" "$dst_path"

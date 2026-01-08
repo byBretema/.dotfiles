@@ -38,16 +38,17 @@
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
     "editor.tokenColorCustomizations": {
-        // "comments": "#F0D",
-        "textMateRules": [
-            {
-                "scope": "comment",
-                "settings": {
-                    "fontStyle": "italic"
-                    // "foreground": "#ee8800"
-                }
-            }
-        ]
+        "comments": "#2299FF",
+        // "comments": "#EB50AA",
+        // "textMateRules": [
+        //     {
+        //         "scope": "comment",
+        //         "settings": {
+        //             "fontStyle": "italic"
+        //             // "foreground": "#ee8800"
+        //         }
+        //     }
+        // ]
     },
     "editor.trimAutoWhitespace": true,
     "editor.semanticTokenColorCustomizations": {
@@ -67,7 +68,8 @@
     "workbench.settings.editor": "json",
     "workbench.iconTheme": "chalice-icon-theme",
     "workbench.colorCustomizations": {
-        "panel.border": "#ee8800"
+        "panel.border": "#ee8800",
+        "color"
     },
     "workbench.startupEditor": "none",
     // "workbench.editorAssociations": {
@@ -76,7 +78,7 @@
     "workbench.sideBar.location": "right",
     "workbench.editor.enablePreview": false,
     "workbench.activityBar.location": "bottom",
-    "workbench.preferredDarkColorTheme": "chalice-color-theme-dark",
+    "workbench.preferredDarkColorTheme": "Gruvbox Dark Hard",
     "workbench.preferredLightColorTheme": "Gruvbox Light Hard",
     "window.commandCenter": true,
     "window.menuBarVisibility": "toggle",
@@ -168,19 +170,24 @@
     //--------------------------------------------------------------------------
     // WEB
     //--------------------------------------------------------------------------
-    "eslint.validate": [
-        "javascript",
-        "javascriptreact",
-        "astro",
-        "typescript",
-        "typescriptreact"
-    ],
-    "prettier.documentSelectors": [
-        "**/*.astro"
-    ],
-    "[astro]": {
-        "editor.defaultFormatter": "astro-build.astro-vscode"
+    // "eslint.validate": [
+    //     "javascript",
+    //     "javascriptreact",
+    //     "astro",
+    //     "typescript",
+    //     "typescriptreact"
+    // ],
+    // "prettier.documentSelectors": [
+    //     "**/*.astro"
+    // ],
+    // "[astro]": {
+    //     "editor.defaultFormatter": "astro-build.astro-vscode"
+    // },
+    "[javascript]": {
+        "editor.defaultFormatter": "esbenp.prettier-vscode",
+        "editor.formatOnSave": true,
     },
+    "javascript.format.enable": true,
     "css.enabledLanguages": [
         "html",
         "astro"
@@ -215,7 +222,7 @@
         "editor.inlayHints.maximumLength": 0
     },
     "editor.bracketPairColorization.enabled": false,
-    "workbench.colorTheme": "Alabaster (Dark Modern)",
+    "workbench.colorTheme": "Gruvbox Dark Hard",
     "window.autoDetectHighContrast": false,
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED

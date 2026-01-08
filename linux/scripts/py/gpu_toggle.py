@@ -14,7 +14,8 @@ PARAMS = [
 
 
 ################################################################################
-def gpu_toggle():
+
+if __name__ == "__main__":
 
     out: str = "\n"
     visited = set()
@@ -54,8 +55,3 @@ def gpu_toggle():
     print(out)
     print("- " * 40)
     print("\n@ Remeber to re-login to apply the changes !")
-
-
-################################################################################
-if __name__ == "__main__":
-    gpu_toggle()
