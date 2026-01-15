@@ -1,7 +1,7 @@
 
 # Tools
 alias hx='helix'
-alias qc='qtcreator >/dev/null'
+alias qc='qtcreator >/dev/null 2>/dev/null'
 
 # Langs
 alias py="python"
@@ -30,7 +30,7 @@ alias h='history'
 alias ccd='cd $(L1 -scr -r | fzf_h "Choose one folder")'
 alias dev='cd $HOME/dev'
 alias lab='cd $HOME/dev/_lab'
-alias oo='xdg-open . >/dev/null'
+alias oo='xdg-open . >/dev/null 2>/dev/null'
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'

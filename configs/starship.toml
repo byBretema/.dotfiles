@@ -19,15 +19,15 @@ symbol = ' '
 format = "\n$symbol "
 
 [directory]
-truncation_length = 2
-truncate_to_repo = false
+# truncation_length = 2
+truncate_to_repo = true
 # truncation_symbol = "…/"
 # format = "\n[$path]($style)"
 
 [time]
 disabled = false
 time_format = "%T"
-# format = '[$time ]($style)'
+# format = "[$time ]($style)"
 
 [cmd_duration]
 format = '[[· ](teal)$duration]($style)'
