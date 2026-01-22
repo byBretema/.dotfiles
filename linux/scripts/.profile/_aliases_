@@ -3,6 +3,7 @@
 alias hx='helix'
 alias qc='qtcreator >/dev/null 2>/dev/null'
 alias ta='tmux attach || tmux'
+alias now='date "+%d/%m/%Y %H:%M ($(curl -s -f --connect-timeout 2 https://ipapi.co/country | head -n 1 || echo '??'))"'
 
 # Langs
 alias py="python"
