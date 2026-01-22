@@ -29,9 +29,9 @@ alias Lt3='L -T --level=3'
 
 # Nav
 alias h='history'
-alias ccd='cd $(L1 -scr -r | fzf_h "Choose one folder")'
-alias dev='cd $HOME/dev'
-alias lab='cd $HOME/dev/_lab'
+alias ccd='pushd $(L1 -scr -r | fzf_h "Choose one folder")'
+alias dev='pushd $HOME/dev'
+alias lab='pushd $HOME/dev/_lab'
 alias oo='xdg-open . >/dev/null 2>/dev/null'
 alias ..='cd ..'
 alias ...='cd ../..'
@@ -39,10 +39,11 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
-alias omid='cd $(omi -d)'
-alias omis='cd $(omi -s)'
+alias omid='pushd $(omi -d)'
+alias omis='pushd $(omi -s)'
 
-alias gittop='cd $(git -C "" rev-parse --show-toplevel 2>/dev/null)'
+alias gittop='pushd $(git -C "" rev-parse --show-toplevel 2>/dev/null)'
+alias gitupdate='git ac "$(now)" && git push'
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'

@@ -23,3 +23,5 @@ export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 export DOTFILES="$HOME/.dotfiles"
 
 export QT_QPA_PLATFORM=xcb
+
+# export COUNTRY=$(curl -s -f --connect-timeout 2 https://ipapi.co/country || echo '??')
