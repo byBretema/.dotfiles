@@ -53,3 +53,6 @@ PATH="$OMI_SCRIPTS/bash:$PATH"
 
 OMI_PROFILE="$OMI_SCRIPTS/_exports_"
 if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi
+if [[ -f "$OMI_SCRIPTS/bash/omi" ]]; then omi -u; fi
+
+# tmux attach || tmux

@@ -119,11 +119,16 @@ if [[ $do_links -eq 1 ]]; then
     dst_path=$(mkdir_ret "$config_path/flameshot")
     ln -srf "$my_configs/flameshot.ini" "$dst_path/flameshot.ini"
 
-    # caps2esc
+    # caps2esc  ("Symlinks could fail at boot-time, so copy the files")
     dst_path="/etc/udevmon.yaml"
-    sudo ln -srf "$script_path/assets/caps2esc/udevmon.yaml" "$dst_path"
+    sudo rm -rf "$dst_path"
+    sudo cp "$script_path/assets/caps2esc/udevmon.yaml" "$dst_path"
     dst_path="/etc/systemd/system/udevmon.service"
-    sudo ln -srf "$script_path/assets/caps2esc/udevmon.service" "$dst_path"
+    sudo rm -rf "$dst_path"
+    sudo cp "$script_path/assets/caps2esc/udevmon.service" "$dst_path"
+    sudo chown root:root "$dst_path"
+    sudo chmod 644 "$dst_path"
+    sudo systemctl daemon-reload
     sudo systemctl enable udevmon.service
     sudo systemctl start  udevmon.service
 

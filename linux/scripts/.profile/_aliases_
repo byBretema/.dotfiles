@@ -2,6 +2,7 @@
 # Tools
 alias hx='helix'
 alias qc='qtcreator >/dev/null 2>/dev/null'
+alias ta='tmux attach || tmux'
 
 # Langs
 alias py="python"

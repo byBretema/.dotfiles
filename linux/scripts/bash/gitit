@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/__common__"
+source ".dotfiles_common"
 guard__is_git
 
 url=$(git remote -v | head -n 1 | awk '{print $2}')

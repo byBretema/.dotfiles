@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/__common__"
+source ".dotfiles_common"
 
 if [[ $# -lt 4 ]]; then
   echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"

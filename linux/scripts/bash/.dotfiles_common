@@ -1,0 +1,38 @@
+
+set -CEeuo pipefail
+shopt -s xpg_echo
+
+script_path=$(dirname "$(readlink -f "$0")")
+
+required() {
+  local op="${1,,}" elem="$2" info="${3:-}"
+  [[ -n "${info}" ]] && info=" <--  ${info}"
+
+  local ok=1
+  [[ "${op}" == "file" ]] && { [[ -f "${elem}" ]] && ok=0 ;}
+  [[ "${op}" == "dir"  ]] && { [[ -d "${elem}" ]] && ok=0 ;}
+  [[ "${op}" == "var"  ]] && { [[ -n "${elem}" ]] && ok=0 ;}
+  [[ "${op}" == "cmd"  ]] && { command -v "${elem}" >/dev/null 2>&1 && ok=0 ;}
+
+  local L="${op[@]^}"
+  local R="found '${elem}'"
+  [[ $ok == 0 ]] && log_info "${L} ${R}" || error_exit "${L} not ${R}${info}"
+}
+
+required_file() { required "file" "$@"; }
+required_dir()  { required "dir"  "$@"; }
+required_var()  { required "var"  "$@"; }
+required_cmd()  { required "cmd"  "$@"; }
+
+log_header() { printf "@ \033[0;33m%s\033[0m\n" "${1}"; }
+log_info  () { printf ">> \033[0;35m%s\033[0m\n" "${1}"; }
+log_error () { printf "E · \033[1;31m%s\033[0m\n" "${1}"; }
+error_exit() { log_error "${1}"; exit 1; }
+
+is_git() {
+  git rev-parse --is-inside-work-tree > /dev/null 2>&1
+}
+
+guard__is_git() {
+  is_git || error_exit "Not a repo"
+}

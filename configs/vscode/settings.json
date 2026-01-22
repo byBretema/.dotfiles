@@ -110,17 +110,9 @@
     // PYTHON  (check https://aka.ms/AAlgvkb)
     //--------------------------------------------------------------------------
     "python.languageServer": "Pylance",
-    "python.analysis.extraPaths": [
-        "$HOME/dev/omi/d/studio_engine/omi_blender/src/resources",
-        "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"
-    ],
-    "python.autoComplete.extraPaths": [
-        "$HOME/dev/omi/d/studio_engine/omi_blender/src/resources",
-        "$HOME/dev/z/blender-3.6.21/3.6/scripts/modules"
-    ],
-    // "[python]": {
-    //     "editor.defaultFormatter": "ms-python.black-formatter"
-    // },
+    "[python]": {
+        "editor.defaultFormatter": "ms-python.black-formatter"
+    },
     "black-formatter.args": [
         "--line-length",
         "120"

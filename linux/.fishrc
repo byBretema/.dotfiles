@@ -15,6 +15,16 @@ set -p PATH "$HOME/Qt/Tools/QtCreator/bin"
 
 
 ################################################################################
+##                                 Functions                                  ##
+################################################################################
+
+function mkcd -a dir;
+    mkdir -p "$dir"
+    pushd "$dir"
+end
+
+
+################################################################################
 ##                                  Plugins                                   ##
 ################################################################################
 
@@ -51,3 +61,6 @@ set -p PATH "$OMI_SCRIPTS/bash"
 
 set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
 if test -f "$OMI_PROFILE"; source "$OMI_PROFILE"; end
+if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end
+
+# tmux attach || tmux

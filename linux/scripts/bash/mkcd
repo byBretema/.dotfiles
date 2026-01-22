@@ -1,5 +1,0 @@
-#!/usr/bin/env bash
-source "${0%/*}/__common__"
-
-mkdir -p "$1";
-pushd "$1"

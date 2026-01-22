@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/__common__"
+source ".dotfiles_common"
 
 GOVERNOR_PATH=/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 

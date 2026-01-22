@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source "${0%/*}/__common__"
+source ".dotfiles_common"
 
 
 ################################################################################
@@ -7,7 +7,7 @@ source "${0%/*}/__common__"
 ################################################################################
 
 sync() {
-  pushd "${DOTFILES}"
+  cd "${DOTFILES}"
   git status -s
   git stash > /dev/null
   git pull --quiet
@@ -15,7 +15,7 @@ sync() {
   git add -A
   git commit -m "Updates ($(date +%s))" > /dev/null
   git push --quiet
-  popd  2> /dev/null || :
+  # popd  2> /dev/null || :
   exit 0
 }
 
