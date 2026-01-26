@@ -2,20 +2,20 @@
 
 
 ################################################################################
-##                 Common setup "Shell-Agnostic"  (Part 1)                    ##
+### Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
 
 set DOTFILES_SCRIPTS "$HOME/.dotfiles/linux/scripts"
-set -p PATH "$DOTFILES_SCRIPTS/bash"
+fish_add_path "$DOTFILES_SCRIPTS/bash" 2>/dev/null
 
 source "$DOTFILES_SCRIPTS/.profile/_exports_"
 
-set -p PATH "$HOME/.local/bin"
-set -p PATH "$HOME/Qt/Tools/QtCreator/bin"
+fish_add_path "$HOME/.local/bin" 2>/dev/null
+fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 
 
 ################################################################################
-##                                 Functions                                  ##
+### Functions
 ################################################################################
 
 function mkcd -a dir;
@@ -25,7 +25,7 @@ end
 
 
 ################################################################################
-##                                  Plugins                                   ##
+### Plugins
 ################################################################################
 
 set fish_greeting ""
@@ -36,7 +36,7 @@ set fish_greeting ""
 
 
 ################################################################################
-##                                 Man pages                                  ##
+### Man pages
 ################################################################################
 
 set -x MANROFFOPT "-c"
@@ -44,7 +44,7 @@ set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 
 ################################################################################
-##                     Common setup "Shell-Agnostic"  (Part 2)                ##
+### Common setup "Shell-Agnostic"  (Part 2)
 ################################################################################
 
 # Prompt
@@ -57,7 +57,7 @@ source "$DOTFILES_SCRIPTS/.profile/_aliases_"
 # External Profile / Binaries
 
 set OMI_SCRIPTS "$HOME/omi/scripts"
-set -p PATH "$OMI_SCRIPTS/bash"
+fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
 
 set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
 if test -f "$OMI_PROFILE"; source "$OMI_PROFILE"; end

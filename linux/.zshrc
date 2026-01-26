@@ -1,7 +1,7 @@
 #!/usr/bin/env zsh
 
 ################################################################################
-##                 Common setup "Shell-Agnostic"  (Part 1)                    ##
+### Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
 
 DOTFILES_SCRIPTS="$HOME/.dotfiles/linux/scripts"
@@ -14,7 +14,17 @@ PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 
 
 ################################################################################
-##                                  Plugins                                   ##
+### Functions
+################################################################################
+
+mkcd(){
+  mkdir -p "${1}"
+  pushd "${1}"
+}
+
+
+################################################################################
+### Plugins
 ################################################################################
 
 export ZSH="/usr/share/oh-my-zsh"
@@ -36,7 +46,7 @@ autoload -U colors && colors
 
 
 ################################################################################
-##                     Common setup "Shell-Agnostic"  (Part 2)                ##
+### Common setup "Shell-Agnostic"  (Part 2)
 ################################################################################
 
 # Prompt
@@ -54,5 +64,3 @@ PATH="$OMI_SCRIPTS/bash:$PATH"
 OMI_PROFILE="$OMI_SCRIPTS/_exports_"
 if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi
 if [[ -f "$OMI_SCRIPTS/bash/omi" ]]; then omi -u; fi
-
-# tmux attach || tmux

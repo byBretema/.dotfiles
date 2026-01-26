@@ -38,7 +38,7 @@
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
     "editor.tokenColorCustomizations": {
-        "comments": "#2299FF",
+        // "comments": "#2299FF",
         // "comments": "#EB50AA",
         // "textMateRules": [
         //     {
