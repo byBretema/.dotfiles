@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 # Settings dir
 

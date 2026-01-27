@@ -4,6 +4,7 @@ alias hx='helix'
 alias qc='qtcreator >/dev/null 2>/dev/null'
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M ($(curl -s -f --connect-timeout 2 https://ipapi.co/country | head -n 1 || echo '??'))"'
+alias gpu_toggle='python "$DOTFILES/linux/scripts/gpu_toggle.py"'
 
 # Langs
 alias py="python"
@@ -11,25 +12,26 @@ alias py3="python3"
 alias py310="python310"
 
 # List
-alias l='eza -a --icons always --git -s type --hyperlink'
-alias L='eza -a --git -s type'
+alias l='eza -a --icons auto --git -s type --hyperlink'
 alias l1='l -1'
 alias ll='l -l --no-user'
 alias lt='l -T'
-alias L1='L -1'
-alias Ll='L -l --no-user'
-alias Lt='L -T'
 alias k='clear && ll'
 alias lt1='l -T --level=1'
-alias Lt1='L -T --level=1'
 alias lt2='l -T --level=2'
-alias Lt2='L -T --level=2'
 alias lt3='l -T --level=3'
-alias Lt3='L -T --level=3'
+
+# alias L='eza -a --git -s type'
+# alias L1='L -1'
+# alias Ll='L -l --no-user'
+# alias Lt='L -T'
+# alias Lt1='L -T --level=1'
+# alias Lt2='L -T --level=2'
+# alias Lt3='L -T --level=3'
 
 # Nav
 alias h='history'
-alias ccd='pushd $(L1 -scr -r | fzf_h "Choose one folder")'
+alias ccd='pushd $(L1 -scr -r | fzf_h)'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'
 alias oo='xdg-open . >/dev/null 2>/dev/null'

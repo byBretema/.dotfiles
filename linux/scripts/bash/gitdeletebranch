@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 guard__is_git
 
 local_delete_flag="-d"
 [[ "$#" > 1 && "$1" == "-f" ]] && local_delete_flag="-D"
 
-branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf_h "Choose one branch")
+branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf_h)
 branch=$(echo "${branch}" | sed -E 's/^\*?[ ]*//; s/^\+?[ ]*//; s/[ ]*$//')
 
 [[ -z "${branch}" ]] && { echo "-- No branch selected."; exit 1; }

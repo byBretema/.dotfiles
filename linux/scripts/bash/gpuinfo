@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 echo "Renderer  => $(glxinfo | grep "OpenGL renderer")"
 echo "NV Status => $(cat "/sys/bus/pci/devices/0000:01:00.0/power/runtime_status")"

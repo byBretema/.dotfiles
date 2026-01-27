@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 OPTIONS=(
   "WORK"
   "LIFE"
 )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
 
 log_info "Focus mode set to: ${option}"
 

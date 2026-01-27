@@ -10,10 +10,12 @@ bbMark="\n@ bb : "
 
 #--- Help -------------------------------------------------
 
-show_usage() {
-    echo "usage: install.sh [-l] [-u] [-i] [-f] [-e] [-a]"
-    echo "\nManage configs and system apps, fonts, themes...\n"
-    echo "options:"
+usage() {
+    echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
+    echo ""
+    echo "Manage configs and system apps, fonts, themes..."
+    echo ""
+    echo "Options:"
     echo "  -l  --  Link configs / themes"
     echo "  -u  --  Update system"
     echo "  -i  --  Install listed apps"
@@ -48,7 +50,7 @@ while getopts "hluifea" opt; do
             do_fonts=1
             do_code_extensions=1
         ;;
-        *) show_usage; exit 1;;
+        *) usage; exit 1;;
     esac
 done
 shift $((OPTIND-1))

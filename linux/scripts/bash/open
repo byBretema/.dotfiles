@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 
 ################################################################################
@@ -24,14 +24,21 @@ block() {
 ### Parse args
 ################################################################################
 
+#! Help
+
 usage() {
-  echo "-s | --silent     No log, no block"
-  echo "-d | --detached   Log, no block"
-  echo "-b | --block      Log and block"
-  echo "-h | --help       Show this message"
-  echo "--                Extra args after this"
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
+  echo ""
+  echo "Options:"
+  echo "  -s | --silent     No log, no block"
+  echo "  -d | --detached   Log, no block"
+  echo "  -b | --block      Log and block"
+  echo "  -h | --help       Show this message"
+  echo "  --                Extra args after this"
   exit 1
 }
+
+#! Process options
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
@@ -50,7 +57,7 @@ done
 ################################################################################
 
 OPTIONS=( "Silent" "Detached" "Block" )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose one mode")
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
 
 [[ "${option}" == "Silent"   ]] && silent "$@"
 [[ "${option}" == "Detached" ]] && detached "$@"

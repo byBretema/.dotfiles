@@ -1,6 +1,4 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
-header="Choose one"
-[[ -n "${1}" ]] && { header="$1"; shift; }
-fzf -1 --header "${header}:" --layout=reverse
+fzf -1 --header "Choose one:" --layout=reverse --no-input --header-border="bottom"

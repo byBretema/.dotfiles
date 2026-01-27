@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-source ".dotfiles_common"
-
-python "${DOTFILES}/linux/scripts/gpu_toggle.py"

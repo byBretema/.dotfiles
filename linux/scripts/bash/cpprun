@@ -1,24 +1,57 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
-if [[ $# -lt 4 ]]; then
-  echo "usage: cpprun <compiler> <usage_msg> <std_version> <filepath>"
-  return
-fi
 
-compiler="$1"; shift
-usage_msg="$1"; shift
-stdver="$1"; shift
+################################################################################
+### Parse args
+################################################################################
+
+#! Help
+
+usage() {
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] FILEPATH"
+  echo ""
+  echo "Options:"
+  echo "  -g | --gnu    Compile with 'g++' (default)"
+  echo "  -c | --clang  Compile with 'clang'"
+  echo "  -m | --msvc   Compile with 'cl'"
+  echo "  -s | --std    Set std verision (default:20)"
+  echo "  -h | --help   Show this message"
+  echo "  --            Extra args after this"
+  exit 1
+}
+
+#! Defaults
+
+compiler="g++"
+stdver="20"
+
+#! Process options
+
+while [[ "${#}" > 0 ]]; do
+  case "${1}" in
+    -g | --gnu   ) shift; compiler="g++"   "$@" ;;
+    -c | --clang ) shift; compiler="clang" "$@" ;;
+    -m | --msvc  ) shift; compiler="cl"    "$@" ;;
+    -s | --std   ) shift; stdver="$1"; shift ;;
+    -h | --help  ) shift; usage ;;
+    --           ) shift; break ;;
+    *            ) break ;;
+  esac
+done
+
+
+################################################################################
+### Execution
+################################################################################
+
+
 filepath=$(realpath "$1"); shift
-
-if [[ ! -f "$filepath" ]]; then
-  echo $usage_msg
-  echo "\n- error: <filepath> was not found."
-  return
-fi
+required_file "${filepath}"
 
 bin_path="/tmp/cpprun/"
 mkdir -p $bin_path
+
 bin_name=$(mktemp -u "$bin_path/XXXXXXXXXX")
 
 "$compiler" --std="c++$stdver" $filepath -o $bin_name && "$bin_name"

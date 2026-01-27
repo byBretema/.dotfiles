@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 guard__is_git
 
-branch=$(git branch -a | fzf_h "Choose one branch")
+branch=$(git branch -a | fzf_h)
 
 echo "${branch}" | \
 sed -E 's/^remotes\/origin\///' | \

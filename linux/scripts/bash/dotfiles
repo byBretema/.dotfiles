@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 
 ################################################################################
@@ -28,17 +28,22 @@ vscode_extensions() { python "$DOTFILES/common/vscode/extensions.py" "$@"; }
 ### Parse args
 ################################################################################
 
+#! Help
+
 usage() {
-  echo "Usage $(basename $0) [options]:"
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
   echo ""
-  echo "-e | --edit   Edit dotfiles"
-  echo "-s | --sync   Sync dotfiles"
-  echo "-r | --run    Run dotfiles \"manager\""
-  echo "-v | --vscode Manage VSCode extensions"
-  echo "-h | --help   Show this message"
-  echo "--            Extra args after this"
+  echo "Options:"
+  echo "  -e | --edit   Edit dotfiles"
+  echo "  -s | --sync   Sync dotfiles"
+  echo "  -r | --run    Run dotfiles \"manager\""
+  echo "  -v | --vscode Manage VSCode extensions"
+  echo "  -h | --help   Show this message"
+  echo "  --            Extra args after this"
   exit 1
 }
+
+#! Process options
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
@@ -58,7 +63,7 @@ done
 ################################################################################
 
 OPTIONS=( "Edit" "Sync" "Run" "VSCode" )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h "Choose an action")
+option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
 
 [[ "${option}" == "Edit"   ]] && edit                   ; exit 0
 [[ "${option}" == "Sync"   ]] && sync                   ; exit 0

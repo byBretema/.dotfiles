@@ -1,4 +1,0 @@
-#!/usr/bin/env bash
-source ".dotfiles_common"
-
-cpprun "g++" "usage: g++run <std_version> <filepath>" "$@"

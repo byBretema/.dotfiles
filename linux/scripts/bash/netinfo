@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".dotfiles_common"
+source ".bash_common"
 
 echo "Public  => $(curl -s icanhazip.com)"
 echo "Private => $(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)"
