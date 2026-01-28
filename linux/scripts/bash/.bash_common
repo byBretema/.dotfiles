@@ -1,5 +1,5 @@
 
-set -CEeuo pipefail
+set -CEu
 shopt -s xpg_echo
 
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
@@ -10,9 +10,9 @@ script_name=$(basename "${BASH_SOURCE[-1]}")
 ### Log
 ################################################################################
 
-log_header() { printf "@ \033[0;33m%s\033[0m\n" "${1}"; }
-log_info  () { printf ">> \033[0;35m%s\033[0m\n" "${1}"; }
-log_error () { printf "E · \033[1;31m%s\033[0m\n" "${1}"; }
+log_header() { printf "@ \033[0;33m%s\033[0m\n"   "${1}" >&2; }
+log_info  () { printf ">> \033[0;35m%s\033[0m\n"  "${1}" >&2; }
+log_error () { printf "E · \033[1;31m%s\033[0m\n" "${1}" >&2; }
 error_exit() { log_error "${1}"; exit 1; }
 
 
@@ -36,17 +36,19 @@ required() {
   [[ "${op}" == "cmd"         ]] && command -v "${elem}" >/dev/null 2>&1 && ok=0
   [[ "${op}" == "notemtpydir" ]] && [[ -d "${elem}" ]] && [[ -n "$(ls -A "${elem}")" ]] && ok=0;
 
-  local L="${op_log[@]^}"
+  local L="${op_log[@]}"
   local R="found '${elem}'"
-  [[ $ok != 0 ]] && error_exit "${L} not ${R}${info}"
+  [[ $ok == 0 ]] || error_exit "${L} not ${R}${info}"
   [[ $ok == 0 && $REQUIRED_VERBOSE == true ]] && log_info "${L} ${R}"
+
+  return 0
 }
 
-required_file()          { required "File"          "$@"; }
-required_dir()           { required "Dir"           "$@"; }
+required_file()          { required "File"        "$@"; }
+required_dir()           { reequired "Dir"         "$@"; }
 required_dir_notempty()  { required "NotEmtpyDir" "$@"; }
-required_var()           { required "Var"           "$@"; }
-required_cmd()           { required "Cmd"           "$@"; }
+required_var()           { required "Var"         "$@"; }
+required_cmd()           { required "Cmd"         "$@"; }
 
 
 ################################################################################

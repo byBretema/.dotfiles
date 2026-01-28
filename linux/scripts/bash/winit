@@ -1,0 +1,134 @@
+#!/usr/bin/env bash
+source ".bash_common"
+
+################################################################################
+### Required
+################################################################################
+
+required_cmd "ydotool"
+
+
+################################################################################
+### Keycodes  (check: /usr/include/linux/input-event-codes.h)
+################################################################################
+
+CTRL=29
+SHIFT=42
+SUPER=125
+UP=103
+DOWN=108
+LEFT=105
+RIGHT=106
+KEY_0=11
+KEY_1=2
+KEY_M=50
+KEY_O=24
+KEY_R=19
+KEY_Q=16
+
+
+################################################################################
+### Vars
+################################################################################
+
+count_fullscreen=0
+
+################################################################################
+### Utils
+################################################################################
+
+press_win_shift_key() {
+  KEY="${1}"
+  ydotool key \
+    "${SUPER}:1" "${SHIFT}:1" "${KEY}:1" \
+    "${KEY}:0"   "${SHIFT}:0" "${SUPER}:0"
+}
+
+press_win_key() {
+  KEY="${1}"
+  ydotool key \
+    "${SUPER}:1" "${KEY}:1" \
+    "${KEY}:0"   "${SUPER}:0"
+}
+
+move() {
+  press_win_shift_key "${1}"
+}
+focus() {
+  press_win_key "${1}"
+}
+rotate_layout() {
+  press_win_key "${KEY_O}"
+}
+
+move_to_new_workspace() {
+  # sleep 1
+  press_win_shift_key "${KEY_0}"
+}
+
+move_one_workspace_up() {
+  press_win_key "${UP}"
+}
+
+maximize_window() {
+  sleep 1
+  press_win_key "${KEY_M}"
+}
+
+launch() {
+  eval "${@}" >/dev/null 2>&1 &
+  sleep 1
+}
+
+launch_in_new_workspace() {
+  launch "${@}"
+  move_to_new_workspace
+  count_fullscreen=$(( count_fullscreen + 1 ))
+}
+
+################################################################################
+### Execution
+################################################################################
+
+if ! ydotool key 29:1 29:0 >/dev/null 2>&1; then
+  sudo -b ydotoold                        \
+    --socket-path="$HOME/.ydotool_socket" \
+    --socket-own="$(id -u):$(id -g)"      \
+    >/dev/null 2>&1
+  export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
+fi
+
+[[ -z "${YDOTOOL_SOCKET}" ]] && error_exit "ydotool found but, not available."
+
+launch "ghostty"  # Dummy window because vscode re-scale is really slow
+ydotool key "${SUPER}:1" "${KEY_R}:1"
+for ((i = 0 ; i < 40 ; i++ )); do 
+  ydotool key "${LEFT}:1" "${LEFT}:0"
+done
+ydotool key "${KEY_R}:0" "${SUPER}:0"
+
+launch "code"
+focus "${LEFT}"
+press_win_key "${KEY_Q}"
+sleep 1
+
+focus "${LEFT}"
+launch "zen-browser"
+move "${UP}"
+
+ydotool key "${SUPER}:1" "${KEY_R}:1"
+for ((i = 0 ; i < 15 ; i++ )); do 
+  ydotool key "${DOWN}:1" "${DOWN}:0"
+done
+ydotool key "${KEY_R}:0" "${SUPER}:0"
+
+launch_in_new_workspace "qtcreator"
+launch_in_new_workspace "cosmic-files"
+launch_in_new_workspace "flatpak run com.slack.Slack"
+
+for ((i = 0 ; i < ${count_fullscreen} ; i++ )); do 
+  maximize_window
+  move_one_workspace_up
+done
+
+echo ""

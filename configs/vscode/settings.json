@@ -38,7 +38,7 @@
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
     "editor.tokenColorCustomizations": {
-        // "comments": "#2299FF",
+        "comments": "#2299FF",
         // "comments": "#EB50AA",
         // "textMateRules": [
         //     {
@@ -66,10 +66,9 @@
     // WORKBENCH
     //--------------------------------------------------------------------------
     "workbench.settings.editor": "json",
-    "workbench.iconTheme": "chalice-icon-theme",
+    "workbench.iconTheme": "icons",
     "workbench.colorCustomizations": {
         "panel.border": "#ee8800",
-        "color"
     },
     "workbench.startupEditor": "none",
     // "workbench.editorAssociations": {
@@ -141,6 +140,7 @@
     "C_Cpp.codeFolding": "enabled",
     "C_Cpp.default.cppStandard": "c++23",
     "C_Cpp.clang_format_style": "file",
+    "C_Cpp.clang_format_fallbackStyle": "None",
     "C_Cpp.autoAddFileAssociations": true,
     "C_Cpp.suggestSnippets": true,
     // "glsllint.glslangValidatorPath": "C:/VulkanSDK/1.3.239.0/Bin/glslangValidator.exe",
