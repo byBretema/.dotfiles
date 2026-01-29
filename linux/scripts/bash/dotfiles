@@ -19,9 +19,19 @@ sync() {
   exit 0
 }
 
-edit()              { code "${DOTFILES}"; }
-run()               { "${DOTFILES}/linux/install.sh" "$@"; }
-vscode_extensions() { python "$DOTFILES/common/vscode/extensions.py" "$@"; }
+edit() { 
+  OPTIONS=( "code" "helix" )
+  option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+  eval "${option}" "${DOTFILES}"
+}
+
+installer() {
+  "${DOTFILES}/linux/install.sh" "$@"
+}
+
+manage_vscode() { 
+  python "$DOTFILES/configs/vscode/extensions.py" "$@"
+}
 
 
 ################################################################################
@@ -34,12 +44,12 @@ usage() {
   echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
   echo ""
   echo "Options:"
-  echo "  -e | --edit   Edit dotfiles"
-  echo "  -s | --sync   Sync dotfiles"
-  echo "  -r | --run    Run dotfiles \"manager\""
-  echo "  -v | --vscode Manage VSCode extensions"
-  echo "  -h | --help   Show this message"
-  echo "  --            Extra args after this"
+  echo "  -e | --edit       Edit dotfiles"
+  echo "  -s | --sync       Sync dotfiles"
+  echo "  -i | --installer  Run dotfiles \"installer\""
+  echo "  -c | --code       Manage VSCode extensions"
+  echo "  -h | --help       Show this message"
+  echo "  --                Extra args after this"
   exit 1
 }
 
@@ -47,13 +57,13 @@ usage() {
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
-    -e | --edit    ) shift; edit                   ; exit 0 ;;
-    -s | --sync    ) shift; sync                   ; exit 0 ;;
-    -r | --run     ) shift; run               "$@" ; exit 0 ;;
-    -v | --vscode  ) shift; vscode_extensions "$@" ; exit 0 ;;
-    -h | --help    ) shift; usage ;;
-    --             ) shift; break ;;
-    *              ) break;;
+    -e | --edit      ) shift; edit               ; exit 0 ;;
+    -s | --sync      ) shift; sync               ; exit 0 ;;
+    -i | --installer ) shift; installer     "$@" ; exit 0 ;;
+    -c | --code      ) shift; manage_vscode "$@" ; exit 0 ;;
+    -h | --help      ) shift; usage ;;
+    --               ) shift; break ;;
+    *                ) break;;
   esac
 done
 
@@ -62,10 +72,10 @@ done
 ### Interactive
 ################################################################################
 
-OPTIONS=( "Edit" "Sync" "Run" "VSCode" )
+OPTIONS=( "Edit" "Sync" "Installer" "VSCode" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
 
-[[ "${option}" == "Edit"   ]] && edit                   ; exit 0
-[[ "${option}" == "Sync"   ]] && sync                   ; exit 0
-[[ "${option}" == "Run"    ]] && run               "$@" ; exit 0
-[[ "${option}" == "VSCode" ]] && vscode_extensions "$@" ; exit 0
+[[ "${option}" == "Edit"      ]] && edit               ; exit 0
+[[ "${option}" == "Sync"      ]] && sync               ; exit 0
+[[ "${option}" == "Installer" ]] && installer     "$@" ; exit 0
+[[ "${option}" == "VSCode"    ]] && manage_vscode "$@" ; exit 0

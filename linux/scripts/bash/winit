@@ -32,103 +32,122 @@ KEY_Q=16
 ################################################################################
 
 count_fullscreen=0
+sleep_after_launch=0.5
 
 ################################################################################
 ### Utils
 ################################################################################
 
-press_win_shift_key() {
-  KEY="${1}"
-  ydotool key \
-    "${SUPER}:1" "${SHIFT}:1" "${KEY}:1" \
-    "${KEY}:0"   "${SHIFT}:0" "${SUPER}:0"
+hold() {
+  for key in "${@}"; do
+    ydotool key "${key}:1"
+  done
 }
-
-press_win_key() {
-  KEY="${1}"
-  ydotool key \
-    "${SUPER}:1" "${KEY}:1" \
-    "${KEY}:0"   "${SUPER}:0"
+release() {
+  for key in "${@}"; do
+    ydotool key "${key}:0"
+  done
+}
+press() {
+  hold ${@}
+  release ${@}
+}
+press_times() {
+  key="${1}"; shift
+  n="${1}"; shift
+  for ((i = 0 ; i < ${n} ; i++ )); do
+    press ${key}
+  done
 }
 
 move() {
-  press_win_shift_key "${1}"
+  press ${SUPER} ${SHIFT} ${1}
 }
 focus() {
-  press_win_key "${1}"
+  press ${SUPER} ${1}
 }
 rotate_layout() {
-  press_win_key "${KEY_O}"
+  press ${SUPER} ${KEY_O}
 }
 
-move_to_new_workspace() {
-  # sleep 1
-  press_win_shift_key "${KEY_0}"
+window_close() {
+  press ${SUPER} ${KEY_Q}
 }
-
-move_one_workspace_up() {
-  press_win_key "${UP}"
-}
-
-maximize_window() {
-  sleep 1
-  press_win_key "${KEY_M}"
+window_maximize() {
+  press ${SUPER} ${KEY_M}
 }
 
 launch() {
-  eval "${@}" >/dev/null 2>&1 &
-  sleep 1
+  eval "${1}" >/dev/null 2>&1 &
+  sleep ${sleep_after_launch}
+}
+launch_in_new_workspace() {
+  launch "${1}"
+  move ${KEY_0}
+  count_fullscreen=$(( count_fullscreen + 1 ))
 }
 
-launch_in_new_workspace() {
-  launch "${@}"
-  move_to_new_workspace
-  count_fullscreen=$(( count_fullscreen + 1 ))
+testtest() {
+  echo "${1}"
 }
 
 ################################################################################
 ### Execution
 ################################################################################
 
+
+# Set socket path
+export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
 if ! ydotool key 29:1 29:0 >/dev/null 2>&1; then
-  sudo -b ydotoold                        \
-    --socket-path="$HOME/.ydotool_socket" \
-    --socket-own="$(id -u):$(id -g)"      \
-    >/dev/null 2>&1
-  export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
+  sudo -b ydotoold --socket-path="${YDOTOOL_SOCKET}" --socket-own="$(id -u):$(id -g)" >/dev/null 2>&1
+  [[ $? != 0 ]] && error_exit "ydotool found but, can't be initialized."
+else
+  log_header "Workspace are already initialized"
+  printf "└── Launch again? [y/N] "; read -n1; echo
+  [[ $REPLY =~ ^[Yy]$ ]] || exit 0
 fi
 
-[[ -z "${YDOTOOL_SOCKET}" ]] && error_exit "ydotool found but, not available."
+# Dummy window because vscode re-scale is really slow
+sleep_after_launch=0.2
+launch "ghostty" 
 
-launch "ghostty"  # Dummy window because vscode re-scale is really slow
-ydotool key "${SUPER}:1" "${KEY_R}:1"
-for ((i = 0 ; i < 40 ; i++ )); do 
-  ydotool key "${LEFT}:1" "${LEFT}:0"
-done
-ydotool key "${KEY_R}:0" "${SUPER}:0"
+# Grow the dummy window to the left
+hold ${SUPER} ${KEY_R}
+press_times ${LEFT} 44
+release ${SUPER} ${KEY_R}
 
+# Launch our editor...
+sleep_after_launch=1.2
 launch "code"
-focus "${LEFT}"
-press_win_key "${KEY_Q}"
-sleep 1
 
-focus "${LEFT}"
+# Close the dummy window (so 'code' takes its space)
+focus ${LEFT}
+window_close
+sleep 0.5
+
+# Change focus to the left and open the browser,
+# it is opened down, so move it up!
+focus ${LEFT}
 launch "zen-browser"
-move "${UP}"
+move ${UP}
+sleep 0.5
 
-ydotool key "${SUPER}:1" "${KEY_R}:1"
-for ((i = 0 ; i < 15 ; i++ )); do 
-  ydotool key "${DOWN}:1" "${DOWN}:0"
-done
-ydotool key "${KEY_R}:0" "${SUPER}:0"
+# Increase browser window a bit in vertical
+hold ${SUPER} ${KEY_R}
+press_times ${DOWN} 20
+release ${SUPER} ${KEY_R}
 
+# Fullscreen apps in separated workspaces
+sleep_after_launch=2
 launch_in_new_workspace "qtcreator"
 launch_in_new_workspace "cosmic-files"
 launch_in_new_workspace "flatpak run com.slack.Slack"
 
-for ((i = 0 ; i < ${count_fullscreen} ; i++ )); do 
-  maximize_window
-  move_one_workspace_up
+# Maximize them backward
+for ((i = 0 ; i < ${count_fullscreen} ; i++)); do
+  sleep 0.5
+  window_maximize
+  focus ${UP}
 done
 
 echo ""
