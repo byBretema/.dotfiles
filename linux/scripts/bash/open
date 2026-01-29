@@ -6,16 +6,24 @@ source ".bash_common"
 ### Actions
 ################################################################################
 
+is_file_or_dir() {
+  [[ -f "${1}" ]] ||  [[ -d "${1}" ]] && return 0
+  return 1
+}
+
 silent() {
-  xdg-open "$1" >/dev/null 2>/dev/null &
+  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
+  eval "${item}" >/dev/null 2>&1 &
   exit 0
 }
 detached() {
-  xdg-open "$1" &
+  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
+  eval "${item}" &
   exit 0
 }
 block() {
-  xdg-open "$1"
+  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
+  eval "${item}"
   exit 0
 }
 
@@ -27,7 +35,7 @@ block() {
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] [ITEM_TO_OPEN]"
   echo ""
   echo "Options:"
   echo "  -s | --silent     No log, no block"
@@ -59,6 +67,6 @@ done
 OPTIONS=( "Silent" "Detached" "Block" )
 option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
 
-[[ "${option}" == "Silent"   ]] && silent "$@"
+[[ "${option}" == "Silent"   ]] && silent   "$@"
 [[ "${option}" == "Detached" ]] && detached "$@"
-[[ "${option}" == "Block"    ]] && block "$@"
+[[ "${option}" == "Block"    ]] && block    "$@"

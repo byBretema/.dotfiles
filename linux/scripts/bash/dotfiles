@@ -7,30 +7,30 @@ source ".bash_common"
 ################################################################################
 
 sync() {
-  cd "${DOTFILES}"
-  git status -s
-  git stash > /dev/null
-  git pull --quiet
-  git stash pop > /dev/null
-  git add -A
-  git commit -m "Updates ($(date +%s))" > /dev/null
-  git push --quiet
-  # popd  2> /dev/null || :
-  exit 0
+    cd "${DOTFILES}"
+    git status -s
+    git stash > /dev/null
+    git pull --quiet
+    git stash pop > /dev/null
+    git add -A
+    git commit -m "Updates ($(date +%s))" > /dev/null
+    git push --quiet
+    # popd  2> /dev/null || :
+    exit 0
 }
 
-edit() { 
-  OPTIONS=( "code" "helix" )
-  option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
-  eval "${option}" "${DOTFILES}"
+edit() {
+    OPTIONS=( "code" "helix" )
+    option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+    eval "${option}" "${DOTFILES}"
 }
 
 installer() {
-  "${DOTFILES}/linux/install.sh" "$@"
+    "${DOTFILES}/linux/install.sh" "$@"
 }
 
-manage_vscode() { 
-  python "$DOTFILES/configs/vscode/extensions.py" "$@"
+manage_vscode() {
+    python "$DOTFILES/configs/vscode/extensions.py" "$@"
 }
 
 
@@ -41,30 +41,30 @@ manage_vscode() {
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
-  echo ""
-  echo "Options:"
-  echo "  -e | --edit       Edit dotfiles"
-  echo "  -s | --sync       Sync dotfiles"
-  echo "  -i | --installer  Run dotfiles \"installer\""
-  echo "  -c | --code       Manage VSCode extensions"
-  echo "  -h | --help       Show this message"
-  echo "  --                Extra args after this"
-  exit 1
+    echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
+    echo ""
+    echo "Options:"
+    echo "  -e | --edit       Edit dotfiles"
+    echo "  -s | --sync       Sync dotfiles"
+    echo "  -i | --installer  Run dotfiles \"installer\""
+    echo "  -c | --code       Manage VSCode extensions"
+    echo "  -h | --help       Show this message"
+    echo "  --                Extra args after this"
+    exit 1
 }
 
 #! Process options
 
 while [[ "${#}" > 0 ]]; do
-  case "${1}" in
-    -e | --edit      ) shift; edit               ; exit 0 ;;
-    -s | --sync      ) shift; sync               ; exit 0 ;;
-    -i | --installer ) shift; installer     "$@" ; exit 0 ;;
-    -c | --code      ) shift; manage_vscode "$@" ; exit 0 ;;
-    -h | --help      ) shift; usage ;;
-    --               ) shift; break ;;
-    *                ) break;;
-  esac
+    case "${1}" in
+        -e | --edit      ) shift; edit               ; exit 0 ;;
+        -s | --sync      ) shift; sync               ; exit 0 ;;
+        -i | --installer ) shift; installer     "$@" ; exit 0 ;;
+        -c | --code      ) shift; manage_vscode "$@" ; exit 0 ;;
+        -h | --help      ) shift; usage ;;
+        --               ) shift; break ;;
+        *                ) break;;
+    esac
 done
 
 

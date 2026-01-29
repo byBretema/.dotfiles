@@ -1,27 +1,24 @@
 
-export LANG=en_US.UTF-8
-export LC_CTYPE="en_US.UTF-8"
-export LC_NUMERIC="en_US.UTF-8"
-export LC_TIME="en_US.UTF-8"
-export LC_COLLATE="en_US.UTF-8"
-export LC_MONETARY="en_US.UTF-8"
-export LC_MESSAGES="en_US.UTF-8"
-export LC_PAPER="en_US.UTF-8"
-export LC_NAME="en_US.UTF-8"
-export LC_ADDRESS="en_US.UTF-8"
-export LC_TELEPHONE="en_US.UTF-8"
-export LC_MEASUREMENT="en_US.UTF-8"
-export LC_IDENTIFICATION="en_US.UTF-8"
-export LC_ALL=en_US.UTF-8
+export LANG="en_US.UTF-8"
+
+export LC_ALL="$LANG"
+export LC_NAME="$LANG"
+export LC_TIME="$LANG"
+export LC_CTYPE="$LANG"
+export LC_PAPER="$LANG"
+export LC_ADDRESS="$LANG"
+export LC_NUMERIC="$LANG"
+export LC_COLLATE="$LANG"
+export LC_MONETARY="$LANG"
+export LC_MESSAGES="$LANG"
+export LC_TELEPHONE="$LANG"
+export LC_MEASUREMENT="$LANG"
+export LC_IDENTIFICATION="$LANG"
 
 export MICRO_TRUECOLOR=1
-
-export FZF_BASE="/usr/share/fzf"
-
-export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
-
-export DOTFILES="$HOME/.dotfiles"
-
 export QT_QPA_PLATFORM=xcb
+export FZF_BASE="/usr/share/fzf"
+export DOTFILES="$HOME/.dotfiles"
+export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 # export COUNTRY=$(curl -s -f --connect-timeout 2 https://ipapi.co/country || echo '??')

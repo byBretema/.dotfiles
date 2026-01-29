@@ -30,10 +30,6 @@ end
 
 set fish_greeting ""
 
-# source "$HOME/.dotfiles/linux/assets/done.fish"
-# set -U __done_min_cmd_duration 10000
-# set -U __done_notification_urgency_level low
-
 
 ################################################################################
 ### Man pages
@@ -62,5 +58,3 @@ fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
 set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
 if test -f "$OMI_PROFILE"; source "$OMI_PROFILE"; end
 if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end
-
-# tmux attach || tmux
