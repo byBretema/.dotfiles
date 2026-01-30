@@ -32,122 +32,173 @@ KEY_Q=16
 ################################################################################
 
 count_fullscreen=0
-sleep_after_launch=0.5
+
 
 ################################################################################
 ### Utils
 ################################################################################
 
 hold() {
-  for key in "${@}"; do
-    ydotool key "${key}:1"
-  done
+    for key in "${@}"; do
+        ydotool key "${key}:1"
+    done
 }
 release() {
-  for key in "${@}"; do
-    ydotool key "${key}:0"
-  done
+    for key in "${@}"; do
+        ydotool key "${key}:0"
+    done
 }
 press() {
-  hold ${@}
-  release ${@}
+    sleep 0.25
+    hold ${@}
+    release ${@}
 }
 press_times() {
-  key="${1}"; shift
-  n="${1}"; shift
-  for ((i = 0 ; i < ${n} ; i++ )); do
-    press ${key}
-  done
+    key="${1}"; shift
+    n="${1}"; shift
+    for ((i = 0 ; i < ${n} ; i++ )); do
+        hold ${key}
+        release ${key}
+    done
 }
 
 move() {
-  press ${SUPER} ${SHIFT} ${1}
+    press ${SUPER} ${SHIFT} ${1}
 }
 focus() {
-  press ${SUPER} ${1}
+    press ${SUPER} ${1}
 }
 rotate_layout() {
-  press ${SUPER} ${KEY_O}
+    press ${SUPER} ${KEY_O}
 }
 
 window_close() {
-  press ${SUPER} ${KEY_Q}
+    press ${SUPER} ${KEY_Q}
 }
 window_maximize() {
-  press ${SUPER} ${KEY_M}
+    press ${SUPER} ${KEY_M}
 }
 
 launch() {
-  eval "${1}" >/dev/null 2>&1 &
-  sleep ${sleep_after_launch}
+    eval "${1}" >/dev/null 2>&1 &
+    sleep 2  # Safe time to init the window and get the focus
 }
 launch_in_new_workspace() {
-  launch "${1}"
-  move ${KEY_0}
-  count_fullscreen=$(( count_fullscreen + 1 ))
+    launch "${1}"
+    move ${KEY_0}
+    count_fullscreen=$(( count_fullscreen + 1 ))
 }
 
-testtest() {
-  echo "${1}"
+
+################################################################################
+### Parse args
+################################################################################
+
+#! Help
+
+usage() {
+    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
+    echo ""
+    echo "Options:"
+    echo "  -1            Init only frist workspace"
+    echo "  -0            Init only fullscreen workspaces"
+    echo "  -h | --help   Show this message"
+    echo "  --            Extra args after this"
+    exit 1
 }
+
+#! Defaults
+
+init_all=true
+init_ws_1=false
+init_ws_0=false
+
+#! Process options
+
+while [[ "${#}" > 0 ]]; do
+    case "${1}" in
+        -1          ) shift; init_ws_1=true; init_all=false ;;
+        -0          ) shift; init_ws_0=true; init_all=false ;;
+        -h | --help ) shift; usage ;;
+        --          ) shift; break ;;
+        *           ) break ;;
+    esac
+done
+
 
 ################################################################################
 ### Execution
 ################################################################################
 
 
-# Set socket path
+#! Set socket path
+
 export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
+
+
+#! Init / Validate ydotool
+
 if ! ydotool key 29:1 29:0 >/dev/null 2>&1; then
-  sudo -b ydotoold --socket-path="${YDOTOOL_SOCKET}" --socket-own="$(id -u):$(id -g)" >/dev/null 2>&1
-  [[ $? != 0 ]] && error_exit "ydotool found but, can't be initialized."
+    sudo -b ydotoold                      \
+        --socket-path="${YDOTOOL_SOCKET}" \
+        --socket-own="$(id -u):$(id -g)"  \
+        >/dev/null 2>&1
+    [[ $? != 0 ]] && error_exit "ydotool found but, can't be initialized."
 else
-  log_header "Workspace are already initialized"
-  printf "└── Launch again? [y/N] "; read -n1; echo
-  [[ $REPLY =~ ^[Yy]$ ]] || exit 0
+    log_header "Workspace are already initialized"
+    printf "└── Launch again? [y/N] "; read -n1; echo
+    [[ $REPLY =~ ^[Yy]$ ]] || exit 0
 fi
 
-# Dummy window because vscode re-scale is really slow
-sleep_after_launch=0.2
-launch "ghostty" 
 
-# Grow the dummy window to the left
-hold ${SUPER} ${KEY_R}
-press_times ${LEFT} 44
-release ${SUPER} ${KEY_R}
+#! Workspace 1
 
-# Launch our editor...
-sleep_after_launch=1.2
-launch "code"
+if [[ ${init_all} == true ]] || [[ ${init_ws_1} == true ]]; then
 
-# Close the dummy window (so 'code' takes its space)
-focus ${LEFT}
-window_close
-sleep 0.5
+    # Dummy window because vscode re-scale is really slow
+    launch "ghostty"
 
-# Change focus to the left and open the browser,
-# it is opened down, so move it up!
-focus ${LEFT}
-launch "zen-browser"
-move ${UP}
-sleep 0.5
+    # Grow the dummy window to the left
+    hold ${SUPER} ${KEY_R}
+    press_times ${LEFT} 44
+    release ${SUPER} ${KEY_R}
 
-# Increase browser window a bit in vertical
-hold ${SUPER} ${KEY_R}
-press_times ${DOWN} 20
-release ${SUPER} ${KEY_R}
+    # Launch our editor...
+    launch "code"
 
-# Fullscreen apps in separated workspaces
-sleep_after_launch=2
-launch_in_new_workspace "qtcreator"
-launch_in_new_workspace "cosmic-files"
-launch_in_new_workspace "flatpak run com.slack.Slack"
+    # Close the dummy window (so 'code' takes its space)
+    focus ${LEFT}
+    window_close
 
-# Maximize them backward
-for ((i = 0 ; i < ${count_fullscreen} ; i++)); do
-  sleep 0.5
-  window_maximize
-  focus ${UP}
-done
+    # Change focus to the left and open the browser,
+    # it is opened down, so move it up!
+    focus ${LEFT}
+    launch "zen-browser"
+    move ${UP}
+
+    # Increase browser window a bit in vertical
+    hold ${SUPER} ${KEY_R}
+    press_times ${DOWN} 20
+    release ${SUPER} ${KEY_R}
+
+fi
+
+
+#! Fullscreen Workspaces
+
+if [[ ${init_all} == true ]] || [[ ${init_ws_0} == true ]]; then
+
+    # Fullscreen apps in separated workspaces
+    launch_in_new_workspace "flatpak run com.slack.Slack"
+    launch_in_new_workspace "cosmic-files"
+    launch_in_new_workspace "qtcreator"
+
+    # Maximize them backward
+    for ((i = 0 ; i < ${count_fullscreen} ; i++)); do
+        window_maximize
+        focus ${UP}
+    done
+
+fi
 
 echo ""

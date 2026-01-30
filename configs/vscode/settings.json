@@ -13,7 +13,7 @@
     // FILES
     //--------------------------------------------------------------------------
     "files.autoSave": "onFocusChange",
-    // "files.trimTrailingWhitespace": true,
+    "files.trimTrailingWhitespace": true,
     "files.enableTrash": true,
     "files.eol": "\n",
     "files.insertFinalNewline": true,
@@ -38,7 +38,7 @@
     "editor.accessibilitySupport": "off",
     "editor.renderWhitespace": "trailing",
     "editor.tokenColorCustomizations": {
-        "comments": "#2299FF",
+        // "comments": "#2299FF",
         // "comments": "#EB50AA",
         // "textMateRules": [
         //     {
@@ -214,7 +214,7 @@
         "editor.inlayHints.maximumLength": 0
     },
     "editor.bracketPairColorization.enabled": false,
-    "workbench.colorTheme": "Gruvbox Dark Hard",
+    "workbench.colorTheme": "Alabaster (Dark Modern)",
     "window.autoDetectHighContrast": false,
     //--------------------------------------------------------------------------
     // DYNAMIC / USORTED
