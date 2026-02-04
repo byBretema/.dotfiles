@@ -102,6 +102,7 @@ usage() {
     echo "Options:"
     echo "  -1            Init only frist workspace"
     echo "  -0            Init only fullscreen workspaces"
+    echo "  -d            Decrypt job folder"
     echo "  -h | --help   Show this message"
     echo "  --            Extra args after this"
     exit 1
@@ -112,6 +113,8 @@ usage() {
 init_all=true
 init_ws_1=false
 init_ws_0=false
+ask_for_decrypt=true
+decrypt=false
 
 #! Process options
 
@@ -119,6 +122,7 @@ while [[ "${#}" > 0 ]]; do
     case "${1}" in
         -1          ) shift; init_ws_1=true; init_all=false ;;
         -0          ) shift; init_ws_0=true; init_all=false ;;
+        -d          ) shift; decrypt=true; ask_for_decrypt=false ;;
         -h | --help ) shift; usage ;;
         --          ) shift; break ;;
         *           ) break ;;
@@ -131,12 +135,20 @@ done
 ################################################################################
 
 
-#! Set socket path
+#! Decrypt
 
-export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
+if ${ask_for_decrypt}; then
+    log_header "Before lauching the workspaces"
+    printf "└── Decrypt job dir? [y/N] "; read -n1; echo
+    [[ $REPLY =~ ^[Yy]$ ]] && omi -u
+elif ${decrypt}; then
+    omi -u
+fi
 
 
 #! Init / Validate ydotool
+
+export YDOTOOL_SOCKET="$HOME/.ydotool_socket"
 
 if ! ydotool key 29:1 29:0 >/dev/null 2>&1; then
     sudo -b ydotoold                      \
@@ -153,32 +165,13 @@ fi
 
 #! Workspace 1
 
-if [[ ${init_all} == true ]] || [[ ${init_ws_1} == true ]]; then
+if ${init_all} || ${init_ws_1}; then
 
-    # Dummy window because vscode re-scale is really slow
-    launch "ghostty"
+    #! Code
 
-    # Grow the dummy window to the left
+    launch "qtcreator"
     hold ${SUPER} ${KEY_R}
-    press_times ${LEFT} 44
-    release ${SUPER} ${KEY_R}
-
-    # Launch our editor...
-    launch "code"
-
-    # Close the dummy window (so 'code' takes its space)
-    focus ${LEFT}
-    window_close
-
-    # Change focus to the left and open the browser,
-    # it is opened down, so move it up!
-    focus ${LEFT}
-    launch "zen-browser"
-    move ${UP}
-
-    # Increase browser window a bit in vertical
-    hold ${SUPER} ${KEY_R}
-    press_times ${DOWN} 20
+    press_times ${LEFT} 40
     release ${SUPER} ${KEY_R}
 
 fi
@@ -186,12 +179,13 @@ fi
 
 #! Fullscreen Workspaces
 
-if [[ ${init_all} == true ]] || [[ ${init_ws_0} == true ]]; then
+if ${init_all} || ${init_ws_0}; then
 
-    # Fullscreen apps in separated workspaces
+    # Launch apps in separated workspaces
+    launch_in_new_workspace "zen-browser"
     launch_in_new_workspace "flatpak run com.slack.Slack"
     launch_in_new_workspace "cosmic-files"
-    launch_in_new_workspace "qtcreator"
+    launch_in_new_workspace "code"
 
     # Maximize them backward
     for ((i = 0 ; i < ${count_fullscreen} ; i++)); do

@@ -67,10 +67,9 @@ alias qctl='journalctl -p 3 -xb'
 # Paru
 alias pm='paru --bottomup'
 alias pmy='pm --noconfirm'
-alias pmm='pm --noconfirm --skipreview'
-alias pi='paru'
-alias piy='paru --noconfirm -S'
-alias pii='paru --noconfirm --skipreview -S'
+alias pmyy='pm --noconfirm --skipreview'
+alias pmiy='paru --noconfirm -S'
+alias pmiyy='paru --noconfirm --skipreview -S'
 # Paru .. Recent installed packages  (from CachyOS default zsh config)
 alias pm_big="expac -H M '%m\t%n' | sort -h | nl"
 alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'

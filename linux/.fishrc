@@ -57,4 +57,4 @@ fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
 
 set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
 if test -f "$OMI_PROFILE"; source "$OMI_PROFILE"; end
-if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end
+# if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end

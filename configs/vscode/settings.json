@@ -220,5 +220,8 @@
     // DYNAMIC / USORTED
     //--------------------------------------------------------------------------
     "shellformat.path": "/usr/bin/shfmt",
-    "bashBeautify.tabSize": 4
+    "bashBeautify.tabSize": 4,
+    "[json]": {
+        "editor.defaultFormatter": "vscode.json-language-features"
+    }
 }
