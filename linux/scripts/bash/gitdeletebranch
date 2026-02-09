@@ -2,16 +2,52 @@
 source ".bash_common"
 guard__is_git
 
+
+################################################################################
+### Parse args
+################################################################################
+
+#! Help
+
+usage() {
+    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
+    echo ""
+    echo "Options:"
+    echo "  -f            Force local delete"
+    echo "  -v            Enable verbose for git-trace/curl"
+    echo "  -h | --help   Show this message"
+    echo "  --            Extra args after this"
+    exit 1
+}
+
+#! Defaults
+
 local_delete_flag="-d"
-[[ "$#" > 1 && "$1" == "-f" ]] && local_delete_flag="-D"
 
-branch=$(git --no-pager branch | grep -P '^(?!.*(main|master|release))' | fzf_h)
-branch=$(echo "${branch}" | sed -E 's/^\*?[ ]*//; s/^\+?[ ]*//; s/[ ]*$//')
+#! Process options
 
-[[ -z "${branch}" ]] && { echo "-- No branch selected."; exit 1; }
+while [[ "${#}" > 0 ]]; do
+    case "${1}" in
+        -f          ) shift; local_delete_flag="-D";;
+        -v          ) shift; GIT_TRACE=1; GIT_CURL_VERBOSE=1;;
+        -h | --help ) shift; usage ;;
+        --          ) shift; break ;;
+        *           ) break ;;
+    esac
+done
 
-read -k 1 -r "?@ Deleting local, sure? [y/N] "; echo
-[[ $REPLY =~ ^[Yy]$ ]] && git branch $local_delete_flag $branch
 
-read -k 1 -r "?@ Deleting remote, sure? [y/N] "; echo
-[[ $REPLY =~ ^[Yy]$ ]] && git push origin --delete $branch
+################################################################################
+### Execution
+################################################################################
+
+log_header "Choose a branch"
+branch=$(git branch --format='%(refname:short)' | grep -vE 'main|master|release' | fzf_default)
+required_var "${branch}"
+
+log_header "Deleting branch ${branch}"
+printf "└── Delete local? [y/N] "; read -n1; echo
+[[ $REPLY =~ ^[Yy]$ ]] && git branch $local_delete_flag "${branch}"
+
+printf "└── Delete remote? [y/N] "; read -n1; echo
+[[ $REPLY =~ ^[Yy]$ ]] && git push origin --progress --delete "${branch}"

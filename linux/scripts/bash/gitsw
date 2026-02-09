@@ -2,10 +2,59 @@
 source ".bash_common"
 guard__is_git
 
-branch=$(git branch -a | fzf_h)
 
-echo "${branch}" | \
-sed -E 's/^remotes\/origin\///' | \
-sed -E 's/^\*?[ ]*//' | \
-sed -E 's/^\+?[ ]*//' | \
-xargs git switch
+################################################################################
+### Utils
+################################################################################
+
+_git_all_branches(){
+    git branch -a --format='%(refname:short)'
+}
+
+
+################################################################################
+### Parse args
+################################################################################
+
+#! Help
+
+usage() {
+    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
+    echo ""
+    echo "Options:"
+    echo "  -n            How many branches to show"
+    echo "  -h | --help   Show this message"
+    echo "  --            Extra args after this"
+    exit 1
+}
+
+#! Defaults
+
+count=99999
+
+#! Process options
+
+while [[ "${#}" > 0 ]]; do
+    case "${1}" in
+        -n          ) shift; count=${1}; shift ;;
+        -h | --help ) shift; usage ;;
+        --          ) shift; break ;;
+        *           ) break ;;
+    esac
+done
+
+
+################################################################################
+### Execution
+################################################################################
+
+sorted_branches="$(_git_all_branches | grep -v '^origin/'; _git_all_branches | grep '^origin/')"
+
+log_header "Choose a branch"
+
+echo "${sorted_branches}"           | \
+    grep -v '^origin$'              | \
+    head -${count}                  | \
+    fzf_default                     | \
+    sed -E 's/^remotes\/origin\///' | \
+    xargs -r git switch

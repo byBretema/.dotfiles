@@ -23,7 +23,7 @@ alias lt3='l -T --level=3'
 
 # Nav
 alias h='history'
-alias ccd='pushd $(L1 -scr -r | fzf_h)'
+alias ccd='pushd $(eza -1 -s created -r | fzf_h)'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'
 alias oo='open -s .'
@@ -36,11 +36,14 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
+# Job
 alias omid='pushd $(omi -d)'
 alias omis='pushd $(omi -s)'
 
-alias gittop='pushd $(git -C "" rev-parse --show-toplevel 2>/dev/null)'
+# Git
+alias gittop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias gitupdate='git ac "$(now)" && git push'
+alias ediff="git status -s >&2; git status -s | awk '{ print \$2 }' | fzf_h | xargs -r code"
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
