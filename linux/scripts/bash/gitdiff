@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+source ".bash_common"
+guard__is_git
+
+git status -s >&2
+
+echo ""
+log_header "Choose one:"
+git status -s | awk '{ print $2 }' | fzf_default | xargs -r git diff

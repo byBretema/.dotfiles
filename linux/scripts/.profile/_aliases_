@@ -39,6 +39,7 @@ alias ......='cd ../../../../..'
 # Job
 alias omid='pushd $(omi -d)'
 alias omis='pushd $(omi -s)'
+alias omita='omi -u && ta'
 
 # Git
 alias gittop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'

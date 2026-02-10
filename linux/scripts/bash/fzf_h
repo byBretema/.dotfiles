@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
 source ".bash_common"
 
-fzf -1 --header "Choose one:" --layout=reverse --no-input --header-border="bottom"
+log_header "Choose one:"
+fzf -1 --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)

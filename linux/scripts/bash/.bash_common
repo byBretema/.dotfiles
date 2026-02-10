@@ -1,5 +1,5 @@
-set -CEu
-shopt -s xpg_echo
+set -CEeuo pipefail
+
 
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
 script_name=$(basename "${BASH_SOURCE[-1]}")
@@ -10,11 +10,11 @@ script_name=$(basename "${BASH_SOURCE[-1]}")
 ################################################################################
 
 _log() {
-    local color_setup="${1}"; shift;
-    local msg="${@}";
-    [[ -t 1 ]] && tput setaf ${color_setup}
-    printf "${msg}\n" >&2
-    [[ -t 1 ]] && tput sgr0
+  local color_setup="${1}"; shift;
+  local msg="${@}";
+  [[ ! -t 1 ]] || tput setaf ${color_setup}
+  printf "${msg}\n" >&2
+  [[ ! -t 1 ]] || tput sgr0
 }
 
 log_header() { _log 3 "@ ${@}";   }  # Yellow
@@ -31,38 +31,40 @@ error_exit() { log_error "${@}"; exit 1; }
 REQUIRED_VERBOSE=false
 
 declare -A _REQUIRED_LABELS=(
-    [file]="File"
-    [dir]="Dir"
-    [var]="Var"
-    [cmd]="Cmd"
-    [notemptydir]="NotEmptyDir"
+  [file]="File"
+  [dir]="Dir"
+  [var]="Var"
+  [cmd]="Cmd"
+  [notemptydir]="NotEmptyDir"
 )
 
 _required() {
-    local op="${1,,}" elem="$2" info="${3:-}"
-    local label="${_REQUIRED_LABELS[$op]:-$op}"
+  local op="${1,,}" elem="$2" info="${3:-}"
+  local label="${_REQUIRED_LABELS[$op]:-$op}"
 
-    local ok=$(_is "$op" "$elem")
-    [[ $ok == 0 ]] || error_exit "${label} not found '${elem}'${info:+ <-- $info}"
-    [[ $ok == 0 && $REQUIRED_VERBOSE == true ]] && log_info "${label} found '${elem}'"
+  if ! _is "$op" "$elem"; then
+    error_exit "${label} not found '${elem}'${info:+ <-- $info}"
+  elif ${REQUIRED_VERBOSE}; then
+    log_info "${label} found '${elem}'"
+  fi
 }
 
 _is() {
-    local op="${1,,}"
-    local elem="$2"
-    case "${op}" in
-        file)        [[ -f "${elem}" ]] ;;
-        dir)         [[ -d "${elem}" ]] ;;
-        var)         [[ -n "${elem}" ]] ;;
-        cmd)         command -v "${elem}" >/dev/null 2>&1 ;;
-        notemptydir) [[ -d "${elem}" ]] && [[ -n "$(ls -A "${elem}" 2>/dev/null)" ]] ;;
-        *)           return 1 ;;
-    esac
+  local op="${1,,}"
+  local elem="$2"
+  case "${op}" in
+    file)        [[ -f "${elem}" ]] && return 0 ;;
+    dir)         [[ -d "${elem}" ]] && return 0 ;;
+    var)         [[ -n "${elem}" ]] && return 0 ;;
+    cmd)         command -v "${elem}" >/dev/null 2>&1 && return 0 ;;
+    dir_notempty) [[ -d "${elem}" ]] && [[ -n "$(ls -A "${elem}" 2>/dev/null)" ]] && return 0 ;;
+  esac
+  return 1;
 }
 
 for type in "${!_REQUIRED_LABELS[@]}"; do
-    eval "is_${type}() { _is '${type}' \"\$@\"; }"
-    eval "required_${type}() { _required '${type}' \"\$@\"; }"
+  eval "is_${type}() { _is '${type}' \"\$@\"; }"
+  eval "required_${type}() { _required '${type}' \"\$@\"; }"
 done
 
 
@@ -71,22 +73,22 @@ done
 ################################################################################
 
 is_git() {
-    required_cmd "git"
-    git rev-parse --is-inside-work-tree > /dev/null 2>&1
+  required_cmd "git"
+  git rev-parse --is-inside-work-tree > /dev/null 2>&1
 }
 guard__is_git() {
-    is_git || error_exit "Current directory is not a git repository"
+  is_git || error_exit "Current directory is not a git repository"
 }
 
 repo_root() {
-    echo "$(git -C "${script_path}" rev-parse --show-toplevel 2>/dev/null)"
+  echo "$(git -C "${script_path}" rev-parse --show-toplevel 2>/dev/null)"
 }
 repo_parent() {
-    root="$(repo_root)"
-    [[ -n "${root}" ]] && echo "$(dirname "${root}")" || echo "${script_path}"
+  local root="$(repo_root)"
+  [[ -n "${root}" ]] && echo "$(dirname "${root}")" || echo "${script_path}"
 }
 repo_branch() {
-    echo "$(git -C "${script_path}" branch --show-current)"
+  echo "$(git -C "${script_path}" branch --show-current)"
 }
 
 
@@ -95,29 +97,28 @@ repo_branch() {
 ################################################################################
 
 _find_dir_name_only() {
-    local dir="${1}"
-    local pattern="${2:-*}"
-    find "${dir}" -mindepth 1 -maxdepth 1 -type d -name "${pattern}" -printf '%P\n'
+  local dir="${1}" pattern="${2:-*}"
+  find "${dir}" -mindepth 1 -maxdepth 1 -type d -name "${pattern}" -printf '%P\n'
 }
 
 fzf_default() {
-    required_cmd "fzf"
-    fzf -1 --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)
+  required_cmd "fzf"
+  fzf -1 --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)
 }
 choose_one() {
-    echo "$(printf "%s\n" "${@}" | fzf_default)"
+  echo "$(printf "%s\n" "${@}" | fzf_default)"
 }
 choose_from_dir() {
-    [[ "${#}" < 1 ]] && { error_exit "Usage: choose_from_dir DIR"; }
-    echo "${1}/$(choose_from_dir_tail "${1}")"
+  [[ "${#}" > 0 ]] || error_exit "Usage: choose_from_dir DIR"
+  echo "${1}/$(choose_from_dir_tail "${1}")"
 }
 choose_from_dir_tail() {
-    [[ "${#}" < 1 ]] && { error_exit "Usage: choose_from_dir_tail DIR"; }
-    echo "$(_find_dir_name_only "${1}" | fzf_default)"
+  [[ "${#}" > 0 ]] || error_exit "Usage: choose_from_dir_tail DIR"
+  echo "$(_find_dir_name_only "${1}" | fzf_default)"
 }
 choose_from_dir_glob() {
-    [[ "${#}" < 2 ]] && { error_exit "Usage: choose_from_dir_glob DIR PATTERN"; }
-    echo "${1}/$(_find_dir_name_only "${1}" "${2}" | fzf_default)"
+  [[ "${#}" > 1 ]] || error_exit "Usage: choose_from_dir_glob DIR PATTERN"
+  echo "${1}/$(_find_dir_name_only "${1}" "${2}" | fzf_default)"
 }
 
 
@@ -126,21 +127,18 @@ choose_from_dir_glob() {
 ################################################################################
 
 show_and_copy() {
-    echo "$1"
-    if command -v xclip >/dev/null 2>&1; then
-        echo "$1" | xclip -selection c
-    fi
+  echo "$1"
+  if is_cmd "xclip"; then
+    echo "$1" | xclip -selection c
+  fi
 }
 
 max() {
-    echo $(( $1 > $2 ? $1 : $2 ))
+  echo $(( $1 > $2 ? $1 : $2 ))
 }
 min() {
-    echo $(( $1 < $2 ? $1 : $2 ))
+  echo $(( $1 < $2 ? $1 : $2 ))
 }
 clamp() {
-  local value=$1; shift
-  local low=$1  ; shift
-  local high=$1 ; shift
-  min $(max $value $low) $high
+  min $(max $1 $2) $3  # value, low, high
 }

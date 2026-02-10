@@ -30,32 +30,31 @@ stdver="20"
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
-    -g | --gnu   ) shift; compiler="g++"   "$@" ;;
-    -c | --clang ) shift; compiler="clang" "$@" ;;
-    -m | --msvc  ) shift; compiler="cl"    "$@" ;;
-    -s | --std   ) shift; stdver="$1"; shift ;;
+    -g | --gnu   ) shift; compiler="g++" ;;
+    -c | --clang ) shift; compiler="clang" ;;
+    -m | --msvc  ) shift; compiler="cl" ;;
+    -s | --std   ) shift; stdver="${1}"; shift ;;
     -h | --help  ) shift; usage ;;
     --           ) shift; break ;;
     *            ) break ;;
   esac
 done
 
+#! Params
+
+filepath=$(realpath "$1"); shift
+required_file "${filepath}"
+
 
 ################################################################################
 ### Execution
 ################################################################################
 
-
-filepath=$(realpath "$1"); shift
-required_file "${filepath}"
-
 bin_path="/tmp/cpprun/"
-mkdir -p $bin_path
+mkdir -p ${bin_path}
 
-bin_name=$(mktemp -u "$bin_path/XXXXXXXXXX")
+bin_name=$(mktemp -u "${bin_path}/XXXXXXXXXX")
 
-"$compiler" --std="c++$stdver" $filepath -o $bin_name && "$bin_name"
+"${compiler}" --std="c++${stdver}" $filepath -o ${bin_name} && "${bin_name}"
 
-if [[ -f "$bin_name" ]]; then
-  rm "$bin_name"
-fi
+[[ -f "${bin_name}" ]] && rm "${bin_name}"
