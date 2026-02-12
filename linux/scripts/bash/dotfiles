@@ -21,7 +21,8 @@ sync() {
 
 edit() {
     OPTIONS=( "code" "helix" )
-    option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+    option=$(choose_one -p "How to edit?" -- "${OPTIONS[@]}")
+    option=$(choose_one -p "How to edit?" -- "${OPTIONS[@]}")
     eval "${option}" "${DOTFILES}"
 }
 
@@ -73,7 +74,7 @@ done
 ################################################################################
 
 OPTIONS=( "Edit" "Sync" "Installer" "VSCode" )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
 
 [[ "${option}" == "Edit"      ]] && edit               ; exit 0
 [[ "${option}" == "Sync"      ]] && sync               ; exit 0

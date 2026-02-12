@@ -50,11 +50,9 @@ done
 
 sorted_branches="$(_git_all_branches | grep -v '^origin/'; _git_all_branches | grep '^origin/')"
 
-log_header "Choose a branch"
-
 echo "${sorted_branches}"           | \
     grep -v '^origin$'              | \
     head -${count}                  | \
-    fzf_default                     | \
+    choose_one -p "Choose a branch" | \
     sed -E 's/^remotes\/origin\///' | \
     xargs -r git switch

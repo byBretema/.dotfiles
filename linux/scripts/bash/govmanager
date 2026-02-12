@@ -4,7 +4,7 @@ source ".bash_common"
 GOVERNOR_PATH=/sys/devices/system/cpu/cpu*/cpufreq/scaling_governor
 
 OPTIONS=( "Get" "Set: PowerSave" "Set: Performance" )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
 
 [[ "${option}" == "${OPTIONS[0]}" ]] && cat ${GOVERNOR_PATH}
 [[ "${option}" == "${OPTIONS[1]}" ]] && echo powersave   | sudo tee ${GOVERNOR_PATH}

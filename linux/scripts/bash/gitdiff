@@ -5,5 +5,4 @@ guard__is_git
 git status -s >&2
 
 echo ""
-log_header "Choose one:"
-git status -s | awk '{ print $2 }' | fzf_default | xargs -r git diff
+git status -s | awk '{ print $2 }' | choose_one -p "Choose a file" | xargs -r git diff

@@ -9,18 +9,20 @@ script_name=$(basename "${BASH_SOURCE[-1]}")
 ### Log
 ################################################################################
 
+: "${LOG_WITH_COLOR:=true}"
+
 _log() {
-  local color_setup="${1}"; shift;
+  local color_setup="\033[${2};3${1}m"; shift; shift
+  local color_reset="\033[0m"
   local msg="${@}";
-  [[ ! -t 1 ]] || tput setaf ${color_setup}
-  printf "${msg}\n" >&2
-  [[ ! -t 1 ]] || tput sgr0
+  if ! ${LOG_WITH_COLOR}; then color_setup=""; fi
+  printf "${color_setup}${msg}${color_reset}\n" >&2
 }
 
-log_header() { _log 3 "@ ${@}";   }  # Yellow
-log_info()   { _log 2 ">> ${@}";  }  # Green
-log_warn()   { _log 5 "W · ${@}"; }  # Purple
-log_error()  { _log 1 "E · ${@}"; }  # Red
+log_header() { _log 3 1 "@ ${@}";   }  # Yellow : 3 | Bold : 1
+log_info()   { _log 2 0 ">> ${@}";  }  # Green  : 2 | Thin : 0
+log_warn()   { _log 5 0 "W · ${@}"; }  # Purple : 5 | Thin : 0
+log_error()  { _log 1 0 "E · ${@}"; }  # Red    : 1 | Thin : 0
 error_exit() { log_error "${@}"; exit 1; }
 
 
@@ -28,7 +30,7 @@ error_exit() { log_error "${@}"; exit 1; }
 ### Required
 ################################################################################
 
-REQUIRED_VERBOSE=false
+: "${REQUIRED_VERBOSE:=false}"
 
 declare -A _REQUIRED_LABELS=(
   [file]="File"
@@ -57,7 +59,7 @@ _is() {
     dir)         [[ -d "${elem}" ]] && return 0 ;;
     var)         [[ -n "${elem}" ]] && return 0 ;;
     cmd)         command -v "${elem}" >/dev/null 2>&1 && return 0 ;;
-    dir_notempty) [[ -d "${elem}" ]] && [[ -n "$(ls -A "${elem}" 2>/dev/null)" ]] && return 0 ;;
+    notemptydir) [[ -d "${elem}" ]] && [[ -n "$(ls -A "${elem}" 2>/dev/null)" ]] && return 0 ;;
   esac
   return 1;
 }
@@ -101,12 +103,22 @@ _find_dir_name_only() {
   find "${dir}" -mindepth 1 -maxdepth 1 -type d -name "${pattern}" -printf '%P\n'
 }
 
-fzf_default() {
-  required_cmd "fzf"
-  fzf -1 --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)
-}
 choose_one() {
-  echo "$(printf "%s\n" "${@}" | fzf_default)"
+  required_cmd "fzf"
+  local prompt="Choose one"
+  #! Args
+  while [[ "${#}" > 0 ]]; do
+      case "${1}" in
+          -p | --prompt ) shift; [[ "${1:-}" =~ ^[^-] ]] && prompt="${1}" || error_exit "Missing prompt (?)"; shift ;;
+          --            ) shift; break ;;
+          *             ) break;;
+      esac
+  done
+  #! Input
+  [[ ! -t 0 ]] && readarray -t fzf_input || fzf_input=("${@}")
+  [[ ${#fzf_input[@]} > 0 ]] || error_exit "Nothing to choose from"
+  #! Command
+  printf "%s\n" "${fzf_input[@]}" | fzf -1 --prompt="${prompt:+$prompt > }" --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)
 }
 choose_from_dir() {
   [[ "${#}" > 0 ]] || error_exit "Usage: choose_from_dir DIR"
@@ -114,11 +126,11 @@ choose_from_dir() {
 }
 choose_from_dir_tail() {
   [[ "${#}" > 0 ]] || error_exit "Usage: choose_from_dir_tail DIR"
-  echo "$(_find_dir_name_only "${1}" | fzf_default)"
+  choose_one "$(_find_dir_name_only "${1}")"
 }
 choose_from_dir_glob() {
   [[ "${#}" > 1 ]] || error_exit "Usage: choose_from_dir_glob DIR PATTERN"
-  echo "${1}/$(_find_dir_name_only "${1}" "${2}" | fzf_default)"
+  choose_one "${1}/$(_find_dir_name_only "${1}" "${2}")"
 }
 
 

@@ -41,8 +41,7 @@ done
 ### Execution
 ################################################################################
 
-log_header "Choose a branch"
-branch=$(git branch --format='%(refname:short)' | grep -vE 'main|master|release' | fzf_default)
+branch=$(git branch --format='%(refname:short)' | grep -vE 'main|master|release' | choose_one -p "Choose a branch")
 required_var "${branch}"
 
 log_header "Deleting branch ${branch}"

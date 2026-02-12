@@ -5,7 +5,7 @@ OPTIONS=(
   "WORK"
   "LIFE"
 )
-option=$(printf "%s\n" "${OPTIONS[@]}" | fzf_h)
+option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
 
 log_info "Focus mode set to: ${option}"
 

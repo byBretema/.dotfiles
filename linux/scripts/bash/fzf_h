@@ -1,5 +1,4 @@
 #!/usr/bin/env bash
 source ".bash_common"
 
-log_header "Choose one:"
-fzf -1 --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)
+choose_one "${@}"

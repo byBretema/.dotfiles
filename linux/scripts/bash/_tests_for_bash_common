@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+source ".bash_common"
+
+log_header "log_header"
+log_info   "log_info"
+log_warn   "log_warn"
+log_error  "log_error"
+
+REQUIRED_VERBOSE=true
+
+required_cmd "git"
+
+LOG_WITH_COLOR=false
+
+log_info "$(repo_root)"
+log_info "$(repo_parent)"
+log_info "$(repo_branch)"
+
+LOG_WITH_COLOR=true
+
+choose_one -p "Choose from args" -- "Arg 1" "Arg 2" "Arg 3"
+
+printf "%s\n" "PipeArg 1" "PipeArg 2" "PipeArg 3" | choose_one -p "Choose from pipe"
+
+show_and_copy "show_and_copy"
+
