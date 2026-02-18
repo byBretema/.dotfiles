@@ -37,9 +37,14 @@ display-inlay-hints = true
 # KEYMAPs
 ################################################################################
 
-
 #--- Normal --------------------------------------------------------------------
+
 [keys.normal]
+
+# Subwords motions
+W = 'move_next_sub_word_start'
+B = 'move_prev_sub_word_start'
+E = 'move_next_sub_word_end'
 
 # Use 'esc' to unselect multiple cursors
 "esc" = ["collapse_selection", "keep_primary_selection"]
@@ -95,6 +100,7 @@ display-inlay-hints = true
 
 
 #--- Normal.g ------------------------------------------------------------------
+
 [keys.normal.g]
 
 # Show possible code actions
@@ -102,6 +108,7 @@ a = "code_action"
 
 
 #--- Normal.space --------------------------------------------------------------
+
 [keys.normal.space]
 
 # Opens YAZI explorer
@@ -121,7 +128,13 @@ a = "code_action"
 
 
 #--- Select --------------------------------------------------------------------
+
 [keys.select]
+
+# Subwords motions
+W = 'extend_next_sub_word_start'
+B = 'extend_prev_sub_word_start'
+E = 'extend_next_sub_word_end'
 
 # Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]
@@ -132,6 +145,7 @@ a = "code_action"
 
 
 #--- Insert --------------------------------------------------------------------
+
 [keys.insert]
 
 # Move line up/down
