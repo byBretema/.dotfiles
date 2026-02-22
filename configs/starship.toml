@@ -1,36 +1,32 @@
-format = """
-$directory\
-$time\
-$git_branch$git_status\
-$cmd_duration\
-$docker_context\
-$character\
-"""
+format = "$directory $git_branch $git_status\n$character"
+
+right_format = "$cmd_duration"
 
 scan_timeout = 500
 command_timeout = 60000
 
-add_newline = true
+# add_newline = true
 
-[fill]
-symbol = ' '
+# [fill]
+# symbol = ' '
 
 [character]
-format = "\n$symbol "
+format = "$symbol "
 
 [directory]
-# truncation_length = 2
-truncate_to_repo = true
-# truncation_symbol = "…/"
-# format = "\n[$path]($style)"
+truncation_length = 1
+# truncate_to_repo = true
+format = "[$path]($style)"
 
 [time]
 disabled = false
 time_format = "%T"
-# format = "[$time ]($style)"
+format = "[$time]($style)"
 
 [cmd_duration]
-format = '[[· ](teal)$duration]($style)'
+min_time = 3000
+show_milliseconds = true
+format = '(yellow)[$duration]($style)'
 
-# [git_branch]
-# format = "\n[$branch ]($style)"
+[git_branch]
+format = "[$branch]($style)"

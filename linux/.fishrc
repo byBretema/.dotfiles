@@ -1,6 +1,5 @@
 #!/usr/bin/env fish
 
-
 ################################################################################
 ### Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
@@ -13,16 +12,15 @@ source "$DOTFILES_SCRIPTS/.profile/_exports_"
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 
-
 ################################################################################
 ### Functions
 ################################################################################
 
-function mkcd -a dir;
+function mkcd -a dir
+
     mkdir -p "$dir"
     pushd "$dir"
 end
-
 
 ################################################################################
 ### Plugins
@@ -30,23 +28,33 @@ end
 
 set fish_greeting ""
 
-
 ################################################################################
 ### Man pages
 ################################################################################
 
-set -x MANROFFOPT "-c"
+set -x MANROFFOPT -c
 set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
-
 
 ################################################################################
 ### Common setup "Shell-Agnostic"  (Part 2)
 ################################################################################
 
 # Prompt
+
+function starship_transient_prompt_func
+    starship module character
+end
+function starship_transient_rprompt_func
+    starship module time
+end
+# function fish_user_key_bindings
+#     bind \r 'if test -z (commandline); set -g CMD_DURATION 0; end; commandline -f execute'
+# end
 starship init fish | source
+enable_transience
 
 # Aliases
+
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/.profile/_aliases_"
 
@@ -56,5 +64,7 @@ set OMI_SCRIPTS "$HOME/omi/scripts"
 fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
 
 set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
-if test -f "$OMI_PROFILE"; source "$OMI_PROFILE"; end
+if test -f "$OMI_PROFILE"
+    source "$OMI_PROFILE"
+end
 # if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end
