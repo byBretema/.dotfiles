@@ -12,6 +12,9 @@ color-modes = true
 bufferline = "multiple"
 line-number = "relative"
 scroll-lines = 1
+# breadcrumbs = true
+cursorline = true
+end-of-line-diagnostics = "hint"
 
 [editor.soft-wrap]
 enable = true
@@ -29,9 +32,15 @@ select = "underline"
 [editor.file-picker]
 hidden = false
 
-[editor.lsp]
-display-inlay-hints = true
+[editor.inline-diagnostics]
+cursor-line = "warning"
 
+[editor.lsp]
+display-messages = true
+display-progress-messages = true
+display-inlay-hints = true
+auto-signature-help = true
+# goto-definition-marker-style = "underline"
 
 ################################################################################
 # KEYMAPs
@@ -41,10 +50,13 @@ display-inlay-hints = true
 
 [keys.normal]
 
+"o" = "command_mode"
+# "ret" = "goto_word"
+
 # Subwords motions
-W = 'move_next_sub_word_start'
-B = 'move_prev_sub_word_start'
-E = 'move_next_sub_word_end'
+"W" = "move_next_sub_word_start"
+"B" = "move_prev_sub_word_start"
+"E" = "move_next_sub_word_end"
 
 # Use 'esc' to unselect multiple cursors
 "esc" = ["collapse_selection", "keep_primary_selection"]
@@ -67,24 +79,10 @@ E = 'move_next_sub_word_end'
     ":reload-all"
 ]
 
-# Classic save
-"C-s" = ":write"
-
-# Classic save-all
-"C-S-s" = ":write-all"
-
-# Close the buffer
-"C-q" = ":buffer-close"
-
-# Toggle comments
-"C-c" = ["toggle_comments", "move_visual_line_down"]
 
 # Go next/prev paragraph
-"}" = "goto_next_paragraph"
-"{" = "goto_prev_paragraph"
-
-# Add new line pressing enter
-"ret" = ["open_below", "normal_mode"]
+# "}" = "goto_next_paragraph"
+# "{" = "goto_prev_paragraph"
 
 # Scooter for symbol rename (?)
 # "C-r" = [
@@ -99,20 +97,15 @@ E = 'move_next_sub_word_end'
 # ]
 
 
-#--- Normal.g ------------------------------------------------------------------
-
-[keys.normal.g]
-
-# Show possible code actions
-a = "code_action"
-
-
 #--- Normal.space --------------------------------------------------------------
 
 [keys.normal.space]
 
+"l" = "global_search"
+" " = "suspend"
+
 # Opens YAZI explorer
-"o" = [
+"tab" = [
   ":write-all",
   ":sh rm -f /tmp/helix_yazi_link",
   ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/helix_yazi_link",
@@ -123,18 +116,15 @@ a = "code_action"
   ":set mouse true",
 ]
 
-# Global search
-" " = "global_search"
-
 
 #--- Select --------------------------------------------------------------------
 
 [keys.select]
 
 # Subwords motions
-W = 'extend_next_sub_word_start'
-B = 'extend_prev_sub_word_start'
-E = 'extend_next_sub_word_end'
+"W" = 'extend_next_sub_word_start'
+"B" = 'extend_prev_sub_word_start'
+"E" = 'extend_next_sub_word_end'
 
 # Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]

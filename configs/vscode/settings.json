@@ -197,8 +197,12 @@
   "qt-core.additionalQtPaths": [
     {
       "name": "Qt-5.15.18-linux-g++_from_PATH",
-      "path": "/usr/bin/qtpaths",
+      "path": "/usr/bin/qtpaths"
     },
+    {
+      "name": "Qt-5.15.18-linux-g++_from_PATH",
+      "path": "/usr/bin/qmake"
+    }
   ],
   "qt-core.qtInstallationRoot": "/home/dac/Qt",
   "editor.inlayHints.enabled": "off",

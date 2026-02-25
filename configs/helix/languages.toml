@@ -1,13 +1,13 @@
 [[language]]
 name = "cpp"
-# language-servers = ["bbClang"]
-formatter = { command = 'clang-format', args = ["--parser", "html"] }
+formatter = { command = 'clang-format' }
 auto-format = false
 
 [[language]]
 name = "python"
-# language-servers = ["ty"]
+language-servers = [ { name = "pylsp" }, { name = "ruff" } ]
 auto-format = true
+formatter = { command = "black" }
 
 [[language]]
 name = "rust"
@@ -66,3 +66,23 @@ auto-format = true
 '"' = '"'
 '`' = '`'
 '<' = '>'
+
+
+#! Python settings
+
+[language-server.ruff]
+command = "ruff"
+args = ["server"]
+
+[language-server.pylsp.config.pylsp.plugins]
+# Rope for Refactoring (Extract method, etc.)
+rope_autoimport = { enabled = true }
+rope_completion = { enabled = true }
+# Mypy for Type Checking
+pylsp_mypy = { enabled = true, live_mode = true }
+# Ruff will do linter/formatter, disable pylsp ones
+pycodestyle = { enabled = false }
+mccabe = { enabled = false }
+pyflakes = { enabled = false }
+autopep8 = { enabled = false }
+yapf = { enabled = false }
