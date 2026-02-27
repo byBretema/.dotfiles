@@ -1,20 +1,20 @@
 
 theme = "gruvbox_dark_hard"
 
-################################################################################
-# EDITOR
-################################################################################
-
 [editor]
 mouse = true  # 'true' to ensure scroll doesn't break the buffer
 true-color = true
 color-modes = true
-bufferline = "multiple"
+# bufferline = "multiple"
 line-number = "relative"
 scroll-lines = 1
 # breadcrumbs = true
 cursorline = true
 end-of-line-diagnostics = "hint"
+rulers = [80, 100, 120]
+
+[editor.statusline]
+left = ["mode", "spinner", "version-control", "file-name"]
 
 [editor.soft-wrap]
 enable = true
@@ -42,16 +42,13 @@ display-inlay-hints = true
 auto-signature-help = true
 # goto-definition-marker-style = "underline"
 
-################################################################################
-# KEYMAPs
-################################################################################
-
-#--- Normal --------------------------------------------------------------------
-
 [keys.normal]
 
-"o" = "command_mode"
+"ñ" = "command_mode"
 # "ret" = "goto_word"
+
+# Line selection reverse operator
+"A-x" = "select_line_above"
 
 # Subwords motions
 "W" = "move_next_sub_word_start"
@@ -79,10 +76,9 @@ auto-signature-help = true
     ":reload-all"
 ]
 
-
 # Go next/prev paragraph
-# "}" = "goto_next_paragraph"
-# "{" = "goto_prev_paragraph"
+"}" = "goto_next_paragraph"
+"{" = "goto_prev_paragraph"
 
 # Scooter for symbol rename (?)
 # "C-r" = [
@@ -92,17 +88,15 @@ auto-signature-help = true
 #     ":reload-all"
 # ]
 
-# "C-f" = [
-#     ":e <C-r> %%"
-# ]
-
-
-#--- Normal.space --------------------------------------------------------------
-
 [keys.normal.space]
 
-"l" = "global_search"
-" " = "suspend"
+" " = "global_search"
+"m" = "suspend"
+
+# "w" = ":w"
+"W" = ":wa"
+"q" = ":q"
+"x" = ":bc"
 
 # Opens YAZI explorer
 "tab" = [
@@ -116,10 +110,10 @@ auto-signature-help = true
   ":set mouse true",
 ]
 
-
-#--- Select --------------------------------------------------------------------
-
 [keys.select]
+
+# Line selection reverse operator
+"A-x" = "select_line_above"
 
 # Subwords motions
 "W" = 'extend_next_sub_word_start'
@@ -133,10 +127,10 @@ auto-signature-help = true
 # VSCode like select next ocurrence (Select)
 "C-d" = ["search_selection", "extend_search_next"]
 
-
-#--- Insert --------------------------------------------------------------------
-
 [keys.insert]
+
+# Completion
+"C-x" = "completion"
 
 # Move line up/down
 "A-j" = [ "extend_to_line_bounds", "delete_selection", "paste_after" ]

@@ -1,13 +1,14 @@
 [[language]]
 name = "cpp"
-formatter = { command = 'clang-format' }
 auto-format = false
+formatter = { command = 'clang-format' }
 
 [[language]]
 name = "python"
-language-servers = [ { name = "pylsp" }, { name = "ruff" } ]
 auto-format = true
-formatter = { command = "black" }
+scope = "source.python"
+language-servers = ["pyright", "ruff"]
+formatter = { command = "black", args = ["-", "--quiet", "--line-length=120"] }
 
 [[language]]
 name = "rust"
@@ -71,18 +72,9 @@ auto-format = true
 #! Python settings
 
 [language-server.ruff]
-command = "ruff"
-args = ["server"]
+command = "ruff-lsp"
 
-[language-server.pylsp.config.pylsp.plugins]
-# Rope for Refactoring (Extract method, etc.)
-rope_autoimport = { enabled = true }
-rope_completion = { enabled = true }
-# Mypy for Type Checking
-pylsp_mypy = { enabled = true, live_mode = true }
-# Ruff will do linter/formatter, disable pylsp ones
-pycodestyle = { enabled = false }
-mccabe = { enabled = false }
-pyflakes = { enabled = false }
-autopep8 = { enabled = false }
-yapf = { enabled = false }
+[language-server.pyright]
+command = "pyright-langserver"
+args = ["--stdio"]
+config = {}

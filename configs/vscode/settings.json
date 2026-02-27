@@ -211,4 +211,8 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
   },
   "zig.zls.enabled": "off",
+  "workbench.editorAssociations": {
+    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
+    "*.qrc": "qt-core.qrcEditor"
+  },
 }
