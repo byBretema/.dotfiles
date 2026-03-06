@@ -17,7 +17,7 @@ mkdir -p "${config_path}"
 ### Actions
 ################################################################################
 
-mkdir_ret() { 
+mkdir_ret() {
     mkdir -p "$1" >/dev/null 2>&1
     echo "$1"
 }
@@ -26,6 +26,9 @@ mkdir_ret() {
 link_config_files_and_themes() {
     #! Configs
     log_header "Linking config files"
+
+    # Global exports
+    sudo ln -srf "${script_path}/scripts/profile/global_exports" "/etc/profile.d/global_exports"
 
     # Fish
     ln -srf "${script_path}/.fishrc"  "$HOME/.config/fish/config.fish"

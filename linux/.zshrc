@@ -4,10 +4,8 @@
 ### Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
 
-DOTFILES_SCRIPTS="$HOME/.dotfiles/linux/scripts"
+DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 PATH="$DOTFILES_SCRIPTS/bash:$PATH"
-
-source "$DOTFILES_SCRIPTS/.profile/_exports_"
 
 PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
@@ -54,15 +52,15 @@ eval "$(starship init zsh)"
 
 # Aliases
 alias configreload='source $HOME/.zshrc'
-source "$DOTFILES_SCRIPTS/.profile/_aliases_"
+source "$DOTFILES_SCRIPTS/profile/_aliases_"
 
 # External Profile / Binaries
 
 OMI_SCRIPTS="$HOME/omi/scripts"
 PATH="$OMI_SCRIPTS/bash:$PATH"
 
-OMI_PROFILE="$OMI_SCRIPTS/_exports_"
-if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi
+# OMI_PROFILE="$OMI_SCRIPTS/_exports_"
+# if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi
 # if [[ -f "$OMI_SCRIPTS/bash/omi" ]]; then omi -u; fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi

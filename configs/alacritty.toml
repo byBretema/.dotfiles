@@ -3,9 +3,7 @@ TERM = "xterm-256color"
 
 [window]
 padding = { x = 12, y = 12 }
-# opacity = 0.6
-# blur = true # wayland-kde or macos
-decorations = "None"
+decorations = "none"
 
 [scrolling]
 history = 100000
@@ -22,9 +20,31 @@ duration = 500
 style = { shape = "Block", blinking = "Always" }
 vi_mode_style = { shape = "Underline", blinking = "Off" }
 
-# [general]
-# import = [
-#     "~/.dotfiles/common/alacritty/themes/themes/catppuccin_latte.toml"
-# ]
 
-# No longer used, moved to Ghostty.
+################################################################################
+### THEME : Gruvbox Material Hard Dark
+################################################################################
+
+[colors.primary]
+background = '#1d2021'
+foreground = '#d4be98'
+
+[colors.normal]
+black   = '#32302f'
+red     = '#ea6962'
+green   = '#a9b665'
+yellow  = '#d8a657'
+blue    = '#7daea3'
+magenta = '#d3869b'
+cyan    = '#89b482'
+white   = '#d4be98'
+
+[colors.bright]
+black   = '#32302f'
+red     = '#ea6962'
+green   = '#a9b665'
+yellow  = '#d8a657'
+blue    = '#7daea3'
+magenta = '#d3869b'
+cyan    = '#89b482'
+white   = '#d4be98'

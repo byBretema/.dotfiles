@@ -4,10 +4,10 @@
 ### Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
 
-set DOTFILES_SCRIPTS "$HOME/.dotfiles/linux/scripts"
+set DOTFILES_SCRIPTS "$DOTFILES/linux/scripts"
 fish_add_path "$DOTFILES_SCRIPTS/bash" 2>/dev/null
 
-source "$DOTFILES_SCRIPTS/.profile/_exports_"
+# source "$DOTFILES_SCRIPTS/.profile/_exports_"
 
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
@@ -53,15 +53,15 @@ enable_transience
 # Aliases
 
 alias configreload='source $HOME/.config/fish/config.fish'
-source "$DOTFILES_SCRIPTS/.profile/_aliases_"
+source "$DOTFILES_SCRIPTS/profile/_aliases_"
 
 # External Profile / Binaries
 
 set OMI_SCRIPTS "$HOME/omi/scripts"
 fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
 
-set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
-if test -f "$OMI_PROFILE"
-    source "$OMI_PROFILE"
-end
+# set OMI_PROFILE "$OMI_SCRIPTS/_exports_"
+# if test -f "$OMI_PROFILE"
+# source "$OMI_PROFILE"
+# end
 # if test -f "$OMI_SCRIPTS/bash/omi"; omi -u; end
