@@ -4,4 +4,9 @@
     appid: "com.github.hluk.copyq",
     title: "CopyQ",
   ),
+  (
+    enabled: true,
+    appid: "it.mijorus.smile",
+    title: "Smile",
+  ),
 ]

@@ -143,14 +143,6 @@ pagedown = "no_op"
 "c" = ":config-open"
 "C" = ":config-reload"
 
-# Opens git-ui
-"g" = [
-    ":write-all",
-    ":insert-output gitui >/dev/tty",
-    ":redraw",
-    ":reload-all"
-]
-
 # Opens YAZI explorer
 "f" = [
   ":write-all",
@@ -162,6 +154,21 @@ pagedown = "no_op"
   ":set mouse false",
   ":set mouse true",
 ]
+
+[keys.normal.space.space.g]
+
+# Opens git-ui
+"f" = [
+    ":write-all",
+    ":insert-output gitui >/dev/tty",
+    ":redraw",
+    ":reload-all"
+]
+
+# Git Blame of current line
+# "b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+"b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
+
 
 [keys.select]
 
