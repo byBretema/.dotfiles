@@ -113,6 +113,9 @@
   "clangd.enableCodeCompletion": true,
   "clangd.inactiveRegions.opacity": 0.55,
   "clangd.inactiveRegions.useBackgroundHighlight": false,
+  "clangd.arguments": [
+    "--compile-commands-dir=${workspaceFolder}",
+  ],
   //--------------------------------------------------------------------------
   // POWERSHELL
   //--------------------------------------------------------------------------
@@ -194,16 +197,16 @@
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
   },
-  "qt-core.additionalQtPaths": [
-    {
-      "name": "Qt-5.15.18-linux-g++_from_PATH",
-      "path": "/usr/bin/qtpaths"
-    },
-    {
-      "name": "Qt-5.15.18-linux-g++_from_PATH",
-      "path": "/usr/bin/qmake"
-    }
-  ],
+  // "qt-core.additionalQtPaths": [
+  //   {
+  //     "name": "Qt-5.15.18-linux-g++_from_PATH",
+  //     "path": "/usr/bin/qtpaths"
+  //   },
+  //   {
+  //     "name": "Qt-5.15.18-linux-g++_from_PATH",
+  //     "path": "/usr/bin/qmake"
+  //   }
+  // ],
   "qt-core.qtInstallationRoot": "/home/dac/Qt",
   "editor.inlayHints.enabled": "off",
   "workbench.colorTheme": "Gruvbox Dark Hard",
@@ -215,4 +218,10 @@
     "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
     "*.qrc": "qt-core.qrcEditor"
   },
+  "qt-core.additionalQtPaths": [
+    {
+      "name": "Qt-5.15.18-linux-g++_from_PATH",
+      "path": "/usr/bin/qmake"
+    }
+  ],
 }

@@ -1,11 +1,11 @@
 
-theme = "gruvbox_dark_hard"
+theme = "bretema"
 
 [editor]
 # mouse = true  # 'true' to ensure scroll doesn't break the buffer
 true-color = true
 color-modes = true
-bufferline = "multiple"
+# bufferline = "multiple"
 line-number = "relative"
 scroll-lines = 1
 # breadcrumbs = true

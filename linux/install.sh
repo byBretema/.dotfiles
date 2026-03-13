@@ -58,6 +58,12 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/helix")
     ln -srf "${my_configs}/helix/config.toml" "${dst_dir}/config.toml"
     ln -srf "${my_configs}/helix/languages.toml" "${dst_dir}/languages.toml"
+    mkdir -p "${dst_dir}/themes"
+    ln -srf "${my_configs}/helix/theme.toml" "${dst_dir}/themes/bretema.toml"
+
+    # WorkTrunk : Manage git-worktrees
+    dst_dir=$(mkdir_ret "${config_path}/worktrunk")
+    ln -srf "${my_configs}/worktrunk.toml" "${dst_dir}/config.toml"
 
     # Tmux
     dst_dir=$(mkdir_ret "${config_path}/tmux")

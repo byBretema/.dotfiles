@@ -31,7 +31,7 @@ stdver="20"
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
     -g | --gnu   ) shift; compiler="g++" ;;
-    -c | --clang ) shift; compiler="clang" ;;
+    -c | --clang ) shift; compiler="clang++" ;;
     -m | --msvc  ) shift; compiler="cl" ;;
     -s | --std   ) shift; stdver="${1}"; shift ;;
     -h | --help  ) shift; usage ;;
