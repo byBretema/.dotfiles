@@ -107,9 +107,20 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/yazi")
     ln -srf "${my_configs}/yazi/themes/gruvbox_dark.toml" "${dst_dir}/theme.toml"
 
+    #! DE
+    log_header "Linking DE Configs"
+
     # Cosmic - Floating Windows  (defined in RON format)
     dst_dir=$(mkdir_ret "${config_path}/cosmic/com.system76.CosmicSettings.WindowRules/v1")
     ln -srf "${script_path}/assets/cosmic/tiling_exception_custom" "${dst_dir}/tiling_exception_custom"
+
+    # Cosmic - Keyboard settings
+    dst_dir=$(mkdir_ret "${config_path}/cosmic/com.system76.CosmicComp/v1")
+    ln -srf "${script_path}/assets/cosmic/keyboard_config" "${dst_dir}/xkb_config"
+    # Cosmic - Keyboard shortcuts
+    dst_dir=$(mkdir_ret "${config_path}/cosmic/com.system76.CosmicSettings.Shortcuts/v1")
+    ln -srf "${script_path}/assets/cosmic/keyboard_shortcuts" "${dst_dir}/custom"
+
 }
 
 
