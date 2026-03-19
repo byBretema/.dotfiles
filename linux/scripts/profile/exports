@@ -24,3 +24,5 @@ export DOTFILES="$HOME/.dotfiles"
 export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export GTK_IM_MODULE=simple
+
+export EDITOR=helix

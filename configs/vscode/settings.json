@@ -224,4 +224,7 @@
       "path": "/usr/bin/qmake"
     }
   ],
+  "[cmake]": {
+    "editor.defaultFormatter": "KylinIdeTeam.cmake-intellisence"
+  },
 }
