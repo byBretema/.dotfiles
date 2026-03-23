@@ -81,7 +81,8 @@ auto-signature-help = true
 
 [keys.normal]
 
-"ñ" = "command_mode"
+# "ñ" = "command_mode"
+"ñ" = "goto_word"
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
 
