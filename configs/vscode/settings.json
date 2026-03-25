@@ -18,7 +18,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.associations": {
-    "*.inc": "shellscript",
+    "*.inc": "shellscript"
   },
   "explorer.confirmDelete": false,
   //--------------------------------------------------------------------------
@@ -116,6 +116,9 @@
   "clangd.arguments": [
     "--compile-commands-dir=${workspaceFolder}",
   ],
+    "[cmake]": {
+    "editor.defaultFormatter": "KylinIdeTeam.cmake-intellisence"
+  },
   //--------------------------------------------------------------------------
   // POWERSHELL
   //--------------------------------------------------------------------------
@@ -156,7 +159,7 @@
     "editor.defaultFormatter": "esbenp.prettier-vscode",
     "editor.formatOnSave": true,
   },
-  "javascript.format.enable": true,
+  "js.format.enable": true,
   "css.enabledLanguages": ["html", "astro"],
   //--------------------------------------------------------------------------
   // MARKDOWN
@@ -190,41 +193,23 @@
   "editor.bracketPairColorization.enabled": false,
   "window.autoDetectHighContrast": false,
   //--------------------------------------------------------------------------
-  // DYNAMIC / USORTED
+  // JSON
   //--------------------------------------------------------------------------
-  "shellformat.path": "/usr/bin/shfmt",
-  "bashBeautify.tabSize": 4,
   "[json]": {
     "editor.defaultFormatter": "vscode.json-language-features",
   },
-  // "qt-core.additionalQtPaths": [
-  //   {
-  //     "name": "Qt-5.15.18-linux-g++_from_PATH",
-  //     "path": "/usr/bin/qtpaths"
-  //   },
-  //   {
-  //     "name": "Qt-5.15.18-linux-g++_from_PATH",
-  //     "path": "/usr/bin/qmake"
-  //   }
-  // ],
-  "qt-core.qtInstallationRoot": "/home/dac/Qt",
-  "editor.inlayHints.enabled": "off",
-  "workbench.colorTheme": "Gruvbox Dark Hard",
   "[jsonc]": {
-    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.defaultFormatter": "vscode.json-language-features",
   },
-  "zig.zls.enabled": "off",
-  "workbench.editorAssociations": {
-    "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
-    "*.qrc": "qt-core.qrcEditor"
-  },
-  "qt-core.additionalQtPaths": [
-    {
-      "name": "Qt-5.15.18-linux-g++_from_PATH",
-      "path": "/usr/bin/qmake"
-    }
-  ],
-  "[cmake]": {
-    "editor.defaultFormatter": "KylinIdeTeam.cmake-intellisence"
-  },
+  //--------------------------------------------------------------------------
+  // BASH
+  //--------------------------------------------------------------------------
+  "shellformat.path": "/usr/bin/shfmt",
+  "bashBeautify.tabSize": 4,
+  //--------------------------------------------------------------------------
+  // DYNAMIC / USORTED
+  //--------------------------------------------------------------------------
+  "qt-core.qtInstallationRoot": "/home/dac/Qt",
+  "workbench.colorTheme": "Gruvbox Dark Hard",
+
 }
