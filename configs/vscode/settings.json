@@ -3,6 +3,8 @@
   // SECURITY
   "security.workspace.trust.untrustedFiles": "open",
   "telemetry.telemetryLevel": "off",
+  "github.copilot.enable": { "*": false },
+  "chat.disableAIFeatures": true,
   //--------------------------------------------------------------------------
   // SEARCH
   //--------------------------------------------------------------------------
@@ -34,11 +36,11 @@
   "editor.accessibilitySupport": "off",
   "editor.renderWhitespace": "trailing",
   "editor.tokenColorCustomizations": {
-    "comments": "#2299FF",
+    "comments": "#2299FF"
   },
   "editor.trimAutoWhitespace": true,
   "editor.semanticTokenColorCustomizations": {
-    "enabled": true,
+    "enabled": true
   },
   "editor.scrollbar.vertical": "hidden",
   "editor.minimap.autohide": "mouseover",
@@ -46,7 +48,7 @@
   "editor.cursorSmoothCaretAnimation": "on",
   "editor.cursorBlinking": "phase",
   "[markdown]": {
-    "diffEditor.ignoreTrimWhitespace": true,
+    "diffEditor.ignoreTrimWhitespace": true
   },
   //--------------------------------------------------------------------------
   // WORKBENCH
@@ -54,7 +56,7 @@
   "workbench.settings.editor": "json",
   "workbench.iconTheme": "icons",
   "workbench.colorCustomizations": {
-    "panel.border": "#ee8800",
+    "panel.border": "#ee8800"
   },
   "workbench.startupEditor": "none",
   "workbench.sideBar.location": "right",
@@ -77,8 +79,8 @@
     "Pwsh": {
       "path": "pwsh.EXE",
       "icon": "terminal-powershell",
-      "args": ["-nologo"],
-    },
+      "args": ["-nologo"]
+    }
   },
   "terminal.integrated.tabs.enabled": false,
   "accessibility.signals.terminalBell": { "sound": "off" },
@@ -89,7 +91,7 @@
   //--------------------------------------------------------------------------
   "python.languageServer": "Pylance",
   "[python]": {
-    "editor.defaultFormatter": "ms-python.black-formatter",
+    "editor.defaultFormatter": "ms-python.black-formatter"
   },
   "black-formatter.args": ["--line-length", "120"],
   "python.analysis.typeCheckingMode": "standard",
@@ -114,7 +116,7 @@
   "clangd.inactiveRegions.opacity": 0.55,
   "clangd.inactiveRegions.useBackgroundHighlight": false,
   "clangd.arguments": [
-    "--compile-commands-dir=${workspaceFolder}",
+    "--compile-commands-dir=${workspaceFolder}"
   ],
     "[cmake]": {
     "editor.defaultFormatter": "KylinIdeTeam.cmake-intellisence"
@@ -157,7 +159,7 @@
   // },
   "[javascript]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
+    "editor.formatOnSave": true
   },
   "js.format.enable": true,
   "css.enabledLanguages": ["html", "astro"],
@@ -179,8 +181,7 @@
     "TODO",
     "XXX",
     "[ ]",
-    "[x]",
-    "asdfasdf",
+    "[x]"
   ],
   //--------------------------------------------------------------------------
   // EXTENSIONS
@@ -188,7 +189,7 @@
   "fiveServer.navigate": true,
   "find-it-faster.general.useTerminalInEditor": true,
   "[dynamic csv]": {
-    "editor.inlayHints.maximumLength": 0,
+    "editor.inlayHints.maximumLength": 0
   },
   "editor.bracketPairColorization.enabled": false,
   "window.autoDetectHighContrast": false,
@@ -196,10 +197,10 @@
   // JSON
   //--------------------------------------------------------------------------
   "[json]": {
-    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   "[jsonc]": {
-    "editor.defaultFormatter": "vscode.json-language-features",
+    "editor.defaultFormatter": "vscode.json-language-features"
   },
   //--------------------------------------------------------------------------
   // BASH
@@ -211,5 +212,4 @@
   //--------------------------------------------------------------------------
   "qt-core.qtInstallationRoot": "/home/dac/Qt",
   "workbench.colorTheme": "Gruvbox Dark Hard",
-
 }
