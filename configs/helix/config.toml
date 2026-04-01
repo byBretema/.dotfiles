@@ -2,7 +2,7 @@
 theme = "bretema"
 
 [editor]
-mouse                    = false  # 'true' to ensure scroll doesn't break the buffer
+mouse                    = false
 true-color               = true
 color-modes              = true
 line-number              = "relative"
@@ -14,6 +14,7 @@ default-line-ending      = "lf"
 insert-final-newline     = true
 trim-trailing-whitespace = true
 end-of-line-diagnostics  = "hint"
+completion-trigger-len   = 1
 
 [editor.auto-save]
 focus-lost         = true
@@ -79,12 +80,13 @@ display-messages          = true
 display-progress-messages = true
 display-inlay-hints       = true
 auto-signature-help       = true
-# goto-definition-marker-style = "underline"
 
 [keys.normal]
 
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
+# C-u = ["half_page_up", "align_view_center"]
+# C-d = ["half_page_down", "align_view_center"]
 
 # Disable arrows
 up       = "no_op"
@@ -124,6 +126,11 @@ pagedown = "no_op"
     ":reload-all"
 ]
 
+[keys.normal.g]
+
+j = "jump_backward"
+k = "jump_forward"
+
 [keys.normal.space]
 
 "l" = "global_search"
@@ -140,6 +147,13 @@ pagedown = "no_op"
 "r" = ":reload-all"
 "c" = ":config-open"
 "C" = ":config-reload"
+"i" = ":toggle lsp.display-inlay-hints"
+
+"h" = [
+    ":toggle file-picker.git-ignore",
+    ":toggle file-picker.git-exclude",
+    ":toggle file-picker.git-global",
+]
 
 # Opens YAZI explorer
 "f" = [
@@ -153,10 +167,8 @@ pagedown = "no_op"
   ':set mouse true',
 ]
 
-[keys.normal.'ñ'.g]
-
 # Opens git-ui
-"f" = [
+"g" = [
     ":write-all",
     ":insert-output lazygit >/dev/tty",
     ":redraw",

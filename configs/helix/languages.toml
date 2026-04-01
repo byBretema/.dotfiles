@@ -55,6 +55,7 @@ auto-format = true
 name = "markdown"
 formatter = { command = "prettier", args = ["--parser", "markdown"] }
 auto-format = true
+comment-tokens = ["-", "+", "*", "- [ ]", ">"]
 
 [[language]]
 name = "lua"
