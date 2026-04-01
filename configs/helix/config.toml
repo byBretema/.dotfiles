@@ -68,9 +68,9 @@ select = "underline"
 
 [editor.file-picker]
 hidden      = false
-git-ignore  = false
-git-global  = false
-git-exclude = false
+git-ignore  = true
+git-global  = true
+git-exclude = true
 
 [editor.inline-diagnostics]
 cursor-line = "warning"
@@ -85,8 +85,6 @@ auto-signature-help       = true
 
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
-# C-u = ["half_page_up", "align_view_center"]
-# C-d = ["half_page_down", "align_view_center"]
 
 # Disable arrows
 up       = "no_op"

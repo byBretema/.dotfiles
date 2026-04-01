@@ -4,6 +4,8 @@ TERM = "xterm-256color"
 [window]
 padding = { x = 12, y = 12 }
 decorations = "none"
+opacity = 0.9
+blur = true
 
 [scrolling]
 history = 100000
@@ -20,6 +22,8 @@ duration = 500
 style = { shape = "Block", blinking = "Always" }
 vi_mode_style = { shape = "Underline", blinking = "Off" }
 
+[mouse]
+hide_when_typing = true
 
 ################################################################################
 ### THEME : Gruvbox Material Hard Dark
