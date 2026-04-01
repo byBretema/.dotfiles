@@ -1,7 +1,8 @@
 #!/usr/bin/env fish
 
-################################################################################
-### Common setup "Shell-Agnostic"  (Part 1)
+
+#
+## Common setup "Shell-Agnostic"  (Part 1)
 ################################################################################
 
 source "$HOME/.dotfiles/linux/scripts/profile/exports"
@@ -12,8 +13,9 @@ fish_add_path "$DOTFILES_SCRIPTS/bash" 2>/dev/null
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 
-################################################################################
-### Functions
+
+#
+## Functions
 ################################################################################
 
 function mkcd -a dir
@@ -31,21 +33,26 @@ function y
 	rm -f -- "$tmp"
 end
 
-################################################################################
-### Plugins
+bind \cz 'fg 2>/dev/null; commandline -f repaint'
+
+
+#
+## Plugins
 ################################################################################
 
 set fish_greeting ""
 
-################################################################################
-### Man pages
+
+#
+## Man pages
 ################################################################################
 
 set -x MANROFFOPT -c
 set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
-################################################################################
-### Common setup "Shell-Agnostic"  (Part 2)
+
+#
+## Common setup "Shell-Agnostic"  (Part 2)
 ################################################################################
 
 # Prompt
