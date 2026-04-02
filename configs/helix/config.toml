@@ -147,11 +147,7 @@ k = "jump_forward"
 "C" = ":config-reload"
 "i" = ":toggle lsp.display-inlay-hints"
 
-"h" = [
-    ":toggle file-picker.git-ignore",
-    ":toggle file-picker.git-exclude",
-    ":toggle file-picker.git-global",
-]
+"h" = ":toggle file-picker.git-ignore"
 
 # Opens YAZI explorer
 "f" = [
@@ -174,7 +170,6 @@ k = "jump_forward"
 ]
 
 # Git Blame of current line
-# "b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
 
 
