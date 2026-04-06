@@ -149,6 +149,8 @@ k = "jump_forward"
 
 "h" = ":toggle file-picker.git-ignore"
 
+"o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
+
 # Opens YAZI explorer
 "f" = [
   ':write-all',

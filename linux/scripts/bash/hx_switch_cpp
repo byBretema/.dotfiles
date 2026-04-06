@@ -1,0 +1,52 @@
+#!/usr/bin/env bash
+
+# 1. Read the exact selection piped from Helix via stdin
+filepath=${1}
+filepath=$(printf "%s" "$filepath" | tr -d '\n\r')
+
+filename=$(basename "$filepath")
+dir=$(dirname "$filepath")
+ext="${filename##*.}"
+name="${filename%.*}"
+
+# 2. Determine target extensions
+case "$ext" in
+    h|hh|hpp|hxx|cuh) targets=("cpp" "cc" "c" "cxx" "cu") ;;
+    c|cc|cpp|cxx|cu) targets=("h" "hpp" "hh" "hxx" "cuh") ;;
+    *) printf "%s" "$filepath"; exit 0 ;;
+esac
+
+# 3. Check the same directory first (fastest path)
+for t in "${targets[@]}"; do
+    candidate="$dir/$name.$t"
+    if [[ -f "$candidate" ]]; then
+        printf "%s" "$candidate"
+        exit 0
+    fi
+done
+
+# 4. If not found, find the project root
+# (Look for .git, CMakeLists.txt, or Makefile)
+root="$dir"
+while [[ "$root" != "/" && "$root" != "." && ! -d "$root/.git" && ! -f "$root/CMakeLists.txt" && ! -f "$root/Makefile" ]]; do
+    root=$(dirname "$root")
+done
+[[ "$root" == "/" ]] && root="$dir"
+
+# 5. Deep search the project tree for the file
+for t in "${targets[@]}"; do
+    # Using 'find', excluding hidden directories (like .git) for speed
+    found=$(find "$root" -type f -name "$name.$t" -not -path '*/\.*' | head -n 1)
+    if [[ -n "$found" ]]; then
+        printf "%s" "$found"
+        exit 0
+    fi
+done
+
+# 6. Fallback: if the file doesn't exist anywhere, guess the standard path
+# so Helix can create a new file buffer for it.
+if [[ "$ext" == h* ]]; then
+    printf "%s" "$dir/$name.cpp"
+else
+    printf "%s" "$dir/$name.h"
+fi
