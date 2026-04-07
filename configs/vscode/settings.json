@@ -55,9 +55,10 @@
   //--------------------------------------------------------------------------
   "workbench.settings.editor": "json",
   "workbench.iconTheme": "icons",
-  "workbench.colorCustomizations": {
-    "panel.border": "#ee8800"
-  },
+  // "workbench.colorCustomizations": {
+  //   "panel.border": "#ee8800"
+  // },
+  "workbench.colorCustomizations": null,
   "workbench.startupEditor": "none",
   "workbench.sideBar.location": "right",
   "workbench.editor.enablePreview": false,
