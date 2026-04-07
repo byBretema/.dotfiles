@@ -1,0 +1,63 @@
+#!/usr/bin/env bash
+
+if [ -z "$1" ] || [ -z "$2" ]; then
+    echo "Usage: hx_duplicate_cpp <current_file> <new_base_name>"
+    exit 1
+fi
+
+filepath="$1"
+new_name="$2"
+
+filename=$(basename "$filepath")
+dir=$(dirname "$filepath")
+ext="${filename##*.}"
+old_name="${filename%.*}"
+
+new_file="$dir/$new_name.$ext"
+
+# 1. Copy the current file
+cp "$filepath" "$new_file"
+
+# 2. Determine target extensions for the alternate file
+case "$ext" in
+    h|hh|hpp|hxx|cuh) targets=("cpp" "cc" "c" "cxx" "cu") ;;
+    c|cc|cpp|cxx|cu) targets=("h" "hpp" "hh" "hxx" "cuh") ;;
+    *) targets=() ;;
+esac
+
+# 3. Search for the alternate file in the project
+alt_file=""
+if [ ${#targets[@]} -gt 0 ]; then
+    root="$dir"
+    while [[ "$root" != "/" && "$root" != "." && ! -d "$root/.git" && ! -f "$root/CMakeLists.txt" && ! -f "$root/Makefile" ]]; do
+        root=$(dirname "$root")
+    done
+    [[ "$root" == "/" ]] && root="$dir"
+
+    for t in "${targets[@]}"; do
+        # Fast path: check same dir
+        if [[ -f "$dir/$old_name.$t" ]]; then
+            alt_file="$dir/$old_name.$t"
+            alt_ext="$t"
+            break
+        fi
+        # Deep path: check project tree
+        found=$(find "$root" -type f -name "$old_name.$t" -not -path '*/\.*' | head -n 1)
+        if [[ -n "$found" ]]; then
+            alt_file="$found"
+            alt_ext="$t"
+            break
+        fi
+    done
+fi
+
+# 4. If the alternate file exists, duplicate it too
+if [[ -n "$alt_file" ]]; then
+    alt_dir=$(dirname "$alt_file")
+    new_alt_file="$alt_dir/$new_name.$alt_ext"
+
+    cp "$alt_file" "$new_alt_file"
+fi
+
+# 5. Print the newly created file so Helix can open it
+echo "$new_file"

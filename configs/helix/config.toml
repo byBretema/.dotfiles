@@ -150,6 +150,7 @@ k = "jump_forward"
 "h" = ":toggle file-picker.git-ignore"
 
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
+"d" = ":open %sh{hx_duplicate_cpp %{buffer_name} "
 
 # Opens YAZI explorer
 "f" = [
