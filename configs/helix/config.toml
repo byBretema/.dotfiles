@@ -1,10 +1,11 @@
-
 theme = "bretema"
 
 [editor]
 mouse                    = true
 true-color               = true
 color-modes              = true
+# rainbow-brackets         = true
+completion-replace       = true
 line-number              = "relative"
 scroll-lines             = 1
 cursorline               = true
@@ -24,23 +25,7 @@ after-delay.enable = true
 separator = "┆"
 left      = [ "mode", "spinner", "file-name", "spacer", "file-modification-indicator", "read-only-indicator" ]
 center    = [ "version-control" ]
-right     = [
-    "separator",
-    "position",
-    "separator",
-    "selections",
-    "primary-selection-length",
-    "separator",
-    "file-type",
-    "separator",
-    "file-encoding",
-    "file-line-ending",
-    "separator",
-    "spacer",
-    "diagnostics",
-    "separator",
-    "workspace-diagnostics"
-]
+right     = [ "file-type", "separator", "file-encoding", "file-line-ending", "separator", "position", "separator", "spacer", "diagnostics", "separator", "workspace-diagnostics" ]
 
 [editor.soft-wrap]
 enable = true
@@ -59,7 +44,7 @@ tabpad  = "·"
 [editor.indent-guides]
 render      = true
 character   = "┆" # Some nice chars: "▏", "┆", "┊", "⸽"
-skip-levels = 1
+skip-levels = 0
 
 [editor.cursor-shape]
 insert = "bar"
@@ -134,6 +119,8 @@ k = "jump_forward"
 "l" = "global_search"
 "m" = "suspend"
 
+# [keys.normal.'+']
+
 [keys.normal.'ñ']
 
 "ñ" = "goto_word"
@@ -142,18 +129,25 @@ k = "jump_forward"
 "a" = ":wa"
 "q" = ":q"
 "x" = ":bc"
+"X" = ":bc!"
 "r" = ":reload-all"
 "c" = ":config-open"
 "C" = ":config-reload"
 "i" = ":toggle lsp.display-inlay-hints"
 
-"h" = ":toggle file-picker.git-ignore"
+"h" = ":toggle whitespace.render none all"
+"." = ":toggle file-picker.git-ignore"
+
+"m" = "@be*v"
+"M" = "@miw*%s<ret>"
 
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
 "d" = ":open %sh{hx_duplicate_cpp %{buffer_name} "
 
+"f" = ":format"
+
 # Opens YAZI explorer
-"f" = [
+"y" = [
   ':write-all',
   ':sh rm -f /tmp/unique-file-h21a434',
   ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/unique-file-h21a434',
@@ -164,8 +158,11 @@ k = "jump_forward"
   ':set mouse true',
 ]
 
+
+[keys.normal.'ñ'.g]
+
 # Opens git-ui
-"g" = [
+"u" = [
     ":write-all",
     ":insert-output lazygit >/dev/tty",
     ":redraw",
@@ -173,7 +170,9 @@ k = "jump_forward"
 ]
 
 # Git Blame of current line
-"b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
+# "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
+"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+"d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 
 
 [keys.select]
