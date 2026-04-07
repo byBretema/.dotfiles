@@ -2,7 +2,7 @@
 theme = "bretema"
 
 [editor]
-mouse                    = false
+mouse                    = true
 true-color               = true
 color-modes              = true
 line-number              = "relative"

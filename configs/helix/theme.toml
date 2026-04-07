@@ -1,3 +1,5 @@
 
 inherits = "gruvbox_dark_hard"
 "ui.background" = {}
+
+"comment" = { fg = "#2299FF" }
