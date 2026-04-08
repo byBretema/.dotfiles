@@ -134,6 +134,7 @@ k = "jump_forward"
 "c" = ":config-open"
 "C" = ":config-reload"
 "i" = ":toggle lsp.display-inlay-hints"
+"l" = "@:lang "
 
 "h" = ":toggle whitespace.render none all"
 "." = ":toggle file-picker.git-ignore"
@@ -142,7 +143,7 @@ k = "jump_forward"
 "M" = "@miw*%s<ret>"
 
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
-"d" = ":open %sh{hx_duplicate_cpp %{buffer_name} "
+"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
 
 "f" = ":format"
 
