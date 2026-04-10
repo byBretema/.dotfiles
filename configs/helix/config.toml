@@ -16,6 +16,7 @@ insert-final-newline     = true
 trim-trailing-whitespace = true
 end-of-line-diagnostics  = "hint"
 completion-trigger-len   = 1
+bufferline               = "always"
 
 [editor.auto-save]
 focus-lost         = true
@@ -111,41 +112,53 @@ pagedown = "no_op"
 
 [keys.normal.g]
 
-j = "jump_backward"
-k = "jump_forward"
+j = "goto_prev_diag"
+k = "goto_next_diag"
 
 [keys.normal.space]
 
 "l" = "global_search"
 "m" = "suspend"
 
-# [keys.normal.'+']
+[keys.normal.'+']
+
+"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
+
+"c" = ":config-open"
+"C" = ":config-reload"
 
 [keys.normal.'ñ']
 
 "ñ" = "goto_word"
-"k" = "global_search"
+
 "w" = ":w"
+"W" = ":w!"
 "a" = ":wa"
+"A" = ":wa!"
 "q" = ":q"
+"Q" = ":q!"
 "x" = ":bc"
 "X" = ":bc!"
-"r" = ":reload-all"
-"c" = ":config-open"
-"C" = ":config-reload"
-"i" = ":toggle lsp.display-inlay-hints"
-"l" = "@:lang "
 
+"k" = "@]"
+"j" = "@["
+
+"l" = "@:lang "
+"f" = ":format"
+"r" = ":reload-all"
+
+"i" = ":toggle lsp.display-inlay-hints"
+"b" = ":toggle bufferline never always"
 "h" = ":toggle whitespace.render none all"
 "." = ":toggle file-picker.git-ignore"
 
-"m" = "@be*v"
-"M" = "@miw*%s<ret>"
+"d" = "@miw*v"           # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
+"D" = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
+"m" = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
+"M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
 
+# Calls a script, enables switch between .cpp and .hpp files
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
-"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
-
-"f" = ":format"
 
 # Opens YAZI explorer
 "y" = [
@@ -158,7 +171,6 @@ k = "jump_forward"
   ':set mouse false',
   ':set mouse true',
 ]
-
 
 [keys.normal.'ñ'.g]
 
