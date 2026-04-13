@@ -1,52 +1,43 @@
 #!/usr/bin/env bash
 
-# 1. Read the exact selection piped from Helix via stdin
+# User input
 filepath=${1}
 filepath=$(printf "%s" "$filepath" | tr -d '\n\r')
 
+# Extract info
 filename=$(basename "$filepath")
 dir=$(dirname "$filepath")
 ext="${filename##*.}"
 name="${filename%.*}"
 
-# 2. Determine target extensions
+# Helpers
+_done()     { printf "%s" "$1"; exit 0; }
+_fallback() { _done $filepath; }
+
+# Get target list based on extension
 case "$ext" in
-    h|hh|hpp|hxx|cuh) targets=("cpp" "cc" "c" "cxx" "cu") ;;
-    c|cc|cpp|cxx|cu) targets=("h" "hpp" "hh" "hxx" "cuh") ;;
-    *) printf "%s" "$filepath"; exit 0 ;;
+    h|hh|hpp|hxx|cuh|vert) targets=("cpp" "cc" "c" "cxx" "cu" "frag") ;;
+    c|cc|cpp|cxx|cu|frag)  targets=("h" "hpp" "hh" "hxx" "cuh" "vert") ;;
+    *)                     _fallback;;
 esac
 
-# 3. Check the same directory first (fastest path)
+# Check on the same dir
 for t in "${targets[@]}"; do
     candidate="$dir/$name.$t"
-    if [[ -f "$candidate" ]]; then
-        printf "%s" "$candidate"
-        exit 0
-    fi
+    if [[ -f "$candidate" ]]; then _done "$candidate"; fi
 done
 
-# 4. If not found, find the project root
-# (Look for .git, CMakeLists.txt, or Makefile)
+# If not found, get closest root: (.git, CMakeLists.txt, ...)
 root="$dir"
 while [[ "$root" != "/" && "$root" != "." && ! -d "$root/.git" && ! -f "$root/CMakeLists.txt" && ! -f "$root/Makefile" ]]; do
     root=$(dirname "$root")
 done
 [[ "$root" == "/" ]] && root="$dir"
 
-# 5. Deep search the project tree for the file
+# Deep search the project tree for the file
 for t in "${targets[@]}"; do
-    # Using 'find', excluding hidden directories (like .git) for speed
-    found=$(find "$root" -type f -name "$name.$t" -not -path '*/\.*' | head -n 1)
-    if [[ -n "$found" ]]; then
-        printf "%s" "$found"
-        exit 0
-    fi
+    found=$(find "$root" -type f -name "$name.$t" -not -path '*/\.*' | head -n 1) # skip .files .dirs
+    if [[ -n "$found" ]]; then _done "$found"; fi
 done
 
-# 6. Fallback: if the file doesn't exist anywhere, guess the standard path
-# so Helix can create a new file buffer for it.
-if [[ "$ext" == h* ]]; then
-    printf "%s" "$dir/$name.cpp"
-else
-    printf "%s" "$dir/$name.h"
-fi
+_fallback

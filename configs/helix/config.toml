@@ -45,7 +45,7 @@ tabpad  = "·"
 [editor.indent-guides]
 render      = true
 character   = "┆" # Some nice chars: "▏", "┆", "┊", "⸽"
-skip-levels = 0
+skip-levels = 1
 
 [editor.cursor-shape]
 insert = "bar"
@@ -71,6 +71,10 @@ auto-signature-help       = true
 
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
+
+"Y" = "@miwy"
+"d" = "delete_selection_noyank"
+"c" = "change_selection_noyank"
 
 # Disable arrows
 up       = "no_op"
@@ -125,7 +129,7 @@ k = "goto_next_diag"
 "d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
 
 "c" = ":config-open"
-"C" = ":config-reload"
+"r" = ":config-reload"
 
 [keys.normal.'ñ']
 
