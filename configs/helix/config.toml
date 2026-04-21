@@ -131,6 +131,11 @@ k = "goto_next_diag"
 "c" = ":config-open"
 "r" = ":config-reload"
 
+"i" = ":toggle lsp.display-inlay-hints"
+"b" = ":toggle bufferline never always"
+"h" = ":toggle whitespace.render none all"
+"." = ":toggle file-picker.git-ignore"
+
 [keys.normal.'ñ']
 
 "ñ" = "goto_word"
@@ -151,17 +156,18 @@ k = "goto_next_diag"
 "f" = ":format"
 "r" = ":reload-all"
 
-"i" = ":toggle lsp.display-inlay-hints"
-"b" = ":toggle bufferline never always"
-"h" = ":toggle whitespace.render none all"
-"." = ":toggle file-picker.git-ignore"
+# "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
+"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 
 "d" = "@miw*v"           # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
 "D" = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
 "m" = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
 "M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
 
-# Calls a script, enables switch between .cpp and .hpp files
+"n" = "@:insert-output echo %{buffer_name}<ret>yu"
+"N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
+
+# Calls a script, enables switch between files .cpp/.hpp (also .frag/.vert)
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
 
 # Opens YAZI explorer
@@ -187,12 +193,16 @@ k = "goto_next_diag"
 ]
 
 # Git Blame of current line
-# "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
-"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
 "d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 
 
 [keys.select]
+
+"C-n" = "page_cursor_half_down"
+"C-p" = "page_cursor_half_up"
+
+"d" = "delete_selection_noyank"
+"c" = "change_selection_noyank"
 
 # Subwords motions
 "W" = 'extend_next_sub_word_start'
