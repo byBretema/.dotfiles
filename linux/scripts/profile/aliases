@@ -7,6 +7,7 @@ alias hhc='helix $DOTFILES'
 alias qc='qtcreator >/dev/null 2>/dev/null'
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M ($(curl -s -f --connect-timeout 2 https://ipapi.co/country | head -n 1 || echo '??'))"'
+alias now_file='date "+%Y-%m-%d_%H-%M"'
 alias gpu_toggle='python "$DOTFILES/linux/scripts/gpu_toggle.py"'
 
 # Langs
@@ -45,9 +46,19 @@ alias omis='pushd $(omi -s)'
 alias omita='omi -u && ta'
 
 # Git
-alias gittop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
-alias gitupdate='git ac "$(now)" && git push'
-alias ediff="git status -s >&2; git status -s | awk '{ print \$2 }' | fzf_h | xargs -r code"
+alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
+alias gp='git pull --rebase'
+alias gd='git diff'
+alias gac='git add -A && git commit -m'
+alias ga='git add -A'
+alias gc='git commit -m'
+alias gb='git branch'
+alias gs='git switch'
+alias gw='git worktree'
+alias gwl='git worktree list'
+alias gwl='git worktree prune'
+alias gwr='git worktree remove'
+alias ediff="git status -s >&2; git status -s | awk '{ print \$2 }' | fzf_h | xargs -r $EDITOR"
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
