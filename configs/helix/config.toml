@@ -134,7 +134,10 @@ k = "goto_next_diag"
 "i" = ":toggle lsp.display-inlay-hints"
 "b" = ":toggle bufferline never always"
 "h" = ":toggle whitespace.render none all"
-"." = ":toggle file-picker.git-ignore"
+"." = [
+    ":toggle file-picker.git-ignore",
+    ":toggle file-picker.ignore"
+]
 
 [keys.normal.'ñ']
 
