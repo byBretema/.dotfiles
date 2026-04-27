@@ -1,3 +1,4 @@
+#!/usr/bin/env python3
 # Lovingly typ(o)ed @byBretema
 
 
@@ -54,4 +55,5 @@ if __name__ == "__main__":
     print("- " * 40)
     print(out)
     print("- " * 40)
-    print("\n@ Remeber to re-login to apply the changes !")
+    print(f"@ Changes applied on: {FILEPATH}")
+    print("@ Remeber to re-login to apply the changes !")

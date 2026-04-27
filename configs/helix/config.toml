@@ -169,6 +169,7 @@ k = "goto_next_diag"
 
 "n" = "@:insert-output echo %{buffer_name}<ret>yu"
 "N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
+"F" = "@:insert-output echo $(pwd)/+{buffer_name}<ret>yu"
 
 # Calls a script, enables switch between files .cpp/.hpp (also .frag/.vert)
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"

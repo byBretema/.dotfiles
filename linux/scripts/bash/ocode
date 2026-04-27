@@ -1,0 +1,60 @@
+#!/usr/bin/env bash
+source ".bash_common"
+
+
+################################################################################
+### Parse args
+################################################################################
+
+#! Help
+
+usage() {
+  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] [ITEM_TO_OPEN]"
+  echo ""
+  echo "Options:"
+  echo "  -w | --watch      Open a 'llama ps' watcher"
+  echo "  -h | --help       Show this message"
+  echo "  --                Extra args after this"
+  exit 1
+}
+
+#! Defaults
+
+llama_watcher=false
+
+
+#! Process options
+
+while [[ "${#}" > 0 ]]; do
+  case "${1}" in
+    -w | --watch    ) shift; llama_watcher=true ;;
+    -h | --help     ) shift; usage ;;
+    --              ) shift; break ;;
+    *               ) break ;;
+  esac
+done
+
+
+################################################################################
+### Execution
+################################################################################
+
+launch_opencode() {
+  export OLLAMA_CONTEXT_LENGTH=${2:-36000}
+  sudo systemctl daemon-reload
+  sudo systemctl restart ollama
+  ollama serve >/dev/null 2>&1 &
+  ollama launch opencode --model "$1"
+}
+
+if ${llama_watcher}; then
+  tmux split-window -v -l 8 "watch ollama ps"
+  tmux select-pane -U
+fi
+
+OPTIONS=( "llama3.1:8b" "qwen3.5:9b" )
+option=$(choose_one -p "Choose model" -- "${OPTIONS[@]}")
+launch_opencode "${option}"
+
+[[ "${option}" == "${OPTIONS[0]}" ]] && launch_opencode "llama3.1:8b" 72000
+[[ "${option}" == "${OPTIONS[1]}" ]] && launch_opencode "qwen3.5:9b" 36000
