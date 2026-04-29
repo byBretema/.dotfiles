@@ -60,6 +60,12 @@ link_config_files_and_themes() {
     ln -srf "${my_configs}/helix/languages.toml" "${dst_dir}/languages.toml"
     mkdir -p "${dst_dir}/themes"
     ln -srf "${my_configs}/helix/theme.toml" "${dst_dir}/themes/bretema.toml"
+    for theme_file in "${my_configs}/helix/themes/"*; do
+        if [ -f "$theme_file" ]; then
+            filename=$(basename "$theme_file")
+            ln -srf "$theme_file" "${dst_dir}/themes/${filename}"
+        fi
+    done
 
     # WorkTrunk : Manage git-worktrees
     dst_dir=$(mkdir_ret "${config_path}/worktrunk")

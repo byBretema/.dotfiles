@@ -1,10 +1,16 @@
 
 # Tools
+
 alias hx='helix'
-alias hxd='helix --health'
-alias hh='helix .'
-alias hhc='helix $DOTFILES'
+alias hh='hx .'
+alias hxdoc='hx --health'
+
+alias hxdot='hx $DOTFILES'
+alias hxdiff='hx $(git ls-files -m -o --exclude-standard)'
+
 alias qc='qtcreator >/dev/null 2>/dev/null'
+alias qcc='qtcreator CMakeLists.txt >/dev/null 2>/dev/null'
+
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M ($(curl -s -f --connect-timeout 2 https://ipapi.co/country | head -n 1 || echo '??'))"'
 alias now_file='date "+%Y-%m-%d_%H-%M"'

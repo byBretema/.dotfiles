@@ -19,8 +19,9 @@ completion-trigger-len   = 1
 bufferline               = "always"
 
 [editor.auto-save]
-focus-lost         = true
-after-delay.enable = true
+focus-lost          = true
+after-delay.enable  = true
+after-delay.timeout = 300
 
 [editor.statusline]
 separator = "┆"
@@ -156,6 +157,7 @@ k = "goto_next_diag"
 "j" = "@["
 
 "l" = "@:lang "
+"t" = "@:theme "
 "f" = ":format"
 "r" = ":reload-all"
 

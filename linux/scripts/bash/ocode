@@ -13,6 +13,7 @@ usage() {
   echo ""
   echo "Options:"
   echo "  -w | --watch      Open a 'llama ps' watcher"
+  echo "  -c | --ctx        Set context length"
   echo "  -h | --help       Show this message"
   echo "  --                Extra args after this"
   exit 1
@@ -21,13 +22,14 @@ usage() {
 #! Defaults
 
 llama_watcher=false
-
+# llama_context=0
 
 #! Process options
 
 while [[ "${#}" > 0 ]]; do
   case "${1}" in
     -w | --watch    ) shift; llama_watcher=true ;;
+    -c | --ctx      ) shift; llama_context=$1; shift ;;
     -h | --help     ) shift; usage ;;
     --              ) shift; break ;;
     *               ) break ;;
@@ -43,12 +45,11 @@ launch_opencode() {
   export OLLAMA_CONTEXT_LENGTH=${2:-36000}
   sudo systemctl daemon-reload
   sudo systemctl restart ollama
-  ollama serve >/dev/null 2>&1 &
   ollama launch opencode --model "$1"
 }
 
 if ${llama_watcher}; then
-  tmux split-window -v -l 8 "watch ollama ps"
+  tmux split-window -v -l 6 "watch ollama ps"
   tmux select-pane -U
 fi
 
@@ -56,5 +57,7 @@ OPTIONS=( "llama3.1:8b" "qwen3.5:9b" )
 option=$(choose_one -p "Choose model" -- "${OPTIONS[@]}")
 launch_opencode "${option}"
 
-[[ "${option}" == "${OPTIONS[0]}" ]] && launch_opencode "llama3.1:8b" 72000
-[[ "${option}" == "${OPTIONS[1]}" ]] && launch_opencode "qwen3.5:9b" 36000
+ollama serve >/dev/null 2>&1 &
+[[ "${option}" == "${OPTIONS[0]}" ]] && launch_opencode "llama3.1:8b" ${llama_context:-72000}
+[[ "${option}" == "${OPTIONS[1]}" ]] && launch_opencode "qwen3.5:9b"  ${llama_context:-36000}
+

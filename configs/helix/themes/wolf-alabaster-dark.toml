@@ -1,0 +1,43 @@
+# wolf-alabaster-dark.toml
+#
+# Author: Wolf <wolf@zv.cx>
+# Project: https://github.com/wolf/alabaster-for-helix
+# Download: https://raw.githubusercontent.com/wolf/alabaster-for-helix/main/helix/dot-config/helix/themes/wolf-alabaster-dark.toml
+#
+# A dark-background Alabaster theme for the Helix editor.
+#
+# STRUCTURE: This file inherits all syntax and UI rules from wolf-alabaster-light.
+# Only the [palette] section is defined here. To understand or modify the rules,
+# see wolf-alabaster-light.toml. To change dark-mode colors, edit the palette below.
+
+inherits = "wolf-alabaster-light"
+
+[palette]
+# Core colors (Original Alabaster Dark)
+fg = "#CECECE"           # Main text - light grey
+bg = "#0E1415"           # Background - very dark blue-black
+
+# The 4 semantic colors (Original Alabaster Dark)
+string = "#95CB82"       # Green - strings & numbers
+constant = "#CC8BC9"     # Magenta - constants, booleans
+comment = "#DFDF8E"      # Yellow - comments (important!)
+definition = "#71ADE7"   # Blue - function/class definitions
+
+# Supporting colors
+punctuation = "#8C8C8C"  # Grey - dimmed operators/brackets
+selection = "#1E3A5F"    # Very dark blue - secondary selections (subtle)
+selection-primary = "#4A7BA7"  # Bright blue - primary selection (clearly distinct)
+active = "#CD974B"       # Golden brown - cursor, active elements (original Alabaster Dark)
+cursor-secondary = "#7A5B30"  # Dimmed gold - secondary cursors (multi-cursor)
+highlight = "#FF9800"    # Orange - search, warnings
+error-red = "#DFDF8E"    # Yellow - errors (use comment color for visibility)
+panel = "#252526"        # Slightly lighter grey - UI panels, menus, popups
+cursorline = "#141819"   # Subtle highlight - secondary cursorline
+cursorline-primary = "#1A2022"  # Primary cursorline (tonsky's original)
+jump-label = "#FF6B35"   # Bright orange - jump destinations
+inlay-hint = "#4A7090"   # Dimmed blue - virtual text (type hints)
+
+# Diff colors
+diff-green = "#95CB82"   # Green - additions (same as string)
+diff-red = "#DFDF8E"     # Yellow - deletions (same as error-red)
+diff-orange = "#FF9800"  # Orange - changes (same as highlight)

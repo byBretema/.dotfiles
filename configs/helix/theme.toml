@@ -1,5 +1,18 @@
 
-inherits = "gruvbox_dark_hard"
-"ui.background" = {}
+# inherits = "gruvbox_dark_hard"
 
-"comment" = { fg = "#2299FF" }
+# inherits = "gruvbox-material"
+
+inherits = "yellowed"
+"ui.virtual.ruler" = { bg = "#2A2A2A" }
+
+# inherits = "wolf-alabaster-dark"
+# "ui.gutter" = {}
+# "ui.bufferline.background" = { }
+# "ui.bufferline" = { fg = "#2A2A2A" }
+# "ui.cursorline" = { bg = "#2A2A2A" }
+# "ui.cursorcolumn" = { bg = "#2A2A2A" }
+
+"ui.background" = {}
+"comment" = { fg = "#2299DD" }
+"ui.virtual.jump-label" = { fg = "black", bg = "yellow", modifiers = ["bold"] }
