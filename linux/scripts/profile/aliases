@@ -1,6 +1,8 @@
 
 # Tools
 
+alias j="jobs"
+
 alias hx='helix'
 alias hh='hx .'
 alias hxdoc='hx --health'

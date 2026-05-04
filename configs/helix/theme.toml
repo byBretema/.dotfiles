@@ -1,10 +1,10 @@
 
-# inherits = "gruvbox_dark_hard"
+inherits = "gruvbox_dark_hard"
 
 # inherits = "gruvbox-material"
 
-inherits = "yellowed"
-"ui.virtual.ruler" = { bg = "#2A2A2A" }
+# inherits = "yellowed"
+# "ui.virtual.ruler" = { bg = "#2A2A2A" }
 
 # inherits = "wolf-alabaster-dark"
 # "ui.gutter" = {}
