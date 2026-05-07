@@ -1,7 +1,13 @@
 
 inherits = "gruvbox_dark_hard"
+# "string" = { fg = "purple1", modifiers = ["italic"]}
+# "string" = { bg = "#914266", modifiers = ["italic"]}
+# "comment" = { bg = "gray" }
 
 # inherits = "gruvbox-material"
+# inherits = "adwaita-dark"
+# inherits = "catppuccin_mocha"
+# inherits = "nordic"
 
 # inherits = "yellowed"
 # "ui.virtual.ruler" = { bg = "#2A2A2A" }
@@ -15,4 +21,5 @@ inherits = "gruvbox_dark_hard"
 
 "ui.background" = {}
 "comment" = { fg = "#2299DD" }
+# "comment" = { bg = "#113366c" }
 "ui.virtual.jump-label" = { fg = "black", bg = "yellow", modifiers = ["bold"] }

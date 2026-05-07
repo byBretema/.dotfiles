@@ -21,7 +21,7 @@ bufferline = "always"
 [editor.auto-save]
 focus-lost = true
 after-delay.enable = true
-after-delay.timeout = 300
+after-delay.timeout = 600
 
 [editor.statusline]
 separator = "┆"
@@ -90,6 +90,8 @@ display-inlay-hints = true
 auto-signature-help = true
 
 [keys.normal]
+"F12" = "delete_selection"
+
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
 
@@ -116,8 +118,8 @@ pagedown = "no_op"
 "esc" = ["collapse_selection", "keep_primary_selection"]
 
 # Move line up/down
-"A-j" = '@X"my<A-d>"mp'
-"A-k" = '@X"my<A-d>k"mP'
+"A-j" = '@X"m<F12>"mp'
+"A-k" = '@X"m<F12>k"mP'
 
 # Goto next/prev buffer
 "A-h" = ":buffer-previous"
@@ -162,7 +164,7 @@ k = "goto_next_diag"
 
 [keys.normal.'ñ']
 "ñ" = "goto_word"
-" " = ':o "$HOME/notes.txt"'
+" " = ':o "~/notes.txt"'
 
 "w" = ":w"
 "W" = ":w!"
@@ -181,6 +183,7 @@ k = "goto_next_diag"
 
 "y" = "@miwy"
 "c" = "@miwc"
+"R" = "@miwR"
 
 # "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
 "b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
@@ -222,6 +225,8 @@ k = "goto_next_diag"
 "d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 
 [keys.select]
+"F12" = "delete_selection"
+
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
 
@@ -234,8 +239,8 @@ k = "goto_next_diag"
 "E" = "extend_next_sub_word_end"
 
 # Move line up/down
-"A-j" = '@X"my<A-d>"mp'
-"A-k" = '@X"my<A-d>k"mP'
+"A-j" = '@X"m<F12>"mp'
+"A-k" = '@X"m<F12>k"mP'
 
 # [keys.insert]
 
