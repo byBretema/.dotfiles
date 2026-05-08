@@ -117,15 +117,15 @@ link_config_files_and_themes() {
     log_header "Linking Wallpapers"
     dst_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
     if [[ -d "${dst_dir}" ]]; then
-        rm -rf "${dst_dir}"
+        sudo rm -rf "${dst_dir}"
     fi
-    ln -srfn "${script_path}/../assets/wallpapers" "${dst_dir}"
+    sudo cp -r "${script_path}/../assets/wallpapers" "${dst_dir}"
 
     #! Cosmic
     log_header "Linking Cosmic Settings"
     dst_dir="${config_path}/cosmic"
     if [[ -d "${dst_dir}" ]]; then
-        rm -rf "${dst_dir}"
+        sudo rm -rf "${dst_dir}"
     fi
     ln -srfn "${script_path}/assets/cosmic" "${config_path}"
 }
