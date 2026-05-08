@@ -113,6 +113,14 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/yazi")
     ln -srf "${my_configs}/yazi/themes/gruvbox_dark.toml" "${dst_dir}/theme.toml"
 
+    #! Wallpapers
+    log_header "Linking Wallpapers"
+    dst_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
+    if [[ -d "${dst_dir}" ]]; then
+        rm -rf "${dst_dir}"
+    fi
+    ln -srfn "${script_path}/../assets/wallpapers" "${dst_dir}"
+
     #! Cosmic
     log_header "Linking Cosmic Settings"
     dst_dir="${config_path}/cosmic"

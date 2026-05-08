@@ -1,6 +1,6 @@
 (
     output: "all",
-    source: Path("/home/dac/Pictures/2109.jpg"),
+    source: Path("~/.dotfiles/assets/mountain.jpg"),
     filter_by_theme: true,
     rotation_frequency: 3600,
     filter_method: Lanczos,
