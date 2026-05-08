@@ -115,6 +115,10 @@ link_config_files_and_themes() {
 
     #! Cosmic
     log_header "Linking Cosmic Settings"
+    dst_dir="${config_path}/cosmic"
+    if [[ -d "${dst_dir}" ]]; then
+        rm -rf "${dst_dir}"
+    fi
     ln -srfn "${script_path}/assets/cosmic" "${config_path}"
 }
 
