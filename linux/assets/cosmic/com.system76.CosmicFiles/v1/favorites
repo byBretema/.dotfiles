@@ -1,0 +1,12 @@
+[
+    Home,
+    Documents,
+    Downloads,
+    Music,
+    Pictures,
+    Videos,
+    Path("/home/dac/omi"),
+    Path("/home/dac/dev"),
+    Path("/home/dac/dani"),
+    Path("/home/dac/omi/tasks"),
+]

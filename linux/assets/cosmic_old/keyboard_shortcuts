@@ -118,6 +118,7 @@
     (
         modifiers: [
             Ctrl,
+            Alt,
         ],
         key: "ntilde",
     ): Spawn("copyq toggle"),

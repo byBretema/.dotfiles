@@ -1,0 +1,17 @@
+[
+    (
+        output: (
+            name: "HDMI-A-1",
+            edid: Some((
+                manufacturer: ('B', 'N', 'Q'),
+                product: 32630,
+                serial: Some(21573),
+                manufacture_week: 31,
+                manufacture_year: 2021,
+                model_year: None,
+            )),
+        ),
+        tiling_enabled: true,
+        id: Some("191cd7f"),
+    ),
+]
