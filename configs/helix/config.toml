@@ -181,6 +181,9 @@ k = "goto_next_diag"
 "f" = ":format"
 "r" = ":reload-all"
 
+# To paste a cpp method signature of a method into the hpp file
+"P" = "@pglF(F:;vT dA;<esc>"
+
 "y" = "@miwy"
 "c" = "@miwc"
 "R" = "@miwR"
