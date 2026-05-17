@@ -9,4 +9,5 @@
     Path("/home/dac/dev"),
     Path("/home/dac/dani"),
     Path("/home/dac/omi/tasks"),
+    Path("/home/brtma/.dotfiles"),
 ]

@@ -95,6 +95,8 @@ auto-signature-help = true
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
 
+"M" = "@miwm"
+
 "Y" = "@miwy"
 "d" = "delete_selection_noyank"
 "c" = "change_selection_noyank"
