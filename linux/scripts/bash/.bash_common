@@ -1,5 +1,4 @@
-set -CEeuo pipefail
-
+# set -CEeuo pipefail
 
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
 script_name=$(basename "${BASH_SOURCE[-1]}")

@@ -15,6 +15,18 @@ name = "rust"
 auto-format = true
 
 [[language]]
+name = "odin"
+auto-format = true
+scope = "scope.odin" # "source.odin"
+file-types = ["odin"]
+# roots = ["ols.json"]
+language-servers = [ "ols" ]
+comment-token = "//"
+indent = { tab-width = 4, unit = " " }
+injection-regex = "odin"
+formatter = { command = "odinfmt", args = [ "-stdin", "true" ] }
+
+[[language]]
 name = "zig"
 auto-format = true
 
@@ -79,3 +91,10 @@ command = "ruff-lsp"
 command = "pyright-langserver"
 args = ["--stdio"]
 config = {}
+
+#! Odin extras
+
+[[grammar]]
+name = "odin"
+#source = { git = "https://github.com/ap29600/tree-sitter-odin", rev = "b219207e49ffca2952529d33e94ed63b1b75c4f1" }
+source = { git = "https://github.com/amaanq/tree-sitter-odin" }

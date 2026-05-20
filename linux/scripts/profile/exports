@@ -25,4 +25,6 @@ export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export GTK_IM_MODULE=simple
 
+export BAT_THEME="Catppuccin Mocha"
+
 export EDITOR=helix

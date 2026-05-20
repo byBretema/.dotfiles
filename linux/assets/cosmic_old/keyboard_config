@@ -1,9 +1,0 @@
-(
-    rules: "",
-    model: "",
-    layout: "es",
-    variant: "",
-    options: None,
-    repeat_delay: 200,
-    repeat_rate: 45,
-)
