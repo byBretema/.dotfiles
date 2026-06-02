@@ -4,6 +4,10 @@ auto-format = false
 formatter = { command = 'clang-format' }
 
 [[language]]
+name = 'bash'
+indent = { tab-width = 4, unit = ' ' }
+
+[[language]]
 name = "python"
 auto-format = true
 scope = "source.python"

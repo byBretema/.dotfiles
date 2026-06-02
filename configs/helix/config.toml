@@ -156,8 +156,8 @@ k = "goto_next_diag"
 "c" = ":config-open"
 "r" = ":config-reload"
 
-"l" = ":lsp-restart"
-# "L" = ":lsp-restart"
+"l" = "@:lang "
+"L" = ":lsp-restart"
 
 "i" = ":toggle lsp.display-inlay-hints"
 "b" = ":toggle bufferline never always"
@@ -178,13 +178,15 @@ k = "goto_next_diag"
 "k" = "@]"
 "j" = "@["
 
-"l" = "@:lang "
 "t" = "@:theme "
 "f" = ":format"
 "r" = ":reload-all"
 
 # To paste a cpp method signature of a method into the hpp file
 "P" = "@pglF(F:;vT dA;<esc>"
+
+"l" = "@miw*"
+"L" = "@miw<A-*>"
 
 "y" = "@miwy"
 "c" = "@miwc"
@@ -200,7 +202,7 @@ k = "goto_next_diag"
 
 "n" = "@:insert-output echo %{buffer_name}<ret>yu"
 "N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
-"F" = "@:insert-output echo $(pwd)/+{buffer_name}<ret>yu"
+"F" = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
 
 # Calls a script, enables switch between files .cpp/.hpp (also .frag/.vert)
 "o" = ":open %sh{hx_switch_cpp %{buffer_name}}"

@@ -1,5 +1,5 @@
 (
-    folders_first: false,
+    folders_first: true,
     icon_sizes: (
         list: 75,
         grid: 100,
