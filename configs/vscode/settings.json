@@ -31,7 +31,7 @@
   "editor.fontSize": 15,
   "editor.fontLigatures": true,
   // "editor.fontFamily": "'Fira Code'",
-  "editor.fontFamily": "'Victor Mono'",
+  "editor.fontFamily": "'VictorMono Nerd Font'",
   // "editor.stickyScroll.enabled": false,
   "editor.accessibilitySupport": "off",
   "editor.renderWhitespace": "trailing",
@@ -74,7 +74,7 @@
   "terminal.integrated.shellIntegration.enabled": true,
   "terminal.integrated.fontSize": 14,
   // "terminal.integrated.fontFamily": "'FiraCode Nerd Font'",
-  "terminal.integrated.fontFamily": "'Victor Mono'",
+  "terminal.integrated.fontFamily": "'VictorMono Nerd Font'",
   "terminal.integrated.fontLigatures.enabled": true,
   "terminal.integrated.cursorBlinking": true,
   "terminal.integrated.profiles.windows": {

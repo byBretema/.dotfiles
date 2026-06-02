@@ -161,40 +161,6 @@ install_packages() {
 }
 
 
-install_font_from_zip()
-{
-    local url=$1; shift
-    local filename=$(basename "${url}")
-
-    local temp_dir=$(mktemp -d)
-    local font_zip="${temp_dir}/${filename}"
-    local font_unzip="${temp_dir}/${filename}_unzip"
-
-    curl -fsSL "${url}" -o "${font_zip}"
-    unzip -q "${font_zip}" -d "${font_unzip}"
-
-    local fonts_path=$(mkdir_ret "$HOME/.local/share/fonts")
-
-    find "${font_unzip}" -type f -name "*.ttf" -o -name "*.otf" | \
-    while read font; do
-        cp "${font}" "${fonts_path}" || log_error "Installing font : $(basename "${font}")"
-    done
-
-    rm -rf "$temp_dir"
-}
-
-
-install_fonts() {
-    log_header "Installing fonts"
-
-    install_font_from_zip "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip"
-    install_font_from_zip "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip"
-    install_font_from_zip "https://rubjo.github.io/victor-mono/VictorMonoAll.zip"
-
-    fc-cache -f
-}
-
-
 vscode_extensions() {
     log_header "Installing vscode extensions"
     python "$my_configs/vscode/extensions.py" -i
@@ -211,13 +177,12 @@ vscode_extensions() {
 usage() {
     echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
     echo ""
-    echo "Manage configs and system apps, fonts, themes..."
+    echo "Manage configs and system apps, themes..."
     echo ""
     echo "Options:"
     echo "  -u | --update         System update"
     echo "  -l | --links          Link configs / themes"
     echo "  -i | --install        Install packages / apps"
-    echo "  -f | --fonts          Install fonts"
     echo "  -c | --code [PARAMS]  Manage code extensions"
     echo "  -h | --help           Show this message"
     echo "  --                    Extra args after this"
@@ -228,7 +193,6 @@ usage() {
 do_links=false
 do_update=false
 do_install=false
-do_fonts=false
 do_code_extensions=false
 
 
@@ -239,7 +203,6 @@ while [[ "${#}" > 0 ]]; do
         -u | --update   ) shift; do_update=true          ;;
         -l | --links    ) shift; do_links=true           ;;
         -i | --install  ) shift; do_install=true         ;;
-        -f | --fonts    ) shift; do_fonts=true           ;;
         -c | --code     ) shift; do_code_extensions=true ;;
         -h | --help     ) shift; usage                   ;;
         --              ) shift; break                   ;;
@@ -255,6 +218,5 @@ done
 [[ ${do_links}           == true ]] && link_config_files_and_themes
 [[ ${do_update}          == true ]] && system_update
 [[ ${do_install}         == true ]] && install_packages
-[[ ${do_fonts}           == true ]] && install_fonts
 [[ ${do_code_extensions} == true ]] && vscode_extensions
 

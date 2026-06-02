@@ -1,6 +1,7 @@
 [[language]]
 name = "cpp"
 auto-format = false
+language-servers = ["clangd"]
 formatter = { command = 'clang-format' }
 
 [[language]]
@@ -85,6 +86,11 @@ auto-format = true
 '`' = '`'
 '<' = '>'
 
+#! C++ settings
+
+[language-server.clangd]
+command = "clangd"
+args = ["--query-driver=/usr/bin/g++"]
 
 #! Python settings
 
@@ -96,7 +102,7 @@ command = "pyright-langserver"
 args = ["--stdio"]
 config = {}
 
-#! Odin extras
+#! Odin settings
 
 [[grammar]]
 name = "odin"

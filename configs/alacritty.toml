@@ -11,7 +11,7 @@ blur = true
 history = 100000
 
 [font]
-normal = { family = "FiraCode Nerd Font", style = "Regular" }
+normal = { family = "VictorMono Nerd Font", style = "Regular" }
 size = 12
 
 [bell]
