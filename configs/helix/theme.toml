@@ -1,8 +1,4 @@
 
-inherits = "catppuccin_mocha"
-"comment" = { fg = "surface2", bg = "mantle" }
-"ui.virtual.inlay-hint" = { fg = "surface1" }
-
 # inherits = "gruvbox_dark_hard"
 # "string" = { fg = "purple1", modifiers = ["italic"]}
 # "string" = { bg = "#914266", modifiers = ["italic"]}
@@ -23,6 +19,10 @@ inherits = "catppuccin_mocha"
 # "ui.cursorline" = { bg = "#2A2A2A" }
 # "ui.cursorcolumn" = { bg = "#2A2A2A" }
 
+inherits = "catppuccin_mocha"
+"comment" = { fg = "surface2", bg = "mantle" }
+"ui.virtual.inlay-hint" = { fg = "surface1" }
 "ui.background" = {}
-# "comment" = { fg = "#2299DD" }
 "ui.virtual.jump-label" = { fg = "black", bg = "yellow", modifiers = ["bold"] }
+"ui.bufferline.background" = { }
+# "ui.statusline" = { fg = "subtext1", bg = "mantle" }
