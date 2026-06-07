@@ -118,7 +118,7 @@ link_config_files_and_themes() {
     # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
     dst_dir=$(mkdir_ret "${config_path}/yazi")
     mkdir -p "${config_path}/yazi/flavors"
-    ya pkg add yazi-rs/flavors:catppuccin-mocha > /dev/null 2&>1 && ya pkg install || true
+    ya pkg add yazi-rs/flavors:catppuccin-mocha > /dev/null 2>&1 && ya pkg install || true
     ln -srf "${my_configs}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
 
     #! Wallpapers
