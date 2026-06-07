@@ -1,0 +1,55 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "model": "opencode/deepseek-v4-flash-free",
+  "default_agent": "select-project",
+  "agent": {
+    "select-project": { "variant": "max", "mode": "primary" },
+    "build":          { "variant": "max" },
+    "plan":           { "variant": "max" },
+    "general":        { "variant": "max" },
+    "explore":        { "variant": "max" }
+  },
+  "provider": {
+    "ollama": {
+      "models": {
+        "gemma4:e4b": {
+          "_launch": true,
+          "name": "gemma4:e4b"
+        },
+        "llama3.1:8b": {
+          "_launch": true,
+          "name": "llama3.1:8b"
+        },
+        "ministral-3:14b": {
+          "_launch": true,
+          "name": "ministral-3:14b"
+        },
+        "qwen2.5-coder:14b": {
+          "_launch": true,
+          "name": "qwen2.5-coder:14b"
+        },
+        "qwen3-coder-next": {
+          "_launch": true,
+          "name": "qwen3-coder-next"
+        },
+        "qwen3.5:35b": {
+          "_launch": true,
+          "name": "qwen3.5:35b"
+        },
+        "qwen3.5:9b": {
+          "_launch": true,
+          "name": "qwen3.5:9b"
+        },
+        "qwen3.6:latest": {
+          "_launch": true,
+          "name": "qwen3.6:latest"
+        }
+      },
+      "name": "Ollama",
+      "npm": "@ai-sdk/openai-compatible",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      }
+    }
+  }
+}

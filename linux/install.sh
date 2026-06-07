@@ -79,6 +79,14 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/flameshot")
     ln -srf "${my_configs}/flameshot.ini" "${dst_dir}/flameshot.ini"
 
+    # opencode
+    ## main stuff
+    dst_dir=$(mkdir_ret "${config_path}/opencode")
+    ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
+    ## agents
+    dst_dir=$(mkdir_ret "${config_path}/opencode/agents")
+    ln -srf "${my_configs}/opencode/agents/select-project.md" "${dst_dir}/select-project.md"
+
     # caps2esc
     ### Symlinks could fail at boot-time
     ### So copy the files is the best approach here
