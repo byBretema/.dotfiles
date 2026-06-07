@@ -22,7 +22,9 @@
 inherits = "catppuccin_mocha"
 "comment" = { fg = "surface2", bg = "mantle" }
 "ui.virtual.inlay-hint" = { fg = "surface1" }
-"ui.background" = {}
 "ui.virtual.jump-label" = { fg = "black", bg = "yellow", modifiers = ["bold"] }
+"ui.background" = {}
+"ui.bufferline" = { fg = "subtext0" }
+"ui.bufferline.active" = { fg = "black", bg = "blue", modifiers = ["bold"] }
 "ui.bufferline.background" = { }
 # "ui.statusline" = { fg = "subtext1", bg = "mantle" }
