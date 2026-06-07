@@ -152,7 +152,7 @@ install_packages() {
     while IFS= read -r line; do
         pkg=${line//[^a-zA-Z0-9_-]/}
         [[ -n $pkg ]] && [[ $line != \#* ]] && { paru -S --needed --noconfirm --skipreview $pkg; }
-    done < "$script_path/pacman_list.conf"
+    done < "$script_path/pacman_list_2.conf"
 
     # Install flatpaks
     while IFS= read -r line; do
