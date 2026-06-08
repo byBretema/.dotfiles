@@ -73,7 +73,7 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/tmux")
     git_url="https://github.com/tmux-plugins/tpm"
     [[ ! -d "${dst_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${dst_dir}/plugins/tpm"; }
-    ln -srf "${my_configs}/tmux.conf" "${dst_dir}/tmux.conf"
+    ln -srf "${my_configs}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
 
     # Flameshot
     dst_dir=$(mkdir_ret "${config_path}/flameshot")
