@@ -30,7 +30,6 @@
     (
         modifiers: [
             Super,
-            Alt,
             Shift,
         ],
         key: "s",
@@ -157,6 +156,7 @@
     (
         modifiers: [
             Super,
+            Alt,
             Shift,
         ],
         key: "s",
