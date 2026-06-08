@@ -16,7 +16,7 @@ insert-final-newline = true
 trim-trailing-whitespace = true
 end-of-line-diagnostics = "hint"
 completion-trigger-len = 1
-bufferline = "always"
+bufferline = "never"
 
 [editor.auto-save]
 focus-lost = true
@@ -84,10 +84,10 @@ git-exclude = true
 cursor-line = "warning"
 
 [editor.lsp]
+display-inlay-hints = false
 display-messages = true
-display-progress-messages = true
-display-inlay-hints = true
 auto-signature-help = true
+display-progress-messages = true
 
 [keys.normal]
 "F12" = "delete_selection"
