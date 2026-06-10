@@ -90,7 +90,7 @@ auto-format = true
 
 [language-server.clangd]
 command = "clangd"
-args = ["--query-driver=/usr/bin/g++"]
+args = ["--query-driver=/usr/bin/g++", "--header-insertion=never"]
 
 #! Python settings
 
