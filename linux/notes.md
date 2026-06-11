@@ -48,4 +48,15 @@ __VK_LAYER_NV_optimus="NVIDIA_only"
 VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
 VK_DRIVER_FILES="/usr/share/vulkadfn/icd.d/nvidia_icd.json"
 
+## SKIP-WORKTREE (local git changes)
+
+Ignore local diffs on a tracked file (won't show in `git st`, won't be committed):
+```shell
+git update-index --skip-worktree <file>
+```
+
+To revert: `git update-index --no-skip-worktree <file>`
+
+List all skipped files: `git ls-files -v | grep ^S`
+
 ```
