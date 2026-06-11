@@ -183,6 +183,7 @@ k = "goto_next_diag"
 "r" = ":reload-all"
 
 # To paste a cpp method signature of a method into the hpp file
+"e" = [':sh wl-paste | sed "s/[][{}()*+?.\\^$|]/\\&/g" | wl-copy', 'global_search']
 "P" = "@pglF(F:;vT dA;<esc>"
 
 "l" = "@miw*"
