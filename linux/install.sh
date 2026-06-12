@@ -121,6 +121,13 @@ link_config_files() {
     sudo systemctl enable udevmon.service
     sudo systemctl start udevmon.service
 
+    # drm-colortemp
+    drm_config="/etc/default/drm-colortemp.conf"
+    sudo mkdir -p "$(dirname "${drm_config}")"
+    sudo cp "${script_path}/assets/drm-colortemp/drm-colortemp.conf" "${drm_config}"
+    sudo systemctl enable drm-colortemp.service
+    sudo systemctl restart drm-colortemp.service
+
     # --- Themes ---
     log_header "Linking Themes"
 
@@ -158,7 +165,6 @@ link_config_files() {
 
 process_packages() {
     local list_file=$1 check_cmd=$2 action_cmd=$3 sanitize=$4 invert_check=${5:-false}
-    shift 5
 
     while IFS= read -r line; do
         local pkg=${line//$sanitize/}
@@ -169,7 +175,7 @@ process_packages() {
         else
             $check_cmd "$pkg" &>/dev/null && continue
         fi
-        $action_cmd "$pkg" "$@"
+        $action_cmd "$pkg"
     done <"$list_file"
 }
 

@@ -48,6 +48,32 @@ __VK_LAYER_NV_optimus="NVIDIA_only"
 VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
 VK_DRIVER_FILES="/usr/share/vulkadfn/icd.d/nvidia_icd.json"
 
+## DRM-COLORTEMP — Screen Temperature
+
+A workaround for color temperature control on COSMIC DE (until native gamma lands). Uses direct DRM manipulation via TTY switching.
+
+### Usage
+
+| Action | Keys |
+|--------|------|
+| Auto (time-based) | `Ctrl+Alt+F3` then back to your TTY |
+| Force warm (night) | `Ctrl+Alt+F4` then back |
+| Force cool (day) | `Ctrl+Alt+F5` then back |
+
+After switching to the monitor TTY, immediately switch back — the daemon applies gamma when COSMIC releases the DRM lock.
+
+### Config
+
+`/etc/default/drm-colortemp.conf` (symlinked from `linux/assets/drm-colortemp/drm-colortemp.conf`)
+
+| Key | Default | Description |
+|-----|---------|-------------|
+| `DAY_TEMP` | 6500 | Daytime temperature (K) |
+| `NIGHT_TEMP` | 3500 | Nighttime temperature (K) |
+| `SUNSET_HOUR` | 20 | When to switch to night |
+| `SUNRISE_HOUR` | 8 | When to switch to day |
+
+
 ## MX MASTER 3 — Solaar Setup
 
 After installing/running `install.sh -l`:
