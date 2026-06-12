@@ -1,0 +1,11 @@
+# logiops-rs udev rules
+# These rules grant access to Logitech HID++ devices and uinput for logiops
+
+# USB-connected Logitech HID++ devices
+SUBSYSTEM=="hidraw", ATTRS{idVendor}=="046d", MODE="0660", GROUP="plugdev"
+
+# Bluetooth-connected Logitech HID++ devices (via uhid)
+SUBSYSTEM=="hidraw", SUBSYSTEMS=="hid", DRIVERS=="logitech-hidpp-device", MODE="0660", GROUP="plugdev"
+
+# uinput - needed for virtual input device creation (button remapping)
+KERNEL=="uinput", MODE="0660", GROUP="input", OPTIONS+="static_node=uinput"

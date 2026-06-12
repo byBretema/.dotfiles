@@ -1,0 +1,13 @@
+[[devices]]
+name = "MX Master 3"
+
+[devices.smartshift]
+on = false
+
+[devices.hiresscroll]
+hires = true
+invert = false
+
+[[devices.buttons]]
+cid = 0x00c4
+action = { type = "gestures", up = ["KEY_LEFTMETA", "KEY_K"], down = ["KEY_LEFTMETA", "KEY_J"], left = "KEY_VOLUMEDOWN", right = "KEY_VOLUMEUP" }

@@ -1,6 +1,6 @@
 # !/usr/bin/env bash
 
-script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
+script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &>/dev/null && pwd)
 source "${script_path}/scripts/bash/.bash_common"
 
 ###############################################################################
@@ -20,7 +20,6 @@ mkdir_ret() {
     echo "$1"
 }
 
-
 link_config_files_and_themes() {
     #! Configs
     log_header "Linking config files"
@@ -29,10 +28,10 @@ link_config_files_and_themes() {
     sudo ln -srf "${script_path}/scripts/profile/global_exports" "/etc/profile.d/global_exports"
 
     # Fish
-    ln -srf "${script_path}/.fishrc"  "$HOME/.config/fish/config.fish"
+    ln -srf "${script_path}/.fishrc" "$HOME/.config/fish/config.fish"
 
     # Zsh
-    ln -srf "${script_path}/.zshrc"  "$HOME/.zshrc"
+    ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
     ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"
 
     # Git
@@ -49,7 +48,7 @@ link_config_files_and_themes() {
 
     # Code
     dst_dir=$(mkdir_ret "${config_path}/Code/User")
-    ln -srf "${my_configs}/vscode/settings.json"    "${dst_dir}/settings.json"
+    ln -srf "${my_configs}/vscode/settings.json" "${dst_dir}/settings.json"
     ln -srf "${my_configs}/vscode/keybindings.json" "${dst_dir}/keybindings.json"
 
     # Helix
@@ -83,9 +82,16 @@ link_config_files_and_themes() {
     ## main stuff
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
-    ## agents
-    dst_dir=$(mkdir_ret "${config_path}/opencode/agents")
-    ln -srf "${my_configs}/opencode/agents/select-project.md" "${dst_dir}/select-project.md"
+    ln -srf "${my_configs}/opencode/tui.json" "${dst_dir}/tui.json"
+    ## skills
+    dst_dir=$(mkdir_ret "${config_path}/opencode")
+    ln -srf "${my_configs}/opencode/skills" "${dst_dir}/skills"
+
+    # logiops-rs
+    sudo mkdir -p "/etc/logiops"
+    sudo ln -srf "${script_path}/assets/logiops/config.toml" "/etc/logiops/config.toml"
+    sudo systemctl enable logiops.service
+    sudo systemctl restart logiops.service
 
     # caps2esc
     ### Symlinks could fail at boot-time
@@ -103,7 +109,7 @@ link_config_files_and_themes() {
     #... caps2esc reload and enable
     sudo systemctl daemon-reload
     sudo systemctl enable udevmon.service
-    sudo systemctl start  udevmon.service
+    sudo systemctl start udevmon.service
 
     #! Themes
     log_header "Linking Themes"
@@ -111,14 +117,14 @@ link_config_files_and_themes() {
     # Qt Creator
     dst_dir=$(mkdir_ret "${config_path}/QtProject/qtcreator/styles")
     src_dir="${my_configs}/qtcreator/themes"
-    ln -srf "${src_dir}/monokai_dark.xml"     "${dst_dir}/monokai_dark_t.xml"
-    ln -srf "${src_dir}/gruvbox_dark.xml"     "${dst_dir}/gruvbox_dark_t.xml"
+    ln -srf "${src_dir}/monokai_dark.xml" "${dst_dir}/monokai_dark_t.xml"
+    ln -srf "${src_dir}/gruvbox_dark.xml" "${dst_dir}/gruvbox_dark_t.xml"
     ln -srf "${src_dir}/catppuccin_latte.xml" "${dst_dir}/catppuccin_latte_t.xml"
 
     # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
     dst_dir=$(mkdir_ret "${config_path}/yazi")
     mkdir -p "${config_path}/yazi/flavors"
-    ya pkg add yazi-rs/flavors:catppuccin-mocha > /dev/null 2>&1 && ya pkg install || true
+    ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
     ln -srf "${my_configs}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
 
     #! Wallpapers
@@ -138,12 +144,11 @@ link_config_files_and_themes() {
     ln -srfn "${script_path}/assets/cosmic" "${config_path}"
 }
 
-
 system_update() {
     log_header "Updating system"
-    paru --noconfirm -Syu  # Trigger updates
+    paru --noconfirm -Syu
+    flatpak update -y
 }
-
 
 install_packages() {
     log_header "Installing / updating apps"
@@ -151,30 +156,53 @@ install_packages() {
     # Install pacman packages
     while IFS= read -r line; do
         pkg=${line//[^a-zA-Z0-9_-]/}
-        [[ -n $pkg ]] && [[ $line != \#* ]] && { paru -S --needed --noconfirm --skipreview $pkg; }
-    done < "$script_path/pacman_list_2.conf"
+        [[ -n $pkg ]] || continue
+        [[ $line != \#* ]] || continue
+        pacman -Qi "$pkg" &>/dev/null && continue
+        paru -S --noconfirm --skipreview "$pkg"
+    done <"$script_path/pacman_list_2.conf"
+
+    # Build logiops-rs from patched PKGBUILD (AUR tarball has broken dep)
+    if ! pacman -Qi logiops-rs >/dev/null 2>&1; then
+        build_dir=$(mktemp -d)
+        cp "${script_path}/assets/logiops/PKGBUILD" "${build_dir}/"
+        cp "${script_path}/assets/logiops/99-logiops.rules" "${build_dir}/"
+        (
+            cd "${build_dir}" || exit
+            makepkg -si --noconfirm --needed
+        )
+        rm -rf "${build_dir}"
+    fi
+
+    # Ensure plugdev group exists and user is a member
+    sudo getent group plugdev >/dev/null 2>&1 || sudo groupadd plugdev
+    sudo usermod -aG plugdev "$USER"
+    sudo udevadm control --reload-rules
+    sudo udevadm trigger --subsystem-match=hidraw
+
+    # Fix permissions on already-connected devices and restart daemon
+    sudo chgrp plugdev /dev/hidraw* 2>/dev/null
+    sudo chmod 660 /dev/hidraw* 2>/dev/null
+    sudo systemctl restart logiops.service
 
     # Install flatpaks
     while IFS= read -r line; do
         pkg=${line//[^a-zA-Z0-9.]/}
         [[ -n $pkg ]] && [[ $line != \#* ]] && { flatpak -y install $pkg; }
-    done < "$script_path/flatpak_list.conf"
+    done <"$script_path/flatpak_list.conf"
     flatpak update
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
-    ncspot_entry="0.0.0.0 apresolve.spotify.com";
+    ncspot_entry="0.0.0.0 apresolve.spotify.com"
     if ! grep -qFx "$ncspot_entry" /etc/hosts; then
-        echo "$ncspot_entry" | sudo tee -a /etc/hosts > /dev/null
+        echo "$ncspot_entry" | sudo tee -a /etc/hosts >/dev/null
     fi
 }
-
 
 vscode_extensions() {
     log_header "Installing vscode extensions"
     python "$my_configs/vscode/extensions.py" -i
 }
-
-
 
 ################################################################################
 ### Parse args
@@ -203,28 +231,25 @@ do_update=false
 do_install=false
 do_code_extensions=false
 
-
 #! Process options
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
-        -u | --update   ) shift; do_update=true          ;;
-        -l | --links    ) shift; do_links=true           ;;
-        -i | --install  ) shift; do_install=true         ;;
-        -c | --code     ) shift; do_code_extensions=true ;;
-        -h | --help     ) shift; usage                   ;;
-        --              ) shift; break                   ;;
-        *               )        break                   ;;
+    -u | --update) shift && do_update=true ;;
+    -l | --links) shift && do_links=true ;;
+    -i | --install) shift && do_install=true ;;
+    -c | --code) shift && do_code_extensions=true ;;
+    -h | --help) shift && usage ;;
+    --) shift && break ;;
+    *) break ;;
     esac
 done
-
 
 ###############################################################################
 ### Execution
 ###############################################################################
 
-[[ ${do_links}           == true ]] && link_config_files_and_themes
-[[ ${do_update}          == true ]] && system_update
-[[ ${do_install}         == true ]] && install_packages
-[[ ${do_code_extensions} == true ]] && vscode_extensions
-
+[[ "${do_links}" == "true" ]] && link_config_files_and_themes
+[[ "${do_update}" == "true" ]] && system_update
+[[ "${do_install}" == "true" ]] && install_packages
+[[ "${do_code_extensions}" == "true" ]] && vscode_extensions

@@ -1,10 +1,11 @@
 ---
-description: Select or create a project AGENTS.md to guide the session.
-mode: primary
-variant: max
+name: select-project
+description: Select or create a project AGENTS.md to guide the session
 ---
 
-You are a project selector. On the very first interaction, do NOT answer or act — instead, guide the user through selecting project context:
+This skill activates when the user says "load project", "switch project", "select project", or similar phrases about loading project context.
+
+Guide the user through selecting project context:
 
 1. **Auto-detect project**: Run `basename "$(git rev-parse --show-toplevel 2>/dev/null || echo "$PWD")"` to get a candidate project name from the current directory's git root (or folder name if not a repo).
 2. **Match**: Check if `$HOME/agents/<candidate>/AGENTS.md` exists. If yes, ask the user to confirm ("Found project '<candidate>' — use this one?"). If confirmed, read it aloud as session context and proceed.
