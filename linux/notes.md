@@ -48,6 +48,17 @@ __VK_LAYER_NV_optimus="NVIDIA_only"
 VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
 VK_DRIVER_FILES="/usr/share/vulkadfn/icd.d/nvidia_icd.json"
 
+## MX MASTER 3 — Solaar Setup
+
+After installing/running `install.sh -l`:
+
+1. **Log out and back in** — Solaar autostarts via XDG desktop file
+2. **Open Solaar GUI** — find your MX Master 3, click the padlock icon to unlock diversion mode
+3. **Set "Mouse Gesture Button" → "Mouse Gestures"** — enables directional gesture events
+4. Verify rules.yaml is linked: `~/.config/solaar/rules.yaml`
+
+Solaar's `KeyPress` actions work on Wayland via uinput. The gesture rules live in `~/.config/solaar/rules.yaml` (symlinked to `linux/assets/solaar/rules.yaml`).
+
 ## SKIP-WORKTREE (local git changes)
 
 Ignore local diffs on a tracked file (won't show in `git st`, won't be committed):

@@ -87,11 +87,11 @@ link_config_files_and_themes() {
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/skills" "${dst_dir}/skills"
 
-    # logiops-rs
-    sudo mkdir -p "/etc/logiops"
-    sudo ln -srf "${script_path}/assets/logiops/config.toml" "/etc/logiops/config.toml"
-    sudo systemctl enable logiops.service
-    sudo systemctl restart logiops.service
+    # Solaar
+    dst_dir=$(mkdir_ret "${config_path}/solaar")
+    ln -srf "${script_path}/assets/solaar/rules.yaml" "${dst_dir}/rules.yaml"
+    # Copy (not symlink) — Solaar rewrites this file with battery/unitId
+    [[ ! -f "${dst_dir}/config.yaml" ]] && cp "${script_path}/assets/solaar/config.yaml" "${dst_dir}/config.yaml"
 
     # caps2esc
     ### Symlinks could fail at boot-time
@@ -161,29 +161,6 @@ install_packages() {
         pacman -Qi "$pkg" &>/dev/null && continue
         paru -S --noconfirm --skipreview "$pkg"
     done <"$script_path/pacman_list_2.conf"
-
-    # Build logiops-rs from patched PKGBUILD (AUR tarball has broken dep)
-    if ! pacman -Qi logiops-rs >/dev/null 2>&1; then
-        build_dir=$(mktemp -d)
-        cp "${script_path}/assets/logiops/PKGBUILD" "${build_dir}/"
-        cp "${script_path}/assets/logiops/99-logiops.rules" "${build_dir}/"
-        (
-            cd "${build_dir}" || exit
-            makepkg -si --noconfirm --needed
-        )
-        rm -rf "${build_dir}"
-    fi
-
-    # Ensure plugdev group exists and user is a member
-    sudo getent group plugdev >/dev/null 2>&1 || sudo groupadd plugdev
-    sudo usermod -aG plugdev "$USER"
-    sudo udevadm control --reload-rules
-    sudo udevadm trigger --subsystem-match=hidraw
-
-    # Fix permissions on already-connected devices and restart daemon
-    sudo chgrp plugdev /dev/hidraw* 2>/dev/null
-    sudo chmod 660 /dev/hidraw* 2>/dev/null
-    sudo systemctl restart logiops.service
 
     # Install flatpaks
     while IFS= read -r line; do
