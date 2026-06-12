@@ -74,15 +74,6 @@ function trash([string]$path) {
 ###############################################################################
 # Prompt: Starship
 
-$starship_config = "$HOME/.config/starship"
-if (-not (Test-Path $starship_config)) {
-    mkdir $starship_config
-}
-
-$env:STARSHIP_CONFIG = "$starship_config/starship.toml";
-if (-not (Test-Path $env:STARSHIP_CONFIG)) {
-    $url = "https://raw.githubusercontent.com/byBretema/.dotfiles/refs/heads/main/configs/starship.toml"
-    _wget $url $env:STARSHIP_CONFIG
-}
+$env:STARSHIP_CONFIG = "$HOME/.config/starship/starship.toml"
 
 Invoke-Expression (&starship init powershell)

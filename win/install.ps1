@@ -78,6 +78,32 @@ function lns([string]$from, [string]$to) {
     $null = New-Item -Path "$to" -ItemType SymbolicLink -Value "$from" -Force
 }
 
+function process_winget_list([string]$list_file) {
+    Get-Content $list_file | ForEach-Object {
+        $line = $_.Trim()
+        if ($line.Length -eq 0 -or $line.StartsWith("#")) {
+            return
+        }
+        install_winget $line
+    }
+}
+
+function install_font([string]$url, [string]$font_name) {
+    $zip = download_to_temp $url "${font_name}.zip"
+    $extract_path = "${env:TEMP}\${font_name}_fonts"
+    Write-Host ">> Installing font : $font_name"
+    Remove-Item -Recurse $extract_path -Force 2>$null
+    $null = Start-Process -FilePath "${env:ProgramFiles}\7-Zip\7zG.exe" -ArgumentList "x `"$zip`" -o`"$extract_path`" -aou" -PassThru -Wait
+    $font_dest = "$env:SYSTEMROOT\Fonts"
+    Get-ChildItem -Path $extract_path -Recurse -Include "*.ttf", "*.otf" | ForEach-Object {
+        $dest = Join-Path $font_dest $_.Name
+        if (-not (Test-Path $dest)) {
+            Copy-Item $_.FullName $font_dest
+        }
+    }
+    Write-Host ">> Font installed : $font_name"
+}
+
 # $global:custom_path = [Environment]::GetEnvironmentVariable('Path', "User")
 # function add_to_env_path ([string] $folder_path) {
 #     if ("$global:custom_path".Contains($folder_path)) {
@@ -104,93 +130,25 @@ Write-Host "`n>>> SCRIPT BEGINING <<<`n"
 print_title "Winget"
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
-    install_winget "Microsoft.PowerShell"               # Pwsh : Powershell 7
+    install_winget "Microsoft.PowerShell"
     sudo config --enable normal
     & pwsh.exe "$script_root\install.ps1"
     return
 }
 
-# OS Tweaks
-#---------------------
-install_winget "Nilesoft.Shell"                         # NShell : Custom right-click menu
-install_winget "Ditto.Ditto"                            # Ditto : Clipboard History
-install_winget "QL-Win.QuickLook"                       # QuickLook : macos-like Preview
-install_winget "voidtools.Everything"                   # Everything : The best file searcher
-install_winget "voidtools.Everything.Cli"               #  ↪ Use 'es <query>' to use Everything Search from Terminal
-install_winget "Flow-Launcher.Flow-Launcher"            # Laucher : Spotlight/Alfred like
-install_winget "Microsoft.PowerToys"                    # PowerToys : FancyZones, Color Picker, OCR, ...
-install_winget "9P8LTPGCBZXD" "WinToys"                 # WinToys : Settings Dashboard
-
-# OS Utils
-#---------------------
-install_winget "Bitwarden.Bitwarden"                    # BitWarden
-install_winget "7zip.7zip"                              # 7Zip
-install_winget "ShareX.ShareX"                          # Better screenshots
+process_winget_list "$script_root\winget_install.conf"
 
 # 7zip : Double-Click Simply Extract
 $null = New-PSDrive -PSProvider registry -Root HKEY_CLASSES_ROOT -Name HKCR
 $null = New-Item -path "HKCR:/Applications/7zG.exe/shell/open/command" -value "`"${env:ProgramFiles}\7-Zip\7zG.exe`" x `"%1`" -o* -aou" -Force
 
-# Media
-#---------------------
-install_winget "Rufus.Rufus"                            # To burn ISOs onto USBs
-install_winget "CodecGuide.K-LiteCodecPack.Full"        # KLite video code pack
-install_winget "9NBLGGH42THS" "3D Previewer"            # 3D Previewer
-install_winget "BlenderFoundation.Blender"              # Blender
-install_winget "HandBrake.HandBrake"                    # HandBrake : Video Coder
-install_winget "OBSProject.OBSStudio"                   # OBS Studio
 
-# Communications
-#---------------------
-install_winget "XPFCS9QJBKTHVZ" "Spark Mail"            # Spark Mail
-install_winget "Microsoft.Teams"                        # MS Teams
-install_winget "TeamViewer.TeamViewer"                  # TeamViewer
-install_winget "9NKSQGP7F2NH" "Whatsapp"                # Whatsapp
-install_winget "SlackTechnologies.Slack"                # Slack
-
-# Information
-#---------------------
-install_winget "SumatraPDF.SumatraPDF"                  # Sumatra : PDF Reader
-install_winget "Brave.Brave"                            # Brave : A better Chrome
-install_winget "Notion.Notion"                          # Notion
-install_winget "Obsidian.Obsidian"                      # Obsidian
-
-# Dev
-#---------------------
-install_winget "Microsoft.VisualStudioCode"             # VS Code
-
-install_winget "Git.Git"                                # Git
-install_winget "bmatzelle.Gow"                          # Linux Aliases
-install_winget "gsass1.NTop"                            # htop for Windows
-install_winget "junegunn.fzf"                           # htop for Windows
-install_winget "sharkdp.bat"                            # like 'cat' but better
-install_winget "eza-community.eza"                      # ls 2.0
-
-install_winget "Starship.Starship"                      # Terminal prompt
-
-install_winget "Python.Python.3.13"                     # Python 3.x
-install_winget "ShiningLight.OpenSSL.Dev"               # OpenSSL
-
-install_winget "Kitware.CMake"                          # CMake
-install_winget "KhronosGroup.VulkanSDK"                 # Vulkan
-install_winget "Microsoft.VisualStudio.2022.Community"  # Visual Studio (MSVC)
-
-# Personal
-#---------------------
-install_winget "Valve.Steam"                            # Steam
-install_winget "LocalSend.LocalSenpad"                    # AirDrop wannabe
-install_winget "9PKTQ5699M62" "iCloud"                  # iCloud
-##install_winget "RazerInc.RazerInstaller"          # Razer Lights
-
-
-### MANUALLY : DOWNLOAD + INSTALL
+### FONTS
 ###############################################################################
 
-print_title "Direct Downloads"
+print_title "Fonts"
 
-unzip (download_to_temp "https://github.com/tonsky/FiraCode/releases/download/6.2/Fira_Code_v6.2.zip")
-unzip (download_to_temp "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/FiraCode.zip")
-unzip (download_to_temp "https://rubjo.github.io/victor-mono/VictorMonoAll.zip")
+install_font "https://github.com/ryanoasis/nerd-fonts/releases/download/v3.3.0/VictorMono.zip" "VictorMono"
 
 ## OpenSSH
 # if ($(Get-Service -Name ssh-agent).Name -lt 1) {
@@ -367,19 +325,66 @@ install_capabilites "Language.OCR" "en-GB,en-US,es-ES,fr-FR"
 
 print_title "Symbolic Links"
 
+$configs = "$script_root\..\configs"
+
 # Git Config
-lns "$script_root\..\common\.gitconfig" "${home}\.gitconfig"
-lns "$script_root\..\common\.gitignore" "${home}\.gitignore"
+lns "$configs\.gitconfig" "${home}\.gitconfig"
+lns "$configs\.gitignore" "${home}\.gitignore"
 
 # VSCode Config + Extensions
 $vscode_config_path = path_to_unix "${env:APPDATA}\Code\User"
-lns "$script_root\..\common\vscode\settings.json"    "${vscode_config_path}\settings.json"
-lns "$script_root\..\common\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
+lns "$configs\vscode\settings.json"    "${vscode_config_path}\settings.json"
+lns "$configs\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
+
+# Starship Prompt
+$starship_dir = "${home}\.config\starship"
+$null = New-Item -ItemType Directory -Path $starship_dir -Force
+lns "$configs\starship.toml" "$starship_dir\starship.toml"
+
+# Alacritty (if installed)
+$alacritty_dir = "${env:APPDATA}\alacritty"
+$null = New-Item -ItemType Directory -Path $alacritty_dir -Force
+lns "$configs\alacritty.toml" "$alacritty_dir\alacritty.toml"
+
+# Helix (if installed)
+$helix_dir = "${env:APPDATA}\helix"
+$null = New-Item -ItemType Directory -Path $helix_dir -Force
+lns "$configs\helix\config.toml"     "$helix_dir\config.toml"
+lns "$configs\helix\languages.toml"  "$helix_dir\languages.toml"
+$helix_themes = "$helix_dir\themes"
+$null = New-Item -ItemType Directory -Path $helix_themes -Force
+foreach ($theme in (Get-ChildItem "$configs\helix\themes\*.toml")) {
+    lns $theme.FullName "$helix_themes\$($theme.Name)"
+}
+
+# Flameshot (if installed)
+$flameshot_dir = "${home}\.config\flameshot"
+$null = New-Item -ItemType Directory -Path $flameshot_dir -Force
+lns "$configs\flameshot.ini" "$flameshot_dir\flameshot.ini"
+
+# Yazi (if installed)
+$yazi_dir = "${env:APPDATA}\yazi"
+$null = New-Item -ItemType Directory -Path $yazi_dir -Force
+lns "$configs\yazi\themes\theme.toml" "$yazi_dir\theme.toml"
+
+# Qt Creator Themes (if installed)
+$qtc_styles = "${home}\.config\QtProject\qtcreator\styles"
+$null = New-Item -ItemType Directory -Path $qtc_styles -Force
+foreach ($xml in (Get-ChildItem "$configs\qtcreator\themes\*.xml")) {
+    lns $xml.FullName "$qtc_styles\$($xml.Name)"
+}
+
+# Clang Format
+lns "$configs\.clang-format" "${home}\.clang-format"
+
+# WorkTrunk
+$worktrunk_dir = "${home}\.config\worktrunk"
+$null = New-Item -ItemType Directory -Path $worktrunk_dir -Force
+lns "$configs\worktrunk.toml" "$worktrunk_dir\worktrunk.toml"
 
 # Powershell Profile on Powershell 7.x
 $documents = ([Environment]::GetFolderPath("MyDocuments"))
 lns "$script_root\profile.ps1" "$documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-
 
 # Windows Terminal Config
 $local_appdata_pkgs = path_to_unix "${env:LOCALAPPDATA}\Packages"
