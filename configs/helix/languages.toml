@@ -78,13 +78,17 @@ comment-tokens = ["-", "+", "*", "- [ ]", ">"]
 name = "lua"
 auto-format = true
 
-[language.auto-pairs]
-'(' = ')'
-'{' = '}'
-'[' = ']'
-'"' = '"'
-'`' = '`'
-'<' = '>'
+[[language]]
+name = "ini"
+file-types = ["project.inc"]
+
+# [language.auto-pairs]
+# '(' = ')'
+# '{' = '}'
+# '[' = ']'
+# '"' = '"'
+# '`' = '`'
+# '<' = '>'
 
 #! C++ settings
 
