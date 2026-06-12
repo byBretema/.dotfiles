@@ -20,8 +20,9 @@ mkdir_ret() {
     echo "$1"
 }
 
-link_config_files_and_themes() {
-    #! Configs
+link_config_files() {
+
+    # --- Shell ---
     log_header "Linking config files"
 
     # Global exports
@@ -34,10 +35,6 @@ link_config_files_and_themes() {
     ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
     ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"
 
-    # Git
-    ln -srf "${my_configs}/.gitconfig" "$HOME/.gitconfig"
-    ln -srf "${my_configs}/.gitignore" "$HOME/.gitignore"
-
     # Ghostty
     dst_dir=$(mkdir_ret "${config_path}/ghostty")
     ln -srf "${my_configs}/ghostty.conf" "${dst_dir}/config"
@@ -45,6 +42,14 @@ link_config_files_and_themes() {
     # Alacritty
     dst_dir=$(mkdir_ret "${config_path}/alacritty")
     ln -srf "${my_configs}/alacritty.toml" "${dst_dir}/alacritty.toml"
+
+    # Tmux
+    dst_dir=$(mkdir_ret "${config_path}/tmux")
+    git_url="https://github.com/tmux-plugins/tpm"
+    [[ ! -d "${dst_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${dst_dir}/plugins/tpm"; }
+    ln -srf "${my_configs}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
+
+    # --- DevEnv ---
 
     # Code
     dst_dir=$(mkdir_ret "${config_path}/Code/User")
@@ -64,38 +69,43 @@ link_config_files_and_themes() {
         fi
     done
 
+    # Git
+    ln -srf "${my_configs}/.gitconfig" "$HOME/.gitconfig"
+    ln -srf "${my_configs}/.gitignore" "$HOME/.gitignore"
+
     # WorkTrunk : Manage git-worktrees
     dst_dir=$(mkdir_ret "${config_path}/worktrunk")
     ln -srf "${my_configs}/worktrunk.toml" "${dst_dir}/config.toml"
 
-    # Tmux
-    dst_dir=$(mkdir_ret "${config_path}/tmux")
-    git_url="https://github.com/tmux-plugins/tpm"
-    [[ ! -d "${dst_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${dst_dir}/plugins/tpm"; }
-    ln -srf "${my_configs}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
+    # --- Apps ---
 
     # Flameshot
     dst_dir=$(mkdir_ret "${config_path}/flameshot")
     ln -srf "${my_configs}/flameshot.ini" "${dst_dir}/flameshot.ini"
 
-    # opencode
-    ## main stuff
+    # --- OpenCode ---
+
+    # Main stuff
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
     ln -srf "${my_configs}/opencode/tui.json" "${dst_dir}/tui.json"
-    ## skills
+
+    # Skills
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/skills" "${dst_dir}/skills"
 
+    # --- Input Management ---
+
     # Solaar
+    ### config.yaml writes battery and weird this, just copy it
     dst_dir=$(mkdir_ret "${config_path}/solaar")
     ln -srf "${script_path}/assets/solaar/rules.yaml" "${dst_dir}/rules.yaml"
-    # Copy (not symlink) — Solaar rewrites this file with battery/unitId
-    [[ ! -f "${dst_dir}/config.yaml" ]] && cp "${script_path}/assets/solaar/config.yaml" "${dst_dir}/config.yaml"
+    if [[ ! -f "${dst_dir}/config.yaml" ]]; then
+        cp "${script_path}/assets/solaar/config.yaml" "${dst_dir}/config.yaml"
+    fi
 
-    # caps2esc
-    ### Symlinks could fail at boot-time
-    ### So copy the files is the best approach here
+    # Caps 2 Esc
+    ### Symlinks could fail at boot-time, so copy the files is the best approach here
     #... caps2esc config
     service_config="/etc/udevmon.yaml"
     sudo rm -rf "${service_config}"
@@ -111,7 +121,7 @@ link_config_files_and_themes() {
     sudo systemctl enable udevmon.service
     sudo systemctl start udevmon.service
 
-    #! Themes
+    # --- Themes ---
     log_header "Linking Themes"
 
     # Qt Creator
@@ -127,16 +137,18 @@ link_config_files_and_themes() {
     ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
     ln -srf "${my_configs}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
 
-    #! Wallpapers
+    # --- Wallpapers ---
     log_header "Linking Wallpapers"
+
     dst_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
     if [[ -d "${dst_dir}" ]]; then
         sudo rm -rf "${dst_dir}"
     fi
     sudo cp -r "${script_path}/../assets/wallpapers" "${dst_dir}"
 
-    #! Cosmic
+    # --- Cosmic ---
     log_header "Linking Cosmic Settings"
+
     dst_dir="${config_path}/cosmic"
     if [[ -d "${dst_dir}" ]]; then
         sudo rm -rf "${dst_dir}"
@@ -144,30 +156,31 @@ link_config_files_and_themes() {
     ln -srfn "${script_path}/assets/cosmic" "${config_path}"
 }
 
-system_update() {
-    log_header "Updating system"
-    paru --noconfirm -Syu
-    flatpak update -y
+process_packages() {
+    local list_file=$1 check_cmd=$2 action_cmd=$3 sanitize=$4 invert_check=${5:-false}
+    shift 5
+
+    while IFS= read -r line; do
+        local pkg=${line//$sanitize/}
+        [[ -n $pkg ]] || continue
+        [[ $line != \#* ]] || continue
+        if [[ $invert_check == true ]]; then
+            $check_cmd "$pkg" &>/dev/null || continue
+        else
+            $check_cmd "$pkg" &>/dev/null && continue
+        fi
+        $action_cmd "$pkg" "$@"
+    done <"$list_file"
 }
 
 install_packages() {
-    log_header "Installing / updating apps"
+    log_header "Installing packages"
 
-    # Install pacman packages
-    while IFS= read -r line; do
-        pkg=${line//[^a-zA-Z0-9_-]/}
-        [[ -n $pkg ]] || continue
-        [[ $line != \#* ]] || continue
-        pacman -Qi "$pkg" &>/dev/null && continue
-        paru -S --noconfirm --skipreview "$pkg"
-    done <"$script_path/pacman_list_2.conf"
+    process_packages "$script_path/pacman_install.conf" \
+        "pacman -Qi" "paru -S --noconfirm --skipreview" "[^a-zA-Z0-9_-]"
 
-    # Install flatpaks
-    while IFS= read -r line; do
-        pkg=${line//[^a-zA-Z0-9.]/}
-        [[ -n $pkg ]] && [[ $line != \#* ]] && { flatpak -y install $pkg; }
-    done <"$script_path/flatpak_list.conf"
-    flatpak update
+    process_packages "$script_path/flatpak_list.conf" \
+        "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]"
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
     ncspot_entry="0.0.0.0 apresolve.spotify.com"
@@ -176,9 +189,16 @@ install_packages() {
     fi
 }
 
-vscode_extensions() {
-    log_header "Installing vscode extensions"
-    python "$my_configs/vscode/extensions.py" -i
+remove_discarded_packages() {
+    log_header "Removing packages"
+    process_packages "$script_path/pacman_remove.conf" \
+        "pacman -Qi" "paru -Rns --noconfirm" "[^a-zA-Z0-9_-]" true
+}
+
+system_update() {
+    log_header "Updating system"
+    paru --noconfirm -Syu
+    flatpak update -y
 }
 
 ################################################################################
@@ -196,6 +216,7 @@ usage() {
     echo "  -u | --update         System update"
     echo "  -l | --links          Link configs / themes"
     echo "  -i | --install        Install packages / apps"
+    echo "  --rd | --remove-discarded  Remove discarded packages"
     echo "  -c | --code [PARAMS]  Manage code extensions"
     echo "  -h | --help           Show this message"
     echo "  --                    Extra args after this"
@@ -203,19 +224,19 @@ usage() {
 
 #! Defaults
 
-do_links=false
+do_remove_discarded=false
 do_update=false
 do_install=false
-do_code_extensions=false
+do_links=false
 
 #! Process options
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
+    --rd | --remove-discarded) shift && do_remove_discarded=true ;;
     -u | --update) shift && do_update=true ;;
-    -l | --links) shift && do_links=true ;;
     -i | --install) shift && do_install=true ;;
-    -c | --code) shift && do_code_extensions=true ;;
+    -l | --link) shift && do_links=true ;;
     -h | --help) shift && usage ;;
     --) shift && break ;;
     *) break ;;
@@ -226,7 +247,7 @@ done
 ### Execution
 ###############################################################################
 
-[[ "${do_links}" == "true" ]] && link_config_files_and_themes
+[[ "${do_remove_discarded}" == "true" ]] && remove_discarded_packages
 [[ "${do_update}" == "true" ]] && system_update
 [[ "${do_install}" == "true" ]] && install_packages
-[[ "${do_code_extensions}" == "true" ]] && vscode_extensions
+[[ "${do_links}" == "true" ]] && link_config_files
