@@ -85,6 +85,14 @@ After installing/running `install.sh -l`:
 
 Solaar's `KeyPress` actions work on Wayland via uinput. The gesture rules live in `~/.config/solaar/rules.yaml` (symlinked to `linux/assets/solaar/rules.yaml`).
 
+## COSMIC — Get window app_id
+
+Lists all running windows and their `app_id` (useful for tiling exception rules). The target app must be running to show up.
+
+```shell
+uv tool run cosmic-ext-window-helper state
+```
+
 ## SKIP-WORKTREE (local git changes)
 
 Ignore local diffs on a tracked file (won't show in `git st`, won't be committed):

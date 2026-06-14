@@ -9,4 +9,9 @@
     appid: "it.mijorus.smile",
     title: "Smile",
   ),
+  (
+    enabled: true,
+    appid: "flameshot",
+    title: "flameshot",
+  ),
 ]
