@@ -193,6 +193,13 @@
     ): Spawn("flameshot gui"),
     (
         modifiers: [
+            Super,
+            Shift,
+        ],
+        key: "c",
+    ): Spawn("wl-color-picker clipboard"),
+    (
+        modifiers: [
             Ctrl,
             Alt,
         ],
