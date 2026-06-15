@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+# source ".bash_common"
+
+prefixes="${1:-}"
+threshold="${2:-0}"
+dirs=()
+
+shopt -s nullglob
+if [[ -n $prefixes ]]; then
+    IFS=',' read -ra pfx_list <<<"$prefixes"
+    for p in "${pfx_list[@]}"; do
+        dirs+=("$p"*/)
+    done
+else
+    dirs=(*/)
+fi
+shopt -u nullglob
+
+for d in "${dirs[@]}"; do
+    [[ -d $d ]] || continue
+
+    result=$(find "$d" \( -name '*.cpp' -o -name '*.h' -o -name '*.hpp' \) \
+        -exec grep -oh '#include.*' {} + 2>/dev/null \
+        | sort | uniq -c | sort -rn \
+        | awk -v t="$threshold" '$1 >= t' \
+        | head -30)
+
+    if [[ -n $result ]]; then
+        echo "$d"
+        echo "$result"
+        echo
+    fi
+done

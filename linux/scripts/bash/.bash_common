@@ -14,7 +14,7 @@ _log() {
   local color_setup="\033[${2};3${1}m"; shift; shift
   local color_reset="\033[0m"
   local msg="${@}";
-  if ! ${LOG_WITH_COLOR}; then color_setup=""; fi
+  if ! ${LOG_WITH_COLOR}; then color_setup=""; color_reset=""; fi
   printf "${color_setup}${msg}${color_reset}\n" >&2
 }
 
