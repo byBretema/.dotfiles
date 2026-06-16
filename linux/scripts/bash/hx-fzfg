@@ -18,7 +18,11 @@ trap 'rm -f "$tmpfile" "$tmpfile.result"' EXIT
 cat "$history_file" 2>/dev/null > "$tmpfile"
 
 script -q -c \
-  "fzf --print-query --prompt='Pattern: ' --height=1 < $tmpfile > $tmpfile.result" \
+  "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
+    --reverse --cycle --height=100% \
+    --info=inline-right --no-separator --no-scrollbar \
+    --border=none --color=bg+:#313244,pointer:#ffffff,gutter:#1E1E2E \
+    --pointer \">\" < $tmpfile > $tmpfile.result" \
   /dev/null </dev/tty >/dev/tty 2>/dev/null
 
 result=$(cat "$tmpfile.result" 2>/dev/null)
