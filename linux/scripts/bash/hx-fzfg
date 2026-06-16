@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+export PATH="$HOME/.dotfiles/linux/scripts/bash:$PATH"
+source ".bash_common"
+
+required_cmd fzfg
+
+history_dir="${XDG_CACHE_HOME:-$HOME/.cache}/hx-fzfg"
+history_file="$history_dir/history"
+max_history=100
+
+void="/tmp/hx_void"
+rm -rf "$void"
+mkdir "$void"
+
+tmpfile=$(mktemp) || exit 1
+trap 'rm -f "$tmpfile" "$tmpfile.result"' EXIT
+
+cat "$history_file" 2>/dev/null > "$tmpfile"
+(
+  cd "$void"
+  script -q -c \
+    "fzf --print-query --prompt='Pattern: ' --height=1 < $tmpfile > $tmpfile.result" \
+    /dev/null </dev/tty >/dev/tty 2>/dev/null
+)
+result=$(cat "$tmpfile.result" 2>/dev/null)
+query=$(echo "$result" | sed -n '1p')
+selection=$(echo "$result" | sed -n '2p')
+pattern="${selection:-$query}"
+[ -n "$pattern" ] || exit 1
+
+mkdir -p "$history_dir"
+{ grep -vxF "$pattern" "$history_file" 2>/dev/null | tail -n $((max_history - 1)); echo "$pattern"; } > "$history_file.tmp"
+mv "$history_file.tmp" "$history_file"
+
+fzfg "$pattern"

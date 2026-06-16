@@ -188,7 +188,7 @@ install_packages() {
     process_packages "$script_path/pacman_install.conf" \
         "pacman -Qi" "paru -S --noconfirm --skipreview" "[^a-zA-Z0-9_-]"
 
-    process_packages "$script_path/flatpak_list.conf" \
+    process_packages "$script_path/flatpak_install.conf" \
         "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]"
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
@@ -200,8 +200,13 @@ install_packages() {
 
 remove_discarded_packages() {
     log_header "Removing packages"
+
     process_packages "$script_path/pacman_remove.conf" \
         "pacman -Qi" "paru -Rns --noconfirm" "[^a-zA-Z0-9_-]" true
+
+    process_packages "$script_path/flatpak_remove.conf" \
+        "flatpak info" "flatpak -y uninstall" "[^a-zA-Z0-9.]" true
+    flatpak uninstall --unused -y
 }
 
 system_update() {
@@ -222,13 +227,12 @@ usage() {
     echo "Manage configs and system apps, themes..."
     echo ""
     echo "Options:"
-    echo "  -u | --update         System update"
-    echo "  -l | --links          Link configs / themes"
-    echo "  -i | --install        Install packages / apps"
-    echo "  --rd | --remove-discarded  Remove discarded packages"
-    echo "  -c | --code [PARAMS]  Manage code extensions"
-    echo "  -h | --help           Show this message"
-    echo "  --                    Extra args after this"
+    echo "  --rm | --remove-discarded  Remove discarded packages"
+    echo "    -u | --update            System update"
+    echo "    -i | --install           Install packages / apps"
+    echo "    -l | --links             Link configs / themes"
+    echo "    -h | --help              Show this message"
+    echo "    --                       Extra args after this"
 }
 
 #! Defaults
@@ -242,7 +246,7 @@ do_links=false
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
-    --rd | --remove-discarded) shift && do_remove_discarded=true ;;
+    --rm | --remove-discarded) shift && do_remove_discarded=true ;;
     -u | --update) shift && do_update=true ;;
     -i | --install) shift && do_install=true ;;
     -l | --link) shift && do_links=true ;;

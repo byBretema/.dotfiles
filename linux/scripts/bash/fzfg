@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+pattern="${1:?Usage: fzfg <pattern> [open-cmd]}"
+opencmd="${2:-}"
+
+BUFFER=25
+
+list_file=$(mktemp) || exit 1
+result_file=$(mktemp) || exit 1
+preview_script=$(mktemp) || exit 1
+fzf_script=$(mktemp) || exit 1
+trap 'rm -f "$list_file" "$result_file" "$preview_script" "$fzf_script"' EXIT
+
+cat > "$preview_script" <<'PREVIEW_SCRIPT_EOF'
+#!/usr/bin/env bash
+item="$1"
+raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
+f=${raw%:*}
+l=${raw##*:}
+BUFFER=25
+bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
+    --highlight-line "$l":"$((l+1))" "$f"
+PREVIEW_SCRIPT_EOF
+
+rg -nU "$pattern" | \
+  awk '{n=split($0,a,":"); f=a[1]; for(i=2;i<n-1;i++)f=f":"a[i]; if(!seen[f]){seen[f]=1; print f":"a[n-1]}}' | \
+  sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list_file"
+
+binds='ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top'
+
+cat > "$fzf_script" <<FZF_SCRIPT_EOF
+SHELL=$(which bash) fzf --ansi --cycle --reverse --height=100% \
+  --prompt "" --info=inline-right --no-separator --no-scrollbar \
+  --bind "$binds" \
+  --border=none --color=bg+:#313244,preview-border:white,pointer:#ffffff,gutter:#1E1E2E \
+  --pointer ">" \
+  --preview "bash $preview_script {}" \
+  --preview-window right,border-bold \
+  < $list_file > $result_file
+FZF_SCRIPT_EOF
+
+script -q -c "bash $fzf_script" /dev/null </dev/tty >/dev/tty 2>/dev/null
+
+result=$(cat "$result_file")
+[ -n "$result" ] || exit 1
+
+if [ -n "$opencmd" ]; then
+  raw=$(printf '%s' "$result" | sed 's/\x1b\[[0-9;]*m//g')
+  f=${raw%:*}
+  l=${raw##*:}
+  exec "$opencmd" "$f:$l"
+fi
+
+printf '%s\n' "$result"

@@ -96,14 +96,42 @@ alias pmy='pm --noconfirm'
 alias pmyy='pm --noconfirm --skipreview'
 alias pmiy='paru --noconfirm -S'
 alias pmiyy='paru --noconfirm --skipreview -S'
+
+# Paru .. Recent installed packages  (from CachyOS default zsh config)
+alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
 # Paru .. Recent installed packages  (from CachyOS default zsh config)
 alias pm_big="expac -H M '%m\t%n' | sort -h | nl"
-alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
-# Paru .. Cleanup cache
-alias pm_clean_cache='sudo pacman -Scc'
+
 # Paru .. Unlock pacman DB
 alias pm_unlock='sudo rm /var/lib/pacman/db.lck'
+
 # Paru .. Remove package recursive and don't save
 alias pm_remove='sudo pacman -Rsn'
+
 # Paru .. Update everything
 alias pm_update='paru -Syu'
+# Paru .. List orphan packages
+alias pm_orphans='pacman -Qdt'
+# Paru .. List files owned by a package
+alias pm_files='pacman -Ql'
+# Paru .. Package info
+alias pm_info='pacman -Qi'
+# Paru .. Search installed packages
+alias pm_search='pacman -Qs'
+# Paru .. Which package owns a file
+alias pm_owns='pacman -Qo'
+
+# Paru .. Dependency tree of a package
+alias pm_deps='pactree'
+# Paru .. Reverse dependency tree (what depends on a package)
+alias pm_rdeps='pactree -r'
+# Paru .. Interactive reverse deps (Required By) via fzf
+alias pm_reqby='expac -Q "%n" | fzf --preview="expac -Q -l \"\n\" \"%R\" {}"'
+
+# Paru .. Full system upgrade (pacman + flatpak)
+alias pm_upgrade='paru -Syu && flatpak update -y'
+
+# Paru .. Cleanup cache
+alias pm_clean_cache='sudo pacman -Scc'
+# Paru .. Remove orphan packages
+alias pm_clean_orphans='sudo pacman -Rns $(pacman -Qdtq)'
