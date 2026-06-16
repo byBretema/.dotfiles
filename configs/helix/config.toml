@@ -145,9 +145,10 @@ k = "goto_next_diag"
 
 [keys.normal.space]
 "l" = "global_search"
-" " = [
+"L" = [
   ":write-all",
   ":insert-output hx-fzfg",
+  ":open %sh{cat /tmp/hx-fzfg.result}",
   ":redraw",
   ":reload-all"
 ]
