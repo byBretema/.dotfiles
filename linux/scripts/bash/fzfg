@@ -22,8 +22,9 @@ bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l
     --highlight-line "$l":"$((l+1))" "$f"
 PREVIEW_SCRIPT_EOF
 
-rg -nU "$pattern" | \
-  awk '{n=split($0,a,":"); f=a[1]; for(i=2;i<n-1;i++)f=f":"a[i]; if(!seen[f]){seen[f]=1; print f":"a[n-1]}}' | \
+rg --color never -nU "$pattern" | \
+  sed 's/^\([^:]*\):\([0-9][0-9]*\):.*/\1:\2/' | \
+  awk -F: '!seen[$1]++' | \
   sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list_file"
 
 binds='ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top'
