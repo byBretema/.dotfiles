@@ -163,8 +163,8 @@ k = "goto_next_diag"
 # Custom search UI made with: rg + fzf + bat
 " " = [
   ":write-all",
-  ":insert-output hx-fzfg",
-  ":open %sh{cat /tmp/hx-fzfg.result}",
+  ":insert-output hx_fzf",
+  ":open %sh{cat /tmp/hx_fzf.result}",
   ":redraw",
   ":reload-all"
 ]
