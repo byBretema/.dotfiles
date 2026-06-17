@@ -98,7 +98,7 @@ display-progress-messages = true
 # > [keys.select] should be the same as this except Scooter.
 
 # Disable
-"tab" = "no_op"
+# "tab" = "no_op"
 up = "no_op"
 down = "no_op"
 left = "no_op"
@@ -272,7 +272,7 @@ k = "goto_next_diag"
 [keys.select]
 
 # Disable
-"tab" = "no_op"
+# "tab" = "no_op"
 up = "no_op"
 down = "no_op"
 left = "no_op"
