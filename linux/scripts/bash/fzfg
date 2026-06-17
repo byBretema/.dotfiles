@@ -15,15 +15,33 @@ cat > "$preview_script" <<'PREVIEW_SCRIPT_EOF'
 #!/usr/bin/env bash
 item="$1"
 raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
-f=${raw%:*}
-l=${raw##*:}
+count=${raw##*:}
+rest=${raw%:*}
+l=${rest##*:}
+f=${rest%:*}
 BUFFER=25
 bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
-    --highlight-line "$l":"$((l+1))" "$f"
+    --highlight-line "$l":"$((l+count-1))" "$f"
 PREVIEW_SCRIPT_EOF
 
 rg --color never -nU "$pattern" | \
-  sed 's/^\([^:]*\):\([0-9][0-9]*\):.*/\1:\2/' | \
+  awk -F: '
+    function emit() {
+      if (file != "") print file ":" startline ":" count
+    }
+    {
+      if ($1 != file || $2 != prevline + 1) {
+        emit()
+        file = $1
+        startline = $2
+        count = 1
+      } else {
+        count++
+      }
+      prevline = $2
+    }
+    END { emit() }
+  ' | \
   awk -F: '!seen[$1]++' | \
   sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list_file"
 
@@ -47,8 +65,9 @@ result=$(cat "$result_file")
 
 if [ -n "$opencmd" ]; then
   raw=$(printf '%s' "$result" | sed 's/\x1b\[[0-9;]*m//g')
-  f=${raw%:*}
-  l=${raw##*:}
+  rest=${raw%:*}
+  l=${rest##*:}
+  f=${rest%:*}
   exec "$opencmd" "$f:$l"
 fi
 
