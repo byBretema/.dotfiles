@@ -20,7 +20,32 @@ cat > "$preview_script" <<'PREVIEW_EOF'
 #!/usr/bin/env bash
 query="$1"
 [ -z "$query" ] && echo "Type a pattern to search" && exit 0
-matches=$(rg --color never -nU "$query" 2>/dev/null | head -10)
+escaped=$(perl -e '
+  my $s = shift;
+  my $out = "";
+  my $i = 0;
+  while ($i < length $s) {
+    my $c = substr($s, $i, 1);
+    if ($c eq "\\" && $i + 1 < length $s) {
+      $out .= "\\" . substr($s, $i + 1, 1);
+      $i += 2;
+    } elsif ($c eq "." && substr($s, $i + 1, 1) eq "*") {
+      $out .= ".*";
+      $i += 2;
+    } elsif ($c eq "[" && substr($s, $i, 4) eq "[ ]*") {
+      $out .= "[ ]*";
+      $i += 4;
+    } elsif ($c =~ /[.^\$*+?{}()\[\]|\\]/) {
+      $out .= "\\" . $c;
+      $i++;
+    } else {
+      $out .= $c;
+      $i++;
+    }
+  }
+  print $out;
+' -- "$query")
+matches=$(rg --color never -nU "$escaped" 2>/dev/null | head -10)
 [ -z "$matches" ] && echo "No matches" && exit 0
 echo "$matches" | sed 's/^\([^:]*\):\([0-9][0-9]*\):.*$/  \1:\2/'
 echo "────────────────────────────────────────"

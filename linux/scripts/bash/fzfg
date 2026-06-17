@@ -1,7 +1,16 @@
 #!/usr/bin/env bash
 
-pattern="${1:?Usage: fzfg <pattern> [open-cmd]}"
-opencmd="${2:-}"
+case_flag=""
+args=()
+for arg in "$@"; do
+  case "$arg" in
+    -i|--ignore-case)     case_flag="-i" ;;
+    -h|--help)            echo "Usage: fzfg [-i] <pattern> [open-cmd]"; exit 0 ;;
+    *)                    args+=("$arg") ;;
+  esac
+done
+pattern="${args[0]:?Usage: fzfg [-i] <pattern> [open-cmd]}"
+opencmd="${args[1]:-}"
 
 BUFFER=25
 
@@ -10,6 +19,35 @@ result_file=$(mktemp) || exit 1
 preview_script=$(mktemp) || exit 1
 fzf_script=$(mktemp) || exit 1
 trap 'rm -f "$list_file" "$result_file" "$preview_script" "$fzf_script"' EXIT
+
+escape_pattern() {
+  perl -e '
+    my $s = shift;
+    my $out = "";
+    my $i = 0;
+    while ($i < length $s) {
+      my $c = substr($s, $i, 1);
+      if ($c eq "\\" && $i + 1 < length $s) {
+        $out .= "\\" . substr($s, $i + 1, 1);
+        $i += 2;
+      } elsif ($c eq "." && substr($s, $i + 1, 1) eq "*") {
+        $out .= ".*";
+        $i += 2;
+      } elsif ($c eq "[" && substr($s, $i, 4) eq "[ ]*") {
+        $out .= "[ ]*";
+        $i += 4;
+      } elsif ($c =~ /[.^\$*+?{}()\[\]|\\]/) {
+        $out .= "\\" . $c;
+        $i++;
+      } else {
+        $out .= $c;
+        $i++;
+      }
+    }
+    print $out;
+  ' -- "$1"
+}
+processed=$(escape_pattern "$pattern")
 
 cat > "$preview_script" <<'PREVIEW_SCRIPT_EOF'
 #!/usr/bin/env bash
@@ -24,7 +62,7 @@ bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l
     --highlight-line "$l":"$((l+count-1))" "$f"
 PREVIEW_SCRIPT_EOF
 
-rg --color never -nU "$pattern" | \
+rg --color never -nU ${case_flag:+"$case_flag"} -e "$processed" | \
   awk -F: '
     function emit() {
       if (file != "") print file ":" startline ":" count
