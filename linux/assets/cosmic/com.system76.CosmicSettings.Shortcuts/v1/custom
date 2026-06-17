@@ -1,6 +1,18 @@
 {
     (
         modifiers: [],
+        key: "XF86AudioRaiseVolume",
+    ): Spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"),
+    (
+        modifiers: [],
+        key: "XF86AudioLowerVolume",
+    ): Spawn("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"),
+    (
+        modifiers: [],
+        key: "XF86AudioMute",
+    ): Spawn("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"),
+    (
+        modifiers: [],
         key: "Print",
     ): Disable,
     (
