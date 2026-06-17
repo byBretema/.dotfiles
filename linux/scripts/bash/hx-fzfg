@@ -13,7 +13,25 @@ history_file="$history_dir/history"
 max_history=100
 
 tmpfile=$(mktemp) || exit 1
-trap 'rm -f "$tmpfile" "$tmpfile.result"' EXIT
+preview_script=$(mktemp) || exit 1
+trap 'rm -f "$tmpfile" "$tmpfile.result" "$preview_script"' EXIT
+
+cat > "$preview_script" <<'PREVIEW_EOF'
+#!/usr/bin/env bash
+query="$1"
+[ -z "$query" ] && echo "Type a pattern to search" && exit 0
+matches=$(rg --color never -nU "$query" 2>/dev/null | head -10)
+[ -z "$matches" ] && echo "No matches" && exit 0
+echo "$matches" | sed 's/^\([^:]*\):\([0-9][0-9]*\):.*$/  \1:\2/'
+echo "────────────────────────────────────────"
+first=$(echo "$matches" | head -1)
+file=${first%%:*}
+line=$(echo "$first" | cut -d: -f2)
+BUFFER=25
+bat --color=always --style=numbers --line-range "$((line>BUFFER?line-BUFFER:1))":"$((line+BUFFER))" \
+    --highlight-line "$line":"$((line+1))" "$file" 2>/dev/null
+PREVIEW_EOF
+chmod +x "$preview_script"
 
 cat "$history_file" 2>/dev/null > "$tmpfile"
 
@@ -22,7 +40,11 @@ script -q -c \
     --reverse --cycle --height=100% \
     --info=inline-right --no-separator --no-scrollbar \
     --border=none --color=bg+:#313244,pointer:#ffffff,gutter:#1E1E2E \
-    --pointer \">\" < $tmpfile > $tmpfile.result" \
+    --pointer \">\" \
+    --bind 'ctrl-t:toggle-preview' \
+    --preview 'bash $preview_script {q}' \
+    --preview-window down:60%,border-bold \
+    < $tmpfile > $tmpfile.result" \
   /dev/null </dev/tty >/dev/tty 2>/dev/null
 
 result=$(cat "$tmpfile.result" 2>/dev/null)

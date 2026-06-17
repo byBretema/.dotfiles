@@ -1,5 +1,7 @@
 theme = "bretema"
 
+# --- EDITOR -------------------------------------------------------------------
+
 [editor]
 mouse = true
 true-color = true
@@ -89,19 +91,14 @@ display-messages = true
 auto-signature-help = true
 display-progress-messages = true
 
+
+# --- KEYs ---------------------------------------------------------------------
+
 [keys.normal]
-"F12" = "delete_selection"
+# > [keys.select] should be the same as this except Scooter.
 
-"C-n" = "page_cursor_half_down"
-"C-p" = "page_cursor_half_up"
-
-"M" = "@miwm"
-
-"Y" = "@miwy"
-"d" = "delete_selection_noyank"
-"c" = "change_selection_noyank"
-
-# Disable arrows
+# Disable
+"tab" = "no_op"
 up = "no_op"
 down = "no_op"
 left = "no_op"
@@ -110,6 +107,19 @@ home = "no_op"
 end = "no_op"
 pageup = "no_op"
 pagedown = "no_op"
+
+# Replace defaults
+"d" = "delete_selection_noyank"
+"c" = "change_selection_noyank"
+"F12" = "delete_selection"
+
+# Scroll
+"C-n" = "page_cursor_half_down"
+"C-p" = "page_cursor_half_up"
+
+# Word-wide shortcut
+"M" = "@miwm"
+"Y" = "@miwy"
 
 # Subwords motions
 "W" = "move_next_sub_word_start"
@@ -131,7 +141,7 @@ pagedown = "no_op"
 "}" = "goto_next_paragraph"
 "{" = "goto_prev_paragraph"
 
-# Scooter for symbol rename (?)
+# Scooter for symbol rename in the whole project
 "C-r" = [
   ":write-all",
   ":insert-output scooter --no-stdin >/dev/tty",
@@ -139,13 +149,19 @@ pagedown = "no_op"
   ":reload-all"
 ]
 
+
 [keys.normal.g]
+# > Extends GoTo actions
+
 j = "goto_prev_diag"
 k = "goto_next_diag"
 
+
 [keys.normal.space]
-"l" = "global_search"
-"L" = [
+# > Extends Space actions
+
+# Custom search UI made with: rg + fzf + bat
+" " = [
   ":write-all",
   ":insert-output hx-fzfg",
   ":open %sh{cat /tmp/hx-fzfg.result}",
@@ -153,11 +169,43 @@ k = "goto_next_diag"
   ":reload-all"
 ]
 
+
+[keys.normal.'0']
+# > Cpp Utils
+
+# Calls custom script: Duplicates C++ files with a different name, not ideal but handy
+"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
+
+# To paste a cpp method signature of a method into the hpp file
+"p" = "@pglF(F:;vT dA;<esc>"
+
+# Calls custom script: Switch between file-pairs .cpp/.hpp, .frag/.vert, ...
+"0" = ":open %sh{hx_switch_cpp %{buffer_name}}"
+
+
+[keys.normal.'9']
+# > Git Utils
+
+# Shows git blame on the status bar
+"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+
+# Git Blame of current line
+"d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
+
+# Opens git-ui
+"9" = [
+  ":write-all",
+  ":insert-output lazygit >/dev/tty",
+  ":redraw",
+  ":reload-all"
+]
+
+
 [keys.normal.'+']
+# > Editor/LSP/Buffers Utils
+
 "q" = ":q"
 "Q" = ":q!"
-
-"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
 
 "c" = ":config-open"
 "r" = ":config-reload"
@@ -165,14 +213,23 @@ k = "goto_next_diag"
 "l" = "@:lang "
 "L" = ":lsp-restart"
 
+"t" = "@:theme "
+
+"n" = "@:insert-output echo %{buffer_name}<ret>yu"
+"N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
+"f" = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
+"F" = "@:insert-output echo $(pwd)/%{buffer_name}:%{cursor_line}<ret>yu"
+
 "i" = ":toggle lsp.display-inlay-hints"
 "b" = ":toggle bufferline never always"
 "h" = ":toggle whitespace.render none all"
 "." = [":toggle file-picker.git-ignore", ":toggle file-picker.ignore"]
 
+
 [keys.normal.'ñ']
-"ñ" = "goto_word"
-" " = ':o "~/notes.txt"'
+# > Text/File Utils + YAZI quick access
+
+" " = ':o "~/notes.md"'
 
 "w" = ":w"
 "W" = ":w!"
@@ -184,13 +241,8 @@ k = "goto_next_diag"
 "k" = "@]"
 "j" = "@["
 
-"t" = "@:theme "
 "f" = ":format"
 "r" = ":reload-all"
-
-# To paste a cpp method signature of a method into the hpp file
-"e" = [':sh wl-paste | sed "s/[][{}()*+?.\\^$|]/\\&/g" | wl-copy', 'global_search']
-"P" = "@pglF(F:;vT dA;<esc>"
 
 "l" = "@miw*"
 "L" = "@miw<A-*>"
@@ -199,23 +251,13 @@ k = "goto_next_diag"
 "c" = "@miwc"
 "R" = "@miwR"
 
-# "b" = ":sh git blame -L %{cursor_line},+1 %{buffer_name}"
-"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
-
 "d" = "@miw*v"  # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
 "D" = "@miw*%s<ret>"  # Similar to 'd' but select all matches in the file
 "m" = "@miw<A-*>v"  # Same as 'd' but matches partial text not full words only
 "M" = "@miw<A-*>%s<ret>"  # Same as 'm' but select all matches in the file
 
-"n" = "@:insert-output echo %{buffer_name}<ret>yu"
-"N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
-"F" = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
-
-# Calls a script, enables switch between files .cpp/.hpp (also .frag/.vert)
-"o" = ":open %sh{hx_switch_cpp %{buffer_name}}"
-
 # Opens YAZI explorer
-"tab" = [
+"ñ" = [
   ":write-all",
   ":sh rm -f /tmp/unique-file-h21a434",
   ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/unique-file-h21a434',
@@ -226,44 +268,49 @@ k = "goto_next_diag"
   ":set mouse true",
 ]
 
-[keys.normal.'ñ'.g]
-# Opens git-ui
-"u" = [
-  ":write-all",
-  ":insert-output lazygit >/dev/tty",
-  ":redraw",
-  ":reload-all"
-]
-
-# Git Blame of current line
-"d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 
 [keys.select]
+
+# Disable
+"tab" = "no_op"
+up = "no_op"
+down = "no_op"
+left = "no_op"
+right = "no_op"
+home = "no_op"
+end = "no_op"
+pageup = "no_op"
+pagedown = "no_op"
+
+# Replace defaults
+"d" = "delete_selection_noyank"
+"c" = "change_selection_noyank"
 "F12" = "delete_selection"
 
+# Scroll
 "C-n" = "page_cursor_half_down"
 "C-p" = "page_cursor_half_up"
 
-"d" = "delete_selection_noyank"
-"c" = "change_selection_noyank"
+# Word-wide shortcut
+"M" = "@miwm"
+"Y" = "@miwy"
 
 # Subwords motions
-"W" = "extend_next_sub_word_start"
-"B" = "extend_prev_sub_word_start"
-"E" = "extend_next_sub_word_end"
+"W" = "move_next_sub_word_start"
+"B" = "move_prev_sub_word_start"
+"E" = "move_next_sub_word_end"
+
+# Use 'esc' to unselect multiple cursors
+"esc" = ["collapse_selection", "keep_primary_selection"]
 
 # Move line up/down
 "A-j" = '@X"m<F12>"mp'
 "A-k" = '@X"m<F12>k"mP'
 
-# [keys.insert]
+# Goto next/prev buffer
+"A-h" = ":buffer-previous"
+"A-l" = ":buffer-next"
 
-# # Disable arrows
-# up = "no_op"
-# down = "no_op"
-# left = "no_op"
-# right = "no_op"
-# home = "no_op"
-# end = "no_op"
-# pageup = "no_op"
-# pagedown = "no_op"
+# Go next/prev paragraph
+"}" = "goto_next_paragraph"
+"{" = "goto_prev_paragraph"
