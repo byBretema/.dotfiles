@@ -9,6 +9,7 @@ readonly COLOR_GUTTER="#1e1e2e"
 readonly COLOR_CURSOR_BG="#313244"
 readonly COLOR_MATCH_BG="#89b4fa"
 readonly COLOR_ACCENT="#ffffff"
+readonly COLOR_CONTENT_DIM="#6c7086"
 
 readonly FZF_COLORS_PATTERN="bg+:${COLOR_CURSOR_BG},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
 readonly FZF_COLORS_RESULT="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
@@ -16,6 +17,7 @@ readonly FZF_COLORS_RESULT="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT
 readonly ANSI_PATH_FG="34"
 readonly ANSI_PATH_FG_DEFAULT="39"
 readonly ANSI_WORD_HL_BG=$'\e[48;2;137;180;250m'  # derived from COLOR_MATCH_BG (kept as literal for perf)
+readonly ANSI_CONTENT_FG=$'\e[38;2;108;112;134m'  # derived from COLOR_CONTENT_DIM
 readonly ANSI_WORD_HL_FG=$'\e[38;2;30;30;46m'
 readonly ANSI_RESET=$'\e[0m'
 
@@ -89,14 +91,15 @@ if [ -z "$pattern" ]; then
   [ -s "$HISTFILE" ] && head -n "$MAX_HISTORY" "$HISTFILE" > "$items"
 
   preview_cmd=$(_temp)
-  {
-    echo '#!/usr/bin/env bash'
-    echo 'item=$1 query=$2'
-    echo 'pat="$item"'
-    echo '[ -n "$pat" ] || pat="$query"'
-    echo '[ -z "$pat" ] && exit'
-    echo "rg --color=always -nU ${case_flag:+"$case_flag"} -e \"\$pat\" 2>/dev/null | head -100"
-  } > "$preview_cmd"
+  cat > "$preview_cmd" << PREVIEW_SCRIPT
+#!/usr/bin/env bash
+item=\$1 query=\$2
+pat="\$item"; [ -n "\$pat" ] || pat="\$query"
+[ -z "\$pat" ] && exit
+matches=\$(rg -nU ${case_flag:+"$case_flag"} -e "\$pat" 2>/dev/null | head -20)
+[ -z "\$matches" ] && exit
+echo "\$matches" | perl -pe 'if (/^(.+?):(\d+):(.*)\$/) { my (\$path, \$line, \$content) = (\$1, \$2, \$3); if (\$path =~ m|(.*/)([^/]+)\$|) { my (\$dir, \$base) = (\$1, \$2); \$_ = "\\033[34m\$dir\\033[39m\$base:\$line:$ANSI_CONTENT_FG\$content\\n"; } }'
+PREVIEW_SCRIPT
   chmod +x "$preview_cmd"
 
   _pty \
