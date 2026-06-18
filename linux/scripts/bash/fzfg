@@ -11,8 +11,7 @@ readonly COLOR_MATCH_BG="#89b4fa"
 readonly COLOR_ACCENT="#ffffff"
 readonly COLOR_CONTENT_DIM="#6c7086"
 
-readonly FZF_COLORS_PATTERN="bg+:${COLOR_CURSOR_BG},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
-readonly FZF_COLORS_RESULT="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
+readonly FZF_COLORS="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
 
 readonly ANSI_PATH_FG="34"
 readonly ANSI_PATH_FG_DEFAULT="39"
@@ -60,10 +59,6 @@ _cleanup() {
 }
 trap _cleanup EXIT
 
-_last_line() {
-  awk 'NF{last=$0} END{print last}' "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
-}
-
 _pty() {
   script -q -c "$*" /dev/null </dev/tty >/dev/tty 2>/dev/null
 }
@@ -81,185 +76,147 @@ while getopts ":p:c:ih" opt; do
   esac
 done
 
-# --- Pattern input with history ----------------------------------------------
-if [ -z "$pattern" ]; then
-  mkdir -p "$(dirname "$HISTFILE")"
+# --- Scratch files -----------------------------------------------------------
+items=$(_temp)
+reload_cmd=$(_temp)
+preview_cmd=$(_temp)
+result=$(_temp)
 
-  items=$(_temp)
-  query=$(_temp)
-
-  [ -s "$HISTFILE" ] && head -n "$MAX_HISTORY" "$HISTFILE" > "$items"
-
-  preview_cmd=$(_temp)
-  cat > "$preview_cmd" << PREVIEW_SCRIPT
+# --- Helper scripts ----------------------------------------------------------
+cat > "$reload_cmd" << RELOAD
 #!/usr/bin/env bash
-item=\$1 query=\$2
-pat="\$item"; [ -n "\$pat" ] || pat="\$query"
-[ -z "\$pat" ] && exit
-matches=\$(rg -nU ${case_flag:+"$case_flag"} -e "\$pat" 2>/dev/null | head -20)
-[ -z "\$matches" ] && exit
-echo "\$matches" | perl -pe 'if (/^(.+?):(\d+):(.*)\$/) { my (\$path, \$line, \$content) = (\$1, \$2, \$3); if (\$path =~ m|(.*/)([^/]+)\$|) { my (\$dir, \$base) = (\$1, \$2); \$_ = "\\033[34m\$dir\\033[39m\$base:\$line:$ANSI_CONTENT_FG\$content\\n"; } }'
-PREVIEW_SCRIPT
-  chmod +x "$preview_cmd"
-
-  _pty \
-    "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
-      $FZF_OPTS --info=inline-right \
-      --color=\"$FZF_COLORS_RESULT\" \
-      --pointer \">\" \
-      --preview \"$preview_cmd '{}' '{q}'\" \
-      --preview-window down,60%,border-bold < $items > $query"
-
-  pattern=$(_last_line "$query")
-  [ -n "$pattern" ] || exit 1
-
-  {
-    echo "$pattern"
-    [ -f "$HISTFILE" ] && grep -vFx "$pattern" "$HISTFILE"
-  } > "${HISTFILE}.tmp" && mv "${HISTFILE}.tmp" "$HISTFILE"
-fi
-
-# --- Escape pattern for ripgrep ---------------------------------------------
-escaped=$(perl -e '
-  my $s = shift;
-  my $out = "";
-  my $i = 0;
-  while ($i < length $s) {
-    my $c = substr($s, $i, 1);
-    if ($c eq "\\" && $i + 1 < length $s) {
-      $out .= "\\" . substr($s, $i + 1, 1);
-      $i += 2;
-    } elsif ($c eq "." && substr($s, $i + 1, 1) eq "*") {
-      $out .= ".*";
-      $i += 2;
-    } elsif ($c eq "[" && substr($s, $i, 4) eq "[ ]*") {
-      $out .= "[ ]*";
-      $i += 4;
-    } elsif ($c =~ /[.^\$*+?{}()\[\]|\\]/) {
-      $out .= "\\" . $c;
-      $i++;
-    } else {
-      $out .= $c;
-      $i++;
-    }
-  }
-  print $out;
-' -- "$pattern")
-
-# --- Save original pattern for preview word-highlighting ----------------------
-pattern_file=$(_temp)
-printf '%s' "$pattern" > "$pattern_file"
-
-# --- Run ripgrep (JSON output), emit one entry per match (path:start_line:line_count) ----
-list=$(_temp)
-
-rg --json -U ${case_flag:+"$case_flag"} -e "$escaped" | \
-  python3 -c '
+q=\$1
+[ -z "\$q" ] && cat "$items" && exit
+rg --json -U ${case_flag:+"$case_flag"} -e "\$q" 2>/dev/null | python3 -c '
 import sys, json
 for line in sys.stdin:
     line = line.strip()
-    if not line:
-        continue
-    try:
-        obj = json.loads(line)
-    except json.JSONDecodeError:
-        continue
-    if obj.get("type") != "match":
-        continue
+    if not line: continue
+    try: obj = json.loads(line)
+    except: continue
+    if obj.get("type") != "match": continue
     data = obj.get("data", {})
     path = data.get("path", {}).get("text", "")
     line_number = data.get("line_number", 0)
     lines_text = data.get("lines", {}).get("text", "")
-    line_count = lines_text.count("\n")
+    line_count = lines_text.count(chr(10))
     if path and line_number:
         print(f"{path}:{line_number}:{line_count}")
-  ' | \
-  sed "s|^\(.*/\)|$(printf '\033[%sm' "$ANSI_PATH_FG")\1$(printf '\033[%sm' "$ANSI_PATH_FG_DEFAULT")|" > "$list"
+' | sed "s|^\\(.*/\\)|$(printf '\033[%sm' "$ANSI_PATH_FG")\1$(printf '\033[%sm' "$ANSI_PATH_FG_DEFAULT")|" | head -200
+RELOAD
+chmod +x "$reload_cmd"
 
-[ -s "$list" ] || exit 1
-
-# --- Result selection with fzf -----------------------------------------------
-preview=$(_temp)
-result=$(_temp)
-
-cat > "$preview" <<'PREVIEW'
+cat > "$preview_cmd" << 'PREVIEW'
 #!/usr/bin/env bash
-item="$1"
-hl_bg="$2"
-hl_fg="$3"
-hl_reset="$4"
-raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
-count=${raw##*:}
-rest=${raw%:*}
-l=${rest##*:}
-f=${rest%:*}
-pattern=$(cat "$FZFG_PATTERN_FILE")
+item=$1 query=$2 buf=$3
 
-bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
-    --highlight-line "$l":"$((l+count-1))" "$f" | \
-perl -e '
-  my $pat      = shift @ARGV;
-  my $hl_bg    = shift @ARGV;
-  my $hl_fg    = shift @ARGV;
-  my $hl_reset = shift @ARGV;
-  while (<>) {
-    chomp;
-    my $ansi = $_;
-    my $raw = $ansi;
-    $raw =~ s/\e\[[0-9;]*m//g;
-    my @matches;
-    while ($raw =~ /\Q$pat\E/g) {
-      push @matches, { pos => pos($raw) - length($&), len => length($&) };
-    }
-    for my $m (reverse @matches) {
-      my $bp = 0;
-      my $rc = 0;
-      my $sb = -1;
-      my $eb = -1;
-      while ($bp < length($ansi)) {
-        if ($rc == $m->{pos} + $m->{len}) { $eb = $bp; last }
-        if (substr($ansi, $bp) =~ /^\e\[[0-9;]*m/) {
-          $bp += length($&);
-          next;
-        }
-        $sb = $bp if $rc == $m->{pos};
-        $bp++;
-        $rc++;
-      }
-      $eb = $bp if $eb < 0;
-      if ($sb >= 0 && $eb > $sb) {
-        substr($ansi, $eb, 0) = $hl_reset;
-        substr($ansi, $sb, 0) = $hl_bg . $hl_fg;
-      }
-    }
-    print "$ansi\n";
-  }
-' "$pattern" "$hl_bg" "$hl_fg" "$hl_reset"
-PREVIEW
-chmod +x "$preview"
-
-binds='ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top'
-
-_pty \
-  "SHELL=$(which bash) fzf --ansi --cycle \
-    $FZF_OPTS --prompt=\"\" --info=inline-right \
-    --bind=\"$binds\" \
-    --color=\"$FZF_COLORS_RESULT\" \
-    --pointer \">\" \
-    --preview \"BUFFER=$BUFFER FZFG_PATTERN_FILE=$pattern_file bash $preview {} '$ANSI_WORD_HL_BG' '$ANSI_WORD_HL_FG' '$ANSI_RESET'\" \
-    --preview-window right,border-bold \
-    < $list > $result"
-
-selection=$(cat "$result")
-[ -n "$selection" ] || exit 1
-
-# --- Open file or print result -----------------------------------------------
-if [ -n "$opencmd" ]; then
-  raw=$(printf '%s' "$selection" | sed 's/\x1b\[[0-9;]*m//g')
+if [[ "$item" =~ ^[^:]+:[0-9]+:[0-9]+$ ]]; then
+  raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
+  count=${raw##*:}
   rest=${raw%:*}
   l=${rest##*:}
   f=${rest%:*}
-  exec "$opencmd" "$f:$l"
+  [ -z "$f" ] && exit
+  bat --color=always --style=numbers --line-range "$((l>buf?l-buf:1))":"$((l+buf))" \
+      --highlight-line "$l:$((l+count-1))" "$f" | \
+  perl -e '
+    my $pat = shift;
+    my $hl_bg = shift;
+    my $hl_fg = shift;
+    my $hl_reset = shift;
+    while (<>) {
+      chomp;
+      my $ansi = $_;
+      my $raw = $ansi;
+      $raw =~ s/\e\[[0-9;]*m//g;
+      my @matches;
+      while ($raw =~ /\Q$pat\E/g) {
+        push @matches, { pos => pos($raw) - length($&), len => length($&) };
+      }
+      for my $m (reverse @matches) {
+        my $bp = 0;
+        my $rc = 0;
+        my $sb = -1;
+        my $eb = -1;
+        while ($bp < length($ansi)) {
+          if ($rc == $m->{pos} + $m->{len}) { $eb = $bp; last }
+          if (substr($ansi, $bp) =~ /^\e\[[0-9;]*m/) {
+            $bp += length($&);
+            next;
+          }
+          $sb = $bp if $rc == $m->{pos};
+          $bp++;
+          $rc++;
+        }
+        $eb = $bp if $eb < 0;
+        if ($sb >= 0 && $eb > $sb) {
+          substr($ansi, $eb, 0) = $hl_reset;
+          substr($ansi, $sb, 0) = $hl_bg . $hl_fg;
+        }
+      }
+      print "$ansi\n";
+    }
+  ' "$query" "$ANSI_WORD_HL_BG" "$ANSI_WORD_HL_FG" "$ANSI_RESET"
+else
+  pat="$item"
+  [ -n "$pat" ] || pat="$query"
+  [ -z "$pat" ] && exit
+  matches=$(rg -nU $case_flag -e "$pat" 2>/dev/null | head -20)
+  [ -z "$matches" ] && exit
+  echo "$matches" | perl -pe 'if (/^(.+?):(\d+):(.*)$/) { my ($path, $line, $content) = ($1, $2, $3); if ($path =~ m|(.*/)([^/]+)$|) { my ($dir, $base) = ($1, $2); $_ = "\033[34m$dir\033[39m$base:$line:$ANSI_CONTENT_FG$content\n"; } }'
+fi
+PREVIEW
+sed -i "s/\$case_flag/${case_flag:-}/g" "$preview_cmd"
+for var in ANSI_WORD_HL_BG ANSI_WORD_HL_FG ANSI_RESET ANSI_CONTENT_FG; do
+  esc=$(printf '%s' "${!var}" | sed 's/[\/&]/\\&/g')
+  sed -i "s/\$$var/$esc/g" "$preview_cmd"
+done
+chmod +x "$preview_cmd"
+
+# --- Main logic --------------------------------------------------------------
+initial_query=""
+[ -n "$pattern" ] && initial_query="$pattern"
+
+if [ -z "$pattern" ] && [ -s "$HISTFILE" ]; then
+  head -n "$MAX_HISTORY" "$HISTFILE" > "$items"
 fi
 
+mkdir -p "$(dirname "$HISTFILE")"
+
+binds='tab:replace-query,ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top'
+
+_pty \
+  "SHELL=$(which bash) fzf --ansi --cycle --phony --print-query \
+    $FZF_OPTS --prompt=\"\" --info=inline-right \
+    --bind=\"$binds\" \
+    --bind=\"change:reload:$reload_cmd '{q}'\" \
+    --color=\"$FZF_COLORS\" \
+    --pointer \">\" \
+    --preview \"$preview_cmd {} {q} $BUFFER\" \
+    --preview-window right,border-bold \
+    ${initial_query:+--query \"$initial_query\"} \
+    < $items > $result"
+
+query_text=$(head -1 "$result")
+selection=$(tail -1 "$result")
+[ -n "$selection" ] || exit 1
+[ "$query_text" = "$selection" ] && exit 1
+
+# Save typed query (or selected history item) to history
+hist_pattern="$query_text"
+[ -z "$hist_pattern" ] && hist_pattern="$selection"
+{
+  echo "$hist_pattern"
+  [ -f "$HISTFILE" ] && grep -vFx "$hist_pattern" "$HISTFILE"
+} > "${HISTFILE}.tmp" && mv "${HISTFILE}.tmp" "$HISTFILE"
+
+# Parse result: strip ANSI, determine path:line
+raw=$(printf '%s' "$selection" | sed 's/\x1b\[[0-9;]*m//g')
+rest=${raw%:*}
+l=${rest##*:}
+f=${rest%:*}
+
+if [ -n "$opencmd" ]; then
+  exec "$opencmd" "$f:$l"
+fi
 printf '%s\n' "$selection"
