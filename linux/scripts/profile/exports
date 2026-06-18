@@ -17,6 +17,7 @@ export LC_IDENTIFICATION="$LANG"
 
 export MICRO_TRUECOLOR=1
 export QT_QPA_PLATFORM=xcb
+export QT_QPA_PLATFORMTHEME=xdgdesktopportal
 
 export FZF_BASE="/usr/share/fzf"
 

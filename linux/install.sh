@@ -94,6 +94,20 @@ link_config_files() {
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/skills" "${dst_dir}/skills"
 
+    # --- Environment ---
+    dst_dir=$(mkdir_ret "${config_path}/environment.d")
+    ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
+
+    # --- XDG Desktop Portal ---
+    dst_dir=$(mkdir_ret "${config_path}/xdg-desktop-portal")
+    ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${dst_dir}/portals.conf"
+
+    # --- GTK ---
+    dst_dir=$(mkdir_ret "${config_path}/gtk-3.0")
+    ln -srf "${script_path}/assets/gtk/gtk-3.0/settings.ini" "${dst_dir}/settings.ini"
+    dst_dir=$(mkdir_ret "${config_path}/gtk-4.0")
+    ln -srf "${script_path}/assets/gtk/gtk-4.0/settings.ini" "${dst_dir}/settings.ini"
+
     # --- Input Management ---
 
     # Solaar
