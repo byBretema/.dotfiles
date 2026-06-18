@@ -4,6 +4,21 @@
 # fzfg - fuzzy grep: interactively search files with rg and fzf
 # =============================================================================
 
+# --- Colors ------------------------------------------------------------------
+readonly COLOR_GUTTER="#1e1e2e"
+readonly COLOR_CURSOR_BG="#313244"
+readonly COLOR_MATCH_BG="#89b4fa"
+readonly COLOR_ACCENT="#ffffff"
+
+readonly FZF_COLORS_PATTERN="bg+:${COLOR_CURSOR_BG},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
+readonly FZF_COLORS_RESULT="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
+
+readonly ANSI_PATH_FG="34"
+readonly ANSI_PATH_FG_DEFAULT="39"
+readonly ANSI_WORD_HL_BG=$'\e[48;2;137;180;250m'  # derived from COLOR_MATCH_BG (kept as literal for perf)
+readonly ANSI_WORD_HL_FG=$'\e[38;2;30;30;46m'
+readonly ANSI_RESET=$'\e[0m'
+
 # --- Configuration -----------------------------------------------------------
 readonly BUFFER=25
 readonly MAX_HISTORY=50
@@ -76,7 +91,7 @@ if [ -z "$pattern" ]; then
   _pty \
     "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
       $FZF_OPTS --info=hidden \
-      --color=\"bg+:#313244,pointer:#ffffff,gutter:#1E1E2E\" \
+      --color=\"$FZF_COLORS_PATTERN\" \
       --pointer \">\" < $items > $query"
 
   pattern=$(_last_line "$query")
@@ -115,6 +130,10 @@ escaped=$(perl -e '
   print $out;
 ' -- "$pattern")
 
+# --- Save original pattern for preview word-highlighting ----------------------
+pattern_file=$(_temp)
+printf '%s' "$pattern" > "$pattern_file"
+
 # --- Run ripgrep (JSON output), emit one entry per match (path:start_line:line_count) ----
 list=$(_temp)
 
@@ -139,7 +158,7 @@ for line in sys.stdin:
     if path and line_number:
         print(f"{path}:{line_number}:{line_count}")
   ' | \
-  sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list"
+  sed "s|^\(.*/\)|$(printf '\033[%sm' "$ANSI_PATH_FG")\1$(printf '\033[%sm' "$ANSI_PATH_FG_DEFAULT")|" > "$list"
 
 [ -s "$list" ] || exit 1
 
@@ -150,13 +169,56 @@ result=$(_temp)
 cat > "$preview" <<'PREVIEW'
 #!/usr/bin/env bash
 item="$1"
+hl_bg="$2"
+hl_fg="$3"
+hl_reset="$4"
 raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
 count=${raw##*:}
 rest=${raw%:*}
 l=${rest##*:}
 f=${rest%:*}
+pattern=$(cat "$FZFG_PATTERN_FILE")
+
 bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
-    --highlight-line "$l":"$((l+count-1))" "$f"
+    --highlight-line "$l":"$((l+count-1))" "$f" | \
+perl -e '
+  my $pat      = shift @ARGV;
+  my $hl_bg    = shift @ARGV;
+  my $hl_fg    = shift @ARGV;
+  my $hl_reset = shift @ARGV;
+  while (<>) {
+    chomp;
+    my $ansi = $_;
+    my $raw = $ansi;
+    $raw =~ s/\e\[[0-9;]*m//g;
+    my @matches;
+    while ($raw =~ /\Q$pat\E/g) {
+      push @matches, { pos => pos($raw) - length($&), len => length($&) };
+    }
+    for my $m (reverse @matches) {
+      my $bp = 0;
+      my $rc = 0;
+      my $sb = -1;
+      my $eb = -1;
+      while ($bp < length($ansi)) {
+        if ($rc == $m->{pos} + $m->{len}) { $eb = $bp; last }
+        if (substr($ansi, $bp) =~ /^\e\[[0-9;]*m/) {
+          $bp += length($&);
+          next;
+        }
+        $sb = $bp if $rc == $m->{pos};
+        $bp++;
+        $rc++;
+      }
+      $eb = $bp if $eb < 0;
+      if ($sb >= 0 && $eb > $sb) {
+        substr($ansi, $eb, 0) = $hl_reset;
+        substr($ansi, $sb, 0) = $hl_bg . $hl_fg;
+      }
+    }
+    print "$ansi\n";
+  }
+' "$pattern" "$hl_bg" "$hl_fg" "$hl_reset"
 PREVIEW
 chmod +x "$preview"
 
@@ -166,9 +228,9 @@ _pty \
   "SHELL=$(which bash) fzf --ansi --cycle \
     $FZF_OPTS --prompt=\"\" --info=inline-right \
     --bind=\"$binds\" \
-    --color=\"bg+:#313244,preview-border:white,pointer:#ffffff,gutter:#1E1E2E\" \
+    --color=\"$FZF_COLORS_RESULT\" \
     --pointer \">\" \
-    --preview \"BUFFER=$BUFFER bash $preview {}\" \
+    --preview \"BUFFER=$BUFFER FZFG_PATTERN_FILE=$pattern_file bash $preview {} '$ANSI_WORD_HL_BG' '$ANSI_WORD_HL_FG' '$ANSI_RESET'\" \
     --preview-window right,border-bold \
     < $list > $result"
 
