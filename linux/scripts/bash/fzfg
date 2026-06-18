@@ -115,28 +115,30 @@ escaped=$(perl -e '
   print $out;
 ' -- "$pattern")
 
-# --- Run ripgrep, coalesce adjacent lines, deduplicate files, color paths ----
+# --- Run ripgrep (JSON output), emit one entry per match (path:start_line:line_count) ----
 list=$(_temp)
 
-rg --color never -nU ${case_flag:+"$case_flag"} -e "$escaped" | \
-  awk -F: '
-    function emit() {
-      if (file != "") print file ":" startline ":" count
-    }
-    {
-      if ($1 != file || $2 != prevline + 1) {
-        emit()
-        file = $1
-        startline = $2
-        count = 1
-      } else {
-        count++
-      }
-      prevline = $2
-    }
-    END { emit() }
+rg --json -U ${case_flag:+"$case_flag"} -e "$escaped" | \
+  python3 -c '
+import sys, json
+for line in sys.stdin:
+    line = line.strip()
+    if not line:
+        continue
+    try:
+        obj = json.loads(line)
+    except json.JSONDecodeError:
+        continue
+    if obj.get("type") != "match":
+        continue
+    data = obj.get("data", {})
+    path = data.get("path", {}).get("text", "")
+    line_number = data.get("line_number", 0)
+    lines_text = data.get("lines", {}).get("text", "")
+    line_count = lines_text.count("\n")
+    if path and line_number:
+        print(f"{path}:{line_number}:{line_count}")
   ' | \
-  awk -F: '!seen[$1]++' | \
   sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list"
 
 [ -s "$list" ] || exit 1
@@ -153,7 +155,6 @@ count=${raw##*:}
 rest=${raw%:*}
 l=${rest##*:}
 f=${rest%:*}
-BUFFER=25
 bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
     --highlight-line "$l":"$((l+count-1))" "$f"
 PREVIEW
@@ -167,7 +168,7 @@ _pty \
     --bind=\"$binds\" \
     --color=\"bg+:#313244,preview-border:white,pointer:#ffffff,gutter:#1E1E2E\" \
     --pointer \">\" \
-    --preview \"bash $preview {}\" \
+    --preview \"BUFFER=$BUFFER bash $preview {}\" \
     --preview-window right,border-bold \
     < $list > $result"
 
