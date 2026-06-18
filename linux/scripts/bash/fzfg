@@ -88,11 +88,24 @@ if [ -z "$pattern" ]; then
 
   [ -s "$HISTFILE" ] && head -n "$MAX_HISTORY" "$HISTFILE" > "$items"
 
+  preview_cmd=$(_temp)
+  {
+    echo '#!/usr/bin/env bash'
+    echo 'item=$1 query=$2'
+    echo 'pat="$item"'
+    echo '[ -n "$pat" ] || pat="$query"'
+    echo '[ -z "$pat" ] && exit'
+    echo "rg --color=always -nU ${case_flag:+"$case_flag"} -e \"\$pat\" 2>/dev/null | head -100"
+  } > "$preview_cmd"
+  chmod +x "$preview_cmd"
+
   _pty \
     "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
-      $FZF_OPTS --info=hidden \
-      --color=\"$FZF_COLORS_PATTERN\" \
-      --pointer \">\" < $items > $query"
+      $FZF_OPTS --info=inline-right \
+      --color=\"$FZF_COLORS_RESULT\" \
+      --pointer \">\" \
+      --preview \"$preview_cmd '{}' '{q}'\" \
+      --preview-window down,60%,border-bold < $items > $query"
 
   pattern=$(_last_line "$query")
   [ -n "$pattern" ] || exit 1
