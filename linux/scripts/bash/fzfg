@@ -32,17 +32,28 @@ done
 BUFFER=25
 
 if [ -z "$pattern" ]; then
+  histfile="${XDG_CACHE_HOME:-$HOME/.cache}/fzfg/history"
+  mkdir -p "$(dirname "$histfile")"
   query_file=$(mktemp) || exit 1
-  trap 'rm -f "$query_file"' EXIT
+  items_file=$(mktemp) || exit 1
+  trap 'rm -f "$query_file" "$items_file"' EXIT
+
+  [ -s "$histfile" ] && head -50 "$histfile" > "$items_file"
+
   script -q -c \
     "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
       --reverse --height=100% --info=hidden --no-separator --no-scrollbar \
       --border=none --color=bg+:#313244,pointer:#ffffff,gutter:#1E1E2E \
       --pointer \">\" \
-      < /dev/null > $query_file" \
+      < $items_file > $query_file" \
     /dev/null </dev/tty >/dev/tty 2>/dev/null
-  pattern=$(sed -n '1p' "$query_file" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+  pattern=$(awk 'NF{last=$0} END{print last}' "$query_file" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
   [ -n "$pattern" ] || exit 1
+
+  {
+    echo "$pattern"
+    [ -f "$histfile" ] && grep -vFx "$pattern" "$histfile"
+  } > "${histfile}.tmp" && mv "${histfile}.tmp" "$histfile"
 fi
 
 escaped=$(perl -e '
