@@ -1,8 +1,22 @@
 #!/usr/bin/env bash
 
+# =============================================================================
+# fzfg - fuzzy grep: interactively search files with rg and fzf
+# =============================================================================
+
+# --- Configuration -----------------------------------------------------------
+readonly BUFFER=25
+readonly MAX_HISTORY=50
+readonly HISTFILE="${XDG_CACHE_HOME:-$HOME/.cache}/fzfg/history"
+readonly FZF_OPTS="--reverse --height=100% --no-separator --no-scrollbar --border=none"
+
+# --- State -------------------------------------------------------------------
 case_flag=""
 pattern=""
 opencmd=""
+_temp_files=()
+
+# --- Helpers -----------------------------------------------------------------
 
 usage() {
   cat <<EOF
@@ -17,6 +31,27 @@ EOF
   exit 0
 }
 
+_temp() {
+  local f
+  f=$(mktemp) || exit 1
+  _temp_files+=("$f")
+  echo "$f"
+}
+
+_cleanup() {
+  rm -f "${_temp_files[@]}"
+}
+trap _cleanup EXIT
+
+_last_line() {
+  awk 'NF{last=$0} END{print last}' "$1" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//'
+}
+
+_pty() {
+  script -q -c "$*" /dev/null </dev/tty >/dev/tty 2>/dev/null
+}
+
+# --- Argument parsing --------------------------------------------------------
 for arg; do [[ "$arg" == "--help" ]] && usage; done
 
 while getopts ":p:c:ih" opt; do
@@ -29,33 +64,31 @@ while getopts ":p:c:ih" opt; do
   esac
 done
 
-BUFFER=25
-
+# --- Pattern input with history ----------------------------------------------
 if [ -z "$pattern" ]; then
-  histfile="${XDG_CACHE_HOME:-$HOME/.cache}/fzfg/history"
-  mkdir -p "$(dirname "$histfile")"
-  query_file=$(mktemp) || exit 1
-  items_file=$(mktemp) || exit 1
-  trap 'rm -f "$query_file" "$items_file"' EXIT
+  mkdir -p "$(dirname "$HISTFILE")"
 
-  [ -s "$histfile" ] && head -50 "$histfile" > "$items_file"
+  items=$(_temp)
+  query=$(_temp)
 
-  script -q -c \
+  [ -s "$HISTFILE" ] && head -n "$MAX_HISTORY" "$HISTFILE" > "$items"
+
+  _pty \
     "SHELL=$(which bash) fzf --print-query --prompt=\"Pattern: \" \
-      --reverse --height=100% --info=hidden --no-separator --no-scrollbar \
-      --border=none --color=bg+:#313244,pointer:#ffffff,gutter:#1E1E2E \
-      --pointer \">\" \
-      < $items_file > $query_file" \
-    /dev/null </dev/tty >/dev/tty 2>/dev/null
-  pattern=$(awk 'NF{last=$0} END{print last}' "$query_file" | sed 's/^[[:space:]]*//;s/[[:space:]]*$//')
+      $FZF_OPTS --info=hidden \
+      --color=\"bg+:#313244,pointer:#ffffff,gutter:#1E1E2E\" \
+      --pointer \">\" < $items > $query"
+
+  pattern=$(_last_line "$query")
   [ -n "$pattern" ] || exit 1
 
   {
     echo "$pattern"
-    [ -f "$histfile" ] && grep -vFx "$pattern" "$histfile"
-  } > "${histfile}.tmp" && mv "${histfile}.tmp" "$histfile"
+    [ -f "$HISTFILE" ] && grep -vFx "$pattern" "$HISTFILE"
+  } > "${HISTFILE}.tmp" && mv "${HISTFILE}.tmp" "$HISTFILE"
 fi
 
+# --- Escape pattern for ripgrep ---------------------------------------------
 escaped=$(perl -e '
   my $s = shift;
   my $out = "";
@@ -82,24 +115,8 @@ escaped=$(perl -e '
   print $out;
 ' -- "$pattern")
 
-preview_script=$(mktemp) || exit 1
-list_file=$(mktemp) || exit 1
-result_file=$(mktemp) || exit 1
-trap 'rm -f "$preview_script" "$list_file" "$result_file"' EXIT
-
-cat > "$preview_script" <<'PREVIEW_EOF'
-#!/usr/bin/env bash
-item="$1"
-raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
-count=${raw##*:}
-rest=${raw%:*}
-l=${rest##*:}
-f=${rest%:*}
-BUFFER=25
-bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
-    --highlight-line "$l":"$((l+count-1))" "$f"
-PREVIEW_EOF
-chmod +x "$preview_script"
+# --- Run ripgrep, coalesce adjacent lines, deduplicate files, color paths ----
+list=$(_temp)
 
 rg --color never -nU ${case_flag:+"$case_flag"} -e "$escaped" | \
   awk -F: '
@@ -120,37 +137,50 @@ rg --color never -nU ${case_flag:+"$case_flag"} -e "$escaped" | \
     END { emit() }
   ' | \
   awk -F: '!seen[$1]++' | \
-  sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list_file"
+  sed "s|^\(.*/\)|$(printf '\033[34m')\1$(printf '\033[39m')|" > "$list"
 
-[ -s "$list_file" ] || exit 1
+[ -s "$list" ] || exit 1
+
+# --- Result selection with fzf -----------------------------------------------
+preview=$(_temp)
+result=$(_temp)
+
+cat > "$preview" <<'PREVIEW'
+#!/usr/bin/env bash
+item="$1"
+raw=$(printf '%s' "$item" | sed 's/\x1b\[[0-9;]*m//g')
+count=${raw##*:}
+rest=${raw%:*}
+l=${rest##*:}
+f=${rest%:*}
+BUFFER=25
+bat --color=always --style=numbers --line-range "$((l>BUFFER?l-BUFFER:1))":"$((l+BUFFER))" \
+    --highlight-line "$l":"$((l+count-1))" "$f"
+PREVIEW
+chmod +x "$preview"
 
 binds='ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top'
 
-fzf_script=$(mktemp) || exit 1
-trap 'rm -f "$fzf_script"' EXIT
+_pty \
+  "SHELL=$(which bash) fzf --ansi --cycle \
+    $FZF_OPTS --prompt=\"\" --info=inline-right \
+    --bind=\"$binds\" \
+    --color=\"bg+:#313244,preview-border:white,pointer:#ffffff,gutter:#1E1E2E\" \
+    --pointer \">\" \
+    --preview \"bash $preview {}\" \
+    --preview-window right,border-bold \
+    < $list > $result"
 
-cat > "$fzf_script" <<FZF_SCRIPT_EOF
-SHELL=$(which bash) fzf --ansi --cycle --reverse --height=100% \
-  --prompt "" --info=inline-right --no-separator --no-scrollbar \
-  --bind "$binds" \
-  --border=none --color=bg+:#313244,preview-border:white,pointer:#ffffff,gutter:#1E1E2E \
-  --pointer ">" \
-  --preview "bash $preview_script {}" \
-  --preview-window right,border-bold \
-  < $list_file > $result_file
-FZF_SCRIPT_EOF
+selection=$(cat "$result")
+[ -n "$selection" ] || exit 1
 
-script -q -c "bash $fzf_script" /dev/null </dev/tty >/dev/tty 2>/dev/null
-
-result=$(cat "$result_file")
-[ -n "$result" ] || exit 1
-
+# --- Open file or print result -----------------------------------------------
 if [ -n "$opencmd" ]; then
-  raw=$(printf '%s' "$result" | sed 's/\x1b\[[0-9;]*m//g')
+  raw=$(printf '%s' "$selection" | sed 's/\x1b\[[0-9;]*m//g')
   rest=${raw%:*}
   l=${rest##*:}
   f=${rest%:*}
   exec "$opencmd" "$f:$l"
 fi
 
-printf '%s\n' "$result"
+printf '%s\n' "$selection"
