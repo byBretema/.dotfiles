@@ -2,6 +2,7 @@
 # Tools
 
 alias j="jobs"
+alias oc="opencode"
 
 alias hx='helix'
 alias hh='hx .'

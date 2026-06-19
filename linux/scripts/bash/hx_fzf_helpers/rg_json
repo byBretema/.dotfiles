@@ -1,0 +1,74 @@
+#!/usr/bin/env bash
+script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+
+export PATH="$script_dir/..:$PATH"
+export PATH="$script_dir:$PATH"
+
+source ".bash_common"
+source "_colors"
+
+required_cmd rg
+required_cmd python
+
+export workdir="$1"
+pattern="$2"
+export SHELL=$(which bash)
+
+#--- FZF Preview ------------------------------------------------------------------------------------
+# expected input = <path>@<line>@<col_start>@<col_end>@<new_line_count>
+bat_preview() {
+    source ".bash_common"
+    source "_colors"
+
+    [[ $# < 1 ]] && error_exit "Usage: bat_preview <info> <pattern>"
+
+    local info="$1" && shift
+    IFS='@' read -r f l cs ce count <<< "$info"
+
+    local b=25
+    local l1=$((l>b?l-b:1))
+    local l2=$((l+b))
+
+    bat --wrap auto --color always --style numbers --line-range $l1:$l2 \
+        --highlight-line "$l:$((l+count-1))" "$f" |\
+    rg --color=always --passthru \
+         --colors 'match:bg:blue' \
+         --colors 'match:fg:black' \
+         --colors 'match:style:bold' \
+         -U -i "$1"
+}
+export -f bat_preview
+
+#--- FZF Reload ------------------------------------------------------------------------------------
+data_input() {
+    source ".bash_common"
+    source "_colors"
+
+    local pattern="$1"
+
+    rg --json -U -i -e "$pattern" "$workdir" 2>/dev/null \
+    | python "parse_rg_json.py" \
+    | sed "s|^\\(.*/\\)|$(printf '\033[%sm' "$ANSI_PATH_FG")\1$(printf '\033[%sm' "$ANSI_PATH_FG_DEFAULT")|"
+}
+export -f data_input
+
+#--- FZF -------------------------------------------------------------------------------------------
+fzf_with_preview() {
+    local binds='tab:replace-query,ctrl-t:toggle-preview,alt-p:preview-up,alt-n:preview-down,alt-t:preview-top,change:reload:data_input {q}'
+
+    fzf --ansi --cycle --phony \
+        --reverse --height=100% --no-separator --no-scrollbar --border=none \
+        --prompt="" \
+        --query="$pattern" \
+        --info=inline-right \
+        --bind="$binds" \
+        --color="$FZF_COLORS" \
+        --pointer=">" \
+        --preview='bat_preview {} {q}' \
+        --preview-window="right,border-bold"
+}
+export -f fzf_with_preview
+
+# EntryPoint
+#---------------------------------------------------------------------------------------------------
+data_input "$pattern" | fzf_with_preview

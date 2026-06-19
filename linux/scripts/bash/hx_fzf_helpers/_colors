@@ -1,0 +1,14 @@
+readonly COLOR_GUTTER="#1e1e2e"
+readonly COLOR_CURSOR_BG="#313244"
+readonly COLOR_MATCH_BG="#89b4fa"
+readonly COLOR_ACCENT="#ffffff"
+readonly COLOR_CONTENT_DIM="#6c7086"
+
+readonly FZF_COLORS="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"
+
+readonly ANSI_PATH_FG="34"
+readonly ANSI_PATH_FG_DEFAULT="39"
+readonly ANSI_WORD_HL_BG=$'\e[48;2;137;180;250m'  # derived from COLOR_MATCH_BG (kept as literal for perf)
+readonly ANSI_CONTENT_FG=$'\e[38;2;108;112;134m'  # derived from COLOR_CONTENT_DIM
+readonly ANSI_WORD_HL_FG=$'\e[38;2;30;30;46m'
+readonly ANSI_RESET=$'\e[0m'
