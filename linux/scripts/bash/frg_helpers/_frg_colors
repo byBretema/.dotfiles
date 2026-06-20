@@ -1,0 +1,14 @@
+readonly  COLOR_GUTTER="#1e1e2e";     export COLOR_GUTTER
+readonly  COLOR_CURSOR_BG="#313244"; export COLOR_CURSOR_BG
+readonly  COLOR_MATCH_BG="#89b4fa";  export COLOR_MATCH_BG
+readonly  COLOR_ACCENT="#ffffff";     export COLOR_ACCENT
+readonly  COLOR_CONTENT_DIM="#6c7086"; export COLOR_CONTENT_DIM
+
+readonly  FZF_COLORS="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"; export FZF_COLORS
+
+readonly  ANSI_PATH_FG="34";           export ANSI_PATH_FG
+readonly  ANSI_PATH_FG_DEFAULT="39";  export ANSI_PATH_FG_DEFAULT
+readonly  ANSI_WORD_HL_BG=$'\e[48;2;137;180;250m';  export ANSI_WORD_HL_BG  # derived from COLOR_MATCH_BG
+readonly  ANSI_CONTENT_FG=$'\e[38;2;108;112;134m';   export ANSI_CONTENT_FG  # derived from COLOR_CONTENT_DIM
+readonly  ANSI_WORD_HL_FG=$'\e[38;2;30;30;46m';      export ANSI_WORD_HL_FG
+readonly  ANSI_RESET=$'\e[0m';         export ANSI_RESET
