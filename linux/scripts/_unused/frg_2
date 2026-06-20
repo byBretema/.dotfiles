@@ -1,4 +1,7 @@
 #!/usr/bin/env bash
+#
+# https://github.com/junegunn/fzf/blob/master/ADVANCED.md#switching-between-ripgrep-mode-and-fzf-mode
+#
 export frg_script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" && pwd)"
 
 source "$frg_script_dir/.bash_common"
