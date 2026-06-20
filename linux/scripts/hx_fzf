@@ -3,8 +3,8 @@ script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" && pwd)"
 export PATH="$script_dir:$PATH"
 source "$script_dir/.bash_common"
 
-required_cmd fzfg
+required_cmd frg
 
 f="/tmp/hx_fzf.result"
 rm -f "$f"
-fzfg > "$f"
+frg > "$f"
