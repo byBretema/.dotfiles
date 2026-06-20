@@ -5,7 +5,7 @@
 ################################################################################
 
 DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
-PATH="$DOTFILES_SCRIPTS/bash:$PATH"
+PATH="$DOTFILES_SCRIPTS:$PATH"
 
 PATH="$HOME/.local/bin:$PATH"
 PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"

@@ -42,7 +42,7 @@ manage_vscode() {
 #! Help
 
 usage() {
-    echo "Usage: $(basename "${BASH_SOURCE[0]}") [options]"
+    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
     echo ""
     echo "Options:"
     echo "  -e | --edit       Edit dotfiles"

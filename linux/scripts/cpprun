@@ -9,7 +9,7 @@ source ".bash_common"
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] FILEPATH"
+  echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options] FILEPATH"
   echo ""
   echo "Options:"
   echo "  -g | --gnu    Compile with 'g++' (default)"

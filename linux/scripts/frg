@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-export frg_script_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export frg_script_dir="$(cd "$(dirname "${BASH_SOURCE[-1]}")" && pwd)"
 
 source "$frg_script_dir/.bash_common"
 export -f error_exit log_error _log

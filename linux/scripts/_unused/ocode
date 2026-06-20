@@ -9,7 +9,7 @@ source ".bash_common"
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[0]}") [options] [ITEM_TO_OPEN]"
+  echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options] [ITEM_TO_OPEN]"
   echo ""
   echo "Options:"
   echo "  -w | --watch      Open a 'llama ps' watcher"

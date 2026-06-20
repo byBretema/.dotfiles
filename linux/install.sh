@@ -1,7 +1,7 @@
 # !/usr/bin/env bash
 
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &>/dev/null && pwd)
-source "${script_path}/scripts/bash/.bash_common"
+source "${script_path}/scripts/.bash_common"
 
 ###############################################################################
 # Consts

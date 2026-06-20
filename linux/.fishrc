@@ -8,7 +8,7 @@
 source "$HOME/.dotfiles/linux/scripts/profile/exports"
 
 set DOTFILES_SCRIPTS "$DOTFILES/linux/scripts"
-fish_add_path "$DOTFILES_SCRIPTS/bash" 2>/dev/null
+fish_add_path "$DOTFILES_SCRIPTS" 2>/dev/null
 
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/.cargo/bin" 2>/dev/null
