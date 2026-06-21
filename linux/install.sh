@@ -188,19 +188,17 @@ process_packages() {
         [[ -n $pkg ]] || continue
         [[ $line != \#* ]] || continue
         if [[ $invert_check == true ]]; then
-            log_header ">>> Package: $pkg"
             $check_cmd "$pkg" &>/dev/null || continue
         else
-            log_header ">>> Package: $pkg"
             $check_cmd "$pkg" &>/dev/null && continue
         fi
+        log_header ">>> Package: $pkg"
         $action_cmd "$pkg"
     done 3<"$list_file"
 }
 
 install_packages() {
     log_header "Installing packages"
-
 
     process_packages "$script_path/pacman_install.conf" \
         "pacman -Qi" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]"
