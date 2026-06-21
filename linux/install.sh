@@ -183,24 +183,27 @@ link_config_files() {
 process_packages() {
     local list_file=$1 check_cmd=$2 action_cmd=$3 sanitize=$4 invert_check=${5:-false}
 
-    while IFS= read -r line; do
+    while IFS= read -r line <&3; do
         local pkg=${line//$sanitize/}
         [[ -n $pkg ]] || continue
         [[ $line != \#* ]] || continue
         if [[ $invert_check == true ]]; then
+            log_header ">>> Package: $pkg"
             $check_cmd "$pkg" &>/dev/null || continue
         else
+            log_header ">>> Package: $pkg"
             $check_cmd "$pkg" &>/dev/null && continue
         fi
         $action_cmd "$pkg"
-    done <"$list_file"
+    done 3<"$list_file"
 }
 
 install_packages() {
     log_header "Installing packages"
 
+
     process_packages "$script_path/pacman_install.conf" \
-        "pacman -Qi" "paru -S --noconfirm --skipreview" "[^a-zA-Z0-9_-]"
+        "pacman -Qi" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]"
 
     process_packages "$script_path/flatpak_install.conf" \
         "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]"
@@ -216,7 +219,7 @@ remove_discarded_packages() {
     log_header "Removing packages"
 
     process_packages "$script_path/pacman_remove.conf" \
-        "pacman -Qi" "paru -Rns --noconfirm" "[^a-zA-Z0-9_-]" true
+        "pacman -Qi" "paru -Rns $paru_confirm" "[^a-zA-Z0-9_-]" true
 
     process_packages "$script_path/flatpak_remove.conf" \
         "flatpak info" "flatpak -y uninstall" "[^a-zA-Z0-9.]" true
@@ -225,7 +228,7 @@ remove_discarded_packages() {
 
 system_update() {
     log_header "Updating system"
-    paru --noconfirm -Syu
+    paru $paru_confirm -Syu
     flatpak update -y
 }
 
@@ -245,6 +248,7 @@ usage() {
     echo "    -u | --update            System update"
     echo "    -i | --install           Install packages / apps"
     echo "    -l | --links             Link configs / themes"
+    echo "    --confirm-pacman         Prompt before each package action (removes --noconfirm)"
     echo "    -h | --help              Show this message"
     echo "    --                       Extra args after this"
 }
@@ -255,6 +259,7 @@ do_remove_discarded=false
 do_update=false
 do_install=false
 do_links=false
+confirm_pacman=false
 
 #! Process options
 
@@ -265,6 +270,7 @@ while [[ "${#}" > 0 ]]; do
     -i | --install) shift && do_install=true ;;
     -l | --link) shift && do_links=true ;;
     -h | --help) shift && usage ;;
+    --confirm-pacman) shift && confirm_pacman=true ;;
     --) shift && break ;;
     *) break ;;
     esac
@@ -273,6 +279,9 @@ done
 ###############################################################################
 ### Execution
 ###############################################################################
+
+paru_confirm="--noconfirm"
+[[ $confirm_pacman == true ]] && paru_confirm=""
 
 [[ "${do_remove_discarded}" == "true" ]] && remove_discarded_packages
 [[ "${do_update}" == "true" ]] && system_update
