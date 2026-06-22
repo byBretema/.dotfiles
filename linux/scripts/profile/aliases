@@ -111,6 +111,8 @@ alias pm_remove='sudo pacman -Rsn'
 
 # Paru .. Update everything
 alias pm_update='paru -Syu'
+# Paru .. List explicitly installed packages
+alias pm_list='pacman -Qe'
 # Paru .. List orphan packages
 alias pm_orphans='pacman -Qdt'
 # Paru .. List files owned by a package
