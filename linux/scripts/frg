@@ -23,6 +23,8 @@ frg_preview() {
     IFS='@' read -r f l cs ce count <<< "$info"
     count="${count%$'\e[0m'}"
 
+    file --mime-type "$f" | grep -q "text/" || return
+
     local b=25
     local l1=$((l>b?l-b:1))
     local l2=$((l+b))
@@ -67,4 +69,8 @@ frg_main() {
 }
 
 
-frg_get "$pattern" | frg_main | sed -e $'s/\e\\[[0-9;]*m//g' -e 's/\([^@]*\)@\([0-9]*\)@.*/\1:\2/'
+if [[ -n "$pattern" ]]; then
+    frg_get "$pattern"
+else
+    cat /dev/null
+fi | frg_main | sed -e $'s/\e\\[[0-9;]*m//g' -e 's/\([^@]*\)@\([0-9]*\)@.*/\1:\2/'

@@ -1,4 +1,6 @@
-import sys, json
+import sys, json, signal, os
+
+signal.signal(signal.SIGPIPE, signal.SIG_DFL)
 
 for line in sys.stdin:
 
@@ -26,5 +28,12 @@ for line in sys.stdin:
         if path and line_number:
             print(f"{path}@{line_number}@{col_start}@{col_end}@{line_count}")
 
-    except:
+    except Exception:
         continue
+
+try:
+    sys.stdout.flush()
+except (BrokenPipeError, OSError):
+    devnull = os.open(os.devnull, os.O_WRONLY)
+    os.dup2(devnull, sys.stdout.fileno())
+    os.close(devnull)
