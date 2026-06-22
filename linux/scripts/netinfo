@@ -1,7 +1,28 @@
 #!/usr/bin/env bash
 source ".bash_common"
 
-echo "Public  => $(curl -s icanhazip.com)"
-echo "Private => $(ip addr | grep 'inet ' | awk '{print $2}' | tail -1)"
-echo "8.8.8.8 => $(ping -qc 5 8.8.8.8 | sed -n 5p | awk -F"/" '{print $5" ms"}')"
-echo "Google  => $(ping -qc 5 'google.es' | sed -n 5p | awk -F"/" '{print $5" ms"}')"
+echo
+log_header "Private:"
+ip -4 -br addr | awk '{
+    if ($1 == "lo") next
+    split($3, a, "/")
+    if (length(a[1]) > m) m = length(a[1])
+    if (length($1) > n) n = length($1)
+    s = ($2 == "UNKNOWN") ? "-" : $2
+    names[NR] = $1
+    ips[NR] = a[1]
+    sts[NR] = s
+} END {
+    for (i = 1; i <= NR; i++)
+        if (ips[i])
+            printf "    %-" m "s  %-" n "s  %s\n", ips[i], names[i], sts[i]
+    }'
+
+echo
+log_header "Public:"
+echo "    $(curl -s icanhazip.com)"
+
+echo
+log_header "Times:"
+echo "    8.8.8.8  ($(ping -qc 5 8.8.8.8 | sed -n 5p | awk -F"/" '{print $5" ms"}'))"
+echo "    Google   ($(ping -qc 5 'google.es' | sed -n 5p | awk -F"/" '{print $5" ms"}'))"
