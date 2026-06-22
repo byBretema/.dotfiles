@@ -213,7 +213,7 @@ install_packages() {
     fi
 }
 
-remove_discarded_packages() {
+remove_packages() {
     log_header "Removing packages"
 
     process_packages "$script_path/pacman_remove.conf" \
@@ -242,10 +242,11 @@ usage() {
     echo "Manage configs and system apps, themes..."
     echo ""
     echo "Options:"
-    echo "  --rm | --remove-discarded  Remove discarded packages"
+    echo "  --rm | --remove            Remove discarded packages"
     echo "    -u | --update            System update"
     echo "    -i | --install           Install packages / apps"
     echo "    -l | --links             Link configs / themes"
+    echo "  --all                      Run --rm, -u, -i, and -l in sequence"
     echo "    --confirm-pacman         Prompt before each package action (removes --noconfirm)"
     echo "    -h | --help              Show this message"
     echo "    --                       Extra args after this"
@@ -253,7 +254,7 @@ usage() {
 
 #! Defaults
 
-do_remove_discarded=false
+do_remove=false
 do_update=false
 do_install=false
 do_links=false
@@ -263,15 +264,16 @@ confirm_pacman=false
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
-    --rm | --remove-discarded) shift && do_remove_discarded=true ;;
+    --rm | --remove) shift && do_remove=true ;;
     -u | --update) shift && do_update=true ;;
     -i | --install) shift && do_install=true ;;
     -l | --link) shift && do_links=true ;;
+    --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
     -h | --help) shift && usage ;;
     --confirm-pacman) shift && confirm_pacman=true ;;
     --) shift && break ;;
     *) break ;;
-    esac
+esac
 done
 
 ###############################################################################
@@ -281,7 +283,7 @@ done
 paru_confirm="--noconfirm"
 [[ $confirm_pacman == true ]] && paru_confirm=""
 
-[[ "${do_remove_discarded}" == "true" ]] && remove_discarded_packages
+[[ "${do_remove}" == "true" ]] && remove_packages
 [[ "${do_update}" == "true" ]] && system_update
 [[ "${do_install}" == "true" ]] && install_packages
 [[ "${do_links}" == "true" ]] && link_config_files
