@@ -163,8 +163,10 @@ k = "goto_next_diag"
 # Custom search UI made with: rg + fzf + bat
 " " = [
   ":write-all",
-  ":insert-output hx_fzf",
-  ":open %sh{cat /tmp/hx_fzf.result}",
+  ":sh rm -f /tmp/hx_frg.result",
+  ':insert-output hx_frg "%{buffer_name}" "/tmp/hx_frg.result"',
+  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ":open %sh{cat /tmp/hx_frg.result}",
   ":redraw",
   ":reload-all"
 ]
@@ -259,10 +261,10 @@ k = "goto_next_diag"
 # Opens YAZI explorer
 "ñ" = [
   ":write-all",
-  ":sh rm -f /tmp/unique-file-h21a434",
-  ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/unique-file-h21a434',
+  ":sh rm -f /tmp/hx_yazi.result",
+  ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/hx_yazi.result',
   ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-  ":open %sh{cat /tmp/unique-file-h21a434}",
+  ":open %sh{cat /tmp/hx_yazi.result}",
   ":redraw",
   ":set mouse false",
   ":set mouse true",

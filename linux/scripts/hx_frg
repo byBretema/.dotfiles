@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+# Small wrapper of the 'frg' utility to be usable from Helix
+
+command -v frg >/dev/null 2>&1 || { echo ">> 'frg' not found" >&2; exit 1; }
+
+src_file="$1"
+output_file="$2"
+
+workdir="."
+if git_root=$(git -C "$(dirname "$src_file")" rev-parse --show-toplevel 2>/dev/null); then
+    workdir="$git_root"
+fi
+
+frg  > "$output_file"
