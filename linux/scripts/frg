@@ -33,11 +33,17 @@ frg_preview() {
 
     file --mime-type "$f" | grep -q "text/" || return
 
-    local b=25
-    local l1=$((l > b ? l - b : 1))
-    local l2=$((l + b))
+    local total=$(wc -l < "$f")
+    local half=25
+    local above=$((l - 1))
+    local below=$((total - l - count + 1))
+    local extra_below=$((half > below ? half - below : 0))
+    local extra_above=$((half > above ? half - above : 0))
+    local context_above=$((above < half + extra_below ? above : half + extra_below))
+    local context_below=$((below < half + extra_above ? below : half + extra_above))
+    local l1=$((l - context_above))
 
-    bat --wrap auto --color always --style numbers --line-range $l1:$l2 \
+    bat --theme "Catppuccin Mocha" --wrap auto --color always --style numbers --line-range $l1: \
         --highlight-line "$l:$((l + count - 1))" "$f" |
         rg --color=always --passthru \
             --colors 'match:bg:blue' \

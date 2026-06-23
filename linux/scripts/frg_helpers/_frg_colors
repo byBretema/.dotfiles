@@ -4,7 +4,7 @@ readonly  COLOR_MATCH_BG="#89b4fa";  export COLOR_MATCH_BG
 readonly  COLOR_ACCENT="#ffffff";     export COLOR_ACCENT
 readonly  COLOR_CONTENT_DIM="#6c7086"; export COLOR_CONTENT_DIM
 
-readonly  FZF_COLORS="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER}"; export FZF_COLORS
+readonly  FZF_COLORS="bg+:${COLOR_CURSOR_BG},preview-border:${COLOR_ACCENT},pointer:${COLOR_ACCENT},gutter:${COLOR_GUTTER},info:${COLOR_ACCENT}:${COLOR_MATCH_BG}"; export FZF_COLORS
 
 readonly  ANSI_PATH_FG="34";           export ANSI_PATH_FG
 readonly  ANSI_PATH_FG_DEFAULT="39";  export ANSI_PATH_FG_DEFAULT
