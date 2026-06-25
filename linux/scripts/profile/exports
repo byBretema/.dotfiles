@@ -16,8 +16,12 @@ export LC_MEASUREMENT="$LANG"
 export LC_IDENTIFICATION="$LANG"
 
 export MICRO_TRUECOLOR=1
+
+export GTK_THEME=Adwaita:dark
+
 export QT_QPA_PLATFORM=xcb
 export QT_QPA_PLATFORMTHEME=xdgdesktopportal
+export QT_STYLE_OVERRIDE=Adwaita-Dark
 
 export FZF_BASE="/usr/share/fzf"
 

@@ -187,11 +187,8 @@ process_packages() {
         local pkg=${line//$sanitize/}
         [[ -n $pkg ]] || continue
         [[ $line != \#* ]] || continue
-        if [[ $invert_check == true ]]; then
-            $check_cmd "$pkg" &>/dev/null || continue
-        else
-            $check_cmd "$pkg" &>/dev/null && continue
-        fi
+        eval "$check_cmd \"$pkg\"" &>/dev/null
+        { [[ $invert_check == false && $? -eq 0 ]] || [[ $invert_check == true && $? -ne 0 ]]; } && continue
         log_header ">>> Package: $pkg"
         $action_cmd "$pkg"
     done 3<"$list_file"
@@ -201,10 +198,10 @@ install_packages() {
     log_header "Installing packages"
 
     process_packages "$script_path/pacman_install.conf" \
-        "pacman -Qi" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]"
+        "pacman -Qq | grep -Fx" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]" false
 
     process_packages "$script_path/flatpak_install.conf" \
-        "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]"
+        "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]" false
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
     ncspot_entry="0.0.0.0 apresolve.spotify.com"
@@ -217,7 +214,7 @@ remove_packages() {
     log_header "Removing packages"
 
     process_packages "$script_path/pacman_remove.conf" \
-        "pacman -Qi" "paru -Rns $paru_confirm" "[^a-zA-Z0-9_-]" true
+        "pacman -Qq | grep -Fx" "paru -Rns $paru_confirm" "[^a-zA-Z0-9_-]" true
 
     process_packages "$script_path/flatpak_remove.conf" \
         "flatpak info" "flatpak -y uninstall" "[^a-zA-Z0-9.]" true
