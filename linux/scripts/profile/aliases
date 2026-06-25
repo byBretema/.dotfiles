@@ -1,6 +1,5 @@
 
 # Tools
-
 alias j="jobs"
 alias oc="opencode"
 
@@ -36,9 +35,11 @@ alias lt3='l -T --level=3'
 
 # Nav
 alias h='history'
-alias ccd='pushd $(eza -1 -s created -r | choose_one)'
+alias ccd='pushd $(eza -1 -s created -r | fzf)'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'
+alias agents='pushd $HOME/agents'
+alias omii='pushd $HOME/omi'
 alias oo='open -s .'
 alias b='open -b'
 alias s='open -s'
@@ -49,14 +50,10 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
-# Job
-alias omid='pushd $(omi -d)'
-alias omis='pushd $(omi -s)'
-alias omita='omi -u && ta'
-
 # Git
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias gp='git pull --rebase'
+alias gu='git push'
 alias gd='git diff'
 alias gac='git add -A && git commit -m'
 alias ga='git add -A'
