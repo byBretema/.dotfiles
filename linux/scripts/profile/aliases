@@ -2,6 +2,7 @@
 # Tools
 alias j="jobs"
 alias oc="opencode"
+alias bot='pushd $HOME/botline && opencode'
 
 alias hx='helix'
 alias hh='hx .'
