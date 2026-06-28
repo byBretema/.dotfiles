@@ -162,6 +162,9 @@ k = "goto_next_diag"
 [keys.normal.space]
 # > Extends Space actions
 
+# 'l' for faster access to Global
+"l" = "global_search"
+
 # Custom search UI made with: rg + fzf + bat
 " " = [
   ":write-all",

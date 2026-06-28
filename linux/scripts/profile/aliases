@@ -21,8 +21,6 @@ alias gpu_toggle='python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
 
 # Langs
 alias py="python"
-alias py3="python3"
-alias py310="python310"
 
 # List
 alias l='eza -a --icons auto --git -s type --hyperlink'
@@ -128,6 +126,10 @@ alias pm_deps='pactree'
 alias pm_rdeps='pactree -r'
 # Paru .. Interactive reverse deps (Required By) via fzf
 alias pm_reqby='expac -Q "%n" | fzf --preview="expac -Q -l \"\n\" \"%R\" {}"'
+
+# OpenRGB
+alias rgbset='openrgb --device 0 --mode static --color'
+alias rgblist='openrgb --list-devices'
 
 # Paru .. Full system upgrade (pacman + flatpak)
 alias pm_upgrade='paru -Syu && flatpak update -y'
