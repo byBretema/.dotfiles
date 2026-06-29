@@ -69,6 +69,10 @@ alias ediff="git status -s >&2; git status -s | awk '{ print \$2 }' | choose_one
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'
 
+# Job
+alias omid='pushd $(omi -d)'
+alias omis='pushd $(omi -s)'
+
 # On prev command
 alias aaa='sudo $(fc -ln | tail -1)'
 alias wii='which $(fc -ln | tail -1)'
