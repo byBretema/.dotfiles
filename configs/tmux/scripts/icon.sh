@@ -24,6 +24,7 @@ man) icon='' ;;
 kubectl) icon='󱃾' ;;
 paru | yay | pacman) icon='󰮯' ;;
 yazi) icon='󰇥' ;;
+hyperfine) icon='' ;;
 *) icon="$1" ;;
 esac
 

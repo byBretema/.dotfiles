@@ -51,19 +51,29 @@ alias ......='cd ../../../../..'
 
 # Git
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
-alias gp='git pull --rebase'
-alias gu='git push'
+
+alias gs='git status --short'
 alias gd='git diff'
-alias gac='git add -A && git commit -m'
-alias ga='git add -A'
-alias gc='git commit -m'
+alias gds='git diff --staged'
+alias ga='git add'
+alias gap='git add --patch'
+alias gc='git commit'
+alias gp='git push'
+alias gu='git pull --rebase'
+alias gl='git log --all --graph --pretty=format:"%C(magenta)%h %C(black) %an  %ar%C(green) %D%n%C(auto)%s%n"'
 alias gb='git branch'
-alias gs='git switch'
+
+alias gi='git init'
+alias gcl='git clone'
+
+alias gsw='git switch'
+alias gsc='git switch -c'
+
 alias gw='git worktree'
 alias gwl='git worktree list'
 alias gwl='git worktree prune'
 alias gwr='git worktree remove'
-alias ediff="git status -s >&2; git status -s | awk '{ print \$2 }' | choose_one | xargs -r $EDITOR"
+
 
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'

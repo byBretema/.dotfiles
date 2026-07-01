@@ -1,31 +1,119 @@
+[user]
+	name = ByBretema
+	email = bybretema@gmail.com
+
 [core]
-	pager = delta
+	compression = 9
+	whitespace = error
+	preloadindex = true
+
 	editor = helix
 	autocrlf = false
 	excludesFile = ~/.gitignore
+
+[advice]
+	detachedHead = false
+	addEmptyPathspec = false
+	pushNonFastForward = false
+	# statusHints = false
+
+[url "git@github.com:bybretema/"]
+	insteadOf = "bb:"
+
+[url "git@github.com:"]
+	insteadOf = "gh:"
+
+[url "git@github.com:omi-lab"]
+	insteadOf = "omi:"
+
+[init]
+	defaultBranch = dev
+
+[status]
+	showStash = true
+	showUntrackedFiles = all
+
+[diff]
+	context = 3
+	renames = copies
+	interHunkContext = 10
+
+[pager]
+	diff = diff-so-fancy | less
+	branch = false
+	tag = false
+
+[diff-so-fancy]
+	markEmptyLines = false
+
+[color "diff"]
+	meta       = black bold
+	frag       = magenta
+	context    = white
+	whitespace = yellow reverse
+	old        = red
+
+[color "decorate"]
+	HEAD = red
+	branch = blue
+	tag = yellow
+	remoteBranch = magenta
+
+[color "branch"]
+	current  = magenta
+	local    = default
+	remote   = yellow
+	upstream = green
+	plain    = blue
 
 [color]
 	ui = true
 
 [interactive]
-    diffFilter = delta --color-only
+    diffFilter = diff-so-fance --patch
+	singlekey = true
 
 [push]
-	default = simple
 	autoSetupRemote = true
+	default = current
+	followTags = true
 
 [pull]
 	rebase = true
+	default = current
 
-[merge]
-	#ff = false  # https://stackoverflow.com/a/14865661
-	conflictstyle = zdiff3
+[rebase]
+	autoStash = true
+	missingCommitsCheck = warn
+
+[log]
+	abbrevCommit = true
+	graphColors = blue,cyan,yellow,magenta,green,red
+
+[branch]
+	sort = -committerdate
+
+[tag]
+	sort = -taggerdate
+
+# [merge]
+# 	#ff = false  # https://stackoverflow.com/a/14865661
+# 	conflictstyle = zdiff3
 
 [advice]
 	detachedHead = false
 
 [init]
 	defaultBranch = main
+
+[safe]
+	directory = *
+
+[credential]
+	helper = manager-core
+
+[remote "origin"]
+	prune = true
 
 [filter "lfs"]
 	required = true
@@ -60,23 +148,8 @@
 	subAdd = !git submodule add
 	subUpdate = !git submodule update --init --recursive -j 12
 
-
-[safe]
-	directory = *
-
-[credential]
-	helper = manager-core
-
-[remote "origin"]
-	prune = true
-
-[user]
-	name = ByBretema
-	email = bybretema@gmail.com
-
-
-[delta]
-	navigate = true
-	line-numbers = true
-	# side-by-side = true
+# [delta]
+# 	navigate = true
+# 	line-numbers = true
+# 	# side-by-side = true
 

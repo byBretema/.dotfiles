@@ -68,7 +68,7 @@ tabpad = "·"
 
 [editor.indent-guides]
 render = true
-character = "•" # Some nice chars: "▏", "┆", "┊", "⸽"
+character = "┊" # Some nice chars: "▏", "┆", "┊", "⸽"
 # skip-levels = 1
 
 [editor.cursor-shape]
@@ -208,6 +208,7 @@ k = "goto_next_diag"
 ]
 
 
+
 [keys.normal.'+']
 # > Editor/LSP/Buffers Utils
 
@@ -230,7 +231,6 @@ k = "goto_next_diag"
 "i" = ":toggle lsp.display-inlay-hints"
 "b" = ":toggle bufferline never always"
 "h" = ":toggle whitespace.render none all"
-"H" = ":toggle indent-guides.character '•' '┊'"
 "." = [":toggle file-picker.git-ignore", ":toggle file-picker.ignore"]
 
 
