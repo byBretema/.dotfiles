@@ -51,7 +51,6 @@ alias ......='cd ../../../../..'
 
 # Git
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
-
 alias gs='git status --short'
 alias gd='git diff'
 alias gds='git diff --staged'
@@ -62,13 +61,11 @@ alias gp='git push'
 alias gu='git pull --rebase'
 alias gl='git log --all --graph --pretty=format:"%C(magenta)%h %C(black) %an  %ar%C(green) %D%n%C(auto)%s%n"'
 alias gb='git branch'
-
+alias gba='git branch -a'
 alias gi='git init'
 alias gcl='git clone'
-
 alias gsw='git switch'
 alias gsc='git switch -c'
-
 alias gw='git worktree'
 alias gwl='git worktree list'
 alias gwl='git worktree prune'

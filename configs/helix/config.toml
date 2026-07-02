@@ -3,42 +3,46 @@ theme = "bretema"
 # --- EDITOR -------------------------------------------------------------------
 
 [editor]
-mouse = true
+default-yank-register = "+"
+
 true-color = true
 color-modes = true
-# rainbow-brackets = true
-completion-replace = true
-line-number = "relative"
-scroll-lines = 1
 cursorline = true
 rulers = [80, 100, 120]
-default-yank-register = "+"
+line-number = "relative"
+end-of-line-diagnostics = "hint"
+
+mouse = true
+bufferline = "never"
+jump-label-alphabet = "jfkdlsñaurieownvmc" # home-row centric + no qpzm (low pinky movement)
+
+completion-replace = true
+completion-timeout = 5
+completion-trigger-len = 1
+
+auto-pairs = false
 default-line-ending = "lf"
 insert-final-newline = true
 trim-trailing-whitespace = true
-end-of-line-diagnostics = "hint"
-completion-trigger-len = 1
-bufferline = "never"
+
+# scroll-lines = 1
+# jump-label-alphabet = "jfkdls;aurieownvmc"
 
 [editor.auto-save]
 focus-lost = true
 after-delay.enable = true
-after-delay.timeout = 600
+after-delay.timeout = 1100
 
 [editor.statusline]
 separator = "·"
 left = [
   "mode",
-  "spinner",
   "file-name",
-  "spacer",
-  "file-modification-indicator",
+  "spinner",
   "read-only-indicator",
+  "file-modification-indicator",
 ]
 right = [
-  "version-control",
-  "spacer",
-  "separator",
   "file-type",
   "separator",
   "file-encoding",
@@ -48,15 +52,20 @@ right = [
   "separator",
   "spacer",
   "diagnostics",
-  "separator",
   "workspace-diagnostics",
 ]
+mode.normal = "N"
+mode.insert = "I"
+mode.select = "S"
 
 [editor.soft-wrap]
 enable = true
 
 [editor.whitespace]
 render = "none"
+# [editor.whitespace.render]
+# tab = "all"
+# nbsp = "all"
 
 [editor.whitespace.characters]
 space = "·"
@@ -86,10 +95,11 @@ git-exclude = true
 cursor-line = "warning"
 
 [editor.lsp]
+auto-signature-help = false
 display-inlay-hints = false
 display-messages = true
-auto-signature-help = true
 display-progress-messages = true
+auto-document-highlight = true
 
 
 # --- KEYs ---------------------------------------------------------------------

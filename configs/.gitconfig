@@ -15,14 +15,12 @@
 	detachedHead = false
 	addEmptyPathspec = false
 	pushNonFastForward = false
-	# statusHints = false
+	statusHints = false
 
 [url "git@github.com:bybretema/"]
 	insteadOf = "bb:"
-
 [url "git@github.com:"]
 	insteadOf = "gh:"
-
 [url "git@github.com:omi-lab"]
 	insteadOf = "omi:"
 
@@ -39,35 +37,34 @@
 	interHunkContext = 10
 
 [pager]
-	diff = diff-so-fancy | less
-	branch = false
-	tag = false
+	diff = diff-so-fancy | less -RFX
 
 [diff-so-fancy]
-	markEmptyLines = false
+	stripLeadingSymbols = false
+	shortHeaders = true
+	semIntegration = true
 
+[color]
+	ui = true
 [color "diff"]
-	meta       = black bold
-	frag       = magenta
+	meta       = yellow bold
+	frag       = blue
 	context    = white
-	whitespace = yellow reverse
+	whitespace = cyan reverse
 	old        = red
-
 [color "decorate"]
 	HEAD = red
 	branch = blue
 	tag = yellow
 	remoteBranch = magenta
-
 [color "branch"]
-	current  = magenta
+	current  = yellow
 	local    = default
-	remote   = yellow
+	remote   = white
 	upstream = green
-	plain    = blue
+	plain    = cyan
+	worktree = blue
 
-[color]
-	ui = true
 
 [interactive]
     diffFilter = diff-so-fance --patch
