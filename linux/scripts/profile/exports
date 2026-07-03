@@ -21,7 +21,7 @@ export GTK_THEME=Adwaita:dark
 
 export QT_QPA_PLATFORM=xcb
 export QT_QPA_PLATFORMTHEME=xdgdesktopportal
-export QT_STYLE_OVERRIDE=Adwaita-Dark
+export QT_STYLE_OVERRIDE=Windows
 
 export FZF_BASE="/usr/share/fzf"
 

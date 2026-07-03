@@ -99,7 +99,7 @@ auto-signature-help = false
 display-inlay-hints = false
 display-messages = true
 display-progress-messages = true
-auto-document-highlight = true
+# auto-document-highlight = true
 
 
 # --- KEYs ---------------------------------------------------------------------
@@ -121,10 +121,6 @@ pagedown = "no_op"
 "d" = "delete_selection_noyank"
 "c" = "change_selection_noyank"
 "F12" = "delete_selection"
-
-# Scroll
-"C-n" = "page_cursor_half_down"
-"C-p" = "page_cursor_half_up"
 
 # Word-wide shortcut
 "M" = "@miwm"
@@ -304,10 +300,6 @@ pagedown = "no_op"
 "c" = "change_selection_noyank"
 "F12" = "delete_selection"
 
-# Scroll
-"C-n" = "page_cursor_half_down"
-"C-p" = "page_cursor_half_up"
-
 # Word-wide shortcut
 "M" = "@miwm"
 "Y" = "@miwy"
@@ -329,6 +321,3 @@ pagedown = "no_op"
 "}" = "goto_next_paragraph"
 "{" = "goto_prev_paragraph"
 
-
-# --- [keys.select] Only ---
-# ...
