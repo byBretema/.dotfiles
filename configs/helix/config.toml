@@ -245,6 +245,8 @@ k = "goto_next_diag"
 
 " " = ':o "~/notes.md"'
 
+"ñ" = 'goto_word'
+
 "w" = ":w"
 "W" = ":w!"
 "a" = ":wa"
@@ -271,7 +273,7 @@ k = "goto_next_diag"
 "M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
 
 # Opens YAZI explorer
-"ñ" = [
+"tab" = [
   ":write-all",
   ":sh rm -f /tmp/hx_yazi.result",
   ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/hx_yazi.result',
