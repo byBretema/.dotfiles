@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+source ".bash_common"
+guard__is_git
+
+DAYS=${1:-5}
+AUTHOR=$(git config user.name)
+
+git log --since="${DAYS}.days" --author="${AUTHOR}" --pretty=format: --name-only | sort -u | grep -v '^$'
