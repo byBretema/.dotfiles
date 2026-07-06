@@ -34,11 +34,16 @@ alias lt3='l -T --level=3'
 
 # Nav
 alias h='history'
+
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
+
+alias dot='pushd $DOTFILES'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'
 alias agents='pushd $HOME/agents'
+
 alias omii='pushd $HOME/omi'
+
 alias oo='open -s .'
 alias b='open -b'
 alias s='open -s'
