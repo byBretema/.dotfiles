@@ -17,7 +17,7 @@
 	pushNonFastForward = false
 	statusHints = false
 
-[url "git@github.com:bybretema/"]
+[url "git@github.com:byBretema/"]
 	insteadOf = "bb:"
 [url "git@github.com:"]
 	insteadOf = "gh:"
@@ -25,7 +25,7 @@
 	insteadOf = "omi:"
 
 [init]
-	defaultBranch = dev
+	defaultBranch = main
 
 [status]
 	showStash = true
