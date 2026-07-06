@@ -50,6 +50,9 @@ autoload -U colors && colors
 # Prompt
 eval "$(starship init zsh)"
 
+# Env vars
+source "$DOTFILES_SCRIPTS/profile/exports"
+
 # Aliases
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/profile/_aliases_"

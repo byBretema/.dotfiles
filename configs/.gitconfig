@@ -67,7 +67,7 @@
 
 
 [interactive]
-    diffFilter = diff-so-fance --patch
+    diffFilter = diff-so-fancy --patch
 	singlekey = true
 
 [push]
