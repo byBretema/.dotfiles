@@ -2,7 +2,10 @@
 
 # https://www.nerdfonts.com/cheat-sheet
 
-case "$1" in
+window_icon="$1" && shift
+window_path="$1" && shift
+
+case "$window_icon" in
 ssh) icon='󰌘' ;;
 vim | nvim | helix) icon='' ;;
 opencode) icon='' ;;
@@ -28,4 +31,5 @@ hyperfine) icon='' ;;
 *) icon="$1" ;;
 esac
 
-printf '%s' "$icon"
+title="$(echo $window_path | tr -d '.')"
+printf "$icon $title"
