@@ -78,7 +78,6 @@ alias gwl='git worktree list'
 alias gwl='git worktree prune'
 alias gwr='git worktree remove'
 
-
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
 alias ffc='code $(fzf -m --preview="bat --color=always {}")'

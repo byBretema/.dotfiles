@@ -3,8 +3,8 @@
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &> /dev/null && pwd)
 script_name=$(basename "${BASH_SOURCE[-1]}")
 
-source "${script_path}/profile/exports"
-
+real_script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)
+source "${real_script_path}/profile/exports"
 
 ################################################################################
 ### Log
