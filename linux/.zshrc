@@ -1,69 +1,64 @@
 #!/usr/bin/env zsh
 
-################################################################################
-### Common setup "Shell-Agnostic"  (Part 1)
-################################################################################
+# --- Basics -------------------------------------------------------------------
 
-DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
-PATH="$DOTFILES_SCRIPTS:$PATH"
+source "$HOME/.dotfiles/linux/scripts/profile/exports"
+export DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 
-PATH="$HOME/.local/bin:$PATH"
-PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
+typeset -U PATH
+export PATH="$DOTFILES_SCRIPTS:$PATH"
+export PATH="$HOME/.local/bin:$PATH"
+export PATH="$HOME/.cargo/bin:$PATH"
+export PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 
+alias configreload='source $HOME/.zshrc'
+source "$DOTFILES_SCRIPTS/profile/aliases"
 
-################################################################################
-### Functions
-################################################################################
+# --- Functions ----------------------------------------------------------------
 
-mkcd(){
-  mkdir -p "${1}"
-  pushd "${1}"
+# mkdir + cd
+mkcd() {
+    mkdir -p "$1" && pushd "$1"
 }
 
+# yazi
+y() {
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    command yazi "$@" --cwd-file="$tmp"
+    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+        builtin cd -- "$cwd"
+    fi
+    rm -f -- "$tmp"
+}
 
-################################################################################
-### Plugins
-################################################################################
+# bring to fg latest job in bg
+fancy-ctrl-z() {
+    if [[ $#BUFFER -eq 0 ]]; then
+        BUFFER="fg 2>/dev/null"
+        zle accept-line
+    else
+        zle push-input
+        zle clear-screen
+    fi
+}
+zle -N fancy-ctrl-z
+bindkey '^Z' fancy-ctrl-z
 
-export ZSH="/usr/share/oh-my-zsh"
-export ZSH_COMPDUMP=$ZSH/cache/.zcompdump-$HOST
+# --- Tweaks -------------------------------------------------------------------
 
-DISABLE_MAGIC_FUNCTIONS="true"
-DISABLE_AUTO_TITLE=true
-DISABLE_LS_COLORS="true"
-HIST_STAMPS="dd.mm.yyyy"
-COMPLETION_WAITING_DOTS="true"
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
-plugins=(git fzf extract zsh-interactive-cd)
-source $ZSH/oh-my-zsh.sh
-source /usr/share/zsh/plugins/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-source /usr/share/zsh/plugins/zsh-autosuggestions/zsh-autosuggestions.zsh
-source /usr/share/zsh/plugins/zsh-history-substring-search/zsh-history-substring-search.zsh
+# --- Prompt -------------------------------------------------------------------
 
-autoload -U colors && colors
-
-
-################################################################################
-### Common setup "Shell-Agnostic"  (Part 2)
-################################################################################
-
-# Prompt
 eval "$(starship init zsh)"
 
-# Env vars
-source "$DOTFILES_SCRIPTS/profile/exports"
+# --- External -----------------------------------------------------------------
 
-# Aliases
-alias configreload='source $HOME/.zshrc'
-source "$DOTFILES_SCRIPTS/profile/_aliases_"
+export PATH="$HOME/omi/scripts/bash:$PATH"
 
-# External Profile / Binaries
-
-OMI_SCRIPTS="$HOME/omi/scripts"
-PATH="$OMI_SCRIPTS/bash:$PATH"
-
-# OMI_PROFILE="$OMI_SCRIPTS/_exports_"
-# if [[ -f "$OMI_PROFILE" ]]; then source "$OMI_PROFILE"; fi
-# if [[ -f "$OMI_SCRIPTS/bash/omi" ]]; then omi -u; fi
-
-if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+if [ -x "/usr/bin/micromamba" ]; then
+    export MAMBA_EXE="/usr/bin/micromamba"
+    export MAMBA_ROOT_PREFIX="$HOME/.local/share/mamba"
+    eval "$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX")"
+fi

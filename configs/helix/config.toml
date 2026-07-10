@@ -1,32 +1,36 @@
+#
+# Lovely typ(o)ed @byBretema
+#
+# NOTES:
+# For iso/us keyboards, replace any 'ñ' with ';'
+
 theme = "bretema"
 
 # --- EDITOR -------------------------------------------------------------------
 
 [editor]
+# Tough opinions
+mouse = true
 default-yank-register = "+"
-
+# Visuals
 true-color = true
-color-modes = true
 cursorline = true
+color-modes = true
+bufferline = "never"
 rulers = [80, 100, 120]
 line-number = "relative"
 end-of-line-diagnostics = "hint"
-
-mouse = true
-bufferline = "never"
-jump-label-alphabet = "jfkdlsñaurieownvmc" # home-row centric + no qpzm (low pinky movement)
-
-completion-replace = true
-completion-timeout = 5
-completion-trigger-len = 1
-
+# Completions
 auto-pairs = false
+completion-timeout = 5
+completion-replace = true
+completion-trigger-len = 1
+# File behaviors
 default-line-ending = "lf"
 insert-final-newline = true
 trim-trailing-whitespace = true
-
-# scroll-lines = 1
-# jump-label-alphabet = "jfkdls;aurieownvmc"
+# goto_word -> home-row centric + no qpzm (low pinky movement)
+jump-label-alphabet = "jfkdlsñaurieownvmc"
 
 [editor.auto-save]
 focus-lost = true
@@ -35,25 +39,8 @@ after-delay.timeout = 1100
 
 [editor.statusline]
 separator = "·"
-left = [
-  "mode",
-  "file-name",
-  "spinner",
-  "read-only-indicator",
-  "file-modification-indicator",
-]
-right = [
-  "file-type",
-  "separator",
-  "file-encoding",
-  "file-line-ending",
-  "separator",
-  "position",
-  "separator",
-  "spacer",
-  "diagnostics",
-  "workspace-diagnostics",
-]
+left  = ["mode", "file-name", "spinner", "read-only-indicator", "file-modification-indicator"]
+right = ["file-type", "file-encoding", "file-line-ending", "position", "diagnostics", "workspace-diagnostics"]
 mode.normal = "N"
 mode.insert = "I"
 mode.select = "S"
@@ -63,9 +50,6 @@ enable = true
 
 [editor.whitespace]
 render = "none"
-# [editor.whitespace.render]
-# tab = "all"
-# nbsp = "all"
 
 [editor.whitespace.characters]
 space = "·"
@@ -77,8 +61,8 @@ tabpad = "·"
 
 [editor.indent-guides]
 render = true
+skip-levels = 1
 character = "┊" # Some nice chars: "▏", "┆", "┊", "⸽"
-# skip-levels = 1
 
 [editor.cursor-shape]
 insert = "bar"
@@ -106,7 +90,6 @@ display-progress-messages = true
 
 [keys.normal]
 # > [keys.normal] and [keys.select] block.
-
 # Disable
 up = "no_op"
 down = "no_op"
@@ -116,36 +99,29 @@ home = "no_op"
 end = "no_op"
 pageup = "no_op"
 pagedown = "no_op"
-
 # Replace defaults
 "d" = "delete_selection_noyank"
 "c" = "change_selection_noyank"
 "F12" = "delete_selection"
-
 # Word-wide shortcut
 "M" = "@miwm"
 "Y" = "@miwy"
-
 # Subwords motions
 "W" = "move_next_sub_word_start"
 "B" = "move_prev_sub_word_start"
 "E" = "move_next_sub_word_end"
-
 # Move line up/down
 "A-j" = '@X"m<F12>"mp'
 "A-k" = '@X"m<F12>k"mP'
+# Handy brackets in Spanish keyboard
+"A-h" = "@["
+"A-l" = "@]"
+# More confy acces to switch case
+"A-c" = "switch_case"
 
-# Goto next/prev buffer
-"A-h" = ":buffer-previous"
-"A-l" = ":buffer-next"
-
-# Go next/prev paragraph
-"}" = "goto_next_paragraph"
-"{" = "goto_prev_paragraph"
-
-
-# --- [keys.normal] Only ---
-
+# > [keys.normal] Only
+# Use 'esc' to unselect multiple cursors
+"esc" = ["collapse_selection", "keep_primary_selection"]
 # Scooter for symbol rename in the whole project
 "C-r" = [
   ":write-all",
@@ -154,124 +130,90 @@ pagedown = "no_op"
   ":reload-all",
 ]
 
-# Use 'esc' to unselect multiple cursors
-"esc" = ["collapse_selection", "keep_primary_selection"]
-
-
 [keys.normal.g]
 # > Extends GoTo actions
-
-j = "goto_prev_diag"
-k = "goto_next_diag"
-
+"j" = "goto_prev_diag"
+"k" = "goto_next_diag"
+"A-j" = "goto_prev_change"
+"A-k" = "goto_next_change"
 
 [keys.normal.space]
 # > Extends Space actions
-
 # 'l' for faster access to Global
 "l" = "global_search"
-
-# Custom search UI made with: rg + fzf + bat
-" " = [
-  ":write-all",
-  ":sh rm -f /tmp/hx_frg.result",
-  ':insert-output hx_frg "%{buffer_name}" "/tmp/hx_frg.result"',
-  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-  ":open %sh{cat /tmp/hx_frg.result}",
-  ":redraw",
-  ":reload-all",
-]
-
+# 'ñ/;' for faster access to : actions
+"ñ" = "@:"
 
 [keys.normal.'0']
 # > Cpp Utils
-
 # Calls custom script: Duplicates C++ files with a different name, not ideal but handy
 "d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
-
 # To paste a cpp method signature of a method into the hpp file
 "p" = "@pglF(F:;vT dA;<esc>"
-
 # Calls custom script: Switch between file-pairs .cpp/.hpp, .frag/.vert, ...
 "0" = ":open %sh{hx_switch_cpp %{buffer_name}}"
 
-
 [keys.normal.'9']
 # > Git Utils
-
 # Shows git blame on the status bar
 "b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
-
 # Git Blame of current line
 "d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
-
 # Opens git-ui
-"9" = [
-  ":write-all",
-  ":insert-output lazygit >/dev/tty",
-  ":redraw",
-  ":reload-all",
-]
-
-
+"9" = [ ":write-all", ":insert-output lazygit >/dev/tty", ":redraw", ":reload-all", ]
 
 [keys.normal.'+']
 # > Editor/LSP/Buffers Utils
-
+# Quit
 "q" = ":q"
 "Q" = ":q!"
-
+# Config
 "c" = ":config-open"
 "r" = ":config-reload"
-
+# Lang/LSP
 "l" = "@:lang "
 "L" = ":lsp-restart"
-
+# Theme
 "t" = "@:theme "
-
+# Copy buffer name in many ways
 "n" = "@:insert-output echo %{buffer_name}<ret>yu"
 "N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
 "f" = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
 "F" = "@:insert-output echo $(pwd)/%{buffer_name}:%{cursor_line}<ret>yu"
-
+# Toggles
 "i" = ":toggle lsp.display-inlay-hints"
 "b" = ":toggle bufferline never always"
 "h" = ":toggle whitespace.render none all"
 "." = [":toggle file-picker.git-ignore", ":toggle file-picker.ignore"]
 
-
 [keys.normal.'ñ']
 # > Text/File Utils + YAZI quick access
-
+# Quick access
 " " = ':o "~/notes.md"'
-
 "ñ" = 'goto_word'
-
+"f" = ":format"
+# Save/Close, Capital == force
 "w" = ":w"
 "W" = ":w!"
 "a" = ":wa"
 "A" = ":wa!"
 "x" = ":bc"
 "X" = ":bc!"
-
-"k" = "@]"
-"j" = "@["
-
-"f" = ":format"
+# Buffers stuff
 "r" = ":reload-all"
-
+# Duplicate line up/down
+"j" = '@X"dy"dp'
+"k" = '@X"dy"dP'
+# Actions over a whole word
 "l" = "@miw*"
 "L" = "@miw<A-*>"
-
 "y" = "@miwy"
 "c" = "@miwc"
 "R" = "@miwR"
-
 "d" = "@miw*v"           # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
 "D" = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
 "m" = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
 "M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
-
 # Opens YAZI explorer
 "tab" = [
   ":write-all",
@@ -284,9 +226,8 @@ k = "goto_next_diag"
   ":set mouse true",
 ]
 
-
 [keys.select]
-
+# > [keys.normal] and [keys.select] block.
 # Disable
 up = "no_op"
 down = "no_op"
@@ -296,30 +237,23 @@ home = "no_op"
 end = "no_op"
 pageup = "no_op"
 pagedown = "no_op"
-
 # Replace defaults
 "d" = "delete_selection_noyank"
 "c" = "change_selection_noyank"
 "F12" = "delete_selection"
-
 # Word-wide shortcut
 "M" = "@miwm"
 "Y" = "@miwy"
-
 # Subwords motions
 "W" = "move_next_sub_word_start"
 "B" = "move_prev_sub_word_start"
 "E" = "move_next_sub_word_end"
-
 # Move line up/down
 "A-j" = '@X"m<F12>"mp'
 "A-k" = '@X"m<F12>k"mP'
-
-# Goto next/prev buffer
-"A-h" = ":buffer-previous"
-"A-l" = ":buffer-next"
-
-# Go next/prev paragraph
-"}" = "goto_next_paragraph"
-"{" = "goto_prev_paragraph"
+# Handy brackets in Spanish keyboard
+"A-h" = "@["
+"A-l" = "@]"
+# More confy acces to switch case
+"A-c" = "switch_case"
 

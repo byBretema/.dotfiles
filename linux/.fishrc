@@ -1,85 +1,54 @@
 #!/usr/bin/env fish
 
-
-#
-## Common setup "Shell-Agnostic"  (Part 1)
-################################################################################
+# --- Basics -------------------------------------------------------------------
 
 source "$HOME/.dotfiles/linux/scripts/profile/exports"
+export DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 
-set DOTFILES_SCRIPTS "$DOTFILES/linux/scripts"
+
 fish_add_path "$DOTFILES_SCRIPTS" 2>/dev/null
-
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/.cargo/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 
+alias configreload='source $HOME/.config/fish/config.fish'
+source "$DOTFILES_SCRIPTS/profile/aliases"
 
-#
-## Functions
-################################################################################
+# --- Functions ----------------------------------------------------------------
 
+# mkdir + cd
 function mkcd -a dir
-    mkdir -p "$dir"
-    pushd "$dir"
+    mkdir -p "$dir" && pushd "$dir"
 end
 
 # yazi
 function y
-	set tmp (mktemp -t "yazi-cwd.XXXXXX")
-	command yazi $argv --cwd-file="$tmp"
-	if read -z cwd < "$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
-		builtin cd -- "$cwd"
-	end
-	rm -f -- "$tmp"
+    set tmp (mktemp -t "yazi-cwd.XXXXXX")
+    command yazi $argv --cwd-file="$tmp"
+    if read -z cwd <"$tmp"; and [ "$cwd" != "$PWD" ]; and test -d "$cwd"
+        builtin cd -- "$cwd"
+    end
+    rm -f -- "$tmp"
 end
 
+# bring to fg latest job in bg
 bind \cz 'fg 2>/dev/null; commandline -f repaint'
 
-
-#
-## Plugins
-################################################################################
-
-set fish_greeting ""
-
-
-#
-## Man pages
-################################################################################
+# --- Tweaks -------------------------------------------------------------------
 
 set -x MANROFFOPT -c
 set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
+# --- Prompt -------------------------------------------------------------------
 
-#
-## Common setup "Shell-Agnostic"  (Part 2)
-################################################################################
-
-# Prompt
-
-function starship_transient_prompt_func
-    starship module character
-end
-function starship_transient_rprompt_func
-    starship module time
-end
 starship init fish | source
-enable_transience
 
-# Aliases
+# --- External -----------------------------------------------------------------
 
-alias configreload='source $HOME/.config/fish/config.fish'
-source "$DOTFILES_SCRIPTS/profile/aliases"
+fish_add_path "$HOME/omi/scripts/bash" 2>/dev/null
 
-# External Profile / Binaries
-
-set OMI_SCRIPTS "$HOME/omi/scripts"
-fish_add_path "$OMI_SCRIPTS/bash" 2>/dev/null
-
-# >>> mamba initialize >>>
-# !! Contents within this block are managed by 'micromamba shell init' !!
-set -gx MAMBA_EXE "/usr/bin/micromamba"
-set -gx MAMBA_ROOT_PREFIX "/home/dac/.local/share/mamba"
-$MAMBA_EXE shell hook --shell fish --root-prefix $MAMBA_ROOT_PREFIX | source
-# <<< mamba initialize <<<
+if test -x "/usr/bin/micromamba"
+    set -gx MAMBA_EXE "/usr/bin/micromamba"
+    set -gx MAMBA_ROOT_PREFIX "$HOME/.local/share/mamba"
+    $MAMBA_EXE shell hook --shell fish --root-prefix $MAMBA_ROOT_PREFIX | source
+end
