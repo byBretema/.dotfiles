@@ -37,6 +37,7 @@ alias h='history'
 
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
 
+alias ho='pushd $HOME'
 alias dots='pushd $DOTFILES'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'

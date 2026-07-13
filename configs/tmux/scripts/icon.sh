@@ -1,9 +1,8 @@
 #!/bin/bash
+# https://www.nerdfonts.com/cheat-sheet + vaaleyard/tmux-dotbar
 
-# https://www.nerdfonts.com/cheat-sheet
-
-window_icon="$1" && shift
-window_path="$1" && shift
+window_icon="${1:-}"
+window_path="${2:+  $2}"
 
 case "$window_icon" in
 ssh) icon='󰌘' ;;
@@ -28,8 +27,8 @@ kubectl) icon='󱃾' ;;
 paru | yay | pacman) icon='󰮯' ;;
 yazi) icon='󰇥' ;;
 hyperfine) icon='' ;;
-*) icon="$1" ;;
+"") icon="??" ;;
+*) icon="$window_icon" ;;
 esac
 
-title="$(echo $window_path | tr -d '.')"
-printf "$icon $title"
+printf "${icon:+ $icon}$window_path"
