@@ -85,14 +85,19 @@ link_config_files() {
 
     # --- OpenCode ---
 
-    # Main stuff
     dst_dir=$(mkdir_ret "${config_path}/opencode")
+    # Main stuff
     ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
     ln -srf "${my_configs}/opencode/tui.json" "${dst_dir}/tui.json"
 
+    # Agents
+    ln -srf "${my_configs}/opencode/agents" "${dst_dir}/agents"
+
     # Skills
-    dst_dir=$(mkdir_ret "${config_path}/opencode")
     ln -srf "${my_configs}/opencode/skills" "${dst_dir}/skills"
+
+    # Plugins
+    ln -srf "${my_configs}/opencode/plugin" "${dst_dir}/plugin"
 
     # --- Environment ---
     dst_dir=$(mkdir_ret "${config_path}/environment.d")

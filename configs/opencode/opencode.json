@@ -7,5 +7,6 @@
     "general":        { "variant": "max" },
     "explore":        { "variant": "max" }
   },
-  "provider": {}
+  "provider": {},
+  "plugin": ["./plugin/auto-agents.ts"]
 }
