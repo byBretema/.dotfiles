@@ -8,5 +8,10 @@
     "explore":        { "variant": "max" }
   },
   "provider": {},
+  "permission": {
+    "external_directory": {
+      "~/agents/**": "allow"
+    }
+  },
   "plugin": ["./plugin/auto-agents.ts"]
 }
