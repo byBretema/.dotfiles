@@ -10,8 +10,20 @@
   "provider": {},
   "permission": {
     "external_directory": {
-      "~/agents/**": "allow"
+      "~/agents/**": "allow",
+      "~/.dotfiles/**": "allow"
     }
+  },
+  "lsp": false,
+  "formatter": false,
+  "share": "disabled",
+  "autoupdate": false,
+  "compaction": {
+    "prune": false
+  },
+  "experimental": {
+    "batch_tool": false,
+    "continue_loop_on_deny": false
   },
   "plugin": ["./plugin/auto-agents.ts"]
 }
