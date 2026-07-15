@@ -1,5 +1,5 @@
 #
-# Lovely typ(o)ed @byBretema
+# Typ(o)ed @byBretema
 #
 # NOTES:
 # For iso/us keyboards, replace any 'ñ' with ';'
@@ -12,6 +12,7 @@ theme = "bretema"
 # Tough opinions
 mouse = true
 default-yank-register = "+"
+smart-tab.enable = false
 # Visuals
 true-color = true
 cursorline = true
@@ -79,9 +80,9 @@ git-exclude = true
 cursor-line = "warning"
 
 [editor.lsp]
-auto-signature-help = false
-display-inlay-hints = false
 display-messages = true
+auto-signature-help = true
+display-inlay-hints = false
 display-progress-messages = true
 # auto-document-highlight = true
 
@@ -173,6 +174,7 @@ pagedown = "no_op"
 # Lang/LSP
 "l" = "@:lang "
 "L" = ":lsp-restart"
+"s" = ":toggle lsp.auto-signature-help"
 # Theme
 "t" = "@:theme "
 # Copy buffer name in many ways
@@ -192,6 +194,7 @@ pagedown = "no_op"
 " " = ':o "~/notes.md"'
 "ñ" = 'goto_word'
 "f" = ":format"
+"s" = "search"
 # Save/Close, Capital == force
 "w" = ":w"
 "W" = ":w!"

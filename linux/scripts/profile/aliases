@@ -23,7 +23,7 @@ alias gpu_toggle='python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
 alias py="python"
 
 # List
-alias l='eza -a --icons auto --git -s type --hyperlink'
+alias l='eza -a --icons auto --git -s type --hyperlink auto'
 alias l1='l -1'
 alias ll='l -l --no-user'
 alias lt='l -T'

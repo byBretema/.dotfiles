@@ -17,11 +17,12 @@ export LC_IDENTIFICATION="$LANG"
 
 export MICRO_TRUECOLOR=1
 
-export GTK_THEME=Adwaita:dark
+export GTK_IM_MODULE=simple
+# export GTK_THEME=Adwaita:dark
 
 export QT_QPA_PLATFORM=xcb
 export QT_QPA_PLATFORMTHEME=xdgdesktopportal
-export QT_STYLE_OVERRIDE=Windows
+export QT_STYLE_OVERRIDE=qt6ct-style
 
 export FZF_BASE="/usr/share/fzf"
 
@@ -32,11 +33,10 @@ export FZF_DEFAULT_OPTS=" \
 --color=selected-bg:#45475A \
 --color=border:#6C7086,label:#CDD6F4"
 
-export DOTFILES="$HOME/.dotfiles"
-export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
-
-export GTK_IM_MODULE=simple
-
 export BAT_THEME="Catppuccin Mocha"
+
+export DOTFILES="$HOME/.dotfiles"
+
+export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export EDITOR=helix
