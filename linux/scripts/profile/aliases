@@ -15,7 +15,7 @@ alias qc='qtcreator >/dev/null 2>/dev/null'
 alias qcc='qtcreator CMakeLists.txt >/dev/null 2>/dev/null'
 
 alias ta='tmux attach || tmux'
-alias now='date "+%d/%m/%Y %H:%M ($(curl -s -f --connect-timeout 2 https://ipapi.co/country | head -n 1 || echo '??'))"'
+alias now='date "+%d/%m/%Y %H:%M"'
 alias now_file='date "+%Y-%m-%d_%H-%M"'
 alias gpu_toggle='python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
 
@@ -44,6 +44,9 @@ alias lab='pushd $HOME/dev/_lab'
 alias agents='pushd $HOME/agents'
 
 alias omii='pushd $HOME/omi'
+
+alias daily="hx \"$HOME/ByBretema/Notes/Daily/$(date '+%Y-%m-%d').md\""
+alias jdaily="hx \"$HOME/omi/_sync/daily/$(date '+%Y-%m-%d').md\""
 
 alias oo='open -s .'
 alias b='open -b'
@@ -80,9 +83,12 @@ alias gwl='git worktree list'
 alias gwl='git worktree prune'
 alias gwr='git worktree remove'
 
+# Find
+alias ff='fd --hidden --no-ignore-vcs | rg -i'
+alias ffi='fd | rg -i'
+
 # Picker
 alias fff='fzf --preview="bat --color=always {}"'
-alias ffc='code $(fzf -m --preview="bat --color=always {}")'
 
 # Job
 alias omid='pushd $(omi -d)'

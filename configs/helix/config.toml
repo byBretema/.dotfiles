@@ -130,17 +130,6 @@ pagedown = "no_op"
   ":redraw",
   ":reload-all",
 ]
-# Opens YAZI explorer
-"tab" = [
-  ":write-all",
-  ":sh rm -f /tmp/hx_yazi.result",
-  ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/hx_yazi.result',
-  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-  ":open %sh{cat /tmp/hx_yazi.result}",
-  ":redraw",
-  ":set mouse false",
-  ":set mouse true",
-]
 
 [keys.normal.g]
 # > Extends GoTo actions
@@ -228,6 +217,17 @@ pagedown = "no_op"
 "D" = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
 "m" = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
 "M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
+# Opens YAZI explorer
+"tab" = [
+  ":write-all",
+  ":sh rm -f /tmp/hx_yazi.result",
+  ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/hx_yazi.result',
+  ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
+  ":open %sh{cat /tmp/hx_yazi.result}",
+  ":redraw",
+  ":set mouse false",
+  ":set mouse true",
+]
 
 [keys.select]
 # > [keys.normal] and [keys.select] block.
