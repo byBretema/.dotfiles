@@ -101,6 +101,9 @@ link_config_files() {
     dst_dir=$(mkdir_ret "${config_path}/environment.d")
     ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
 
+    # Global environment
+    sudo cp "${script_path}/assets/etc/environment" "/etc/environment"
+
     # --- XDG Desktop Portal ---
     dst_dir=$(mkdir_ret "${config_path}/xdg-desktop-portal")
     ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${dst_dir}/portals.conf"
