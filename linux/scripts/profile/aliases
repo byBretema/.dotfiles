@@ -36,6 +36,7 @@ alias lt3='l -T --level=3'
 alias h='history'
 
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
+alias kd='pushd $(eza -1 -s created -r | fzf)'
 
 alias ho='pushd $HOME'
 alias dots='pushd $DOTFILES'
