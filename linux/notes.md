@@ -93,6 +93,23 @@ Lists all running windows and their `app_id` (useful for tiling exception rules)
 uv tool run cosmic-ext-window-helper state
 ```
 
+## SSH_AUTH_SOCK not set
+
+If you see `SSH_AUTH_SOCK not set` briefly on session start (e.g., in TTY), the fix is to enable `gcr-ssh-agent`:
+
+```shell
+systemctl --user enable --now gcr-ssh-agent.socket
+systemctl --user enable --now gcr-ssh-agent.service
+```
+
+After enabling, the SSH socket appears at `$XDG_RUNTIME_DIR/keyring/ssh` and `SSH_AUTH_SOCK` is set automatically.
+
+To verify:
+```shell
+echo $SSH_AUTH_SOCK
+# Should output: /run/user/$UID/keyring/ssh
+```
+
 ## SKIP-WORKTREE (local git changes)
 
 Ignore local diffs on a tracked file (won't show in `git st`, won't be committed):
@@ -103,5 +120,35 @@ git update-index --skip-worktree <file>
 To revert: `git update-index --no-skip-worktree <file>`
 
 List all skipped files: `git ls-files -v | grep ^S`
+
+## LOGIN KEYRING NOT UNLOCKED (cosmic-greeter)
+
+After switching from GDM to `cosmic-greeter`, apps (Slack, etc.) prompt for the login keyring password because `pam_gnome_keyring.so` is not in greetd's PAM stack.
+
+### Fix
+
+Add `pam_gnome_keyring.so` to `/etc/pam.d/greetd`:
+
+```shell
+sudo cp /etc/pam.d/greetd /etc/pam.d/greetd.bak
+
+echo '#%PAM-1.0
+
+auth       required     pam_securetty.so
+auth       requisite    pam_nologin.so
+auth       include      system-local-login
+auth       optional     pam_gnome_keyring.so
+account    include      system-local-login
+session    include      system-local-login
+session    optional     pam_gnome_keyring.so auto_start' | sudo tee /etc/pam.d/greetd
+```
+
+Then log out and back in (or reboot) for the PAM config to take effect.
+
+### Verify module installed
+
+```shell
+ls /usr/lib/security/pam_gnome_keyring.so
+```
 
 ```

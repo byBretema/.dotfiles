@@ -125,7 +125,7 @@ link_config_files() {
     fi
     ### Autostart
     dst_dir=$(mkdir_ret "${config_path}/autostart")
-    ln -srf "/usr/share/applications/solaar.desktop" "${dst_dir}/solaar.desktop"
+    ln -srf "${script_path}/assets/solaar/solaar.desktop" "${dst_dir}/solaar.desktop"
 
     # Caps 2 Esc
     ### Symlinks could fail at boot-time, so copy the files is the best approach here

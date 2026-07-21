@@ -5,7 +5,6 @@
 source "$HOME/.dotfiles/linux/scripts/profile/exports"
 export DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 
-
 fish_add_path "$DOTFILES_SCRIPTS" 2>/dev/null
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/.cargo/bin" 2>/dev/null
@@ -41,13 +40,15 @@ set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 # --- Prompt -------------------------------------------------------------------
 
-starship init fish | source
+if status is-interactive
+    starship init fish | source
+end
 
 # --- External -----------------------------------------------------------------
 
 fish_add_path "$HOME/omi/scripts/bash" 2>/dev/null
 
-if test -x "/usr/bin/micromamba"
+if status is-interactive; and test -x "/usr/bin/micromamba"
     set -gx MAMBA_EXE "/usr/bin/micromamba"
     set -gx MAMBA_ROOT_PREFIX "$HOME/.local/share/mamba"
     $MAMBA_EXE shell hook --shell fish --root-prefix $MAMBA_ROOT_PREFIX | source
