@@ -121,6 +121,9 @@ pagedown = "no_op"
 "A-c" = "switch_case"
 
 # > [keys.normal] Only
+# Navigate between changes in current file: J->down->next / K->up->prev
+"A-K" = "goto_prev_change"
+"A-J" = "goto_next_change"
 # Use 'esc' to unselect multiple cursors
 "esc" = ["collapse_selection", "keep_primary_selection"]
 # Scooter for symbol rename in the whole project
@@ -135,8 +138,8 @@ pagedown = "no_op"
 # > Extends GoTo actions
 "j" = "goto_prev_diag"
 "k" = "goto_next_diag"
-"A-j" = "goto_prev_change"
-"A-k" = "goto_next_change"
+# "A-j" = "goto_prev_change"
+# "A-k" = "goto_next_change"
 
 [keys.normal.space]
 # > Extends Space actions

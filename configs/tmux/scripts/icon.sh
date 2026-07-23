@@ -6,6 +6,7 @@ window_path="${2:+  $2}"
 
 case "$window_icon" in
 ssh) icon='󰌘' ;;
+bat) icon='󰈈' ;;
 vim | nvim | helix) icon='' ;;
 opencode) icon='' ;;
 fish | bash | zsh) icon='' ;;
