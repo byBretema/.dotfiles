@@ -15,6 +15,10 @@ source "$DOTFILES_SCRIPTS/profile/aliases"
 
 # --- Functions ----------------------------------------------------------------
 
+# greeting
+function fish_greeting
+end
+
 # mkdir + cd
 function mkcd -a dir
     mkdir -p "$dir" && pushd "$dir"
