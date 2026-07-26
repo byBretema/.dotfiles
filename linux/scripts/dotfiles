@@ -15,23 +15,23 @@ sync() {
     git add -A
     git commit -m "Updates ($(date +%s))" > /dev/null
     git push --quiet
-    # popd  2> /dev/null || :
+    cd -
     exit 0
 }
 
 edit() {
-    OPTIONS=( "code" "helix" )
-    option=$(choose_one -p "How to edit?" -- "${OPTIONS[@]}")
-    option=$(choose_one -p "How to edit?" -- "${OPTIONS[@]}")
-    eval "${option}" "${DOTFILES}"
+    "$EDITOR" "$DOTFILES"
+    exit 0
 }
 
 installer() {
     "${DOTFILES}/linux/install.sh" "$@"
+    exit 0
 }
 
 manage_vscode() {
     python "$DOTFILES/configs/vscode/extensions.py" "$@"
+    exit 0
 }
 
 
@@ -48,7 +48,6 @@ usage() {
     echo "  -e | --edit       Edit dotfiles"
     echo "  -s | --sync       Sync dotfiles"
     echo "  -i | --installer  Run dotfiles \"installer\""
-    echo "  -c | --code       Manage VSCode extensions"
     echo "  -h | --help       Show this message"
     echo "  --                Extra args after this"
     exit 1
@@ -58,10 +57,10 @@ usage() {
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
-        -e | --edit      ) shift; edit               ; exit 0 ;;
-        -s | --sync      ) shift; sync               ; exit 0 ;;
-        -i | --installer ) shift; installer     "$@" ; exit 0 ;;
-        -c | --code      ) shift; manage_vscode "$@" ; exit 0 ;;
+        -e | --edit      ) shift; edit               ;;
+        -s | --sync      ) shift; sync               ;;
+        -i | --installer ) shift; installer     "$@" ;;
+        -c | --code      ) shift; manage_vscode "$@" ;;
         -h | --help      ) shift; usage ;;
         --               ) shift; break ;;
         *                ) break;;
@@ -76,7 +75,7 @@ done
 OPTIONS=( "Edit" "Sync" "Installer" "VSCode" )
 option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
 
-[[ "${option}" == "Edit"      ]] && edit               ; exit 0
-[[ "${option}" == "Sync"      ]] && sync               ; exit 0
-[[ "${option}" == "Installer" ]] && installer     "$@" ; exit 0
-[[ "${option}" == "VSCode"    ]] && manage_vscode "$@" ; exit 0
+[[ "${option}" == "Edit"      ]] && edit
+[[ "${option}" == "Sync"      ]] && sync
+[[ "${option}" == "Installer" ]] && installer     "$@"
+[[ "${option}" == "VSCode"    ]] && manage_vscode "$@"

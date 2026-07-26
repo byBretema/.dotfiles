@@ -62,3 +62,5 @@ if [ -x "/usr/bin/micromamba" ]; then
     export MAMBA_ROOT_PREFIX="$HOME/.local/share/mamba"
     eval "$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX")"
 fi
+
+if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
