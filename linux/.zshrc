@@ -16,6 +16,18 @@ source "$DOTFILES_SCRIPTS/profile/aliases"
 
 # --- Functions ----------------------------------------------------------------
 
+# git worktree add + cd
+gwa() {
+    git_worktree_add "$@"
+    local target=$(cat /tmp/git_worktree_add_target 2>/dev/null)
+    [[ -n "$target" && -d "$target" ]] && cd "$target"
+}
+gws() {
+    git_worktree_switch "$@"
+    local target=$(cat /tmp/git_worktree_switch_target 2>/dev/null)
+    [[ -n "$target" && -d "$target" ]] && cd "$target"
+}
+
 # mkdir + cd
 mkcd() {
     mkdir -p "$1" && pushd "$1"

@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+
+target_file="/tmp/git_worktree_switch_target"
+rm -f "$target_file"
+
+source ".bash_common"
+if ! is_git; then
+  for dir in main master dev; do
+    [[ -d "$dir/.git" ]] || [[ -f "$dir/.git" ]] && cd "$dir" && exec "$script_path/$script_name" "$@"
+  done
+  error_exit "not a git repository"
+fi
+
+MAX_HEIGHT=12
+
+parent_dir=$(dirname "$(git rev-parse --show-toplevel)")
+
+entries=$(git worktree list | while read -r path hash rest; do
+  name=$(basename "$path")
+  case "$rest" in
+    *detached*) echo "$name  [detached]" ;;
+    *)          echo "$name" ;;
+  esac
+done)
+
+count=$(echo "$entries" | grep -c .)
+height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 3 ))
+
+echo
+gum style --foreground 4 --bold "▌ git worktree switch"
+  selection=$(gum filter --height=$height --indicator="•> " --indicator.foreground=3 --cursor-text.foreground=3 --placeholder="Choose a worktree..." <<< "$entries")
+[[ -z "$selection" ]] && gum style --foreground 1 "cancelled" && exit 1
+
+name=$(echo "$selection" | awk '{print $1}')
+target="$parent_dir/$name"
+
+[[ -d "$target" ]] && echo "$target" > "$target_file"

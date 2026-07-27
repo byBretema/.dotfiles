@@ -15,6 +15,22 @@ source "$DOTFILES_SCRIPTS/profile/aliases"
 
 # --- Functions ----------------------------------------------------------------
 
+# git worktree add + cd
+function gwa
+    git_worktree_add $argv
+    set -l target (cat /tmp/git_worktree_add_target 2>/dev/null)
+    if test -n "$target"; and test -d "$target"
+        cd "$target"
+    end
+end
+function gws
+    git_worktree_switch $argv
+    set -l target (cat /tmp/git_worktree_switch_target 2>/dev/null)
+    if test -n "$target"; and test -d "$target"
+        cd "$target"
+    end
+end
+
 # greeting
 function fish_greeting
 end
