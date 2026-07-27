@@ -63,11 +63,13 @@ alias ......='cd ../../../../..'
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
 alias gs='git status --short'
 alias gd='git diff'
+alias gdd='git diff HEAD~1..HEAD'
 alias gds='git diff --staged'
 alias ga='git add'
 alias gA='git add -A'
 alias gap='git add --patch'
 alias gac='git add -A; git commit -m '
+alias gqp='git add -A && git commit -m "update ⚡️" && git pull && git push'
 alias gc='git commit -m'
 alias gp='git push'
 alias gu='git pull --rebase'
@@ -80,8 +82,9 @@ alias gsw='git switch'
 alias gsc='git switch -c'
 alias grecent='$EDITOR $(gitrecent | fzf --preview="bat --color=always {}")'
 alias gw='git worktree'
+alias gwa='git worktree add'
 alias gwl='git worktree list'
-alias gwl='git worktree prune'
+alias gwp='git worktree prune'
 alias gwr='git worktree remove'
 
 # Find
@@ -107,7 +110,11 @@ alias pbcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*\$//' | wl-copy"
 alias pbpaste='wl-paste'
 alias rr='gio trash'
 alias trash='gio trash'
-# alias pwdcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*$//' | pbcopy"
+alias pwdcopy="pwd | pbcopy"
+
+# OpenRGB
+alias rgbset='openrgb --device 0 --mode static --color'
+alias rgblist='openrgb --list-devices'
 
 # Kernel info
 alias jctl='journalctl'
@@ -152,10 +159,6 @@ alias pm_deps='pactree'
 alias pm_rdeps='pactree -r'
 # Paru .. Interactive reverse deps (Required By) via fzf
 alias pm_reqby='expac -Q "%n" | fzf --preview="expac -Q -l \"\n\" \"%R\" {}"'
-
-# OpenRGB
-alias rgbset='openrgb --device 0 --mode static --color'
-alias rgblist='openrgb --list-devices'
 
 # Paru .. Full system upgrade (pacman + flatpak)
 alias pm_upgrade='paru -Syu && flatpak update -y'
