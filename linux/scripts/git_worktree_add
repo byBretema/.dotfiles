@@ -31,8 +31,7 @@ if [[ -z "$selection" ]]; then
   height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 3 ))
 
   echo
-  gum style --bold "▌ git worktree add"
-  selection=$(gum filter --height=$height --placeholder="Choose a branch..." <<< "$entries")
+  selection=$(gum filter --height=$height --header="▌ git worktree add" --placeholder="Choose a branch..." <<< "$entries")
   [[ -z "$selection" ]] && {
     selection=$(gum input --placeholder " New branch name...")
     [[ -z "$selection" ]] && gum style "cancelled" && exit 1
