@@ -41,7 +41,7 @@ export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export EDITOR=helix
 
-# --- gum UI (Catppuccin Mocha / lavender accent) -------------------------------
+# --- gum UI (Catppuccin Mocha / lavender accent) ------------------------------
 
 export GUM_CHOOSE_CURSOR_FOREGROUND="#b4befe"
 export GUM_CHOOSE_HEADER_FOREGROUND="#89b4fa"
@@ -61,6 +61,7 @@ export GUM_FILE_SELECTED_FOREGROUND="#b4befe"
 export GUM_FILE_SYMLINK_FOREGROUND="#a6e3a1"
 
 export GUM_FILTER_HEADER_FOREGROUND="#89b4fa"
+export GUM_FILTER_INDICATOR="•>"
 export GUM_FILTER_INDICATOR_FOREGROUND="#b4befe"
 export GUM_FILTER_MATCH_FOREGROUND="#89b4fa"
 export GUM_FILTER_PLACEHOLDER_FOREGROUND="#45475a"

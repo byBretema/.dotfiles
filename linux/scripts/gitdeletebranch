@@ -2,51 +2,46 @@
 source ".bash_common"
 guard__is_git
 
-
-################################################################################
-### Parse args
-################################################################################
-
-#! Help
-
-usage() {
-    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
-    echo ""
-    echo "Options:"
-    echo "  -f            Force local delete"
-    echo "  -v            Enable verbose for git-trace/curl"
-    echo "  -h | --help   Show this message"
-    echo "  --            Extra args after this"
-    exit 1
-}
-
-#! Defaults
-
 local_delete_flag="-d"
-
-#! Process options
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
         -f          ) shift; local_delete_flag="-D";;
         -v          ) shift; GIT_TRACE=1; GIT_CURL_VERBOSE=1;;
-        -h | --help ) shift; usage ;;
+        -h | --help ) shift;
+            echo "Usage: $script_name [options]"
+            echo ""
+            echo "Options:"
+            echo "  -f            Force local delete"
+            echo "  -v            Enable verbose for git-trace/curl"
+            echo "  -h | --help   Show this message"
+            exit 1;;
         --          ) shift; break ;;
         *           ) break ;;
     esac
 done
 
+branches=$(git branch --format='%(refname:short)' | grep -vE '^(main|master|release)$')
+[[ -z "$branches" ]] && gum style "no deletable branches" && exit 1
 
-################################################################################
-### Execution
-################################################################################
+count=$(echo "$branches" | grep -c .)
+height=$(( (count < 12 ? count : 12) + 3 ))
 
-branch=$(git branch --format='%(refname:short)' | grep -vE 'main|master|release' | choose_one -p "Choose a branch")
-required_var "${branch}"
+echo
+gum style --bold "▌ git delete branch"
 
-log_header "Deleting branch ${branch}"
-printf "└── Delete local? [y/N] "; read -n1; echo
-[[ $REPLY =~ ^[Yy]$ ]] && git branch $local_delete_flag "${branch}"
+branch=$(gum filter --height=$height --placeholder="Choose a branch to delete..." <<< "$branches")
+[[ -z "$branch" ]] && gum style "cancelled" && exit 1
 
-printf "└── Delete remote? [y/N] "; read -n1; echo
-[[ $REPLY =~ ^[Yy]$ ]] && git push origin --progress --delete "${branch}"
+echo
+gum style --bold "  $branch"
+git log -1 --format='%C(auto)%h %an %ar%n%C(auto)%s' "$branch" 2>/dev/null | sed 's/^/  /'
+echo
+
+if gum confirm "Delete local branch $branch?"; then
+  git branch $local_delete_flag "$branch"
+fi
+
+if gum confirm "Delete remote branch origin/$branch?"; then
+  git push origin --progress --delete "$branch"
+fi
