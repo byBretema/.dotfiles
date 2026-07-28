@@ -1,0 +1,49 @@
+# --- Secrets / Credentials ----------------------------------------------------
+
+*.key
+*.pem
+*.p12
+*.pfx
+*.cert
+*.crt
+*_rsa
+*_dsa
+*_ed25519
+*.pub
+credentials
+.aws/
+.gcp/
+.ssh/
+*.secret
+secrets/
+.env
+.env.*
+*.token
+*.auth
+
+# --- OS junk ------------------------------------------------------------------
+
+.DS_Store
+.DS_Store?
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+Desktop.ini
+*.lnk
+$RECYCLE.BIN/
+.Trash-*/
+
+# --- Editor swap / backup -----------------------------------------------------
+
+*.swp
+*.swo
+*~
+
+# --- Archives -----------------------------------------------------------------
+
+*.zip
+*.tar.gz
+*.tgz
+*.rar
+*.7z

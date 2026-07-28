@@ -12,6 +12,7 @@ fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/profile/aliases"
+alias fuuuck='set cmd (history search --max 1); and gum confirm --default=false "Re-run as SUDO: $cmd"; and eval sudo $cmd'
 
 # --- Functions ----------------------------------------------------------------
 

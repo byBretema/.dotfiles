@@ -104,7 +104,10 @@
 	defaultBranch = main
 
 [safe]
-	directory = *
+	directory = ~/dev/*
+	directory = ~/omi/*
+	directory = ~/agents/*
+	directory = ~/.dotfiles
 
 [credential]
 	helper = manager-core

@@ -13,6 +13,7 @@ export PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/profile/aliases"
+alias fuuuck='cmd=$(fc -ln -1); gum confirm --default=false "Re-run as SUDO: $cmd" && eval sudo "$cmd"'
 
 # --- Functions ----------------------------------------------------------------
 

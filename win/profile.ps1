@@ -37,11 +37,19 @@ function rmrf() {
     Remove-Item -Recurse -Force $args 2>$null
 }
 
-function download_to_temp([string]$url, [string]$name = "") {
+function download_to_temp([string]$url, [string]$name = "", [string]$expectedHash = "") {
 	if ($name.Length -lt 1) { $name = $url.Split("/")[-1] }
 	Write-Host "@ Downloading : $name"
 	$tmp_file = "${env:TEMP}\$name"
     _wget $url $tmp_file
+    if ($expectedHash) {
+        $actualHash = (Get-FileHash $tmp_file -Algorithm SHA256).Hash
+        if ($actualHash -ne $expectedHash.ToUpper()) {
+            Remove-Item $tmp_file -Force
+            throw "Hash mismatch for $name! Expected $expectedHash, got $actualHash"
+        }
+        Write-Host "@ Hash verified : $name"
+    }
 	return $tmp_file
 }
 

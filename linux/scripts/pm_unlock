@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+source ".bash_common"
+
+if pidof pacman > /dev/null; then
+    log_error "pacman is running, aborting"
+    exit 1
+fi
+
+sudo rm /var/lib/pacman/db.lck
+log_info "pacman DB lock removed"

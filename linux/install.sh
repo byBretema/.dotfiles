@@ -1,4 +1,4 @@
-# !/usr/bin/env bash
+#!/usr/bin/env bash
 
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &>/dev/null && pwd)
 source "${script_path}/scripts/.bash_common"
@@ -33,7 +33,7 @@ link_config_files() {
 
     # Zsh
     ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
-    ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"
+    # ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"  # uncomment if you drop fish and want zshenv
 
     # Ghostty
     dst_dir=$(mkdir_ret "${config_path}/ghostty")
