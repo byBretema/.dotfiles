@@ -1,4 +1,4 @@
-format = "$directory $git_branch $git_status\n$character"
+format = "$directory ${custom.gbr} $git_status\n$character"
 
 right_format = "$cmd_duration"
 
@@ -29,4 +29,10 @@ show_milliseconds = true
 format = '(yellow)[$duration]($style)'
 
 [git_branch]
-format = "[$branch]($style)"
+disabled = true
+
+[custom.gbr]
+command = "git_branch_or_symbol"
+when = "true"
+style = "bold purple"
+format = "[$output]($style)"
