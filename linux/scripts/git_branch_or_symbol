@@ -1,6 +1,32 @@
 #!/usr/bin/env bash
+source ".bash_common"
+
+is_git || { printf "" && return 0; }
+
+pwd_base="$(basename "$PWD")"
+
+toplevel=$(git rev-parse --show-toplevel 2>/dev/null)
+repo_name="$(basename "$toplevel")"
+is_worktree() {
+  git worktree list | tr -s ' ' | cut -d ' ' -f3 | tr -d '[]' | grep -qxF "$repo_name"
+}
+is_worktree && repo_name="$(basename $(dirname "$toplevel"))"
+show_repo() {
+  [[ "$repo_name" != "$pwd_base" ]]
+}
+
 branch=$(git rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+show_branch() {
+  [[ "$branch" != "$pwd_base" ]]
+}
 
-[[ "$branch" != "$(basename "$PWD")" ]] && output="($branch)" || output="(git)"
+out=""
 
-printf "$output"
+skip_tag=''
+sep=""
+show_repo && show_branch && sep="::"
+
+show_repo   && out="$repo_name"
+show_branch && out="${out:-$skip_tag}$sep$branch" || out+="$sep$skip_tag"
+
+printf "($out)"

@@ -1,4 +1,4 @@
-format = "$directory ${custom.gbr} $git_status\n$character"
+format = "$directory ${custom.git_info} $git_status\n$character"
 
 right_format = "$cmd_duration"
 
@@ -15,7 +15,7 @@ format = "$symbol "
 
 [directory]
 truncation_length = 1
-# truncate_to_repo = true
+truncate_to_repo = true
 format = "[$path]($style)"
 
 [time]
@@ -31,7 +31,7 @@ format = '(yellow)[$duration]($style)'
 [git_branch]
 disabled = true
 
-[custom.gbr]
+[custom.git_info]
 command = "git_branch_or_symbol"
 when = "true"
 style = "bold purple"

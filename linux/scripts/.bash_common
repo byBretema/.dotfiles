@@ -76,7 +76,7 @@ done
 ################################################################################
 
 is_git() {
-  required_cmd "git"
+  is_cmd "git" || return 1
   git rev-parse --is-inside-work-tree > /dev/null 2>&1
 }
 guard__is_git() {
