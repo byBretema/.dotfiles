@@ -23,12 +23,14 @@ get_branches() {
     sort -u
 }
 
+git worktree prune
+
 selection="$1"
 if [[ -z "$selection" ]]; then
 
   entries=$(get_branches)
   count=$(echo "$entries" | grep -c .)
-  height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 3 ))
+  height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 4 ))
 
   echo
   selection=$(gum filter --height=$height --header="▌ git worktree add" --placeholder="Choose a branch..." <<< "$entries")

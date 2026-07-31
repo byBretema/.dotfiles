@@ -17,14 +17,17 @@ parent_dir=$(dirname "$(git rev-parse --show-toplevel)")
 
 entries=$(git worktree list | while read -r path hash rest; do
   name=$(basename "$path")
+  mtime=$(stat -c %Y "$path" 2>/dev/null || echo 0)
   case "$rest" in
-    *detached*) echo "$name  [detached]" ;;
-    *)          echo "$name" ;;
+    *detached*) printf "%s\t%s\t[detached]\n" "$mtime" "$name" ;;
+    *)          printf "%s\t%s\n" "$mtime" "$name" ;;
   esac
-done)
+done | sort -rn | cut -f2-)
 
 count=$(echo "$entries" | grep -c .)
-height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 3 ))
+height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 4 ))
+
+git worktree prune
 
 echo
   selection=$(gum filter --height=$height --header="▌ git worktree switch" --placeholder="Choose a worktree..." <<< "$entries")
