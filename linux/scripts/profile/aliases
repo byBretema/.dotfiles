@@ -18,7 +18,7 @@ alias qcc='qtcreator CMakeLists.txt >/dev/null 2>/dev/null'
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M"'
 alias now_file='date "+%Y-%m-%d_%H-%M"'
-alias gpu_toggle='python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
+alias gpu_toggle='sudo python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
 
 # Langs
 alias py="python"
