@@ -1,0 +1,37 @@
+#!/usr/bin/env bash
+# Usage: git_repo_info [DIR]
+# Prints "(repo::branch)", "(repo)", "(branch)", "()" or "" (not a git repo)
+# Same interpolation logic previously in git_branch_or_symbol:
+# repo/branch are omitted when they equal the directory name.
+
+dir="${1:-$PWD}"
+
+git -C "$dir" rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf ""; exit 0; }
+
+pwd_base="$(basename "$dir")"
+
+toplevel=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
+repo_name="$(basename "$toplevel")"
+is_worktree() {
+  git -C "$dir" worktree list | tr -s ' ' | cut -d ' ' -f3 | tr -d '[]' | grep -qxF "$repo_name"
+}
+is_worktree && repo_name="$(basename "$(dirname "$toplevel")")"
+show_repo() {
+  [[ "$repo_name" != "$pwd_base" ]]
+}
+
+branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+show_branch() {
+  [[ "$branch" != "$pwd_base" ]]
+}
+
+out=""
+
+skip_tag=''
+sep=""
+show_repo && show_branch && sep="::"
+
+show_repo   && out="$repo_name"
+show_branch && out="${out:-$skip_tag}$sep$branch" || out+="$sep$skip_tag"
+
+printf "($out)"

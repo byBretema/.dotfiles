@@ -1,8 +1,10 @@
 #!/bin/bash
 # https://www.nerdfonts.com/cheat-sheet + vaaleyard/tmux-dotbar
 
-window_icon="${1:-}"
-window_path="${2:+  $2}"
+[[ $# < 1 ]] && { printf "??"; exit 0; }
+
+window_icon="$1"
+window_path="$2"
 
 case "$window_icon" in
 ssh) icon='󰌘' ;;
@@ -32,4 +34,10 @@ hyperfine) icon='' ;;
 *) icon="$window_icon" ;;
 esac
 
-printf "${icon:+ $icon}$window_path"
+git_info=""
+if [[ -n "${2:-}" ]]; then
+  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
+  git_info="  $( git_repo_info_tmux "$window_path" )"
+fi
+
+printf "${icon:+ $icon}$git_info"

@@ -1,0 +1,32 @@
+#!/usr/bin/env bash
+
+dir="${1:-$PWD}"
+dir_base="$(basename $dir)"
+
+git -C "$dir" rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf "$dir_base"; exit 0; }
+
+toplevel=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
+repo_name="$(basename "$toplevel")"
+is_worktree() {
+  git -C "$dir" worktree list | tr -s ' ' | cut -d ' ' -f3 | tr -d '[]' | grep -qxF "$repo_name"
+}
+is_worktree && repo_name="$(basename "$(dirname "$toplevel")")"
+show_repo() {
+  [[ "$repo_name" != "$dir_base" ]]
+}
+
+branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+show_branch() {
+  [[ "$branch" != "$dir_base" ]]
+}
+
+out=""
+
+pre=""
+post=""
+show_repo && show_branch && {
+  pre="$dir_base ("
+  post=")"
+}
+
+printf "$pre$repo_name::$branch$post"
