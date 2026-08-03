@@ -9,6 +9,7 @@ fish_add_path "$DOTFILES_SCRIPTS" 2>/dev/null
 fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/.cargo/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
+fish_add_path "$HOME/.local/share/pnpm/bin" 2>/dev/null
 
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/profile/aliases"
