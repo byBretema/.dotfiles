@@ -61,31 +61,41 @@ alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
 # Git
+
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
+
 alias gs='git status --short'
 alias gd='git diff'
 alias gdd='git diff HEAD~1..HEAD'
 alias gds='git diff --staged'
+
 alias ga='git add'
 alias gA='git add -A'
 alias gap='git add --patch'
 alias gac='git add -A; git commit -m '
 
 alias gc='git commit -m'
+
 alias gp='git push'
 alias gu='git pull --rebase'
-alias gl='git log --all --graph --pretty=format:"%C(magenta)%h %C(black) %an  %ar%C(green) %D%n%C(auto)%s%n"'
+
+alias gl='git lg'
+alias gla='git lg --all'
+
 alias gb='git branch'
 alias gba='git branch -a'
+
 alias gi='git init'
 alias gcl='git clone'
+
 alias gsw='git switch'
 alias gsc='git switch -c'
-alias grecent='$EDITOR $(gitrecent | fzf --preview="bat --color=always {}")'
+
 alias gw='git worktree'
 alias gwl='git worktree list'
 alias gwp='git worktree prune'
 alias gwr='git worktree remove'
+
 
 # Find
 alias ff='fd --hidden --no-ignore-vcs | rg -i'

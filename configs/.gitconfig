@@ -132,8 +132,7 @@
 	sc    = switch -c
 	sww   = !bname=$(git branch | fzf) && git sw "${bname#* }"
 
-	lol   = log --graph --pretty=oneline --decorate=full --all
-	lg    = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %C(bold blue)<%an>%Creset' --abbrev-commit --date=relative --all
+	lg    = log --graph --pretty=format:'%C(yellow)%h %C(yellow)· %C(green)%ar %C(yellow)· %C(bold blue)%an%C(auto)%d%n%C(auto)%s%n'
 
 	ac    = !git add -A && git commit -m
 
