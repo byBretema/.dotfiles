@@ -151,4 +151,31 @@ Then log out and back in (or reboot) for the PAM config to take effect.
 ls /usr/lib/security/pam_gnome_keyring.so
 ```
 
+### Still prompting once per login? Mask the socket
+
+Even with the PAM config above, apps kept asking for the keyring password once per login. Root cause: the user systemd unit `gnome-keyring-daemon.socket` (enabled by preset) binds `/run/user/$UID/keyring/control` when the systemd user manager starts. PAM's `auto_start` then spawns its daemon instance, which connects to that socket → systemd activates the service **without the login password**, and PAM's instance exits (`discover_other_daemon: 1`) without passing the password. Keyring daemon runs, but `login.keyring` stays locked.
+
+Fix: mask the socket so PAM spawns the daemon itself with the login password:
+
+```shell
+systemctl --user mask gnome-keyring-daemon.socket
+```
+
+**Mask alone is not enough on re-login.** The systemd user manager persists across logout/login (`KillUserProcesses=no`), so a socket that was already active keeps listening even after masking (masking only blocks future starts). Stop the units too (or reboot — a fresh user manager won't start the masked socket):
+
+```shell
+systemctl --user stop gnome-keyring-daemon.socket gnome-keyring-daemon.service
+systemctl --user daemon-reload
+```
+
+Then log out and back in. Expected after re-login: `systemctl --user status gnome-keyring-daemon.service` shows **inactive** (daemon now runs as a PAM child, not a systemd unit) — that is correct.
+
+Verify the daemon is not systemd-owned:
+
+```shell
+ps -o ppid= -p $(pgrep gnome-keyring-daemon)   # not the systemd --user PID
+```
+
+If it *still* prompts once: `login.keyring`'s password ≠ login password (keyring predates a password change). Fix via Seahorse → login keyring → Change Password (set to login password), or delete `~/.local/share/keyrings/login.keyring` — PAM re-creates it with the login password (saved secrets lost).
+
 ```
