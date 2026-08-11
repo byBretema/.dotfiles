@@ -40,8 +40,32 @@ after-delay.timeout = 1100
 
 [editor.statusline]
 separator = "·"
-left  = ["mode", "file-name", "spinner", "read-only-indicator", "file-modification-indicator"]
-right = ["file-type", "file-encoding", "file-line-ending", "position", "diagnostics", "workspace-diagnostics"]
+left = [
+  "mode",
+  "file-name",
+  "spinner",
+  "read-only-indicator",
+  "file-modification-indicator",
+]
+right = [
+  "register",
+  "spacer",
+  "spacer",
+  "spacer",
+  "file-type",
+  "separator",
+  "file-encoding",
+  "file-line-ending",
+  "separator",
+  "position",
+  "separator",
+  "primary-selection-length",
+  "separator",
+  "file-indent-style",
+  "separator",
+  "diagnostics",
+  "workspace-diagnostics",
+]
 mode.normal = "N"
 mode.insert = "I"
 mode.select = "S"
@@ -177,7 +201,12 @@ pagedown = "no_op"
 # Git Blame of current line
 "d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 # Opens git-ui
-"9" = [ ":write-all", ":insert-output lazygit >/dev/tty", ":redraw", ":reload-all", ]
+"9" = [
+  ":write-all",
+  ":insert-output lazygit >/dev/tty",
+  ":redraw",
+  ":reload-all",
+]
 
 [keys.normal.'+']
 # > Editor/LSP/Buffers Utils
@@ -264,4 +293,3 @@ pagedown = "no_op"
 "A-l" = "@]"
 # More confy acces to switch case
 "A-c" = "switch_case"
-

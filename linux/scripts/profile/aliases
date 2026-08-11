@@ -1,5 +1,6 @@
 
-# Tools
+# --- Tools ---
+
 alias j="jobs"
 alias oc="opencode"
 alias bot='pushd $HOME/botline && opencode'
@@ -20,10 +21,14 @@ alias now='date "+%d/%m/%Y %H:%M"'
 alias now_file='date "+%Y-%m-%d_%H-%M"'
 alias gpu_toggle='sudo python "$DOTFILES/linux/scripts/py/gpu_toggle.py"'
 
-# Langs
+alias ytd='yt-dlp'
+
+# --- Langs ---
+
 alias py="python"
 
-# List
+# --- List ---
+
 alias l='eza -a --icons auto --git -s type --hyperlink auto'
 alias l1='l -1'
 alias ll='l -l --no-user'
@@ -33,7 +38,8 @@ alias lt1='l -T --level=1'
 alias lt2='l -T --level=2'
 alias lt3='l -T --level=3'
 
-# Nav
+# --- Navigation ---
+
 alias h='history'
 
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
@@ -60,7 +66,7 @@ alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
 
-# Git
+# --- Git ---
 
 alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
 
@@ -96,82 +102,94 @@ alias gwl='git worktree list'
 alias gwp='git worktree prune'
 alias gwr='git worktree remove'
 
+# --- Find / Pickers ---
 
-# Find
 alias ff='fd --hidden --no-ignore-vcs | rg -i'
 alias ffi='fd | rg -i'
-
-# Picker
 alias fff='fzf --preview="bat --color=always {}"'
 
-# Job
+# --- Job(s) ---
+
 alias omid='pushd $(omi -d)'
 alias omis='pushd $(omi -s)'
 
-# On prev command
-alias wii='which $(fc -ln | tail -1)'
+# --- Others ---
 
-# On last return
+# alias wii='which $(fc -ln | tail -1)'
 # alias cdd='which $(fc -ln | tail -1)'
 
-# System
+# --- System ---
+
 alias pbcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*\$//' | wl-copy"
 alias pbpaste='wl-paste'
 alias rr='gio trash'
 alias trash='gio trash'
 alias pwdcopy="pwd | pbcopy"
 
-# OpenRGB
+# --- OpenRGB ---
+
 alias rgbset='openrgb --device 0 --mode static --color'
 alias rgblist='openrgb --list-devices'
 
-# Kernel info
+# --- Kernel info ---
 alias jctl='journalctl'
 alias qctl='journalctl -p 3 -xb'
 
-# Paru
+# --- Pacman Helpers ---
+
 alias pm='paru --bottomup'
 alias pmy='pm --noconfirm'
 alias pmyy='pm --noconfirm --skipreview'
 alias pmiy='paru --noconfirm -S'
 alias pmiyy='paru --noconfirm --skipreview -S'
 
-# Paru .. Recent installed packages  (from CachyOS default zsh config)
+## Recent packages
 alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
-# Paru .. Recent installed packages  (from CachyOS default zsh config)
+
+## Big packages
 alias pm_big="expac -H M '%m\t%n' | sort -h | nl"
 
-# Paru .. Remove package recursive and don't save
+## Remove a package
 alias pm_remove='sudo pacman -Rsn'
 
-# Paru .. Update everything
+##  Update everything
 alias pm_update='paru -Syu'
-# Paru .. List explicitly installed packages
+
+##  List explicitly installed packages
 alias pm_list='pacman -Qe'
-# Paru .. List orphan packages
+
+##  List orphan packages
 alias pm_orphans='pacman -Qdt'
-# Paru .. List files owned by a package
+
+##  List files owned by a package
 alias pm_files='pacman -Ql'
-# Paru .. Package info
+
+##  Package info
 alias pm_info='pacman -Qi'
-# Paru .. Search installed packages
+
+##  Search installed packages
 alias pm_search='pacman -Qs'
-# Paru .. Which package owns a file
+
+##  Which package owns a file
 alias pm_owns='pacman -Qo'
 
-# Paru .. Dependency tree of a package
+##  Dependency tree of a package
 alias pm_deps='pactree'
-# Paru .. Reverse dependency tree (what depends on a package)
+
+##  Reverse dependency tree (what depends on a package)
 alias pm_rdeps='pactree -r'
-# Paru .. Interactive reverse deps (Required By) via fzf
+
+##  Interactive reverse deps (Required By) via fzf
 alias pm_reqby='expac -Q "%n" | fzf --preview="expac -Q -l \"\n\" \"%R\" {}"'
 
-# Paru .. Full system upgrade (pacman + flatpak)
+##  Full system upgrade (pacman + flatpak)
 alias pm_upgrade='paru -Syu && flatpak update -y'
 
-# Paru .. Cleanup cache
+##  Cleanup cache
 alias pm_clean_cache='sudo pacman -Sc'
-# Paru .. Cleanup all cache (incl installed)
+
+##  Cleanup all cache (incl installed)
 alias pm_clean_cache_all='sudo pacman -Scc'
-# Paru .. Remove orphan packages
+
+##  Remove orphan packages
 alias pm_clean_orphans='sudo pacman -Rns $(pacman -Qdtq)'
