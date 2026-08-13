@@ -1,22 +1,19 @@
 {
   "$schema": "https://opencode.ai/config.json",
-  "model": "opencode/deepseek-v4-flash-free",
   "agent": {
-    "build":          { "variant": "max" },
-    "plan":           { "variant": "max" },
-    "general":        { "variant": "max" },
-    "explore":        { "variant": "max" }
-  },
-  "provider": {},
-  "permission": {
-    "external_directory": {
-      "~/agents/**": "allow",
-      "~/.dotfiles/**": "allow"
+    "build": {
+      "variant": "max"
+    },
+    "explore": {
+      "variant": "max"
+    },
+    "general": {
+      "variant": "max"
+    },
+    "plan": {
+      "variant": "max"
     }
   },
-  "lsp": false,
-  "formatter": false,
-  "share": "disabled",
   "autoupdate": false,
   "compaction": {
     "prune": false
@@ -25,5 +22,23 @@
     "batch_tool": false,
     "continue_loop_on_deny": false
   },
-  "plugin": ["./plugin/auto-agents.ts"]
+  "formatter": false,
+  "instructions": [
+    "~/.config/opencode/AGENTS.md"
+  ],
+  "lsp": false,
+  "model": "opencode/deepseek-v4-flash-free",
+  "permission": {
+    "external_directory": {
+      "/tmp/**": "allow",
+      "~/.dotfiles/**": "allow",
+      "~/agents/**": "allow",
+      "~/dev/dani/**": "allow"
+    }
+  },
+  "plugin": [
+    // "./plugin/auto-agents.ts"
+  ],
+  "provider": {},
+  "share": "disabled"
 }
