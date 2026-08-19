@@ -1,18 +1,18 @@
-#
-# Typ(o)ed @byBretema
-#
+# Gently typ(o)ed @byBretema
+
 # NOTES:
 # For iso/us keyboards, replace any 'ñ' with ';'
 
 theme = "bretema"
 
-# --- EDITOR -------------------------------------------------------------------
 
 [editor]
+
 # Tough opinions
 mouse = true
 default-yank-register = "+"
 smart-tab.enable = false
+
 # Visuals
 true-color = true
 cursorline = true
@@ -21,22 +21,26 @@ bufferline = "never"
 rulers = [80, 100, 120]
 line-number = "relative"
 end-of-line-diagnostics = "hint"
+
 # Completions
 auto-pairs = false
 completion-timeout = 5
 completion-replace = true
 completion-trigger-len = 1
+
 # File behaviors
 default-line-ending = "lf"
 insert-final-newline = true
 trim-trailing-whitespace = true
+
 # goto_word -> home-row centric + no qpzm (low pinky movement)
 jump-label-alphabet = "jfkdlsñaurieownvmc"
 
-[editor.auto-save]
-focus-lost = true
-# after-delay.enable = true
-# after-delay.timeout = 1100
+# other key settings
+auto-save.focus-lost = true
+soft-wrap.enable = true
+whitespace.render = "none"
+inline-diagnostics.cursor-line = "warning"
 
 [editor.statusline]
 separator = "·"
@@ -70,12 +74,6 @@ mode.normal = "N"
 mode.insert = "I"
 mode.select = "S"
 
-[editor.soft-wrap]
-enable = true
-
-[editor.whitespace]
-render = "none"
-
 [editor.whitespace.characters]
 space = "·"
 nbsp = "⍽"
@@ -99,9 +97,6 @@ hidden = false
 git-ignore = true
 git-global = true
 git-exclude = true
-
-[editor.inline-diagnostics]
-cursor-line = "warning"
 
 [editor.lsp]
 display-messages = true
@@ -183,10 +178,10 @@ g.k = "goto_next_diag"
 # Calls custom script: Switch between file-pairs .cpp/.hpp, .frag/.vert, ...
 o = ":open %sh{hx_switch_cpp %{buffer_name}}"
 
-# Double tap space to access global search
-" " = "global_search"
+# 'l' for faster access to: global search
+"l" = "global_search"
 
-# 'ñ' for faster access to : actions
+# 'ñ' for faster access to: colon ':' actions
 "ñ" = "@:"
 
 # File Explorer - Dir
