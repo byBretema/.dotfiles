@@ -167,6 +167,7 @@ link_config_files() {
     mkdir -p "${config_path}/yazi/flavors"
     ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
     ln -srf "${my_configs}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
+    ln -srf "${my_configs}/yazi/yazi.toml" "${dst_dir}/yazi.toml"
 
     # --- Wallpapers ---
     log_header "Linking Wallpapers"

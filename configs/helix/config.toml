@@ -35,8 +35,8 @@ jump-label-alphabet = "jfkdlsñaurieownvmc"
 
 [editor.auto-save]
 focus-lost = true
-after-delay.enable = true
-after-delay.timeout = 1100
+# after-delay.enable = true
+# after-delay.timeout = 1100
 
 [editor.statusline]
 separator = "·"
@@ -111,10 +111,11 @@ display-progress-messages = true
 # auto-document-highlight = true
 
 
-# --- KEYs ---------------------------------------------------------------------
-
 [keys.normal]
-# > [keys.normal] and [keys.select] block.
+
+# >>> [keys.normal] and [keys.select] block <<<
+#-------------------------------------------------------------------------------
+
 # Disable
 up = "no_op"
 down = "no_op"
@@ -124,56 +125,75 @@ home = "no_op"
 end = "no_op"
 pageup = "no_op"
 pagedown = "no_op"
-# Replace defaults
-"d" = "delete_selection_noyank"
-"c" = "change_selection_noyank"
-"F12" = "delete_selection"
-# Word-wide shortcut
-"M" = "@miwm"
-"Y" = "@miwy"
-# Subwords motions
-"W" = "move_next_sub_word_start"
-"B" = "move_prev_sub_word_start"
-"E" = "move_next_sub_word_end"
-# Move line up/down
-"A-j" = '@X"m<F12>"mp'
-"A-k" = '@X"m<F12>k"mP'
-# Handy brackets in Spanish keyboard
-"A-h" = "@["
-"A-l" = "@]"
-# More confy acces to switch case
-"A-c" = "switch_case"
 
-# > [keys.normal] Only
-# Navigate between changes in current file: J->down->next / K->up->prev
-"A-K" = "goto_prev_change"
-"A-J" = "goto_next_change"
+# Replace defaults
+d = "delete_selection_noyank"
+c = "change_selection_noyank"
+F12 = "delete_selection"
+
+# Word-wide shortcut
+M = "@miwm"
+Y = "@miwy"
+
+# Subwords motions
+W = "move_next_sub_word_start"
+B = "move_prev_sub_word_start"
+E = "move_next_sub_word_end"
+
+# Move line up/down
+A-j = '@X"m<F12>"mp'
+A-k = '@X"m<F12>k"mP'
+
+# Handy brackets in Spanish keyboard
+A-h = "@["
+A-l = "@]"
+
+# More confy acces to switch case
+A-c = "switch_case"
+
+# >>> [keys.normal] Only <<<
+#-------------------------------------------------------------------------------
+
 # Use 'esc' to unselect multiple cursors
-"esc" = ["collapse_selection", "keep_primary_selection"]
+esc = ["collapse_selection", "keep_primary_selection", ":write-all"]
+
+# Navigate between changes in current file: J->down->next / K->up->prev
+A-K = "goto_prev_change"
+A-J = "goto_next_change"
+
 # Scooter for symbol rename in the whole project
-"C-r" = [
+C-r = [
   ":write-all",
   ":insert-output scooter --no-stdin >/dev/tty",
   ":redraw",
   ":reload-all",
 ]
 
-[keys.normal.g]
-# > Extends GoTo actions
-"j" = "goto_prev_diag"
-"k" = "goto_next_diag"
-# "A-j" = "goto_prev_change"
-# "A-k" = "goto_next_change"
+# >>> Extends GoTo actions <<<
+#-------------------------------------------------------------------------------
+
+g.j = "goto_prev_diag"
+g.k = "goto_next_diag"
 
 [keys.normal.space]
-# > Extends Space actions
-# 'l' for faster access to Global
-"l" = "global_search"
+
+# >>> Extends Space actions <<<
+#-------------------------------------------------------------------------------
+
+# Calls custom script: Switch between file-pairs .cpp/.hpp, .frag/.vert, ...
+o = ":open %sh{hx_switch_cpp %{buffer_name}}"
+
+# Double tap space to access global search
+" " = "global_search"
+
 # 'ñ' for faster access to : actions
 "ñ" = "@:"
-# File Explorer - Dir + Yazi
-"E" = "file_explorer_in_current_buffer_directory"
-"e" = [
+
+# File Explorer - Dir
+E = "file_explorer_in_current_buffer_directory"
+
+# File Explorer - Yazi
+e = [
   ":write-all",
   ":sh rm -f /tmp/hx_yazi.result",
   ':insert-output yazi "%{buffer_name}" --chooser-file=/tmp/hx_yazi.result',
@@ -184,87 +204,122 @@ pagedown = "no_op"
   ":set mouse true",
 ]
 
+# >>> Cpp Utils <<<
+#-------------------------------------------------------------------------------
 
-[keys.normal.'0']
-# > Cpp Utils
 # Calls custom script: Duplicates C++ files with a different name, not ideal but handy
-"d" = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
-# To paste a cpp method signature of a method into the hpp file
-"p" = "@pglF(F:;vT dA;<esc>"
-# Calls custom script: Switch between file-pairs .cpp/.hpp, .frag/.vert, ...
-"0" = ":open %sh{hx_switch_cpp %{buffer_name}}"
+c.d = "@:open %sh{hx_duplicate_cpp %{buffer_name}  }<C-b><C-b>"
 
-[keys.normal.'9']
-# > Git Utils
+# To paste a cpp method signature of a method into the hpp file
+c.p = "@pglF(F:;vT dA;<esc>"
+
+# >>> Git Utils <<<
+#-------------------------------------------------------------------------------
+
+# Default: Changed file picker
+g.g = ["changed_file_picker"]
+
 # Shows git blame on the status bar
-"b" = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+g.b = ":echo %sh{git blame -L %{cursor_line},+1 %{buffer_name}}"
+
 # Git Blame of current line
-"d" = [":vsplit-new", ":lang diff", ":insert-output git diff"]
+g.d = [":vsplit-new", ":lang diff", ":insert-output git diff"]
+
 # Opens git-ui
-"9" = [
+g.t = [
   ":write-all",
   ":insert-output lazygit >/dev/tty",
   ":redraw",
   ":reload-all",
 ]
 
+
 [keys.normal.'+']
-# > Editor/LSP/Buffers Utils
+
+# >>> Editor/LSP/Buffers Utils <<<
+#-------------------------------------------------------------------------------
+
 # Quit
-"q" = ":q"
-"Q" = ":q!"
+q = ":q"
+Q = ":q!"
+
 # Config
-"c" = ":config-open"
-"r" = ":config-reload"
+c = ":config-open"
+r = ":config-reload"
+
 # Lang/LSP
-"l" = "@:lang "
-"L" = ":lsp-restart"
-"s" = ":toggle lsp.auto-signature-help"
+l = "@:lang "
+L = ":lsp-restart"
+s = ":toggle lsp.auto-signature-help"
+
 # Theme
-"t" = "@:theme "
+t = "@:theme "
+
 # Copy buffer name in many ways
-"n" = "@:insert-output echo %{buffer_name}<ret>yu"
-"N" = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
-"f" = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
-"F" = "@:insert-output echo $(pwd)/%{buffer_name}:%{cursor_line}<ret>yu"
+n = "@:insert-output echo %{buffer_name}<ret>yu"
+N = "@:insert-output echo %{buffer_name}:%{cursor_line}<ret>yu"
+f = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
+F = "@:insert-output echo $(pwd)/%{buffer_name}:%{cursor_line}<ret>yu"
+
 # Toggles
-"i" = ":toggle lsp.display-inlay-hints"
-"b" = ":toggle bufferline never always"
-"h" = ":toggle whitespace.render none all"
-"." = [":toggle file-picker.git-ignore", ":toggle file-picker.ignore"]
+i = ":toggle lsp.display-inlay-hints"
+b = ":toggle bufferline never always"
+h = ":toggle whitespace.render none all"
+'.' = [":toggle file-picker.git-ignore", ":toggle file-picker.ignore"]
+
 
 [keys.normal.'ñ']
-# > Text/File Utils + YAZI quick access
+
+# >>> Text/File Utils + YAZI quick access <<<
+#-------------------------------------------------------------------------------
+
 # Quick access
-" " = ':o "~/notes.md"'
-"ñ" = 'goto_word'
-"f" = ":format"
-"s" = "search"
+' ' = ':o "~/notes.md"'
+'ñ' = 'goto_word'
+f = ":format"
+s = "search"
+
 # Save/Close, Capital == force
-"w" = ":w"
-"W" = ":w!"
-"a" = ":wa"
-"A" = ":wa!"
-"x" = ":bc"
-"X" = ":bc!"
+w = ":w"
+W = ":w!"
+a = ":wa"
+A = ":wa!"
+x = ":bc"
+X = ":bc!"
+
 # Buffers stuff
-"r" = ":reload-all"
+r = ":reload-all"
+
 # Duplicate line up/down
-"j" = '@X"dy"dp'
-"k" = '@X"dy"dP'
+j = '@X"dy"dp'
+k = '@X"dy"dP'
+
 # Actions over a whole word
-"l" = "@miw*"
-"L" = "@miw<A-*>"
-"y" = "@miwy"
-"c" = "@miwc"
-"R" = "@miwR"
-"d" = "@miw*v"           # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
-"D" = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
-"m" = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
-"M" = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
+l = "@miw*"
+L = "@miw<A-*>"
+y = "@miwy"
+c = "@miwc"
+R = "@miwR"
+d = "@miw*v"           # Mimics Ctrl+D of VSCode, select word and enter select mode, then press 'n' to iterate
+D = "@miw*%s<ret>"     # Similar to 'd' but select all matches in the file
+m = "@miw<A-*>v"       # Same as 'd' but matches partial text not full words only
+M = "@miw<A-*>%s<ret>" # Same as 'm' but select all matches in the file
+
+
+[keys.insert]
+
+# >>> [keys.insert] block <<<
+#-------------------------------------------------------------------------------
+
+# Escape also saves
+esc = ["normal_mode", ":write-all"]
+
 
 [keys.select]
-# > [keys.normal] and [keys.select] block.
+
+# >>> [keys.normal] and [keys.select] block <<<
+#-------------------------------------------------------------------------------
+
 # Disable
 up = "no_op"
 down = "no_op"
@@ -274,22 +329,34 @@ home = "no_op"
 end = "no_op"
 pageup = "no_op"
 pagedown = "no_op"
+
 # Replace defaults
-"d" = "delete_selection_noyank"
-"c" = "change_selection_noyank"
-"F12" = "delete_selection"
+d = "delete_selection_noyank"
+c = "change_selection_noyank"
+F12 = "delete_selection"
+
 # Word-wide shortcut
-"M" = "@miwm"
-"Y" = "@miwy"
+M = "@miwm"
+Y = "@miwy"
+
 # Subwords motions
-"W" = "move_next_sub_word_start"
-"B" = "move_prev_sub_word_start"
-"E" = "move_next_sub_word_end"
+W = "move_next_sub_word_start"
+B = "move_prev_sub_word_start"
+E = "move_next_sub_word_end"
+
 # Move line up/down
-"A-j" = '@X"m<F12>"mp'
-"A-k" = '@X"m<F12>k"mP'
+A-j = '@X"m<F12>"mp'
+A-k = '@X"m<F12>k"mP'
+
 # Handy brackets in Spanish keyboard
-"A-h" = "@["
-"A-l" = "@]"
+A-h = "@["
+A-l = "@]"
+
 # More confy acces to switch case
-"A-c" = "switch_case"
+A-c = "switch_case"
+
+# >>> [keys.select] block <<<
+#-------------------------------------------------------------------------------
+
+# Escape also saves
+esc = ["normal_mode", ":write-all"]

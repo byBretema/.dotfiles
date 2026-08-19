@@ -31,6 +31,7 @@ alias py="python"
 
 alias l='eza -a --icons auto --git -s type --hyperlink auto'
 alias l1='l -1'
+alias L='l -1'
 alias ll='l -l --no-user'
 alias lt='l -T'
 alias k='clear && ll'
