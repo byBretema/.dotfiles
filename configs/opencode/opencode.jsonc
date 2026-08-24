@@ -1,7 +1,17 @@
 {
   "$schema": "https://opencode.ai/config.json",
+  //--------------------------------------------------------------------------------
+  // CORE MODEL & ROUTING
+  //--------------------------------------------------------------------------------
+  "model": "opencode/x-preview-f-free",
+  // "small_model": "ollama/qwen3.5:4b",
   "default_agent": "plan",
-
+  "instructions": [
+    "~/.config/opencode/AGENTS.md"
+  ],
+  //--------------------------------------------------------------------------------
+  // LOCAL PROVIDERS (OLLAMA)
+  //--------------------------------------------------------------------------------
   "provider": {
     "ollama": {
       "npm": "@ai-sdk/openai-compatible",
@@ -15,68 +25,9 @@
       }
     }
   },
-
-  "instructions": ["~/.config/opencode/AGENTS.md"],
-  "model": "opencode/x-preview-f-free",
-  "small_model": "ollama/qwen3.5:4b",
-
-  "permission": {
-    "external_directory": {
-      "/tmp/**": "allow",
-      "~/.dotfiles/**": "allow",
-      "~/agents/**": "allow",
-      "~/dev/dani/**": "allow"
-    },
-    "bash": {
-      "rm *": "deny",
-
-      "make*": "deny",
-      "cmake*": "deny",
-      "g++*": "deny",
-      "clang*": "deny",
-      "gcc*": "deny",
-      "ninja*": "deny",
-
-      "go *": "deny",
-      "cargo *": "deny",
-      "rustc *": "deny",
-      "odin *": "deny",
-      "zig *": "deny",
-
-      "python*": "deny",
-      "python3*": "deny",
-      "uv *": "ask",
-      "pip *": "ask",
-      "poetry *": "ask",
-
-      "psql*": "ask",
-      "sqlite*": "ask",
-      "mysql*": "ask",
-
-      "git commit*": "deny",
-      "git push*": "deny",
-      "git rebase*": "deny",
-      "git reset*": "deny",
-      "git clean*": "deny"
-    },
-    "read": {
-      "**/Dockerfile*": "ask",
-
-      "*.env": "deny",
-      "*.env.*": "deny",
-
-      "**/*.tf": "deny",
-      "**/*.tfvars": "deny",
-      "terraform/**": "deny",
-
-      ".github/workflows/**": "deny",
-      ".gitlab-ci.yml": "deny",
-
-      "k8s/**": "deny",
-      "helm/**": "deny"
-    }
-  },
-
+  //--------------------------------------------------------------------------------
+  // AGENT BEHAVIORS & LIMITS
+  //--------------------------------------------------------------------------------
   "agent": {
     "build": {
       "variant": "max",
@@ -99,26 +50,104 @@
       "steps": 2
     },
     "title": {
+      "variant": "low",
       "steps": 1
     },
     "summary": {
+      "variant": "low",
       "steps": 1
     }
   },
-
+  //--------------------------------------------------------------------------------
+  // SECURITY & GUARDRAILS
+  //--------------------------------------------------------------------------------
+  "permission": {
+    "external_directory": {
+      "/tmp/**": "allow",
+      "~/.dotfiles/**": "allow",
+      "~/agents/**": "allow",
+      "~/dev/dani/**": "allow"
+    },
+    "read": {
+      // Secrets & Configs
+      "*.env": "deny",
+      "*.env.*": "deny",
+      "**/Dockerfile*": "ask",
+      // Infrastructure as Code
+      "**/*.tf": "deny",
+      "**/*.tfvars": "deny",
+      "terraform/**": "deny",
+      ".github/workflows/**": "deny",
+      ".gitlab-ci.yml": "deny",
+      "k8s/**": "deny",
+      "helm/**": "deny"
+    },
+    "bash": {
+      // Bash Exceptions (/tmp/ Context Sandbox)
+      "cd /tmp/* && make*": "ask",
+      "cd /tmp/* && cmake*": "ask",
+      "cd /tmp/* && g++*": "ask",
+      "cd /tmp/* && clang*": "ask",
+      "cd /tmp/* && gcc*": "ask",
+      "cd /tmp/* && ninja*": "ask",
+      "cd /tmp/* && go *": "ask",
+      "cd /tmp/* && cargo *": "ask",
+      "cd /tmp/* && rustc *": "ask",
+      "cd /tmp/* && odin *": "ask",
+      "cd /tmp/* && zig *": "ask",
+      "cd /tmp/* && python*": "ask",
+      "cd /tmp/* && python3*": "ask",
+      // Privilege Escalation
+      "sudo *": "deny",
+      "su -*": "deny",
+      // Destructive Actions
+      "rm *": "deny",
+      // Git Mutations
+      "git commit*": "deny",
+      "git push*": "deny",
+      "git rebase*": "deny",
+      "git reset*": "deny",
+      "git clean*": "deny",
+      // Databases
+      "psql*": "ask",
+      "sqlite*": "ask",
+      "mysql*": "ask",
+      // Package Managers
+      "uv *": "ask",
+      "pip *": "ask",
+      "poetry *": "ask",
+      // Global Execution Denies
+      "make*": "deny",
+      "cmake*": "deny",
+      "g++*": "deny",
+      "clang*": "deny",
+      "gcc*": "deny",
+      "ninja*": "deny",
+      "go *": "deny",
+      "cargo *": "deny",
+      "rustc *": "deny",
+      "odin *": "deny",
+      "zig *": "deny",
+      "python*": "deny",
+      "python3*": "deny"
+    }
+  },
+  //--------------------------------------------------------------------------------
+  // CONTEXT & MEMORY MANAGEMENT
+  //--------------------------------------------------------------------------------
   "compaction": {
     "prune": true
   },
-
   "watcher": {
     "ignore": [
+      // IDE & Caches
       ".git/**",
       ".cache/**",
       ".clangd/**",
       ".vs/**",
       ".vscode/**",
       ".idea/**",
-
+      // Build Outputs
       "build/**",
       "build-*/**",
       "cmake-build-*/**",
@@ -126,7 +155,10 @@
       "CMakeCache.txt",
       "bin/**",
       "out/**",
-
+      "dist/**",
+      "coverage/**",
+      ".next/**",
+      // C/C++ Artifacts
       "**/*.o",
       "**/*.obj",
       "**/*.d",
@@ -138,12 +170,20 @@
       "**/*.dylib",
       "**/*.dll",
       "**/*.exe",
-
-      "dist/**",
-      "coverage/**",
-      ".next/**",
+      // Rust / Cargo
+      "target/**",
+      "Cargo.lock",
+      // Python
+      "__pycache__/**",
+      "**/*.pyc",
+      ".venv/**",
+      "venv/**",
+      // Zig
+      ".zig-cache/**",
+      "zig-out/**",
+      // Node
       "node_modules/**",
-
+      // IaC
       "**/*.tf",
       "**/*.tfvars",
       "terraform/**",
@@ -153,13 +193,13 @@
       "helm/**"
     ]
   },
-
+  //--------------------------------------------------------------------------------
+  // APPLICATION & PRIVACY SETTINGS
+  //--------------------------------------------------------------------------------
   "share": "disabled",
-
   "lsp": false,
   "formatter": false,
   "autoupdate": false,
-
   "experimental": {
     "batch_tool": true,
     "continue_loop_on_deny": false
