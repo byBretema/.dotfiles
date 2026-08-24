@@ -1,0 +1,167 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "default_agent": "plan",
+
+  "provider": {
+    "ollama": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Ollama (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:11434/v1"
+      },
+      "models": {
+        "qwen3.5:4b": {},
+        "qwen3.5:9b-q4_K_M": {}
+      }
+    }
+  },
+
+  "instructions": ["~/.config/opencode/AGENTS.md"],
+  "model": "opencode/x-preview-f-free",
+  "small_model": "ollama/qwen3.5:4b",
+
+  "permission": {
+    "external_directory": {
+      "/tmp/**": "allow",
+      "~/.dotfiles/**": "allow",
+      "~/agents/**": "allow",
+      "~/dev/dani/**": "allow"
+    },
+    "bash": {
+      "rm *": "deny",
+
+      "make*": "deny",
+      "cmake*": "deny",
+      "g++*": "deny",
+      "clang*": "deny",
+      "gcc*": "deny",
+      "ninja*": "deny",
+
+      "go *": "deny",
+      "cargo *": "deny",
+      "rustc *": "deny",
+      "odin *": "deny",
+      "zig *": "deny",
+
+      "python*": "deny",
+      "python3*": "deny",
+      "uv *": "ask",
+      "pip *": "ask",
+      "poetry *": "ask",
+
+      "psql*": "ask",
+      "sqlite*": "ask",
+      "mysql*": "ask",
+
+      "git commit*": "deny",
+      "git push*": "deny",
+      "git rebase*": "deny",
+      "git reset*": "deny",
+      "git clean*": "deny"
+    },
+    "read": {
+      "**/Dockerfile*": "ask",
+
+      "*.env": "deny",
+      "*.env.*": "deny",
+
+      "**/*.tf": "deny",
+      "**/*.tfvars": "deny",
+      "terraform/**": "deny",
+
+      ".github/workflows/**": "deny",
+      ".gitlab-ci.yml": "deny",
+
+      "k8s/**": "deny",
+      "helm/**": "deny"
+    }
+  },
+
+  "agent": {
+    "build": {
+      "variant": "max",
+      "steps": 8
+    },
+    "plan": {
+      "variant": "high",
+      "steps": 6
+    },
+    "explore": {
+      "variant": "default",
+      "steps": 4
+    },
+    "general": {
+      "variant": "default",
+      "steps": 4
+    },
+    "compaction": {
+      "variant": "default",
+      "steps": 2
+    },
+    "title": {
+      "steps": 1
+    },
+    "summary": {
+      "steps": 1
+    }
+  },
+
+  "compaction": {
+    "prune": true
+  },
+
+  "watcher": {
+    "ignore": [
+      ".git/**",
+      ".cache/**",
+      ".clangd/**",
+      ".vs/**",
+      ".vscode/**",
+      ".idea/**",
+
+      "build/**",
+      "build-*/**",
+      "cmake-build-*/**",
+      "CMakeFiles/**",
+      "CMakeCache.txt",
+      "bin/**",
+      "out/**",
+
+      "**/*.o",
+      "**/*.obj",
+      "**/*.d",
+      "**/*.o.d",
+      "**/*.a",
+      "**/*.lib",
+      "**/*.so",
+      "**/*.so.*",
+      "**/*.dylib",
+      "**/*.dll",
+      "**/*.exe",
+
+      "dist/**",
+      "coverage/**",
+      ".next/**",
+      "node_modules/**",
+
+      "**/*.tf",
+      "**/*.tfvars",
+      "terraform/**",
+      ".github/workflows/**",
+      ".gitlab-ci.yml",
+      "k8s/**",
+      "helm/**"
+    ]
+  },
+
+  "share": "disabled",
+
+  "lsp": false,
+  "formatter": false,
+  "autoupdate": false,
+
+  "experimental": {
+    "batch_tool": true,
+    "continue_loop_on_deny": false
+  }
+}

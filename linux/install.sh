@@ -87,7 +87,8 @@ link_config_files() {
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     # Main stuff
     ln -srf "${my_configs}/opencode/AGENTS.md" "${dst_dir}/AGENTS.md"
-    ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
+    # ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
+    ln -srf "${my_configs}/opencode/opencode.jsonc" "${dst_dir}/opencode.jsonc"
     ln -srf "${my_configs}/opencode/tui.json" "${dst_dir}/tui.json"
     # Commands
     ln -srfn "${my_configs}/opencode/commands" "${dst_dir}/commands"
