@@ -31,11 +31,13 @@
   "agent": {
     "build": {
       "variant": "max",
-      "steps": 8
+      "steps": 8,
+      "color": "#CBA6F7"
     },
     "plan": {
       "variant": "high",
-      "steps": 6
+      "steps": 6,
+      "color": "#EBCB8B"
     },
     "explore": {
       "variant": "default",
