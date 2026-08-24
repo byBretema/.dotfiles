@@ -19,11 +19,16 @@
 
   "share": "disabled",
 
+  "model": "opencode/x-preview-f-free",
+
   "agent": {
     "build": { "variant": "max" },
-    "explore": { "variant": "max" },
-    "general": { "variant": "max" },
-    "plan": { "variant": "max" }
+    "plan": { "variant": "high" },
+    "explore": { "variant": "default" },
+    "general": { "variant": "default" },
+    "compaction": { "variant": "default" },
+    "title": { "variant": "low" },
+    "summary": { "variant": "low" }
   },
 
   "experimental": {
