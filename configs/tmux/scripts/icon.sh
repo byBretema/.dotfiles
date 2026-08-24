@@ -11,6 +11,7 @@ ssh) icon='󰌘' ;;
 bat) icon='󰈈' ;;
 vim | nvim | helix) icon='' ;;
 opencode) icon='' ;;
+ollama) icon='' ;;
 fish | bash | zsh) icon='' ;;
 python | python3 | .venv/bin/python*) icon='' ;;
 git | lazygit) icon='' ;;
