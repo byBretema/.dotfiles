@@ -31,33 +31,35 @@
   "agent": {
     "build": {
       "variant": "max",
-      "steps": 8,
+      "steps": 12,
       "color": "#CBA6F7"
     },
     "plan": {
       "variant": "high",
-      "steps": 6,
+      "steps": 8,
       "color": "#EBCB8B"
     },
     "explore": {
       "variant": "default",
-      "steps": 4
+      "steps": 6
     },
     "general": {
       "variant": "default",
-      "steps": 4
+      "steps": 6
     },
     "compaction": {
       "variant": "default",
-      "steps": 2
+      "steps": 4
     },
     "title": {
-      "variant": "low",
-      "steps": 1
+      // "variant": "low",
+      // "steps": 1
+      "enabled": false
     },
     "summary": {
-      "variant": "low",
-      "steps": 1
+      // "variant": "low",
+      // "steps": 1
+      "enabled": false
     }
   },
   //--------------------------------------------------------------------------------
