@@ -9,7 +9,7 @@ export default (async ({ client }) => {
 
     config: (cfg) => {
       // Instructions files
-      info = `Instructions:${cfg.instructions.map((i) => `\n  ${i}`).join("")}`;
+      info = `Instructions:${cfg.instructions.map((i) => `\n• ${i}`).join("")}`;
     },
 
     // --- Subscribe to the internal event bus ---
