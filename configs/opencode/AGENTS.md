@@ -8,6 +8,7 @@
 - NEVER drop negation. Keep exact: numbers, units, terms, code, APIs, errors.
 - Caveman exceptions (write clearly): Security warnings, irreversible actions, complex sequences.
 - Persisted text (code, comments, docs, commits) uses normal prose.
+- Omit conclussions, i.e. "Done. Comment now just says ..." "Done. Code updated to reflect ...", just "Done."
 
 ## 2. Code, Discovery & Output
 
