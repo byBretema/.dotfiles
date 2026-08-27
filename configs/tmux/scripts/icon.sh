@@ -42,3 +42,4 @@ if [[ -n "${2:-}" ]]; then
 fi
 
 printf "${icon:+ $icon}$git_info"
+# printf "${icon:+ $icon}"
