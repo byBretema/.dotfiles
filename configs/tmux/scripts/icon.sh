@@ -41,5 +41,8 @@ if [[ -n "${2:-}" ]]; then
   git_info="  $( git_repo_info_tmux "$window_path" )"
 fi
 
-printf "${icon:+ $icon}$git_info"
-# printf "${icon:+ $icon}"
+if [[ -f "$HOME/.local/state/tmux/git_info" ]]; then
+  printf "  $icon$git_info"
+else
+  printf " $icon"
+fi
