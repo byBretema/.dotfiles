@@ -10,6 +10,7 @@ fish_add_path "$HOME/.local/bin" 2>/dev/null
 fish_add_path "$HOME/.cargo/bin" 2>/dev/null
 fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
 fish_add_path "$HOME/.local/share/pnpm/bin" 2>/dev/null
+fish_add_path "$HOME/go/bin" 2>/dev/null
 
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/profile/aliases"
@@ -70,8 +71,8 @@ end
 
 fish_add_path "$HOME/omi/scripts/bash" 2>/dev/null
 
-if status is-interactive; and test -x "/usr/bin/micromamba"
-    set -gx MAMBA_EXE "/usr/bin/micromamba"
+if status is-interactive; and test -x /usr/bin/micromamba
+    set -gx MAMBA_EXE /usr/bin/micromamba
     set -gx MAMBA_ROOT_PREFIX "$HOME/.local/share/mamba"
     $MAMBA_EXE shell hook --shell fish --root-prefix $MAMBA_ROOT_PREFIX | source
 end

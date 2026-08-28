@@ -20,6 +20,11 @@ mkdir_ret() {
     echo "$1"
 }
 
+pnpm_installed() {
+    # 'pnpm list -g' exits 0 even when the package is missing, so match the name@version line
+    pnpm list -g "$1" 2>/dev/null | grep -qF "$1@"
+}
+
 link_config_files() {
 
     # --- Shell ---
@@ -98,6 +103,10 @@ link_config_files() {
     ln -srfn "${my_configs}/opencode/skills" "${dst_dir}/skills"
     # Plugins
     ln -srfn "${my_configs}/opencode/plugin" "${dst_dir}/plugin"
+
+    # Mocha Report (HTML renderer)
+    mkdir -p "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")"
+    ln -srf "${my_configs}/opencode/scripts/mocha-report" "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")/mocha-report"
 
     # --- Environment ---
     dst_dir=$(mkdir_ret "${config_path}/environment.d")
@@ -197,7 +206,8 @@ process_packages() {
         [[ -n $pkg ]] || continue
         [[ $line != \#* ]] || continue
         eval "$check_cmd \"$pkg\"" &>/dev/null
-        { [[ $invert_check == false && $? -eq 0 ]] || [[ $invert_check == true && $? -ne 0 ]]; } && continue
+        # local status=$?
+        { [[ $invert_check == false && $status -eq 0 ]] || [[ $invert_check == true ]]; } && continue
         log_header ">>> Package: $pkg"
         $action_cmd "$pkg"
     done 3<"$list_file"
@@ -211,6 +221,9 @@ install_packages() {
 
     process_packages "$script_path/flatpak_install.conf" \
         "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]" false
+
+    process_packages "$script_path/pnpm_install.conf" \
+        "pnpm_installed" "pnpm add -g" "[^a-zA-Z0-9@\/._-]" false
 
     # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
     ncspot_entry="0.0.0.0 apresolve.spotify.com"
@@ -228,6 +241,9 @@ remove_packages() {
     process_packages "$script_path/flatpak_remove.conf" \
         "flatpak info" "flatpak -y uninstall" "[^a-zA-Z0-9.]" true
     flatpak uninstall --unused -y
+
+    process_packages "$script_path/pnpm_remove.conf" \
+        "pnpm_installed" "pnpm remove -g" "[^a-zA-Z0-9@\/._-]" true
 }
 
 system_update() {

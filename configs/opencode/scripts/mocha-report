@@ -1,0 +1,131 @@
+#!/usr/bin/env node
+const fs = require("fs");
+const path = require("path");
+
+let marked;
+try {
+  marked = require("marked");
+} catch {
+  marked = loadMarkedFromPnpmGlobal();
+}
+
+function loadMarkedFromPnpmGlobal() {
+  // Node resolves this script through its symlink, so require() cannot see
+  // pnpm's global store. Search the global root as a fallback.
+  const { execSync } = require("child_process");
+  const { readdirSync, existsSync } = require("fs");
+  try {
+    const roots = [
+      execSync("pnpm root -g", { encoding: "utf8" }).trim(),
+      path.join(process.env.HOME || "", ".local/share/pnpm/global"),
+    ];
+    for (const root of roots) {
+      if (!root || !existsSync(root)) continue;
+      const dirs = [root];
+      for (const entry of readdirSync(root, { withFileTypes: true })) {
+        if (entry.isDirectory()) dirs.push(path.join(root, entry.name));
+      }
+      const candidates = [];
+      for (const dir of dirs) {
+        candidates.push(path.join(dir, "node_modules", "marked"));
+        for (const entry of readdirSync(dir, { withFileTypes: true })) {
+          if (entry.isDirectory()) {
+            candidates.push(path.join(dir, entry.name, "node_modules", "marked"));
+          }
+        }
+      }
+      for (const candidate of candidates) {
+        if (existsSync(candidate)) return require(candidate);
+      }
+    }
+  } catch {}
+  console.error("[mocha-report] Missing dependency. Run: pnpm add -g marked");
+  process.exit(1);
+}
+
+const inputFile = process.argv[2];
+if (!inputFile || !inputFile.endsWith(".md")) {
+  console.error("Usage: mocha-report <file.md>");
+  process.exit(1);
+}
+
+if (!fs.existsSync(inputFile)) {
+  console.error(`[mocha-report] File not found: ${inputFile}`);
+  process.exit(1);
+}
+
+let markdown = fs.readFileSync(inputFile, "utf-8");
+
+// Convert GitHub alerts into styled UI cards
+markdown = markdown.replace(
+  /^>\s*\[!(NOTE|INFO|WARNING|DANGER|IMPORTANT)\]\s*(.*(?:\n>.*)*)/gim,
+  (match, type, content) => {
+    const cleanContent = content.replace(/^>\s?/gm, "");
+    const typeLower = type.toLowerCase();
+    return `<div class="ui-card alert-${typeLower}"><div class="ui-card-title">${type}</div><div class="ui-card-body">${cleanContent}</div></div>\n`;
+  },
+);
+
+const rawHtml = marked.parse(markdown);
+const title = path.basename(inputFile, ".md").replace(/_/g, " ");
+
+const template = `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>${title}</title>
+<style>
+:root {
+  --bg: #1e1e2e; --mantle: #181825; --crust: #11111b;
+  --text: #cdd6f4; --subtext: #a6adc8; --surface: #313244;
+  --blue: #89b4fa; --green: #a6e3a1; --red: #f38ba8;
+  --yellow: #f9e2af; --mauve: #cba6f7; --peach: #fab387;
+}
+* { box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: var(--bg); color: var(--text);
+  line-height: 1.6; padding: 2rem; max-width: 900px; margin: 0 auto;
+}
+h1, h2, h3 { color: var(--blue); margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid var(--surface); padding-bottom: 0.3rem; }
+h1 { font-size: 2rem; color: var(--text); border: none; }
+h3 { color: var(--mauve); border: none; }
+p, ul, ol { margin-bottom: 1.5rem; color: var(--subtext); }
+li { margin-bottom: 0.5rem; }
+code {
+  font-family: 'Fira Code', monospace; font-size: 0.85em;
+  background: var(--surface); color: var(--peach);
+  padding: 0.2rem 0.4rem; border-radius: 4px;
+}
+pre {
+  background: var(--mantle); padding: 1.2rem; border-radius: 8px;
+  overflow-x: auto; border: 1px solid var(--surface); margin-bottom: 1.5rem;
+}
+pre code { background: transparent; padding: 0; color: var(--text); }
+table { width: 100%; border-collapse: collapse; margin-bottom: 2rem; font-size: 0.9rem; }
+th { text-align: left; background: var(--mantle); color: var(--text); padding: 0.8rem; border-radius: 6px 6px 0 0; }
+td { padding: 0.8rem; border-bottom: 1px solid var(--surface); color: var(--subtext); }
+tr:hover td { background: rgba(255,255,255,0.02); }
+.ui-card {
+  background: var(--mantle); border-left: 4px solid var(--surface);
+  border-radius: 6px; padding: 1rem 1.5rem; margin-bottom: 1.5rem;
+}
+.ui-card-title { font-weight: 700; margin-bottom: 0.5rem; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; }
+.ui-card-body { color: var(--subtext); font-size: 0.95rem; margin: 0; }
+.ui-card-body p:last-child { margin-bottom: 0; }
+.alert-note { border-color: var(--blue); } .alert-note .ui-card-title { color: var(--blue); }
+.alert-info { border-color: var(--blue); } .alert-info .ui-card-title { color: var(--blue); }
+.alert-warning { border-color: var(--yellow); } .alert-warning .ui-card-title { color: var(--yellow); }
+.alert-important { border-color: var(--mauve); } .alert-important .ui-card-title { color: var(--mauve); }
+.alert-danger { border-color: var(--red); } .alert-danger .ui-card-title { color: var(--red); }
+</style>
+</head>
+<body>
+${rawHtml}
+</body>
+</html>`;
+
+const outputFile = inputFile.replace(/\.md$/, ".html");
+fs.writeFileSync(outputFile, template);
+console.log(`[mocha-report] ${outputFile}`);

@@ -31,3 +31,9 @@
 - STRICT SANDBOX SYNTAX: You MUST chain sandbox commands exactly like this: `cd /tmp/test_dir && g++ main.cpp` or `cd /tmp/test_dir && python3 test.py`. (Do not use `;` or separate shell calls).
 - FIREWALL: System blocks Git mutations, DB writes, and IaC/env reads. Do NOT attempt them. Use read-only commands for Git/DB.
 - Error handling: Analyze trace, locate exact line, propose fix. Request file if trace lacks context.
+
+## 5. Reports
+
+- Complex/architecture explanations: write Markdown to `~/agents/reports/<title>_<timestamp>.md`.
+- Use standard Markdown (tables, lists, code) and GitHub alerts (`> [!NOTE]`, `> [!WARNING]`, `> [!IMPORTANT]`, `> [!DANGER]`) for emphasis.
+- Run `mocha-report <filepath>` when finished. Outputs styled HTML alongside the .md.
