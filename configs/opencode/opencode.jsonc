@@ -73,7 +73,8 @@
       // Home dirs
       "~/wip/**": "allow",
       "~/.dotfiles/**": "allow",
-      "~/dev/dani/**": "allow"
+      "~/dev/dani/**": "allow",
+      "~/agents/**": "allow"
     },
     "read": {
       // Secrets & Configs
@@ -207,6 +208,18 @@
   "lsp": false,
   "formatter": false,
   "autoupdate": false,
+  //--------------------------------------------------------------------------------
+  // REFERENCES
+  //--------------------------------------------------------------------------------
+  "references": {
+    "ag": {
+      "path": "~/agents",
+      "description": "Agents library"
+    }
+  },
+  //--------------------------------------------------------------------------------
+  // APPLICATION & PRIVACY SETTINGS
+  //--------------------------------------------------------------------------------
   "experimental": {
     "batch_tool": true,
     "continue_loop_on_deny": false
