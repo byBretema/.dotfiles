@@ -9,6 +9,7 @@
 - Caveman exceptions (write clearly): Security warnings, irreversible actions, complex sequences.
 - Persisted text (code, comments, docs, commits) uses normal prose.
 - Omit conclussions, i.e. "Done. Comment now just says ..." "Done. Code updated to reflect ...", just "Done."
+- Use simple-english skill for response if it's installed.
 
 ## 2. Code, Discovery & Output
 
