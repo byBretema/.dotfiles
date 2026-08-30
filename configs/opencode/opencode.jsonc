@@ -3,7 +3,7 @@
   //--------------------------------------------------------------------------------
   // CORE MODEL & ROUTING
   //--------------------------------------------------------------------------------
-  "model": "opencode/x-preview-f-free",
+  // "model": "opencode/x-preview-f-free",
   // "small_model": "ollama/qwen3.5:4b",
   "default_agent": "plan",
   "instructions": [
@@ -46,26 +46,23 @@
   //--------------------------------------------------------------------------------
   "agent": {
     "build": {
-      "variant": "max",
-      "steps": 20,
+      // "variant": "max",
+      "steps": 32,
       "color": "#CBA6F7"
     },
     "plan": {
-      "variant": "high",
-      "steps": 12,
+      // "variant": "high",
+      "steps": 16,
       "color": "#EBCB8B"
     },
     "explore": {
-      "variant": "default",
       "steps": 8
     },
     "general": {
-      "variant": "default",
       "steps": 8
     },
     "compaction": {
-      "variant": "default",
-      "steps": 6
+      "steps": 8
     },
     "title": {
       // "variant": "low",
