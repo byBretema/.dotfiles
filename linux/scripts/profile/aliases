@@ -30,14 +30,14 @@ alias py="python"
 # --- List ---
 
 alias l='eza -a --icons auto --git -s type --hyperlink auto'
-alias l1='l -1'
-alias L='l -1'
 alias ll='l -l --no-user'
-alias lt='l -T'
+alias lll='l -1'
 alias k='clear && ll'
-alias lt1='l -T --level=1'
-alias lt2='l -T --level=2'
-alias lt3='l -T --level=3'
+
+alias t='l -T --ignore-glob=.git'
+alias t1='t --level=1'
+alias tt='t --level=2'
+alias ttt='t --level=3'
 
 # --- Navigation ---
 
