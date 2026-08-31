@@ -4,34 +4,52 @@
 # Same interpolation logic previously in git_branch_or_symbol:
 # repo/branch are omitted when they equal the directory name.
 
-dir="${1:-$PWD}"
+# --- Consts ---
 
-git -C "$dir" rev-parse --is-inside-work-tree > /dev/null 2>&1 || { printf ""; exit 0; }
+IN_DIR="${1:-$PWD}"
+git -C "$IN_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1 || { printf ""; exit 0; }
 
-pwd_base="$(basename "$dir")"
+PWD_BASE="$(basename "$IN_DIR")"
+TOP_LEVEL=$(git -C "$IN_DIR" rev-parse --show-toplevel 2>/dev/null)
 
-toplevel=$(git -C "$dir" rev-parse --show-toplevel 2>/dev/null)
-repo_name="$(basename "$toplevel")"
+# --- Vars ---
+
+mark=""
+repo_name="$(basename "$TOP_LEVEL")"
+branch=$(git -C "$IN_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
+
+# --- Helpers ---
+
 is_worktree() {
-  git -C "$dir" worktree list | tr -s ' ' | cut -d ' ' -f3 | tr -d '[]' | grep -qxF "$repo_name"
+    [[ -d .git/worktrees ]] && [[ -n "$(ls -A .git/worktrees 2>/dev/null)" ]] && return 0
+    [[ -f .git ]] && grep -q 'gitdir:' .git 2>/dev/null && return 0
+    return 1
 }
-is_worktree && repo_name="$(basename "$(dirname "$toplevel")")"
+worktree_branch_match() {
+    git -C "$IN_DIR" worktree list | tr -s ' ' | cut -d ' ' -f3 | tr -d '[]' | grep -qxF "$PWD_BASE"
+}
+
 show_repo() {
-  [[ "$repo_name" != "$pwd_base" ]]
+    [[ "$repo_name" != "$PWD_BASE" ]]
 }
 
-branch=$(git -C "$dir" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 show_branch() {
-  [[ "$branch" != "$pwd_base" ]]
+    [[ "$branch" != "$PWD_BASE" ]]
 }
 
-out=""
+# --- Logic ---
 
-skip_tag=''
+if is_worktree; then
+    repo_name="$(basename "$(dirname "$TOP_LEVEL")")"
+    worktree_branch_match || mark=" [non-worktree]"
+fi
+
 sep=""
+skip_tag=''
 show_repo && show_branch && sep="::"
 
-show_repo   && out="$repo_name"
-show_branch && out="${out:-$skip_tag}$sep$branch" || out+="$sep$skip_tag"
+out=""
+show_repo && out="$repo_name"
+show_branch && out="$out$sep$branch" || out+="$sep"
 
-printf "($out)"
+printf "($out)$mark"
