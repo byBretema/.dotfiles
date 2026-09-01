@@ -69,35 +69,41 @@ alias ......='cd ../../../../..'
 
 # --- Git ---
 
-alias gtop='pushd $(git rev-parse --show-toplevel 2>/dev/null)'
-
+# Movement
+alias gt='pushd $(git rev-parse --show-toplevel 2>/dev/null)' # go to repo root
+# Status
 alias gs='git status --short'
+# Management
+alias gi='git init'
+alias gcl='git clone'
+# Diff
 alias gd='git diff'
 alias gdd='git diff HEAD~1..HEAD'
 alias gds='git diff --staged'
-
+# Add
 alias ga='git add'
 alias gA='git add -A'
 alias gap='git add --patch'
-alias gac='git add -A; git commit -m '
-
+# Commit
+alias gm='git add -A; git commit -m '
 alias gc='git commit -m'
-
+# Push
 alias gp='git push'
+alias gp_nc='git add -A && git commit -m "-"           && git push'
+alias gp_as='git add -A && git commit -m "Agents sync" && git push'
+alias gp_ai='git add -A && git commit -m "AI++"        && git push'
+# Pull
 alias gu='git pull --rebase'
-
+# Log
 alias gl='git lg'
 alias gla='git lg --all'
-
+# Branch
 alias gb='git branch'
 alias gba='git branch -a'
-
-alias gi='git init'
-alias gcl='git clone'
-
+# Switch
 alias gsw='git switch'
 alias gsc='git switch -c'
-
+# Worktrees
 alias gw='git worktree'
 alias gwl='git worktree list'
 alias gwp='git worktree prune'

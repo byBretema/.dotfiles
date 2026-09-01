@@ -24,7 +24,9 @@ Load a task's `context.md` from the `@ag` agents library.
 ## Context Summary Format
 
 After loading, present:
+
 - **Task:** <folder name>
 - **Goal:** <from context.md>
 - **Status:** done / in-progress / blocked items
 - **Next:** <next steps>
+- **Relevant notes:** <other notes or previous research notes from the contex.md relevant to the pending tasks>
