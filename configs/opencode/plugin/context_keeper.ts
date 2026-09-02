@@ -93,14 +93,15 @@ export default (async () => {
       turnCount = 0;
       await saveState();
 
-      output.parts.unshift({
-        id: `ctx-${Date.now()}`,
+      const part: Record<string, unknown> = {
+        id: `prt-${Date.now()}`,
         sessionID: input.sessionID,
-        messageID: input.messageID ?? "",
         type: "text",
         text: INSTRUCTION(activeTask),
         synthetic: true,
-      });
+      };
+      if (input.messageID) part.messageID = input.messageID;
+      output.parts.unshift(part);
     },
   };
 }) satisfies Plugin;

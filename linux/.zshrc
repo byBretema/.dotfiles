@@ -14,6 +14,7 @@ export PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/profile/aliases"
 alias fuuuck='cmd=$(fc -ln -1); gum confirm --default=false "Re-run as SUDO: $cmd" && eval sudo "$cmd"'
+alias gp_msg='git add -A && git commit -m "$*" && git push'
 
 # --- Functions ----------------------------------------------------------------
 

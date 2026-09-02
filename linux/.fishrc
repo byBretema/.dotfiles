@@ -43,6 +43,11 @@ function mkcd -a dir
     mkdir -p "$dir" && pushd "$dir"
 end
 
+# git add + commit + push
+function gp_msg
+    git add -A && git commit -m "$argv" && git push
+end
+
 # yazi
 function y
     set tmp (mktemp -t "yazi-cwd.XXXXXX")
