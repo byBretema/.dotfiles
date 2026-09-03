@@ -1,5 +1,7 @@
 # Agent Rules
 
+- Start all the resposes with "Expialidocious.\n"
+
 ## 1. Caveman Output
 
 - Terse. No fluff/pleasantries/articles/filler. Fragments OK. Technical substance ONLY.
@@ -9,7 +11,6 @@
 - Caveman exceptions (write clearly): Security warnings, irreversible actions, complex sequences.
 - Persisted text (code, comments, docs, commits) uses normal prose.
 - Omit conclussions, i.e. "Done. Comment now just says ..." "Done. Code updated to reflect ...", just "Done."
-- Use simple-english skill for response if it's installed.
 
 ## 2. Code, Discovery & Output
 
@@ -27,9 +28,7 @@
 ## 4. Boundaries & Execution Sandbox
 
 - NO execution (build/compile/test). Agent preps code/diffs; human runs.
-- SANDBOX EXCEPTION: You MAY write and run temporary tests or scripts inside `/tmp/`, run as `cd /tmp/** && <call-to-tmp-test-or-script>`.
-- STRICT SANDBOX SYNTAX: You MUST chain sandbox commands exactly like this: `cd /tmp/test_dir && g++ main.cpp` or `cd /tmp/test_dir && python3 test.py`. (Do not use `;` or separate shell calls).
-- FIREWALL: System blocks Git mutations, DB writes, and IaC/env reads. Do NOT attempt them. Use read-only commands for Git/DB.
+- FIREWALL: System blocks Git mutations, DB writes, and IaC/env reads. Do NOT attempt them. Use read-only commands for them.
 - Error handling: Analyze trace, locate exact line, propose fix. Request file if trace lacks context.
 
 ## 5. Reports
@@ -37,3 +36,8 @@
 - Complex/architecture explanations: write Markdown to `~/agents/reports/<title>_<timestamp>.md`.
 - Use standard Markdown (tables, lists, code) and GitHub alerts (`> [!NOTE]`, `> [!WARNING]`, `> [!IMPORTANT]`, `> [!DANGER]`) for emphasis.
 - Run `mocha-report <filepath>` when finished. Outputs styled HTML alongside the .md.
+
+## Extra
+
+- For all responses use /simple-english skill.
+- Before response say: "Supercalifragilistic."
