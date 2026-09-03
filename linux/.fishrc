@@ -44,7 +44,7 @@ function mkcd -a dir
 end
 
 # git add + commit + push
-function gp_msg
+function gpmsg
     git add -A && git commit -m "$argv" && git push
 end
 

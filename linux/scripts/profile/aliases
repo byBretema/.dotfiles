@@ -46,10 +46,14 @@ alias h='history'
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
 alias kd='pushd $(eza -1 -s created -r | fzf)'
 
-alias ho='pushd $HOME'
+alias ho='cd'
 alias dots='pushd $DOTFILES'
+
 alias dev='pushd $HOME/dev'
+alias devy='pushd $HOME/dev; y'
+
 alias lab='pushd $HOME/dev/_lab'
+alias laby='pushd $HOME/dev/_lab; y'
 
 alias omii='pushd $HOME/omi'
 

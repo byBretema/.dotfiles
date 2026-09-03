@@ -1,2 +1,6 @@
-[manager]
+
+[manager] # yazi < 25
+show_hidden = true
+
+[mgr] # yazi > 25
 show_hidden = true
