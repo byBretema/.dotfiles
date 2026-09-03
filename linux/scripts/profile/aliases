@@ -50,7 +50,6 @@ alias ho='pushd $HOME'
 alias dots='pushd $DOTFILES'
 alias dev='pushd $HOME/dev'
 alias lab='pushd $HOME/dev/_lab'
-alias agents='pushd $HOME/agents'
 
 alias omii='pushd $HOME/omi'
 
@@ -89,9 +88,8 @@ alias gm='git add -A; git commit -m '
 alias gc='git commit -m'
 # Push
 alias gp='git push'
-alias gp_nc='git add -A && git commit -m "-"           && git push'
-alias gp_as='git add -A && git commit -m "Agents sync" && git push'
-alias gp_ai='git add -A && git commit -m "AI++"        && git push'
+alias gpnc='git add -A && git commit -m "-"           && git push'
+alias gpai='git add -A && git commit -m "AI++"        && git push'
 # Pull
 alias gu='git pull --rebase'
 # Log
@@ -108,6 +106,11 @@ alias gw='git worktree'
 alias gwl='git worktree list'
 alias gwp='git worktree prune'
 alias gwr='git worktree remove'
+
+# --- AI bs ---
+
+alias agcd='pushd $HOME/agents'
+alias agsync='agcd; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
 
 # --- Find / Pickers ---
 

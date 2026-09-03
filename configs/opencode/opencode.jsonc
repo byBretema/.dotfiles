@@ -103,25 +103,11 @@
       "helm/**": "deny"
     },
     "bash": {
-      // Bash Exceptions (/tmp/ Context Sandbox)
-      "cd /tmp/* && make*": "ask",
-      "cd /tmp/* && cmake*": "ask",
-      "cd /tmp/* && g++*": "ask",
-      "cd /tmp/* && clang*": "ask",
-      "cd /tmp/* && gcc*": "ask",
-      "cd /tmp/* && ninja*": "ask",
-      "cd /tmp/* && go *": "ask",
-      "cd /tmp/* && cargo *": "ask",
-      "cd /tmp/* && rustc *": "ask",
-      "cd /tmp/* && odin *": "ask",
-      "cd /tmp/* && zig *": "ask",
-      "cd /tmp/* && python*": "ask",
-      "cd /tmp/* && python3*": "ask",
       // Privilege Escalation
       "sudo *": "deny",
       "su -*": "deny",
       // Destructive Actions
-      "rm *": "deny",
+      "rm *": "ask",
       // Git Mutations
       "git commit*": "deny",
       "git push*": "deny",
@@ -148,8 +134,8 @@
       "rustc *": "deny",
       "odin *": "deny",
       "zig *": "deny",
-      "python*": "deny",
-      "python3*": "deny"
+      "python*": "ask",
+      "python3*": "ask"
     }
   },
   //--------------------------------------------------------------------------------
@@ -224,7 +210,7 @@
   // APPLICATION & PRIVACY SETTINGS
   //--------------------------------------------------------------------------------
   "experimental": {
-    "batch_tool": true,
+    "batch_tool": true, // This could save tokens
     "continue_loop_on_deny": false
   }
 }
