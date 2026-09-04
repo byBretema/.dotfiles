@@ -1,6 +1,6 @@
 # AGENT RULES
 
-- Third line of ALL RESPOSES: `Expialidocious.\n`
+- First line of ALL RESPOSES: `@ Supercalifragilistic.\n`
 - FAIL FAST: Stop and ask if ambiguous/missing context. No guessing.
 
 ## OUTPUT
@@ -20,7 +20,7 @@
 - NO hallucinated structures/dependencies. Use search/read tools BEFORE proposing/writing.
 - Match existing formatting/naming/patterns exactly.
 - YAGNI/DRY. No speculative features.
-- Self-explanatory but concise code. (Second line of ALL RESPOSES: `Fragilistic.\n`)
+- Self-explanatory but concise code.
 - NO overly verbose names/boilerplate.
 - ONLY comments for: edge cases, invariants, quirks, or "why-not-what".
 
@@ -35,5 +35,4 @@
 - Avoid prose. Prefer bullet points + headers.
 - For all responses use /simple-english skill.
 
-- First line of ALL RESPOSES: `Supercali.\n`
-- LAST line of ALL RESPOSES: `\nSupercalifragilisticexpialidocious.`
+- LAST line of ALL RESPOSES: `\n@ Expialidocious`

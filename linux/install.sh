@@ -111,9 +111,26 @@ link_config_files() {
     # --- Environment ---
     dst_dir=$(mkdir_ret "${config_path}/environment.d")
     ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
+    ln -srf "${script_path}/assets/env/10-ssh.conf" "${dst_dir}/10-ssh.conf"
 
     # Global environment
     sudo cp "${script_path}/assets/etc/environment" "/etc/environment"
+
+    # --- GNOME Keyring ---
+    # Unmask socket (was masked to /dev/null when using gcr-ssh-agent only)
+    if [[ -L "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket" ]]; then
+        rm "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket"
+        systemctl --user daemon-reload 2>/dev/null || true
+        systemctl --user enable gnome-keyring-daemon.socket 2>/dev/null || true
+    fi
+    # Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
+    dst_dir=$(mkdir_ret "${config_path}/autostart")
+    ln -srf "${script_path}/assets/autostart/gnome-keyring-secrets.desktop" "${dst_dir}/gnome-keyring-secrets.desktop"
+    ln -srf "${script_path}/assets/autostart/gnome-keyring-pkcs11.desktop" "${dst_dir}/gnome-keyring-pkcs11.desktop"
+    # PAM unlock: login service holds user session via greetd (Service=login)
+    if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
+        sudo cp "${script_path}/assets/pam/login" /etc/pam.d/login
+    fi
 
     # --- XDG Desktop Portal ---
     dst_dir=$(mkdir_ret "${config_path}/xdg-desktop-portal")
