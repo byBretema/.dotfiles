@@ -88,6 +88,16 @@ link_config_files() {
     dst_dir=$(mkdir_ret "${config_path}/flameshot")
     ln -srf "${my_configs}/flameshot.ini" "${dst_dir}/flameshot.ini"
 
+    # Glow
+    dst_dir=$(mkdir_ret "${config_path}/glow")
+    ln -srf "${my_configs}/glow/glow.yml" "${dst_dir}/glow.yml"
+    dst_dir=$(mkdir_ret "${dst_dir}/themes")
+    ln -srf "${my_configs}/glow/themes/catppuccin-mocha.json" "${dst_dir}/catppuccin-mocha.json"
+
+    # Hunk
+    dst_dir=$(mkdir_ret "${config_path}/hunk")
+    ln -srf "${my_configs}/hunk/config.toml" "${dst_dir}/config.toml"
+
     # --- OpenCode ---
     dst_dir=$(mkdir_ret "${config_path}/opencode")
     # Main stuff

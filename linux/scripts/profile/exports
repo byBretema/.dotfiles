@@ -35,6 +35,9 @@ export FZF_DEFAULT_OPTS=" \
 
 export BAT_THEME="Catppuccin Mocha"
 
+export GLOW_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
+export GLAMOUR_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
+
 export DOTFILES="$HOME/.dotfiles"
 
 export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"

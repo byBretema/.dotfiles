@@ -31,6 +31,13 @@ alias py="python"
 alias l='eza -a --icons auto --git -s type --hyperlink auto'
 alias ll='l -l --no-user'
 alias lll='l -1'
+
+alias lh='l -1 | head -5'
+alias lhh='l -1 | head -10'
+
+alias lt='l -1 | tail -5'
+alias ltt='l -1 | tail -10'
+
 alias k='clear && ll'
 
 alias t='l -T --ignore-glob=.git'
