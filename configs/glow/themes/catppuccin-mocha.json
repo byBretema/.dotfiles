@@ -19,30 +19,43 @@
     "bold": true
   },
   "h1": {
-    "prefix": "▓▓▓ ",
+    "prefix": " ",
     "suffix": " ",
-    "color": "#f38ba8",
+    "color": "#1e1e2e",
+    "background_color": "#f38ba8",
     "bold": true
   },
   "h2": {
-    "prefix": "▓▓▓▓ ",
-    "color": "#fab387"
+    "prefix": "  ",
+    "suffix": " ",
+    "color": "#1e1e2e",
+    "background_color": "#fab387",
+    "bold": true
   },
   "h3": {
-    "prefix": "▓▓▓▓▓ ",
-    "color": "#f9e2af"
+    "prefix": "   ",
+    "suffix": " ",
+    "color": "#1e1e2e",
+    "background_color": "#f9e2af",
+    "bold": true
   },
   "h4": {
-    "prefix": "▓▓▓▓▓▓ ",
-    "color": "#a6e3a1"
+    "prefix": "    ",
+    "suffix": " ",
+    "color": "#1e1e2e",
+    "background_color": "#a6e3a1"
   },
   "h5": {
-    "prefix": "▓▓▓▓▓▓▓ ",
-    "color": "#74c7ec"
+    "prefix": "     ",
+    "suffix": " ",
+    "color": "#1e1e2e",
+    "background_color": "#74c7ec"
   },
   "h6": {
-    "prefix": "▓▓▓▓▓▓▓▓ ",
-    "color": "#b4befe"
+    "prefix": "      ",
+    "suffix": " ",
+    "color": "#1e1e2e",
+    "background_color": "#b4befe"
   },
   "text": {},
   "strikethrough": {
