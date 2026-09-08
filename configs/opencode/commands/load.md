@@ -1,2 +1,1 @@
-Read or create task `~/agents/$ARGUMENTS/context.md`
-Present loaded info, using: `~/.dotfiles/configs/opencode/templates/present_context.md`
+Read or create task `~/agents/$ARGUMENTS/context.md`, present info as `~/.dotfiles/configs/opencode/templates/present_context.md`

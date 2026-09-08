@@ -124,6 +124,7 @@ alias gwr='git worktree remove'
 alias ag='pushd $HOME/agents'
 alias agy='pushd $HOME/agents && y'
 alias agsync='agcd; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
+alias agtree='t $HOME/agents'
 
 # --- Find / Pickers ---
 

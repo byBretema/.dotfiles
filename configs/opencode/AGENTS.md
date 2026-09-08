@@ -1,6 +1,6 @@
 # AGENT RULES
 
-- First line of ALL RESPOSES: `@ Supercalifragilistic.\n`
+- First line of ALL RESPOSES: `> Start`
 - FAIL FAST: Stop and ask if ambiguous/missing context. No guessing.
 
 ## OUTPUT
@@ -35,4 +35,4 @@
 - Avoid prose. Prefer bullet points + headers.
 - For all responses use /simple-english skill.
 
-- LAST line of ALL RESPOSES: `\n@ Expialidocious`
+- LAST line of ALL RESPOSES: `> End`
