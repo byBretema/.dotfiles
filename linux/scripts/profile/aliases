@@ -6,10 +6,10 @@ alias oc="opencode"
 alias bot='pushd $HOME/botline && opencode'
 alias dotfiles='$DOTFILES/linux/install.sh'
 
+# TODO: update this to $EDITOR
 alias hx='helix'
 alias hh='hx .'
 alias hxdoc='hx --health'
-
 alias hxdot='hx $DOTFILES'
 alias hxdiff='hx $(git ls-files -m -o --exclude-standard)'
 
@@ -48,6 +48,7 @@ alias ttt='t --level=3'
 # --- Navigation ---
 
 alias h='history'
+alias yy='yazi'
 
 alias ccd='pushd $(eza -1 -s created -r | fzf)'
 alias kd='pushd $(eza -1 -s created -r | fzf)'
@@ -56,12 +57,13 @@ alias ho='cd'
 alias dots='pushd $DOTFILES'
 
 alias dev='pushd $HOME/dev'
-alias devy='pushd $HOME/dev; y'
+alias devy='pushd $HOME/dev && y'
 
 alias lab='pushd $HOME/dev/_lab'
-alias laby='pushd $HOME/dev/_lab; y'
+alias laby='pushd $HOME/dev/_lab && y'
 
 alias omii='pushd $HOME/omi'
+alias omiy='pushd $HOME/omi && y'
 
 alias daily="hx \"$HOME/ByBretema/Notes/Daily/$(date '+%Y-%m-%d').md\""
 alias jdaily="hx \"$HOME/omi/_sync/daily/$(date '+%Y-%m-%d').md\""
@@ -119,7 +121,8 @@ alias gwr='git worktree remove'
 
 # --- AI bs ---
 
-alias agcd='pushd $HOME/agents'
+alias ag='pushd $HOME/agents'
+alias agy='pushd $HOME/agents && y'
 alias agsync='agcd; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
 
 # --- Find / Pickers ---
