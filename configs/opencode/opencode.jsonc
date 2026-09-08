@@ -83,10 +83,9 @@
       // Sys dirs
       "/tmp/**": "allow",
       // Home dirs
-      "~/wip/**": "allow",
+      "~/dev/**": "allow",
+      "~/agents/**": "allow",
       "~/.dotfiles/**": "allow",
-      "~/dev/dani/**": "allow",
-      "~/agents/**": "allow"
     },
     "read": {
       // Secrets & Configs
