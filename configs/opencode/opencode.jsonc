@@ -13,6 +13,10 @@
   // REFERENCES
   //--------------------------------------------------------------------------------
   "references": {
+    "dots": {
+      "path": "~/.dotfiles",
+      "description": "Dotfiles directory"
+    },
     "ag": {
       "path": "~/agents",
       "description": "Agents library"
@@ -202,7 +206,17 @@
   // APPLICATION & PRIVACY SETTINGS
   //--------------------------------------------------------------------------------
   "share": "disabled",
-  "lsp": false,
+  "lsp": {
+    "clangd": {
+      "command": [
+        "clangd"
+      ],
+      "env": {
+        "OPENCODE_DISABLE_LSP_DOWNLOAD": "true",
+        "CLANGD_ARGS": "--background-index=false"
+      }
+    }
+  },
   "formatter": false,
   "autoupdate": false,
   //--------------------------------------------------------------------------------

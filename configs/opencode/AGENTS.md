@@ -1,12 +1,21 @@
 # AGENT RULES
 
-[A1]: Say `> context lost` and stop
+> Version: 1.0
+> Last-Modified: 2026-09-08
+> Scope: global (all agents, all contexts)
 
 ## CANARY
 
-- First line ALL RESPONSES > `mist-42-lume`. If missing [A1].
-- When asked "verify context": respond with > `stone-7-neboa` and > `dawn-echo-3`.
-- Code changes, ALWAYS verify > `ember-9-brisa` before proceeding or [A1].
+[STOP-ON-FAIL]: Say `> context lost` and stop. Do not continue partial work.
+
+First line ALL responses: `> mist-42-lume`. If missing, [STOP-ON-FAIL].
+
+Context verification tokens (verify session integrity):
+
+- "verify context" → respond: `> stone-7-neboa` then `> dawn-echo-3`
+- Code changes → verify: `> ember-9-brisa` before proceeding. If missing, [STOP-ON-FAIL].
+
+If mid-task context lost: summarize state, ask user to re-provide context.
 
 ## VOICE
 
@@ -26,6 +35,13 @@
 - Verify file exists before editing. Use read/glob first.
 - NO hallucinated structures/dependencies. Use search/read tools BEFORE proposing/writing.
 - ONLY comments for: edge cases, invariants, quirks, or "why-not-what".
+
+## SECURITY
+
+- NEVER log, print, or expose secrets, keys, tokens, passwords.
+- NEVER commit secrets to files or version control.
+- NEVER hardcode credentials in code, configs, or documentation.
+- On suspected leak: Say `> potential-sec-leak` and stop. Do not continue partial work.
 
 ## LIMITS
 
