@@ -8,7 +8,7 @@
 
 [STOP-ON-FAIL]: Say `> context lost` and stop. Do not continue partial work.
 
-First line ALL responses: `> mist-42-lume`. If missing, [STOP-ON-FAIL].
+Begin every response with the literal text `> mist-42-lume` on its own line. If missing, [STOP-ON-FAIL].
 
 Context verification tokens (verify session integrity):
 

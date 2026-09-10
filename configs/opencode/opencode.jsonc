@@ -17,6 +17,14 @@
       "path": "~/.dotfiles",
       "description": "Dotfiles directory"
     },
+    "ocd": {
+      "path": "~/.dotfiles/configs/opencode",
+      "description": "OpenCode config directory inside dotfiles"
+    },
+    "tmpl": {
+      "path": "~/.dotfiles/configs/opencode/templates",
+      "description": "Templates (usually .md) for agents"
+    },
     "ag": {
       "path": "~/agents",
       "description": "Agents library"

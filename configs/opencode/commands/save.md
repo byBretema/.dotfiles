@@ -1,1 +1,1 @@
-Update active task's `context.md` with progress made this session, following `@dots/configs/opencode/templates/update_rules.md`
+Update active task's `*.md` with progress made this session, following `@tmpl/task_update.md`
