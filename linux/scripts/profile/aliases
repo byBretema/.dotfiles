@@ -148,7 +148,8 @@ alias pbcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*\$//' | wl-copy"
 alias pbpaste='wl-paste'
 alias rr='gio trash'
 alias trash='gio trash'
-alias pwdcopy="pwd | pbcopy"
+alias cbwd="pwd | pbcopy"
+alias cbfp="realpathcopy"
 
 # --- OpenRGB ---
 

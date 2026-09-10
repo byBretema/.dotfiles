@@ -1,0 +1,2 @@
+#!/usr/bin/env bash
+realpath "$1" | wl-copy
