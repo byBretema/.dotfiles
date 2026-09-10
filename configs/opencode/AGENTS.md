@@ -1,21 +1,14 @@
 # AGENT RULES
 
 > Version: 1.0
-> Last-Modified: 2026-09-08
+> Last-AI-Modified: 2026-09-08
 > Scope: global (all agents, all contexts)
 
 ## CANARY
 
-[STOP-ON-FAIL]: Say `> context lost` and stop. Do not continue partial work.
-
-Begin every response with the literal text `> mist-42-lume` on its own line. If missing, [STOP-ON-FAIL].
-
-Context verification tokens (verify session integrity):
-
+- First line EVERY RESPONSE: > mist-42-lume
 - "verify context" → respond: `> stone-7-neboa` then `> dawn-echo-3`
-- Code changes → verify: `> ember-9-brisa` before proceeding. If missing, [STOP-ON-FAIL].
-
-If mid-task context lost: summarize state, ask user to re-provide context.
+- Before code changes SAY: > ember-9-brisa
 
 ## VOICE
 
