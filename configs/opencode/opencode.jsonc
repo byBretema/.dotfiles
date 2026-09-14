@@ -214,17 +214,18 @@
   // APPLICATION & PRIVACY SETTINGS
   //--------------------------------------------------------------------------------
   "share": "disabled",
-  "lsp": {
-    "clangd": {
-      "command": [
-        "clangd"
-      ],
-      "env": {
-        "OPENCODE_DISABLE_LSP_DOWNLOAD": "true",
-        "CLANGD_ARGS": "--background-index=false"
-      }
-    }
-  },
+  "lsp": false,
+  // "lsp": {
+  //   "clangd": {
+  //     "command": [
+  //       "clangd"
+  //     ],
+  //     "env": {
+  //       "OPENCODE_DISABLE_LSP_DOWNLOAD": "true",
+  //       "CLANGD_ARGS": "--background-index=false"
+  //     }
+  //   }
+  // },
   "formatter": false,
   "autoupdate": false,
   //--------------------------------------------------------------------------------
