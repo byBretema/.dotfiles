@@ -3,71 +3,71 @@
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &>/dev/null && pwd)
 source "${script_path}/scripts/.bash_common"
 
-###############################################################################
-# Consts
-###############################################################################
 
-my_configs="${script_path}/../configs"
-config_path="$HOME/.config"
-mkdir -p "${config_path}"
+# --- Consts -------------------------------------------------------------------
 
-################################################################################
-### Actions
-################################################################################
+DOT_CONFIGS="${script_path}/../configs"
+
+HOME_CONFIG="$HOME/.config"
+mkdir -p "${HOME_CONFIG}"
+
+
+# --- Actions ------------------------------------------------------------------
 
 mkdir_ret() {
     mkdir -p "$1" >/dev/null 2>&1
     echo "$1"
 }
 
-pnpm_installed() {
-    # 'pnpm list -g' exits 0 even when the package is missing, so match the name@version line
-    pnpm list -g "$1" 2>/dev/null | grep -qF "$1@"
-}
-
 link_config_files() {
 
     # --- Shell ---
-    log_header "Linking config files"
-
-    # Global exports
-    sudo ln -srf "${script_path}/scripts/profile/global_exports" "/etc/profile.d/global_exports"
+    log_header "Linking - Shell stuff"
 
     # Fish
+    log_info "Fish"
     ln -srf "${script_path}/.fishrc" "$HOME/.config/fish/config.fish"
 
     # Zsh
+    log_info "Zsh"
     ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
     # ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"  # uncomment if you drop fish and want zshenv
 
     # Ghostty
-    dst_dir=$(mkdir_ret "${config_path}/ghostty")
-    ln -srf "${my_configs}/ghostty.conf" "${dst_dir}/config"
+    log_info "Ghostty"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/ghostty")
+    ln -srf "${DOT_CONFIGS}/ghostty.conf" "${dst_dir}/config"
 
     # Alacritty
-    dst_dir=$(mkdir_ret "${config_path}/alacritty")
-    ln -srf "${my_configs}/alacritty.toml" "${dst_dir}/alacritty.toml"
+    log_info "Alacritty"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/alacritty")
+    ln -srf "${DOT_CONFIGS}/alacritty.toml" "${dst_dir}/alacritty.toml"
 
     # Tmux
-    dst_dir=$(mkdir_ret "${config_path}/tmux")
+    log_info "Tmux"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/tmux")
     git_url="https://github.com/tmux-plugins/tpm"
     [[ ! -d "${dst_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${dst_dir}/plugins/tpm"; }
-    ln -srf "${my_configs}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
+    ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
+
 
     # --- DevEnv ---
+    log_header "Linking - Dev env"
 
-    # Code
-    dst_dir=$(mkdir_ret "${config_path}/Code/User")
-    ln -srf "${my_configs}/vscode/settings.json" "${dst_dir}/settings.json"
-    ln -srf "${my_configs}/vscode/keybindings.json" "${dst_dir}/keybindings.json"
+    # # Code
+    # log_info "VS Code"
+    # dst_dir=$(mkdir_ret "${config_path}/Code/User")
+    # ln -srf "${my_configs}/vscode/settings.json" "${dst_dir}/settings.json"
+    # ln -srf "${my_configs}/vscode/keybindings.json" "${dst_dir}/keybindings.json"
 
     # Helix
-    dst_dir=$(mkdir_ret "${config_path}/helix")
-    ln -srf "${my_configs}/helix/config.toml" "${dst_dir}/config.toml"
-    ln -srf "${my_configs}/helix/languages.toml" "${dst_dir}/languages.toml"
+    log_info "Helix"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/helix")
+    ln -srf "${DOT_CONFIGS}/helix/config.toml" "${dst_dir}/config.toml"
+    ln -srf "${DOT_CONFIGS}/helix/languages.toml" "${dst_dir}/languages.toml"
     mkdir -p "${dst_dir}/themes"
-    ln -srf "${my_configs}/helix/theme.toml" "${dst_dir}/themes/bretema.toml"
-    for theme_file in "${my_configs}/helix/themes/"*; do
+    ln -srf "${DOT_CONFIGS}/helix/theme.toml" "${dst_dir}/themes/bretema.toml"
+    for theme_file in "${DOT_CONFIGS}/helix/themes/"*; do
         if [ -f "$theme_file" ]; then
             filename=$(basename "$theme_file")
             ln -srf "$theme_file" "${dst_dir}/themes/${filename}"
@@ -75,136 +75,186 @@ link_config_files() {
     done
 
     # Git
-    ln -srf "${my_configs}/.gitconfig" "$HOME/.gitconfig"
-    ln -srf "${my_configs}/.gitignore" "$HOME/.gitignore"
+    log_info "Git"
+    ln -srf "${DOT_CONFIGS}/.gitconfig" "$HOME/.gitconfig"
+    ln -srf "${DOT_CONFIGS}/.gitignore" "$HOME/.gitignore"
 
     # WorkTrunk : Manage git-worktrees
-    dst_dir=$(mkdir_ret "${config_path}/worktrunk")
-    ln -srf "${my_configs}/worktrunk.toml" "${dst_dir}/config.toml"
+    log_info "WorkTrunk"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/worktrunk")
+    ln -srf "${DOT_CONFIGS}/worktrunk.toml" "${dst_dir}/config.toml"
+
 
     # --- Apps ---
+    log_header "Linking - Apps settings"
 
     # Flameshot
-    dst_dir=$(mkdir_ret "${config_path}/flameshot")
-    ln -srf "${my_configs}/flameshot.ini" "${dst_dir}/flameshot.ini"
+    log_info "Flameshot"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/flameshot")
+    ln -srf "${DOT_CONFIGS}/flameshot.ini" "${dst_dir}/flameshot.ini"
 
     # Glow
-    dst_dir=$(mkdir_ret "${config_path}/glow")
-    ln -srf "${my_configs}/glow/glow.yml" "${dst_dir}/glow.yml"
+    log_info "Glow"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
+    cat > "${dst_dir}/glow.yml" <<EOF
+style: "${HOME}/.config/glow/themes/catppuccin-mocha.json"
+EOF
     dst_dir=$(mkdir_ret "${dst_dir}/themes")
-    ln -srf "${my_configs}/glow/themes/catppuccin-mocha.json" "${dst_dir}/catppuccin-mocha.json"
+    ln -srf "${DOT_CONFIGS}/glow/themes/catppuccin-mocha.json" "${dst_dir}/catppuccin-mocha.json"
 
     # Hunk
-    dst_dir=$(mkdir_ret "${config_path}/hunk")
-    ln -srf "${my_configs}/hunk/config.toml" "${dst_dir}/config.toml"
+    log_info "Hunk"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/hunk")
+    ln -srf "${DOT_CONFIGS}/hunk/config.toml" "${dst_dir}/config.toml"
+
+    # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
+    log_info "Yazi"
+
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/yazi")
+    ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${dst_dir}/yazi.toml"
+    ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
+
+    log_info "  -- catppuccin"
+    mkdir -p "${HOME_CONFIG}/yazi/flavors"
+    ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
+
+    log_info "  -- piper"
+    ya pkg add yazi-rs/plugins:piper >/dev/null 2>&1 && ya pkg install || true
+
+    # Qt Creator
+    log_info "Qt Creator"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/QtProject/qtcreator/styles")
+    src_dir="${DOT_CONFIGS}/qtcreator/themes"
+    ln -srf "${src_dir}/monokai_dark.xml" "${dst_dir}/monokai_dark_t.xml"
+    ln -srf "${src_dir}/gruvbox_dark.xml" "${dst_dir}/gruvbox_dark_t.xml"
+    ln -srf "${src_dir}/catppuccin_latte.xml" "${dst_dir}/catppuccin_latte_t.xml"
+
 
     # --- OpenCode ---
-    dst_dir=$(mkdir_ret "${config_path}/opencode")
-    # Main stuff
-    ln -srf "${my_configs}/opencode/AGENTS.md" "${dst_dir}/AGENTS.md"
-    # ln -srf "${my_configs}/opencode/opencode.json" "${dst_dir}/opencode.json"
-    ln -srf "${my_configs}/opencode/opencode.jsonc" "${dst_dir}/opencode.jsonc"
-    ln -srf "${my_configs}/opencode/tui.json" "${dst_dir}/tui.json"
-    # Commands
-    ln -srfn "${my_configs}/opencode/commands" "${dst_dir}/commands"
-    # Agents
-    ln -srfn "${my_configs}/opencode/agents" "${dst_dir}/agents"
-    # Skills
-    ln -srfn "${my_configs}/opencode/skills" "${dst_dir}/skills"
-    # Plugins
-    ln -srfn "${my_configs}/opencode/plugin" "${dst_dir}/plugin"
+    log_header "Linking - OpenCode"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
 
-    # Mocha Report (HTML renderer)
+    log_info "AGENTS.md"
+    ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${dst_dir}/AGENTS.md"
+    log_info "Settings"
+    ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${dst_dir}/opencode.jsonc"
+    log_info "TUI"
+    ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${dst_dir}/tui.json"
+    log_info "Commands"
+    ln -srfn "${DOT_CONFIGS}/opencode/commands" "${dst_dir}/commands"
+    log_info "Agents"
+    ln -srfn "${DOT_CONFIGS}/opencode/agents" "${dst_dir}/agents"
+    log_info "Skills"
+    ln -srfn "${DOT_CONFIGS}/opencode/skills" "${dst_dir}/skills"
+    log_info "Plugins"
+    ln -srfn "${DOT_CONFIGS}/opencode/plugin" "${dst_dir}/plugin"
+    log_info "Scripts"
     mkdir -p "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")"
-    ln -srf "${my_configs}/opencode/scripts/mocha-report" "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")/mocha-report"
+    ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")/mocha-report"
+
 
     # --- Environment ---
-    dst_dir=$(mkdir_ret "${config_path}/environment.d")
-    ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
-    ln -srf "${script_path}/assets/env/10-ssh.conf" "${dst_dir}/10-ssh.conf"
+    log_header "Linking - Env vars"
 
     # Global environment
+    log_info "Global"
     sudo cp "${script_path}/assets/etc/environment" "/etc/environment"
 
-    # --- GNOME Keyring ---
-    # Unmask socket (was masked to /dev/null when using gcr-ssh-agent only)
+    # Per app/tool env settings
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
+
+    log_info "Qt"
+    ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
+
+    log_info "SSH"
+    ln -srf "${script_path}/assets/env/10-ssh.conf" "${dst_dir}/10-ssh.conf"
+
+
+    # --- GNOME ---
+    log_header "Linking - Gnome fixs"
+
+    # Keyring
+    log_info "Keyring"
+
+    #... Unmask socket (was masked to /dev/null when using gcr-ssh-agent only)
     if [[ -L "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket" ]]; then
         rm "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket"
         systemctl --user daemon-reload 2>/dev/null || true
         systemctl --user enable gnome-keyring-daemon.socket 2>/dev/null || true
     fi
-    # Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
-    dst_dir=$(mkdir_ret "${config_path}/autostart")
+
+    #... Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
     ln -srf "${script_path}/assets/autostart/gnome-keyring-secrets.desktop" "${dst_dir}/gnome-keyring-secrets.desktop"
     ln -srf "${script_path}/assets/autostart/gnome-keyring-pkcs11.desktop" "${dst_dir}/gnome-keyring-pkcs11.desktop"
-    # PAM unlock: login service holds user session via greetd (Service=login)
+
+    #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
         sudo cp "${script_path}/assets/pam/login" /etc/pam.d/login
     fi
 
-    # --- XDG Desktop Portal ---
-    dst_dir=$(mkdir_ret "${config_path}/xdg-desktop-portal")
+    # XDG Desktop Portal
+    log_info "XDG Desktop portal"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/xdg-desktop-portal")
     ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${dst_dir}/portals.conf"
 
-    # --- GTK ---
-    dst_dir=$(mkdir_ret "${config_path}/gtk-3.0")
+    # GTK
+    log_info "Gtk theme"
+
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-3.0")
     ln -srf "${script_path}/assets/gtk/gtk-3.0/settings.ini" "${dst_dir}/settings.ini"
-    dst_dir=$(mkdir_ret "${config_path}/gtk-4.0")
+
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
     ln -srf "${script_path}/assets/gtk/gtk-4.0/settings.ini" "${dst_dir}/settings.ini"
 
+
     # --- Input Management ---
+    log_header "Linking - Input management"
 
     # Solaar
-    ### config.yaml writes battery and weird this, just copy it
-    dst_dir=$(mkdir_ret "${config_path}/solaar")
+    log_info "Solaar"
+
+    #... config.yaml writes battery and weird this, just copy it
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/solaar")
     ln -srf "${script_path}/assets/solaar/rules.yaml" "${dst_dir}/rules.yaml"
     if [[ ! -f "${dst_dir}/config.yaml" ]]; then
         cp "${script_path}/assets/solaar/config.yaml" "${dst_dir}/config.yaml"
     fi
-    ### Autostart
-    dst_dir=$(mkdir_ret "${config_path}/autostart")
+
+    #... autostart hidden
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
     ln -srf "${script_path}/assets/solaar/solaar.desktop" "${dst_dir}/solaar.desktop"
 
     # Caps 2 Esc
-    ### Symlinks could fail at boot-time, so copy the files is the best approach here
+    log_info "Caps-2-Esc"
+    # -- Symlinks could fail at boot-time
+    # -- so copy the files is the best approach here
+
     #... caps2esc config
     service_config="/etc/udevmon.yaml"
     sudo rm -rf "${service_config}"
     sudo cp "${script_path}/assets/caps2esc/udevmon.yaml" "${service_config}"
+
     #... caps2esc service
     service_file="/etc/systemd/system/udevmon.service"
     sudo rm -rf "${service_file}"
     sudo cp "${script_path}/assets/caps2esc/udevmon.service" "${service_file}"
     sudo chown root:root "${service_file}"
     sudo chmod 644 "${service_file}"
+
     #... caps2esc reload and enable
     sudo systemctl daemon-reload
     sudo systemctl enable udevmon.service
     sudo systemctl start udevmon.service
 
     # drm-colortemp
+    log_info "DRM ColorTemp"
     drm_config="/etc/default/drm-colortemp.conf"
     sudo mkdir -p "$(dirname "${drm_config}")"
     sudo cp "${script_path}/assets/drm-colortemp/drm-colortemp.conf" "${drm_config}"
     sudo systemctl enable drm-colortemp.service
     sudo systemctl restart drm-colortemp.service
 
-    # --- Themes ---
-    log_header "Linking Themes"
-
-    # Qt Creator
-    dst_dir=$(mkdir_ret "${config_path}/QtProject/qtcreator/styles")
-    src_dir="${my_configs}/qtcreator/themes"
-    ln -srf "${src_dir}/monokai_dark.xml" "${dst_dir}/monokai_dark_t.xml"
-    ln -srf "${src_dir}/gruvbox_dark.xml" "${dst_dir}/gruvbox_dark_t.xml"
-    ln -srf "${src_dir}/catppuccin_latte.xml" "${dst_dir}/catppuccin_latte_t.xml"
-
-    # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
-    dst_dir=$(mkdir_ret "${config_path}/yazi")
-    mkdir -p "${config_path}/yazi/flavors"
-    ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
-    ln -srf "${my_configs}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
-    ln -srf "${my_configs}/yazi/yazi.toml" "${dst_dir}/yazi.toml"
 
     # --- Wallpapers ---
     log_header "Linking Wallpapers"
@@ -214,15 +264,17 @@ link_config_files() {
         sudo rm -rf "${dst_dir}"
     fi
     sudo cp -r "${script_path}/../assets/wallpapers" "${dst_dir}"
+    log_info "Availables at: $dst_dir"
+
 
     # --- Cosmic ---
     log_header "Linking Cosmic Settings"
 
-    dst_dir="${config_path}/cosmic"
+    dst_dir="${HOME_CONFIG}/cosmic"
     if [[ -d "${dst_dir}" ]]; then
         sudo rm -rf "${dst_dir}"
     fi
-    ln -srfn "${script_path}/assets/cosmic" "${config_path}"
+    ln -srfn "${script_path}/assets/cosmic" "${HOME_CONFIG}"
 }
 
 process_packages() {
@@ -240,6 +292,11 @@ process_packages() {
     done 3<"$list_file"
 }
 
+pnpm_installed() {
+    # 'pnpm list -g' exits 0 even when the package is missing, so match the name@version line
+    pnpm list -g "$1" 2>/dev/null | grep -qF "$1@"
+}
+
 install_packages() {
     log_header "Installing packages"
 
@@ -251,12 +308,6 @@ install_packages() {
 
     process_packages "$script_path/pnpm_install.conf" \
         "pnpm_installed" "pnpm add -g" "[^a-zA-Z0-9@\/._-]" false
-
-    # Fix for ncspot - https://github.com/hrkfdn/ncspot/issues/1676#issuecomment-3168197941
-    ncspot_entry="0.0.0.0 apresolve.spotify.com"
-    if ! grep -qFx "$ncspot_entry" /etc/hosts; then
-        echo "$ncspot_entry" | sudo tee -a /etc/hosts >/dev/null
-    fi
 }
 
 remove_packages() {
@@ -279,9 +330,8 @@ system_update() {
     flatpak update -y
 }
 
-################################################################################
-### Parse args
-################################################################################
+
+# --- Parse Args ---------------------------------------------------------------
 
 #! Help
 
@@ -325,9 +375,8 @@ while [[ "${#}" > 0 ]]; do
 esac
 done
 
-###############################################################################
-### Execution
-###############################################################################
+
+# --- Execution ----------------------------------------------------------------
 
 paru_confirm="--noconfirm"
 [[ $confirm_pacman == true ]] && paru_confirm=""

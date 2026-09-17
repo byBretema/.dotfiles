@@ -91,6 +91,7 @@ alias gcl='git clone'
 alias gd='git diff'
 alias gdd='git diff HEAD~1..HEAD'
 alias gds='git diff --staged'
+alias hd='hunk diff'
 # Add
 alias ga='git add'
 alias gA='git add -A'

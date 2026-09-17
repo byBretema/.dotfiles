@@ -4,3 +4,17 @@ show_hidden = true
 
 [mgr] # yazi > 25
 show_hidden = true
+
+[opener]
+glow = [
+	{ run = "glow -t %s1", block = true },
+]
+
+[open]
+prepend_rules = [
+	{ url = "*.md", use = "glow" },
+]
+
+[[plugin.prepend_previewers]]
+url = "*.md"
+run = 'piper -- glow -w=$w -s="$HOME/.config/glow/themes/catppuccin-mocha.json" "$1"'
