@@ -99,6 +99,11 @@ link_config_files() {
     ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${dst_dir}/copyq.conf"
     ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${dst_dir}/copyq-commands.ini"
 
+    # LazyGit
+    log_info "LazyGit"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/lazygit")
+    ln -srf "${DOT_CONFIGS}/lazygit/config.yml" "${dst_dir}/config.yml"
+
     # Glow
     log_info "Glow"
     dst_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
@@ -112,6 +117,21 @@ EOF
     log_info "Hunk"
     dst_dir=$(mkdir_ret "${HOME_CONFIG}/hunk")
     ln -srf "${DOT_CONFIGS}/hunk/config.toml" "${dst_dir}/config.toml"
+
+    # MPV
+    log_info "MPV"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/mpv")
+    ln -srf "${DOT_CONFIGS}/mpv/mpv.conf" "${dst_dir}/mpv.conf"
+
+    # OBS Studio
+    log_info "OBS Studio"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/obs-studio")
+    ln -srf "${DOT_CONFIGS}/obs-studio/global.ini" "${dst_dir}/global.ini"
+    ln -srf "${DOT_CONFIGS}/obs-studio/user.ini" "${dst_dir}/user.ini"
+    profile_dir=$(mkdir_ret "${dst_dir}/basic/profiles/Untitled")
+    ln -srf "${DOT_CONFIGS}/obs-studio/basic/profiles/Untitled/basic.ini" "${profile_dir}/basic.ini"
+    scenes_dir=$(mkdir_ret "${dst_dir}/basic/scenes")
+    ln -srf "${DOT_CONFIGS}/obs-studio/basic/scenes/Untitled.json" "${scenes_dir}/Untitled.json"
 
     # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
     log_info "Yazi"
