@@ -93,6 +93,12 @@ link_config_files() {
     dst_dir=$(mkdir_ret "${HOME_CONFIG}/flameshot")
     ln -srf "${DOT_CONFIGS}/flameshot.ini" "${dst_dir}/flameshot.ini"
 
+    # CopyQ
+    log_info "CopyQ"
+    dst_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
+    ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${dst_dir}/copyq.conf"
+    ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${dst_dir}/copyq-commands.ini"
+
     # Glow
     log_info "Glow"
     dst_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
