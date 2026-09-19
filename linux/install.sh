@@ -35,20 +35,20 @@ link_config_files() {
 
     # Ghostty
     log_info "Ghostty"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/ghostty")
-    ln -srf "${DOT_CONFIGS}/ghostty.conf" "${dst_dir}/config"
+    ghostty_dir=$(mkdir_ret "${HOME_CONFIG}/ghostty")
+    ln -srf "${DOT_CONFIGS}/ghostty.conf" "${ghostty_dir}/config"
 
     # Alacritty
     log_info "Alacritty"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/alacritty")
-    ln -srf "${DOT_CONFIGS}/alacritty.toml" "${dst_dir}/alacritty.toml"
+    alacritty_dir=$(mkdir_ret "${HOME_CONFIG}/alacritty")
+    ln -srf "${DOT_CONFIGS}/alacritty.toml" "${alacritty_dir}/alacritty.toml"
 
     # Tmux
     log_info "Tmux"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/tmux")
+    tmux_dir=$(mkdir_ret "${HOME_CONFIG}/tmux")
     git_url="https://github.com/tmux-plugins/tpm"
-    [[ ! -d "${dst_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${dst_dir}/plugins/tpm"; }
-    ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${dst_dir}/tmux.conf"
+    [[ ! -d "${tmux_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${tmux_dir}/plugins/tpm"; }
+    ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${tmux_dir}/tmux.conf"
 
 
     # --- DevEnv ---
@@ -56,21 +56,21 @@ link_config_files() {
 
     # # Code
     # log_info "VS Code"
-    # dst_dir=$(mkdir_ret "${config_path}/Code/User")
-    # ln -srf "${my_configs}/vscode/settings.json" "${dst_dir}/settings.json"
-    # ln -srf "${my_configs}/vscode/keybindings.json" "${dst_dir}/keybindings.json"
+    # vscode_dir=$(mkdir_ret "${config_path}/Code/User")
+    # ln -srf "${my_configs}/vscode/settings.json" "${vscode_dir}/settings.json"
+    # ln -srf "${my_configs}/vscode/keybindings.json" "${vscode_dir}/keybindings.json"
 
     # Helix
     log_info "Helix"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/helix")
-    ln -srf "${DOT_CONFIGS}/helix/config.toml" "${dst_dir}/config.toml"
-    ln -srf "${DOT_CONFIGS}/helix/languages.toml" "${dst_dir}/languages.toml"
-    mkdir -p "${dst_dir}/themes"
-    ln -srf "${DOT_CONFIGS}/helix/theme.toml" "${dst_dir}/themes/bretema.toml"
+    helix_dir=$(mkdir_ret "${HOME_CONFIG}/helix")
+    ln -srf "${DOT_CONFIGS}/helix/config.toml" "${helix_dir}/config.toml"
+    ln -srf "${DOT_CONFIGS}/helix/languages.toml" "${helix_dir}/languages.toml"
+    helix_themes_dir=$(mkdir_ret "${helix_dir}/themes")
+    ln -srf "${DOT_CONFIGS}/helix/theme.toml" "${helix_themes_dir}/bretema.toml"
     for theme_file in "${DOT_CONFIGS}/helix/themes/"*; do
         if [ -f "$theme_file" ]; then
             filename=$(basename "$theme_file")
-            ln -srf "$theme_file" "${dst_dir}/themes/${filename}"
+            ln -srf "$theme_file" "${helix_themes_dir}/${filename}"
         fi
     done
 
@@ -81,8 +81,8 @@ link_config_files() {
 
     # WorkTrunk : Manage git-worktrees
     log_info "WorkTrunk"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/worktrunk")
-    ln -srf "${DOT_CONFIGS}/worktrunk.toml" "${dst_dir}/config.toml"
+    worktrunk_dir=$(mkdir_ret "${HOME_CONFIG}/worktrunk")
+    ln -srf "${DOT_CONFIGS}/worktrunk.toml" "${worktrunk_dir}/config.toml"
 
 
     # --- Apps ---
@@ -90,58 +90,59 @@ link_config_files() {
 
     # Flameshot
     log_info "Flameshot"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/flameshot")
-    ln -srf "${DOT_CONFIGS}/flameshot.ini" "${dst_dir}/flameshot.ini"
+    flameshot_dir=$(mkdir_ret "${HOME_CONFIG}/flameshot")
+    ln -srf "${DOT_CONFIGS}/flameshot.ini" "${flameshot_dir}/flameshot.ini"
 
     # CopyQ
     log_info "CopyQ"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
-    ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${dst_dir}/copyq.conf"
-    ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${dst_dir}/copyq-commands.ini"
+    copyq_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
+    ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${copyq_dir}/copyq.conf"
+    ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${copyq_dir}/copyq-commands.ini"
 
     # LazyGit
     log_info "LazyGit"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/lazygit")
-    ln -srf "${DOT_CONFIGS}/lazygit/config.yml" "${dst_dir}/config.yml"
+    lazygit_dir=$(mkdir_ret "${HOME_CONFIG}/lazygit")
+    ln -srf "${DOT_CONFIGS}/lazygit/config.yml" "${lazygit_dir}/config.yml"
 
     # Glow
     log_info "Glow"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
-    cat > "${dst_dir}/glow.yml" <<EOF
+    glow_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
+    cat > "${glow_dir}/glow.yml" <<EOF
 style: "${HOME}/.config/glow/themes/catppuccin-mocha.json"
 EOF
-    dst_dir=$(mkdir_ret "${dst_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/glow/themes/catppuccin-mocha.json" "${dst_dir}/catppuccin-mocha.json"
+    glow_theme_dir=$(mkdir_ret "${glow_dir}/themes")
+    ln -srf "${DOT_CONFIGS}/glow/themes/catppuccin-mocha.json" "${glow_theme_dir}/catppuccin-mocha.json"
 
     # Hunk
     log_info "Hunk"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/hunk")
-    ln -srf "${DOT_CONFIGS}/hunk/config.toml" "${dst_dir}/config.toml"
+    hunk_dir=$(mkdir_ret "${HOME_CONFIG}/hunk")
+    ln -srf "${DOT_CONFIGS}/hunk/config.toml" "${hunk_dir}/config.toml"
 
     # MPV
     log_info "MPV"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/mpv")
-    ln -srf "${DOT_CONFIGS}/mpv/mpv.conf" "${dst_dir}/mpv.conf"
+    mpv_dir=$(mkdir_ret "${HOME_CONFIG}/mpv")
+    ln -srf "${DOT_CONFIGS}/mpv/mpv.conf" "${mpv_dir}/mpv.conf"
 
     # OBS Studio
     log_info "OBS Studio"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/obs-studio")
-    ln -srf "${DOT_CONFIGS}/obs-studio/global.ini" "${dst_dir}/global.ini"
-    ln -srf "${DOT_CONFIGS}/obs-studio/user.ini" "${dst_dir}/user.ini"
-    profile_dir=$(mkdir_ret "${dst_dir}/basic/profiles/Untitled")
-    ln -srf "${DOT_CONFIGS}/obs-studio/basic/profiles/Untitled/basic.ini" "${profile_dir}/basic.ini"
-    scenes_dir=$(mkdir_ret "${dst_dir}/basic/scenes")
-    ln -srf "${DOT_CONFIGS}/obs-studio/basic/scenes/Untitled.json" "${scenes_dir}/Untitled.json"
+    obs_dir=$(mkdir_ret "${HOME_CONFIG}/obs-studio")
+    ln -srf "${DOT_CONFIGS}/obs-studio/global.ini" "${obs_dir}/global.ini"
+    ln -srf "${DOT_CONFIGS}/obs-studio/user.ini" "${obs_dir}/user.ini"
+    obs_profiles_dir=$(mkdir_ret "${obs_dir}/basic/profiles")
+    obs_profile_dir="$(mkdir_ret "${obs_profiles_dir}/Untitled")"
+    ln -srf "${DOT_CONFIGS}/obs-studio/basic/profiles/Untitled/basic.ini" "${obs_profile_dir}/basic.ini"
+    obs_scenes_dir=$(mkdir_ret "${obs_dir}/basic/scenes")
+    ln -srf "${DOT_CONFIGS}/obs-studio/basic/scenes/Untitled.json" "${obs_scenes_dir}/Untitled.json"
 
     # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
     log_info "Yazi"
 
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/yazi")
-    ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${dst_dir}/yazi.toml"
-    ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${dst_dir}/theme.toml"
+    yazi_dir=$(mkdir_ret "${HOME_CONFIG}/yazi")
+    ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${yazi_dir}/yazi.toml"
+    ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${yazi_dir}/theme.toml"
 
     log_info "  -- catppuccin"
-    mkdir -p "${HOME_CONFIG}/yazi/flavors"
+    yazi_flavors_dir=$(mkdir_ret "${yazi_dir}/flavors")
     ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
 
     log_info "  -- piper"
@@ -149,34 +150,34 @@ EOF
 
     # Qt Creator
     log_info "Qt Creator"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/QtProject/qtcreator/styles")
+    qtcreator_styles_dir=$(mkdir_ret "${HOME_CONFIG}/QtProject/qtcreator/styles")
     src_dir="${DOT_CONFIGS}/qtcreator/themes"
-    ln -srf "${src_dir}/monokai_dark.xml" "${dst_dir}/monokai_dark_t.xml"
-    ln -srf "${src_dir}/gruvbox_dark.xml" "${dst_dir}/gruvbox_dark_t.xml"
-    ln -srf "${src_dir}/catppuccin_latte.xml" "${dst_dir}/catppuccin_latte_t.xml"
+    ln -srf "${src_dir}/monokai_dark.xml" "${qtcreator_styles_dir}/monokai_dark_t.xml"
+    ln -srf "${src_dir}/gruvbox_dark.xml" "${qtcreator_styles_dir}/gruvbox_dark_t.xml"
+    ln -srf "${src_dir}/catppuccin_latte.xml" "${qtcreator_styles_dir}/catppuccin_latte_t.xml"
 
 
     # --- OpenCode ---
     log_header "Linking - OpenCode"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
+    opencode_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
 
     log_info "AGENTS.md"
-    ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${dst_dir}/AGENTS.md"
+    ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${opencode_dir}/AGENTS.md"
     log_info "Settings"
-    ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${dst_dir}/opencode.jsonc"
+    ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${opencode_dir}/opencode.jsonc"
     log_info "TUI"
-    ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${dst_dir}/tui.json"
+    ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${opencode_dir}/tui.json"
     log_info "Commands"
-    ln -srfn "${DOT_CONFIGS}/opencode/commands" "${dst_dir}/commands"
+    ln -srfn "${DOT_CONFIGS}/opencode/commands" "${opencode_dir}/commands"
     log_info "Agents"
-    ln -srfn "${DOT_CONFIGS}/opencode/agents" "${dst_dir}/agents"
+    ln -srfn "${DOT_CONFIGS}/opencode/agents" "${opencode_dir}/agents"
     log_info "Skills"
-    ln -srfn "${DOT_CONFIGS}/opencode/skills" "${dst_dir}/skills"
+    ln -srfn "${DOT_CONFIGS}/opencode/skills" "${opencode_dir}/skills"
     log_info "Plugins"
-    ln -srfn "${DOT_CONFIGS}/opencode/plugin" "${dst_dir}/plugin"
+    ln -srfn "${DOT_CONFIGS}/opencode/plugin" "${opencode_dir}/plugin"
     log_info "Scripts"
-    mkdir -p "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")"
-    ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")/mocha-report"
+    pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
+    ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
 
 
     # --- Environment ---
@@ -187,13 +188,13 @@ EOF
     sudo cp "${script_path}/assets/etc/environment" "/etc/environment"
 
     # Per app/tool env settings
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
+    env_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
 
     log_info "Qt"
-    ln -srf "${script_path}/assets/env/10-qt.conf" "${dst_dir}/10-qt.conf"
+    ln -srf "${script_path}/assets/env/10-qt.conf" "${env_dir}/10-qt.conf"
 
     log_info "SSH"
-    ln -srf "${script_path}/assets/env/10-ssh.conf" "${dst_dir}/10-ssh.conf"
+    ln -srf "${script_path}/assets/env/10-ssh.conf" "${env_dir}/10-ssh.conf"
 
 
     # --- GNOME ---
@@ -210,9 +211,9 @@ EOF
     fi
 
     #... Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "${script_path}/assets/autostart/gnome-keyring-secrets.desktop" "${dst_dir}/gnome-keyring-secrets.desktop"
-    ln -srf "${script_path}/assets/autostart/gnome-keyring-pkcs11.desktop" "${dst_dir}/gnome-keyring-pkcs11.desktop"
+    autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
+    ln -srf "${script_path}/assets/autostart/gnome-keyring-secrets.desktop" "${autostart_dir}/gnome-keyring-secrets.desktop"
+    ln -srf "${script_path}/assets/autostart/gnome-keyring-pkcs11.desktop" "${autostart_dir}/gnome-keyring-pkcs11.desktop"
 
     #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
@@ -221,17 +222,17 @@ EOF
 
     # XDG Desktop Portal
     log_info "XDG Desktop portal"
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/xdg-desktop-portal")
-    ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${dst_dir}/portals.conf"
+    portal_dir=$(mkdir_ret "${HOME_CONFIG}/xdg-desktop-portal")
+    ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${portal_dir}/portals.conf"
 
     # GTK
     log_info "Gtk theme"
 
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-3.0")
-    ln -srf "${script_path}/assets/gtk/gtk-3.0/settings.ini" "${dst_dir}/settings.ini"
+    gtk3_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-3.0")
+    ln -srf "${script_path}/assets/gtk/gtk-3.0/settings.ini" "${gtk3_dir}/settings.ini"
 
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
-    ln -srf "${script_path}/assets/gtk/gtk-4.0/settings.ini" "${dst_dir}/settings.ini"
+    gtk4_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
+    ln -srf "${script_path}/assets/gtk/gtk-4.0/settings.ini" "${gtk4_dir}/settings.ini"
 
 
     # --- Input Management ---
@@ -241,15 +242,15 @@ EOF
     log_info "Solaar"
 
     #... config.yaml writes battery and weird this, just copy it
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/solaar")
-    ln -srf "${script_path}/assets/solaar/rules.yaml" "${dst_dir}/rules.yaml"
-    if [[ ! -f "${dst_dir}/config.yaml" ]]; then
-        cp "${script_path}/assets/solaar/config.yaml" "${dst_dir}/config.yaml"
+    solaar_dir=$(mkdir_ret "${HOME_CONFIG}/solaar")
+    ln -srf "${script_path}/assets/solaar/rules.yaml" "${solaar_dir}/rules.yaml"
+    if [[ ! -f "${solaar_dir}/config.yaml" ]]; then
+        cp "${script_path}/assets/solaar/config.yaml" "${solaar_dir}/config.yaml"
     fi
 
     #... autostart hidden
-    dst_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "${script_path}/assets/solaar/solaar.desktop" "${dst_dir}/solaar.desktop"
+    autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
+    ln -srf "${script_path}/assets/solaar/solaar.desktop" "${autostart_dir}/solaar.desktop"
 
     # Caps 2 Esc
     log_info "Caps-2-Esc"
@@ -285,20 +286,20 @@ EOF
     # --- Wallpapers ---
     log_header "Linking Wallpapers"
 
-    dst_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
-    if [[ -d "${dst_dir}" ]]; then
-        sudo rm -rf "${dst_dir}"
+    wallpaper_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
+    if [[ -d "${wallpaper_dir}" ]]; then
+        sudo rm -rf "${wallpaper_dir}"
     fi
-    sudo cp -r "${script_path}/../assets/wallpapers" "${dst_dir}"
-    log_info "Availables at: $dst_dir"
+    sudo cp -r "${script_path}/../assets/wallpapers" "${wallpaper_dir}"
+    log_info "Availables at: $wallpaper_dir"
 
 
     # --- Cosmic ---
     log_header "Linking Cosmic Settings"
 
-    dst_dir="${HOME_CONFIG}/cosmic"
-    if [[ -d "${dst_dir}" ]]; then
-        sudo rm -rf "${dst_dir}"
+    cosmic_dir="${HOME_CONFIG}/cosmic"
+    if [[ -d "${cosmic_dir}" ]]; then
+        sudo rm -rf "${cosmic_dir}"
     fi
     ln -srfn "${script_path}/assets/cosmic" "${HOME_CONFIG}"
 }
