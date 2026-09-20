@@ -15,7 +15,7 @@
   _sensitive: {divert-keys: true, hires-scroll-mode: true, hires-smooth-resolution: true, reprogrammable-keys: true, scroll-ratchet: true, smart-shift: true}
   _unitId: B5C184CA
   change-host: null
-  divert-keys: {82: 2, 83: 0, 86: 0, 195: 2, 196: 0}
+  divert-keys: {82: 0, 83: 0, 86: 0, 195: 2, 196: 0}
   dpi: 1000
   hires-scroll-mode: false
   hires-smooth-invert: false
