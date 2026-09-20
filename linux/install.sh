@@ -7,6 +7,8 @@ source "${script_path}/scripts/.bash_common"
 # --- Consts -------------------------------------------------------------------
 
 DOT_CONFIGS="${script_path}/../configs"
+DOT_ASSETS="${script_path}/../assets"
+DOT_LINUX_ASSETS="${script_path}/assets"
 
 HOME_CONFIG="$HOME/.config"
 mkdir -p "${HOME_CONFIG}"
@@ -141,11 +143,11 @@ EOF
     ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${yazi_dir}/yazi.toml"
     ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${yazi_dir}/theme.toml"
 
-    log_info "  -- catppuccin"
+    log_info "-- catppuccin"
     yazi_flavors_dir=$(mkdir_ret "${yazi_dir}/flavors")
     ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
 
-    log_info "  -- piper"
+    log_info "-- piper"
     ya pkg add yazi-rs/plugins:piper >/dev/null 2>&1 && ya pkg install || true
 
     # Qt Creator
@@ -185,16 +187,19 @@ EOF
 
     # Global environment
     log_info "Global"
-    sudo cp "${script_path}/assets/etc/environment" "/etc/environment"
+    sudo cp "$DOT_LINUX_ASSETS/etc/environment" "/etc/environment"
 
     # Per app/tool env settings
     env_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
 
+    log_info "Shell"
+    ln -srf "$DOT_LINUX_ASSETS/env/10-shell.conf" "${env_dir}/10-shell.conf"
+
     log_info "Qt"
-    ln -srf "${script_path}/assets/env/10-qt.conf" "${env_dir}/10-qt.conf"
+    ln -srf "$DOT_LINUX_ASSETS/env/10-qt.conf" "${env_dir}/10-qt.conf"
 
     log_info "SSH"
-    ln -srf "${script_path}/assets/env/10-ssh.conf" "${env_dir}/10-ssh.conf"
+    ln -srf "$DOT_LINUX_ASSETS/env/10-ssh.conf" "${env_dir}/10-ssh.conf"
 
 
     # --- GNOME ---
@@ -212,27 +217,27 @@ EOF
 
     #... Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
     autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "${script_path}/assets/autostart/gnome-keyring-secrets.desktop" "${autostart_dir}/gnome-keyring-secrets.desktop"
-    ln -srf "${script_path}/assets/autostart/gnome-keyring-pkcs11.desktop" "${autostart_dir}/gnome-keyring-pkcs11.desktop"
+    ln -srf "$DOT_LINUX_ASSETS/autostart/gnome-keyring-secrets.desktop" "${autostart_dir}/gnome-keyring-secrets.desktop"
+    ln -srf "$DOT_LINUX_ASSETS/autostart/gnome-keyring-pkcs11.desktop" "${autostart_dir}/gnome-keyring-pkcs11.desktop"
 
     #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
-        sudo cp "${script_path}/assets/pam/login" /etc/pam.d/login
+        sudo cp "$DOT_LINUX_ASSETS/pam/login" /etc/pam.d/login
     fi
 
     # XDG Desktop Portal
     log_info "XDG Desktop portal"
     portal_dir=$(mkdir_ret "${HOME_CONFIG}/xdg-desktop-portal")
-    ln -srf "${script_path}/assets/xdg-desktop-portal/portals.conf" "${portal_dir}/portals.conf"
+    ln -srf "$DOT_LINUX_ASSETS/xdg-desktop-portal/portals.conf" "${portal_dir}/portals.conf"
 
     # GTK
     log_info "Gtk theme"
 
     gtk3_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-3.0")
-    ln -srf "${script_path}/assets/gtk/gtk-3.0/settings.ini" "${gtk3_dir}/settings.ini"
+    ln -srf "$DOT_LINUX_ASSETS/gtk/gtk-3.0/settings.ini" "${gtk3_dir}/settings.ini"
 
     gtk4_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
-    ln -srf "${script_path}/assets/gtk/gtk-4.0/settings.ini" "${gtk4_dir}/settings.ini"
+    ln -srf "$DOT_LINUX_ASSETS/gtk/gtk-4.0/settings.ini" "${gtk4_dir}/settings.ini"
 
 
     # --- Input Management ---
@@ -241,16 +246,17 @@ EOF
     # Solaar
     log_info "Solaar"
 
-    #... config.yaml writes battery and weird this, just copy it
+    #... config.yaml ///writes battery and weird things, just copy it
     solaar_dir=$(mkdir_ret "${HOME_CONFIG}/solaar")
-    ln -srf "${script_path}/assets/solaar/rules.yaml" "${solaar_dir}/rules.yaml"
-    if [[ ! -f "${solaar_dir}/config.yaml" ]]; then
-        cp "${script_path}/assets/solaar/config.yaml" "${solaar_dir}/config.yaml"
-    fi
+    ln -srf "$DOT_LINUX_ASSETS/solaar/rules.yaml" "${solaar_dir}/rules.yaml"
+    ln -srf "$DOT_LINUX_ASSETS/solaar/config.yaml" "${solaar_dir}/config.yaml"
+    # if [[ ! -f "${solaar_dir}/config.yaml" ]]; then
+    #     cp "$DOT_LINUX_ASSETS/solaar/config.yaml" "${solaar_dir}/config.yaml"
+    # fi
 
     #... autostart hidden
     autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "${script_path}/assets/solaar/solaar.desktop" "${autostart_dir}/solaar.desktop"
+    ln -srf "$DOT_LINUX_ASSETS/solaar/solaar.desktop" "${autostart_dir}/solaar.desktop"
 
     # Caps 2 Esc
     log_info "Caps-2-Esc"
@@ -260,12 +266,12 @@ EOF
     #... caps2esc config
     service_config="/etc/udevmon.yaml"
     sudo rm -rf "${service_config}"
-    sudo cp "${script_path}/assets/caps2esc/udevmon.yaml" "${service_config}"
+    sudo cp "$DOT_LINUX_ASSETS/caps2esc/udevmon.yaml" "${service_config}"
 
     #... caps2esc service
     service_file="/etc/systemd/system/udevmon.service"
     sudo rm -rf "${service_file}"
-    sudo cp "${script_path}/assets/caps2esc/udevmon.service" "${service_file}"
+    sudo cp "$DOT_LINUX_ASSETS/caps2esc/udevmon.service" "${service_file}"
     sudo chown root:root "${service_file}"
     sudo chmod 644 "${service_file}"
 
@@ -278,7 +284,7 @@ EOF
     log_info "DRM ColorTemp"
     drm_config="/etc/default/drm-colortemp.conf"
     sudo mkdir -p "$(dirname "${drm_config}")"
-    sudo cp "${script_path}/assets/drm-colortemp/drm-colortemp.conf" "${drm_config}"
+    sudo cp "$DOT_LINUX_ASSETS/drm-colortemp/drm-colortemp.conf" "${drm_config}"
     sudo systemctl enable drm-colortemp.service
     sudo systemctl restart drm-colortemp.service
 
@@ -286,12 +292,13 @@ EOF
     # --- Wallpapers ---
     log_header "Linking Wallpapers"
 
-    wallpaper_dir=$(mkdir_ret "/usr/share/wallpapers/bretema")
-    if [[ -d "${wallpaper_dir}" ]]; then
-        sudo rm -rf "${wallpaper_dir}"
+    wallpapers_dir="/usr/share/wallpapers/bretema"
+    if [[ -d "${wallpapers_dir}" ]]; then
+        sudo rm -rf "${wallpapers_dir}"
     fi
-    sudo cp -r "${script_path}/../assets/wallpapers" "${wallpaper_dir}"
-    log_info "Availables at: $wallpaper_dir"
+    sudo mkdir -p "$wallpapers_dir"
+    sudo cp -r "$DOT_ASSETS/wallpapers/." "${wallpapers_dir}"
+    log_info "Availables at: $wallpapers_dir"
 
 
     # --- Cosmic ---
@@ -301,7 +308,7 @@ EOF
     if [[ -d "${cosmic_dir}" ]]; then
         sudo rm -rf "${cosmic_dir}"
     fi
-    ln -srfn "${script_path}/assets/cosmic" "${HOME_CONFIG}"
+    ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${HOME_CONFIG}"
 }
 
 process_packages() {
@@ -312,7 +319,7 @@ process_packages() {
         [[ -n $pkg ]] || continue
         [[ $line != \#* ]] || continue
         eval "$check_cmd \"$pkg\"" &>/dev/null
-        # local status=$?
+        local status=$?
         { [[ $invert_check == false && $status -eq 0 ]] || [[ $invert_check == true ]]; } && continue
         log_header ">>> Package: $pkg"
         $action_cmd "$pkg"
@@ -327,12 +334,17 @@ pnpm_installed() {
 install_packages() {
     log_header "Installing packages"
 
+    log_header "-- Pacman"
+    is_cmd "paru" || sudo pacman -S paru
     process_packages "$script_path/pacman_install.conf" \
         "pacman -Qq | grep -Fx" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]" false
 
+    log_header "-- Flatpak"
+    is_cmd "flatpak" || sudo pacman -S flatpak
     process_packages "$script_path/flatpak_install.conf" \
         "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]" false
 
+    log_header "-- Pnpm"
     process_packages "$script_path/pnpm_install.conf" \
         "pnpm_installed" "pnpm add -g" "[^a-zA-Z0-9@\/._-]" false
 }
