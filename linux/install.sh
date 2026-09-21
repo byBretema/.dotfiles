@@ -17,7 +17,7 @@ mkdir -p "${HOME_CONFIG}"
 # --- Actions ------------------------------------------------------------------
 
 mkdir_ret() {
-    mkdir -p "$1" >/dev/null 2>&1
+    mkdir -p "$1" &>/dev/null
     echo "$1"
 }
 
@@ -145,10 +145,10 @@ EOF
 
     log_info "-- catppuccin"
     yazi_flavors_dir=$(mkdir_ret "${yazi_dir}/flavors")
-    ya pkg add yazi-rs/flavors:catppuccin-mocha >/dev/null 2>&1 && ya pkg install || true
+    ya pkg add yazi-rs/flavors:catppuccin-mocha &>/dev/null && ya pkg install || true
 
     log_info "-- piper"
-    ya pkg add yazi-rs/plugins:piper >/dev/null 2>&1 && ya pkg install || true
+    ya pkg add yazi-rs/plugins:piper &>/dev/null && ya pkg install || true
 
     # Qt Creator
     log_info "Qt Creator"
@@ -311,19 +311,20 @@ EOF
     ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${HOME_CONFIG}"
 }
 
-process_packages() {
-    local list_file=$1 check_cmd=$2 action_cmd=$3 sanitize=$4 invert_check=${5:-false}
+collect_packages() {
+    local list_file=$1 check_cmd=$2 sanitize=$3 invert=${4:-0}
+    local result=()
 
-    while IFS= read -r line <&3; do
+    while IFS= read -r line; do
+        [[ $line != \#* ]] || continue
         local pkg=${line//$sanitize/}
         [[ -n $pkg ]] || continue
-        [[ $line != \#* ]] || continue
         eval "$check_cmd \"$pkg\"" &>/dev/null
         local status=$?
-        { [[ $invert_check == false && $status -eq 0 ]] || [[ $invert_check == true ]]; } && continue
-        log_header ">>> Package: $pkg"
-        $action_cmd "$pkg"
-    done 3<"$list_file"
+        [[ $(( status ^ invert )) -eq 1 ]] && result+=("$pkg")
+    done < "$list_file"
+
+    echo "${result[@]}"
 }
 
 pnpm_installed() {
@@ -336,31 +337,31 @@ install_packages() {
 
     log_header "-- Pacman"
     is_cmd "paru" || sudo pacman -S paru
-    process_packages "$script_path/pacman_install.conf" \
-        "pacman -Qq | grep -Fx" "paru -S $paru_confirm --skipreview" "[^a-zA-Z0-9_-]" false
+    _pkgs=( $(collect_packages "$script_path/pacman_install.conf" "paru -Q" "[^a-zA-Z0-9_-]") )
+    [[ ${#_pkgs[@]} -gt 0 ]] && paru -S $paru_confirm --skipreview "${_pkgs[@]}"
 
     log_header "-- Flatpak"
     is_cmd "flatpak" || sudo pacman -S flatpak
-    process_packages "$script_path/flatpak_install.conf" \
-        "flatpak info" "flatpak -y install" "[^a-zA-Z0-9.]" false
+    _pkgs=( $(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9.]") )
+    [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y install "${_pkgs[@]}"
 
     log_header "-- Pnpm"
-    process_packages "$script_path/pnpm_install.conf" \
-        "pnpm_installed" "pnpm add -g" "[^a-zA-Z0-9@\/._-]" false
+    _pkgs=( $(collect_packages "$script_path/pnpm_install.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]") )
+    [[ ${#_pkgs[@]} -gt 0 ]] && pnpm add -g "${_pkgs[@]}"
 }
 
 remove_packages() {
     log_header "Removing packages"
 
-    process_packages "$script_path/pacman_remove.conf" \
-        "pacman -Qq | grep -Fx" "paru -Rns $paru_confirm" "[^a-zA-Z0-9_-]" true
+    _pkgs=( $(collect_packages "$script_path/pacman_remove.conf" "paru -Q" "[^a-zA-Z0-9_-]" 1) )
+    [[ ${#_pkgs[@]} -gt 0 ]] && paru -Rns $paru_confirm "${_pkgs[@]}"
 
-    process_packages "$script_path/flatpak_remove.conf" \
-        "flatpak info" "flatpak -y uninstall" "[^a-zA-Z0-9.]" true
+    _pkgs=( $(collect_packages "$script_path/flatpak_remove.conf" "flatpak info" "[^a-zA-Z0-9.]" 1) )
+    [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y uninstall "${_pkgs[@]}"
     flatpak uninstall --unused -y
 
-    process_packages "$script_path/pnpm_remove.conf" \
-        "pnpm_installed" "pnpm remove -g" "[^a-zA-Z0-9@\/._-]" true
+    _pkgs=( $(collect_packages "$script_path/pnpm_remove.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]" 1) )
+    [[ ${#_pkgs[@]} -gt 0 ]] && pnpm remove -g "${_pkgs[@]}"
 }
 
 system_update() {
