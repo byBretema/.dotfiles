@@ -135,8 +135,8 @@ alias fff='fzf --preview="bat --color=always {}"'
 
 # --- Job(s) ---
 
-alias omid='pushd $(omi -d)'
-alias omis='pushd $(omi -s)'
+alias omid='pushd "$HOME/dev/omi/deploy_studio_engine"'
+alias omis='pushd "$HOME/dev/omi/studio_engine" && gws'
 
 # --- Others ---
 

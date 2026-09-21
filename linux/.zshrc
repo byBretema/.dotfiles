@@ -69,7 +69,7 @@ eval "$(starship init zsh)"
 
 # --- External -----------------------------------------------------------------
 
-export PATH="$HOME/omi/scripts/bash:$PATH"
+export PATH="$HOME/omi/scripts:$PATH"
 
 if [ -x "/usr/bin/micromamba" ]; then
     export MAMBA_EXE="/usr/bin/micromamba"

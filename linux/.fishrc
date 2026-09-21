@@ -74,7 +74,7 @@ end
 
 # --- External -----------------------------------------------------------------
 
-fish_add_path "$HOME/omi/scripts/bash" 2>/dev/null
+fish_add_path "$HOME/omi/scripts" 2>/dev/null
 
 if status is-interactive; and test -x /usr/bin/micromamba
     set -gx MAMBA_EXE /usr/bin/micromamba
