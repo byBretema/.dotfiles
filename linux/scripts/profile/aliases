@@ -3,7 +3,7 @@
 
 alias j="jobs"
 alias oc="opencode"
-alias bot='pushd $HOME/botline && opencode'
+alias bot='pushd "$(mktemp -d -t bot-XXXXXX)" && opencode'
 alias dotfiles='$DOTFILES/linux/install.sh'
 
 # TODO: update this to $EDITOR
