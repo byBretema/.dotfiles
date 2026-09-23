@@ -52,4 +52,9 @@ out=""
 show_repo && out="$repo_name"
 show_branch && out="$out$sep$branch" || out+="$sep"
 
+if [[ -z "$out" ]]; then
+    out="$(git -C "$IN_DIR" remote -v | awk '/fetch/ {print $2; exit}' \
+        | sed -E 's#^(git@|ssh://[^/]+/|https?://[^/]+/)##; s#\.git$##; s#.*/##')"
+fi
+
 printf "($out)$mark"

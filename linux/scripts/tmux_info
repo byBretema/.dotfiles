@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+# Usage: tmux_info [DIR]
+# Prints "~/path/to/dir[ [branch]]", or "alias[ · rest of tree][ [branch]]"
+# for known prefixes (longest match wins). Alias wrapped in #[italics],
+# " · rest" dropped when no rest or when rest == branch.
+
+IN_DIR="${1:-$PWD}"
+IN_DIR="${IN_DIR%/}"
+
+branch=""
+if git -C "$IN_DIR" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+    branch="$(git -C "$IN_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null)"
+fi
+suffix=""
+[[ -n "$branch" ]] && suffix=" [$branch]"
+
+# Longest-prefix alias map: path:display, specific before generic
+ALIASES=(
+    "$HOME/omi/code/studio_engine:omi_engine"
+    "$HOME/omi/code/deploy_studio_engine:omi_deploy"
+    "$HOME/omi/code:omi_code"
+    "$HOME/omi:omi"
+    "$HOME/.dotfiles:dots"
+)
+
+show=""
+for pair in "${ALIASES[@]}"; do
+    p="${pair%%:*}" a="${pair##*:}"
+    # tmux status parses #[...] from #() output → italicize alias token only
+    it_a="#[italics]$a#[noitalics]"
+    if [[ "$IN_DIR" == "$p" ]]; then
+        show="$it_a"; break
+    fi
+    if [[ "$IN_DIR" == "$p"/* ]]; then
+        rest="${IN_DIR#"$p"/}"
+        # rest duplicates branch → hide it, branch already shown in suffix
+        if [[ -n "$branch" && "$rest" == "$branch" ]]; then
+            show="$it_a"
+        else
+            show="$it_a · $rest"
+        fi
+        break
+    fi
+done
+
+if [[ -z "$show" ]]; then
+    case "$IN_DIR" in
+        "$HOME") show="~" ;;
+        "$HOME"/*) show="~${IN_DIR#"$HOME"}" ;;
+        *) show="$IN_DIR" ;;
+    esac
+fi
+
+printf '%s%s' "$show" "$suffix"

@@ -62,9 +62,6 @@ alias devy='pushd $HOME/dev && y'
 alias lab='pushd $HOME/dev/_lab'
 alias laby='pushd $HOME/dev/_lab && y'
 
-alias omii='pushd $HOME/omi'
-alias omiy='pushd $HOME/omi && y'
-
 alias daily="hx \"$HOME/ByBretema/Notes/Daily/$(date '+%Y-%m-%d').md\""
 alias jdaily="hx \"$HOME/omi/_sync/daily/$(date '+%Y-%m-%d').md\""
 
@@ -133,10 +130,12 @@ alias ff='fd --hidden --no-ignore-vcs | rg -i'
 alias ffi='fd | rg -i'
 alias fff='fzf --preview="bat --color=always {}"'
 
-# --- Job(s) ---
+# --- Omi ---
 
-alias omid='pushd "$HOME/dev/omi/deploy_studio_engine"'
-alias omis='pushd "$HOME/dev/omi/studio_engine" && gws'
+alias omi='pushd $HOME/omi'
+alias omiy='pushd $HOME/omi && y'
+alias omid='pushd "$HOME/omi/code/deploy_studio_engine"'
+alias omis='pushd "$HOME/omi/code/studio_engine" && gws'
 
 # --- Others ---
 

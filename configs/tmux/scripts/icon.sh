@@ -36,14 +36,14 @@ esac
 
 icon="$icon$icon_space"
 
-git_info=""
+info=""
 if [[ -n "${2:-}" ]]; then
   script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
-  git_info="$( git_repo_info_tmux "$window_path" )"
+  info="$( tmux_info "$window_path" )"
 fi
 
-if [[ -f "$HOME/.local/state/tmux/git_info" ]]; then
-  printf " $icon $git_info"
+if [[ -f "$HOME/.local/state/tmux/show_info" ]]; then
+  printf " $icon $info"
 else
   printf " $icon"
 fi

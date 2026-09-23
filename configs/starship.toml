@@ -32,7 +32,7 @@ format = '(yellow)[$duration]($style)'
 disabled = true
 
 [custom.git_info]
-command = "git_branch_or_symbol"
+command = "git_info"
 when = "true"
 style = "bold purple"
 format = "[$output]($style)"
