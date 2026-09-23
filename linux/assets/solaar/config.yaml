@@ -37,7 +37,7 @@
     logivoice-limiter-state, logivoice-hpf-state, backlight_level, backlight_duration_hands_out, backlight_duration_hands_in, backlight_duration_powered,
     reprogrammable-keys]
   _battery: 4100
-  _config_cookie: [183, 100]
+  _config_cookie: [183, 101]
   _modelId: B36900000000
   _sensitive: {hires-scroll-mode: ignore, hires-smooth-invert: ignore, hires-smooth-resolution: ignore}
   _unitId: 202562DE
