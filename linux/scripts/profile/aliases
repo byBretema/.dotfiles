@@ -7,11 +7,12 @@ alias bot='pushd "$(mktemp -d -t bot-XXXXXX)" && opencode'
 alias dotfiles='$DOTFILES/linux/install.sh'
 
 # TODO: update this to $EDITOR
-alias hx='helix'
-alias hh='hx .'
+alias e='$EDITOR'
+alias ee='e .'
+alias edot='hx $DOTFILES'
+alias ediff='hx $(git ls-files -m -o --exclude-standard)'
+
 alias hxdoc='hx --health'
-alias hxdot='hx $DOTFILES'
-alias hxdiff='hx $(git ls-files -m -o --exclude-standard)'
 
 alias qc='qtcreator >/dev/null 2>/dev/null'
 alias qcc='qtcreator CMakeLists.txt >/dev/null 2>/dev/null'
@@ -38,8 +39,6 @@ alias lhh='l -1 | head -10'
 alias lt='l -1 | tail -5'
 alias ltt='l -1 | tail -10'
 
-alias k='clear && ll'
-
 alias t='l -T --ignore-glob=.git'
 alias t1='t --level=1'
 alias tt='t --level=2'
@@ -56,19 +55,11 @@ alias kd='pushd $(eza -1 -s created -r | fzf)'
 alias ho='cd'
 alias dots='pushd $DOTFILES'
 
-alias dev='pushd $HOME/dev'
-alias devy='pushd $HOME/dev && y'
-
-alias lab='pushd $HOME/dev/_lab'
-alias laby='pushd $HOME/dev/_lab && y'
-
-alias daily="hx \"$HOME/ByBretema/Notes/Daily/$(date '+%Y-%m-%d').md\""
-alias jdaily="hx \"$HOME/omi/_sync/daily/$(date '+%Y-%m-%d').md\""
-
 alias oo='open -s .'
 alias b='open -b'
 alias s='open -s'
 alias d='open -d'
+
 alias ..='cd ..'
 alias ...='cd ../..'
 alias ....='cd ../../..'
@@ -117,7 +108,7 @@ alias gwl='git worktree list'
 alias gwp='git worktree prune'
 alias gwr='git worktree remove'
 
-# --- AI bs ---
+# --- External agents ---
 
 alias ag='pushd $HOME/agents'
 alias agy='pushd $HOME/agents && y'
@@ -132,24 +123,41 @@ alias fff='fzf --preview="bat --color=always {}"'
 
 # --- Omi ---
 
-alias omi='pushd $HOME/omi'
-alias omiy='pushd $HOME/omi && y'
-alias omid='pushd "$HOME/omi/code/deploy_studio_engine"'
-alias omis='pushd "$HOME/omi/code/studio_engine" && gws'
+alias om='pushd $HOME/omi'
+alias omy='om && y'
+alias omd='pushd "$HOME/omi/code/deploy_studio_engine"'
+alias omc='pushd "$HOME/omi/code/studio_engine" && gws'
+alias omn='pushd "$HOME/omi/data/notes"'
+alias omnn="mkdir -p \"$HOME/omi/data/notes\" && hx \"$HOME/omi/data/notes/$(date '+%Y-%m-%d').md\""
 
-# --- Others ---
+# --- Poet ---
 
-# alias wii='which $(fc -ln | tail -1)'
-# alias cdd='which $(fc -ln | tail -1)'
+alias po='pushd $HOME/poet'
+alias poy='po && y'
+alias poc='pushd "$HOME/poet/latest" && gws'
+alias pon='pushd "$HOME/poet/notes"'
+alias ponn="mkdir -p \"$HOME/poet/notes\" && hx \"$HOME/poet/notes/$(date '+%Y-%m-%d').md\""
+
+# --- Bretema ---
+
+alias br='pushd $HOME/brtm'
+alias bry='br && y'
+alias brl='pushd "$(ls -1tA $HOME/brtm | head -1)" && gws'
+alias brn='pushd \"$HOME/brtm/notes\"'
+alias brnn="mkdir -p \"$HOME/poet/data/notes\" && hx \"$HOME/poet/data/notes/$(date '+%Y-%m-%d').md\""
+alias lab='pushd $HOME/brtm/lab'
+alias laby='lab && y'
 
 # --- System ---
 
 alias pbcopy="sed -z 's/^[[:space:]]*//; s/[[:space:]]*\$//' | wl-copy"
+alias copyd="pwd | pbcopy"
+alias copyf="realpathcopy"
+
 alias pbpaste='wl-paste'
+
 alias rr='gio trash'
 alias trash='gio trash'
-alias cbwd="pwd | pbcopy"
-alias cbfp="realpathcopy"
 
 # --- OpenRGB ---
 
@@ -157,64 +165,7 @@ alias rgbset='openrgb --device 0 --mode static --color'
 alias rgblist='openrgb --list-devices'
 
 # --- Kernel info ---
+
 alias jctl='journalctl'
 alias qctl='journalctl -p 3 -xb'
 
-# --- Pacman Helpers ---
-
-alias pm='paru --bottomup'
-alias pmy='pm --noconfirm'
-alias pmyy='pm --noconfirm --skipreview'
-alias pmiy='paru --noconfirm -S'
-alias pmiyy='paru --noconfirm --skipreview -S'
-
-## Recent packages
-alias pm_rip='expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl'
-
-## Big packages
-alias pm_big="expac -H M '%m\t%n' | sort -h | nl"
-
-## Remove a package
-alias pm_remove='sudo pacman -Rsn'
-
-##  Update everything
-alias pm_update='paru -Syu'
-
-##  List explicitly installed packages
-alias pm_list='pacman -Qe'
-
-##  List orphan packages
-alias pm_orphans='pacman -Qdt'
-
-##  List files owned by a package
-alias pm_files='pacman -Ql'
-
-##  Package info
-alias pm_info='pacman -Qi'
-
-##  Search installed packages
-alias pm_search='pacman -Qs'
-
-##  Which package owns a file
-alias pm_owns='pacman -Qo'
-
-##  Dependency tree of a package
-alias pm_deps='pactree'
-
-##  Reverse dependency tree (what depends on a package)
-alias pm_rdeps='pactree -r'
-
-##  Interactive reverse deps (Required By) via fzf
-alias pm_reqby='expac -Q "%n" | fzf --preview="expac -Q -l \"\n\" \"%R\" {}"'
-
-##  Full system upgrade (pacman + flatpak)
-alias pm_upgrade='paru -Syu && flatpak update -y'
-
-##  Cleanup cache
-alias pm_clean_cache='sudo pacman -Sc'
-
-##  Cleanup all cache (incl installed)
-alias pm_clean_cache_all='sudo pacman -Scc'
-
-##  Remove orphan packages
-alias pm_clean_orphans='sudo pacman -Rns $(pacman -Qdtq)'

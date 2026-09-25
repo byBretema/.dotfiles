@@ -1,0 +1,95 @@
+#!/usr/bin/env bash
+
+usage() {
+    cat <<EOF
+Usage: pm [-y] [-t] [verb] [args]
+
+Flags:
+  -y    --noconfirm
+  -t    --skipreview (trusted)
+
+Verbs:
+  (none)        paru --bottomup (search)
+  install       paru -S
+  update        paru -Syu
+  upgrade       paru -Syu + flatpak update
+  remove        pacman -Rsn
+  recent        recent installed packages
+  big           biggest packages
+  list          explicitly installed packages
+  orphans       orphan packages
+  files         files owned by package
+  info          package info
+  search        search installed packages
+  owns          which package owns a file
+  deps-of       dependency tree of a package
+  dep-by        reverse dependency tree
+  clean cache | cache-all | orphans
+EOF
+}
+
+flags=""
+while [[ $# -gt 0 ]]; do
+    case "$1" in
+    -y) flags="$flags --noconfirm" && shift ;;
+    -t) flags="$flags --skipreview" && shift ;;
+    -h | --help) usage && exit 0 ;;
+    *) break ;;
+    esac
+done
+
+
+verb="${1:-}"
+[[ $# -gt 0 ]] && shift
+
+
+case "$verb" in
+
+install) exec paru -S $flags "$@" ;;
+
+update) exec paru $flags -Syu ;;
+
+upgrade) paru $flags -Syu && flatpak update -y ;;
+
+remove) exec sudo pacman -Rsn "$@" ;;
+
+recent) expac --timefmt="%Y-%m-%d %T" "%l\t%n %v" | sort | tail -200 | nl ;;
+
+big) exec expac -H M '%m\t%n' | sort -h | nl ;;
+
+list) exec pacman -Qe ;;
+
+orphans) exec pacman -Qdt ;;
+
+files) exec pacman -Ql "$@" ;;
+
+info) exec pacman -Qi "$@" ;;
+
+search) exec pacman -Qs "$@" ;;
+
+owns) exec pacman -Qo "$@" ;;
+
+deps-of) exec pactree "$@" ;;
+
+dep-by) exec pactree -r "$@" ;;
+
+clean)
+    case "${1:-}" in
+    cache) exec sudo pacman -Sc ;;
+    cache-all) exec sudo pacman -Scc ;;
+    orphans)
+        _orphans=$(pacman -Qdtq)
+        if [[ -z "$_orphans" ]]; then
+            echo "no orphans"
+            exit 0
+        fi
+        exec sudo pacman -Rns $_orphans
+        ;;
+    esac
+    echo "usage: pm clean cache | cache-all | orphans"
+    exit 1
+    ;;
+
+*) exec paru --bottomup $flags "$verb" "$@" ;;
+
+esac

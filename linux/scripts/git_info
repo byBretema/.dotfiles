@@ -41,7 +41,7 @@ show_branch() {
 
 if is_worktree; then
     repo_name="$(basename "$(dirname "$TOP_LEVEL")")"
-    worktree_branch_match || mark=" [non-worktree]"
+    # worktree_branch_match || mark=" [non-worktree]"
 fi
 
 sep=""

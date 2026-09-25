@@ -5,10 +5,10 @@
     selected: "#56688AFF",
     selected_text: "#536994FF",
     focus: "#536994FF",
-    divider: "#030303FF",
-    on: "#FFFFFFFF",
+    divider: "#000000FF",
+    on: "#000000FF",
     disabled: "#536994FF",
-    on_disabled: "#FFFFFF80",
+    on_disabled: "#2A344AFF",
     border: "#536994FF",
     disabled_border: "#53699480",
 )

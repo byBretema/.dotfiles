@@ -10,7 +10,6 @@
     headset_per_zone_lighting, headset-signature-startup, headset-signature-shutdown, headset-signature-passive, logivoice-nr-state, logivoice-ng-state,
     logivoice-comp-state, logivoice-deesser-state, logivoice-depopper-state, logivoice-limiter-state, logivoice-hpf-state]
   _battery: 4100
-  _config_cookie: [183, 99]
   _modelId: B03400000000
   _sensitive: {divert-keys: true, hires-scroll-mode: true, hires-smooth-resolution: true, reprogrammable-keys: true, scroll-ratchet: true, smart-shift: true}
   _unitId: B5C184CA
@@ -37,7 +36,6 @@
     logivoice-limiter-state, logivoice-hpf-state, backlight_level, backlight_duration_hands_out, backlight_duration_hands_in, backlight_duration_powered,
     reprogrammable-keys]
   _battery: 4100
-  _config_cookie: [183, 101]
   _modelId: B36900000000
   _sensitive: {hires-scroll-mode: ignore, hires-smooth-invert: ignore, hires-smooth-resolution: ignore}
   _unitId: 202562DE
