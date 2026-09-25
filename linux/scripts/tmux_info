@@ -19,10 +19,10 @@ ALIASES=(
     "$HOME/brtm:bm"
     "$HOME/poet:poet"
     "$HOME/.dotfiles:dots"
-    "$HOME/omi:omi"
-    "$HOME/omi/code:omi_code"
-    "$HOME/omi/code/studio_engine:omi_engine"
     "$HOME/omi/code/deploy_studio_engine:omi_deploy"
+    "$HOME/omi/code/studio_engine:omi_engine"
+    "$HOME/omi/code:omi_code"
+    "$HOME/omi:omi"
 )
 
 show=""

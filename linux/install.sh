@@ -373,6 +373,53 @@ system_update() {
     flatpak update -y
 }
 
+configure_git_filters() {
+    log_header "Configuring Git filters"
+
+    local repo_root git_dir attributes_file helper rectangle_command
+    local solaar_attribute cosmic_attribute
+
+    repo_root=$(git -C "$script_path" rev-parse --show-toplevel 2>/dev/null) || {
+        log_info "Not inside a Git repository"
+        return 1
+    }
+    git_dir=$(git -C "$repo_root" rev-parse --absolute-git-dir)
+    attributes_file="${git_dir}/info/attributes"
+    helper="${git_dir}/cosmic-rectangle-clean.py"
+    solaar_attribute="linux/assets/solaar/config.yaml filter=solaar-cookie"
+    cosmic_attribute="linux/assets/cosmic/com.system76.CosmicPortal/v1/screenshot filter=cosmic-rectangle"
+
+    mkdir -p "$(dirname "$attributes_file")"
+    touch "$attributes_file"
+    grep -Fqx -- "$solaar_attribute" "$attributes_file" || printf '%s\n' "$solaar_attribute" >> "$attributes_file"
+    grep -Fqx -- "$cosmic_attribute" "$attributes_file" || printf '%s\n' "$cosmic_attribute" >> "$attributes_file"
+
+    git -C "$repo_root" config --local filter.solaar-cookie.clean "sed '/^[[:space:]]*_config_cookie:/d'"
+
+    cat > "$helper" <<'PY'
+import re
+import subprocess
+import sys
+
+
+path = sys.argv[1]
+pattern = re.compile(rb"(?ms)^[ \t]*last_rectangle: Some\(\(\n.*?^[ \t]*\)\),")
+baseline = subprocess.check_output(["git", "show", f":{path}"])
+source = sys.stdin.buffer.read()
+match = pattern.search(baseline)
+
+if match:
+    source = pattern.sub(lambda _: match.group(0), source, count=1)
+
+sys.stdout.buffer.write(source)
+PY
+
+    printf -v rectangle_command 'python3 %q %%f' "$helper"
+    git -C "$repo_root" config --local filter.cosmic-rectangle.clean "$rectangle_command"
+
+    log_info "Solaar and Cosmic filters configured for ${repo_root}"
+}
+
 
 # --- Parse Args ---------------------------------------------------------------
 
@@ -388,6 +435,7 @@ usage() {
     echo "    -u | --update            System update"
     echo "    -i | --install           Install packages / apps"
     echo "    -l | --links             Link configs / themes"
+    echo "       --set-git-filters  Configure local Solaar and Cosmic Git filters"
     echo "  --all                      Run --rm, -u, -i, and -l in sequence"
     echo "    --confirm-pacman         Prompt before each package action (removes --noconfirm)"
     echo "    -h | --help              Show this message"
@@ -400,6 +448,7 @@ do_remove=false
 do_update=false
 do_install=false
 do_links=false
+do_filters=false
 confirm_pacman=false
 
 #! Process options
@@ -410,6 +459,7 @@ while [[ "${#}" > 0 ]]; do
     -u | --update) shift && do_update=true ;;
     -i | --install) shift && do_install=true ;;
     -l | --link) shift && do_links=true ;;
+    --set-git-filters) shift && do_filters=true ;;
     --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
     -h | --help) shift && usage ;;
     --confirm-pacman) shift && confirm_pacman=true ;;
@@ -428,3 +478,4 @@ paru_confirm="--noconfirm"
 [[ "${do_update}" == "true" ]] && system_update
 [[ "${do_install}" == "true" ]] && install_packages
 [[ "${do_links}" == "true" ]] && link_config_files
+[[ "${do_filters}" == "true" ]] && configure_git_filters
