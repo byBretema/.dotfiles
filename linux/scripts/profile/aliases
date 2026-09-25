@@ -4,18 +4,14 @@
 alias j="jobs"
 alias oc="opencode"
 alias bot='pushd "$(mktemp -d -t bot-XXXXXX)" && opencode'
-alias dotfiles='$DOTFILES/linux/install.sh'
 
-# TODO: update this to $EDITOR
 alias e='$EDITOR'
 alias ee='e .'
-alias edot='hx $DOTFILES'
-alias ediff='hx $(git ls-files -m -o --exclude-standard)'
+alias edot='e $DOTFILES'
+alias ediff='e $(git ls-files -m -o --exclude-standard)'
 
-alias hxdoc='hx --health'
-
-alias qc='qtcreator >/dev/null 2>/dev/null'
-alias qcc='qtcreator CMakeLists.txt >/dev/null 2>/dev/null'
+alias qc='qtcreator >/dev/null 2&>1'
+alias qcc='qtcreator CMakeLists.txt >/dev/null 2&>1'
 
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M"'
@@ -31,16 +27,18 @@ alias py="python"
 
 alias l='eza -a --icons auto --git -s type --hyperlink auto'
 alias ll='l -l --no-user'
-alias lll='l -1'
+alias l1='l -1'
 
 alias lh='l -1 | head -5'
 alias lhh='l -1 | head -10'
+alias lhhh='l -1 | head -15'
 
 alias lt='l -1 | tail -5'
 alias ltt='l -1 | tail -10'
+alias lttt='l -1 | tail -15'
 
-alias t='l -T --ignore-glob=.git'
-alias t1='t --level=1'
+alias T='l -T --ignore-glob=.git'
+alias t='t --level=1'
 alias tt='t --level=2'
 alias ttt='t --level=3'
 
@@ -48,12 +46,6 @@ alias ttt='t --level=3'
 
 alias h='history'
 alias yy='yazi'
-
-alias ccd='pushd $(eza -1 -s created -r | fzf)'
-alias kd='pushd $(eza -1 -s created -r | fzf)'
-
-alias ho='cd'
-alias dots='pushd $DOTFILES'
 
 alias oo='open -s .'
 alias b='open -b'
@@ -65,6 +57,13 @@ alias ...='cd ../..'
 alias ....='cd ../../..'
 alias .....='cd ../../../..'
 alias ......='cd ../../../../..'
+
+# --- Dotfiles ---
+
+alias dot='pushd $DOTFILES'
+alias doty='dot && y'
+alias dotm='$DOTFILES/linux/install.sh'
+
 
 # --- Git ---
 
@@ -129,6 +128,7 @@ alias omd='pushd "$HOME/omi/code/deploy_studio_engine"'
 alias omc='pushd "$HOME/omi/code/studio_engine" && gws'
 alias omn='pushd "$HOME/omi/data/notes"'
 alias omnn="mkdir -p \"$HOME/omi/data/notes\" && hx \"$HOME/omi/data/notes/$(date '+%Y-%m-%d').md\""
+alias omu="bash $HOME/omi/data/omi_utils.sh"
 
 # --- Poet ---
 
