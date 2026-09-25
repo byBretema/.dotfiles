@@ -2,7 +2,7 @@
 # Usage: tmux_info [DIR]
 # Prints "~/path/to/dir[ [branch]]", or "alias[ · rest of tree][ [branch]]"
 # for known prefixes (longest match wins). Alias wrapped in #[italics],
-# " · rest" dropped when no rest or when rest == branch.
+# " · rest" drops a trailing branch name when it matches the current branch.
 
 IN_DIR="${1:-$PWD}"
 IN_DIR="${IN_DIR%/}"
@@ -16,11 +16,13 @@ suffix=""
 
 # Longest-prefix alias map: path:display, specific before generic
 ALIASES=(
+    "$HOME/brtm:bm"
+    "$HOME/poet:poet"
+    "$HOME/.dotfiles:dots"
+    "$HOME/omi:omi"
+    "$HOME/omi/code:omi_code"
     "$HOME/omi/code/studio_engine:omi_engine"
     "$HOME/omi/code/deploy_studio_engine:omi_deploy"
-    "$HOME/omi/code:omi_code"
-    "$HOME/omi:omi"
-    "$HOME/.dotfiles:dots"
 )
 
 show=""
@@ -33,9 +35,11 @@ for pair in "${ALIASES[@]}"; do
     fi
     if [[ "$IN_DIR" == "$p"/* ]]; then
         rest="${IN_DIR#"$p"/}"
-        # rest duplicates branch → hide it, branch already shown in suffix
+        # Hide a matching trailing branch name; branch is already shown in suffix.
         if [[ -n "$branch" && "$rest" == "$branch" ]]; then
             show="$it_a"
+        elif [[ -n "$branch" && "$rest" == */"$branch" ]]; then
+            show="$it_a · ${rest%/"$branch"}"
         else
             show="$it_a · $rest"
         fi
