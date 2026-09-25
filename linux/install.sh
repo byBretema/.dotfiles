@@ -167,8 +167,11 @@ EOF
     ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${opencode_dir}/AGENTS.md"
     log_info "Settings"
     ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${opencode_dir}/opencode.jsonc"
+    ln -srf "${DOT_CONFIGS}/opencode/cli.json" "${opencode_dir}/cli.json"
     log_info "TUI"
     ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${opencode_dir}/tui.json"
+    themes_dir=$(mkdir_ret "${opencode_dir}/themes")
+    ln -srf "${DOT_CONFIGS}/opencode/themes/catppuccin-transparent.json" "${themes_dir}/catppuccin-transparent.json"
     log_info "Commands"
     ln -srfn "${DOT_CONFIGS}/opencode/commands" "${opencode_dir}/commands"
     log_info "Agents"

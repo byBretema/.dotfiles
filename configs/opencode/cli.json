@@ -1,0 +1,47 @@
+{
+  "$schema": "https://opencode.ai/v2/cli.json",
+  "theme": {
+    "name": "catppuccin-transparent",
+    "mode": "system"
+  },
+  "keybinds": {
+    "app.exit": "<leader>q",
+    "prompt.clear": "ctrl+c"
+  },
+  "scroll": {
+    "acceleration": true
+  },
+  "session": {
+    "sidebar": "hide",
+    "markdown": "rendered",
+    "grouping": "auto",
+    "image_preview": false,
+    "new_location": "launch",
+    "permissions": "prompt"
+  },
+  "tabs": {
+    "enabled": false,
+    "scope": "cwd",
+    "layout": "horizontal",
+    "indicators": "numbers"
+  },
+  "diffs": {
+    "view": "auto",
+    "wrap": "word",
+    "tree": true,
+    "single": false
+  },
+  "prompt": {
+    "paste": "compact",
+    "image_preview": true
+  },
+  "attention": {
+    "notifications": true,
+    "sound": true
+  },
+  "terminal": {
+    "title": false,
+    "copy": "select"
+  },
+  "animations": true
+}
