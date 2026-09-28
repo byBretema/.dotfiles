@@ -100,6 +100,8 @@ link_config_files() {
     copyq_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
     ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${copyq_dir}/copyq.conf"
     ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${copyq_dir}/copyq-commands.ini"
+    copyq_themes_dir=$(mkdir_ret "${copyq_dir}/themes")
+    ln -srf "${DOT_CONFIGS}/copyq/themes/catppuccin-mocha.ini" "${copyq_themes_dir}/catppuccin-mocha.ini"
     copyq_autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
     ln -srf "${DOT_LINUX_ASSETS}/autostart/copyq.desktop" "${copyq_autostart_dir}/copyq.desktop"
 
