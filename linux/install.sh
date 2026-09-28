@@ -100,6 +100,8 @@ link_config_files() {
     copyq_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
     ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${copyq_dir}/copyq.conf"
     ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${copyq_dir}/copyq-commands.ini"
+    copyq_autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
+    ln -srf "${DOT_LINUX_ASSETS}/autostart/copyq.desktop" "${copyq_autostart_dir}/copyq.desktop"
 
     # LazyGit
     log_info "LazyGit"
@@ -141,6 +143,7 @@ EOF
 
     yazi_dir=$(mkdir_ret "${HOME_CONFIG}/yazi")
     ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${yazi_dir}/yazi.toml"
+    ln -srf "${DOT_CONFIGS}/yazi/keymap.toml" "${yazi_dir}/keymap.toml"
     ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${yazi_dir}/theme.toml"
 
     log_info "-- catppuccin"
@@ -149,6 +152,9 @@ EOF
 
     log_info "-- piper"
     ya pkg add yazi-rs/plugins:piper &>/dev/null && ya pkg install || true
+
+    log_info "-- toggle-pane"
+    ya pkg add yazi-rs/plugins:toggle-pane &>/dev/null && ya pkg install || true
 
     # Qt Creator
     log_info "Qt Creator"

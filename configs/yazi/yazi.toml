@@ -9,12 +9,24 @@ show_hidden = true
 glow = [
 	{ run = "glow -t %s1", block = true },
 ]
+imv = [
+	{ run = "imv %s", orphan = true },
+]
+mpv = [
+	{ run = "mpv %s", orphan = true },
+]
 
 [open]
 prepend_rules = [
+	{ mime = "video/*", use = "mpv" },
+	{ mime = "image/*", use = "imv" },
 	{ url = "*.md", use = "glow" },
 ]
 
 [[plugin.prepend_previewers]]
 url = "*.md"
 run = 'piper -- glow -w=$w -s="$HOME/.config/glow/themes/catppuccin-mocha.json" "$1"'
+
+[preview]
+max_width = 3840
+max_height = 2160
