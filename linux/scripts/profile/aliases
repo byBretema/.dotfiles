@@ -1,4 +1,3 @@
-
 # --- Tools ---
 
 alias j="jobs"
@@ -64,7 +63,6 @@ alias dot='pushd $DOTFILES'
 alias doty='dot && y'
 alias dotm='$DOTFILES/linux/install.sh'
 
-
 # --- Git ---
 
 # Movement
@@ -122,30 +120,39 @@ alias fff='fzf --preview="bat --color=always {}"'
 
 # --- Omi ---
 
-alias om='pushd $HOME/omi'
+export __DIR__omi="$HOME/omi"
+
+alias om='mkdir -p "$__DIR__omi" && pushd "$__DIR__omi"'
 alias omy='om && y'
-alias omd='pushd "$HOME/omi/code/deploy_studio_engine"'
-alias omc='pushd "$HOME/omi/code/studio_engine" && gws'
-alias omn='pushd "$HOME/omi/data/notes"'
-alias omnn="mkdir -p \"$HOME/omi/data/notes\" && hx \"$HOME/omi/data/notes/$(date '+%Y-%m-%d').md\""
+
+alias omd='pushd ""$__DIR__omi/code/deploy_studio_engine"'
+alias omc='pushd ""$__DIR__omi/code/studio_engine" && gws'
 alias omu="bash $HOME/omi/data/omi_utils.sh"
+
+# alias omn='pushd "$HOME/omi/data/notes"'
+# alias omnn="mkdir -p \"$HOME/omi/data/notes\" && hx \"$HOME/omi/data/notes/$(date '+%Y-%m-%d').md\""
 
 # --- Poet ---
 
-alias po='pushd $HOME/poet'
+export __DIR__poet="$HOME/poet"
+
+alias po='mkdir -p "$__DIR__poet" && pushd "$__DIR__poet"'
 alias poy='po && y'
-alias poc='pushd "$HOME/poet/latest" && gws'
-alias pon='pushd "$HOME/poet/notes"'
-alias ponn="mkdir -p \"$HOME/poet/notes\" && hx \"$HOME/poet/notes/$(date '+%Y-%m-%d').md\""
+alias pol='pushd "$(ls -1tA "$__DIR__po" | head -1)" && gws'
 
-# --- Bretema ---
+# --- Me ---
 
-alias br='pushd $HOME/brtm'
-alias bry='br && y'
-alias brl='pushd "$(ls -1tA $HOME/brtm | head -1)" && gws'
-alias brn='pushd \"$HOME/brtm/notes\"'
-alias brnn="mkdir -p \"$HOME/poet/data/notes\" && hx \"$HOME/poet/data/notes/$(date '+%Y-%m-%d').md\""
-alias lab='pushd $HOME/brtm/lab'
+export __DIR__me="$HOME/me"
+export __DIR__lab="$HOME/me/lab"
+
+alias me='mkdir -p "$__DIR__me" && pushd "$__DIR__me"'
+alias mey='me && y'
+alias mel='pushd "$(ls -1tA "$__DIR__me" | head -1)" && gws'
+
+# alias brn='pushd \"$HOME/me/notes\"'
+# alias brnn="mkdir -p \"$HOME/poet/data/notes\" && hx \"$HOME/poet/data/notes/$(date '+%Y-%m-%d').md\""
+
+alias lab='pushd "$__DIR__lab"'
 alias laby='lab && y'
 
 # --- System ---
@@ -168,4 +175,3 @@ alias rgblist='openrgb --list-devices'
 
 alias jctl='journalctl'
 alias qctl='journalctl -p 3 -xb'
-

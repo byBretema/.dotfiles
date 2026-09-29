@@ -1,0 +1,15 @@
+#!/usr/bin/env bash
+
+SSH_PUB="$HOME/.ssh/id_ed25519.pub"
+
+[[ ! -f "$SSH_PUB" ]] && ssh-keygen -t ed25519
+
+pub_key="$(cat "$SSH_PUB")"
+
+if command -v wl-copy >/dev/null 2>&1; then
+    echo "$pub_key" | wl-copy
+elif command -v xclip >/dev/null 2>&1; then
+    echo "$pub_key" | xclip -selection c
+fi
+
+echo "$pub_key"
