@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".bash_common"
+source "${0%/*}/.bash_common"
 guard__is_git
 
 local_delete_flag="-d"

@@ -3,7 +3,7 @@
 target_file="/tmp/git_worktree_add_target"
 rm -f "$target_file"
 
-source ".bash_common"
+source "${0%/*}/.bash_common"
 if ! is_git; then
   for dir in main master dev; do
     [[ -d "$dir/.git" ]] || [[ -f "$dir/.git" ]] && cd "$dir" && exec "$script_path/$script_name" "$@"

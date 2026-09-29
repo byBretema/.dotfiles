@@ -182,7 +182,7 @@ EOF
     log_info "Skills"
     ln -srfn "${DOT_CONFIGS}/opencode/skills" "${opencode_dir}/skills"
     log_info "Plugins"
-    ln -srfn "${DOT_CONFIGS}/opencode/plugin" "${opencode_dir}/plugin"
+    ln -srfn "${DOT_CONFIGS}/opencode/plugins" "${opencode_dir}/plugins"
     log_info "Scripts"
     pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
     ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"

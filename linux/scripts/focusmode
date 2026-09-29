@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-source ".bash_common"
+source "${0%/*}/.bash_common"
 
 OPTIONS=(
   "WORK"
@@ -10,7 +10,7 @@ option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
 log_info "Focus mode set to: ${option}"
 
 op="rm"; suffix=""
-[[ "${option}" == "WORK" ]] && { op="add"; suffix="::1" }
+[[ "${option}" == "WORK" ]] && { op="add"; suffix="::1"; }
 
 TO_BLOCK=(
   "youtube.com"
