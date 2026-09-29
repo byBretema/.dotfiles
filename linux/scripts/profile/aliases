@@ -9,8 +9,8 @@ alias ee='e .'
 alias edot='e $DOTFILES'
 alias ediff='e $(git ls-files -m -o --exclude-standard)'
 
-alias qc='qtcreator >/dev/null 2&>1'
-alias qcc='qtcreator CMakeLists.txt >/dev/null 2&>1'
+alias qc='qtcreator >/dev/null 2>&1'
+alias qcc='qtcreator CMakeLists.txt >/dev/null 2>&1'
 
 alias ta='tmux attach || tmux'
 alias now='date "+%d/%m/%Y %H:%M"'
@@ -37,9 +37,9 @@ alias ltt='l -1 | tail -10'
 alias lttt='l -1 | tail -15'
 
 alias T='l -T --ignore-glob=.git'
-alias t='t --level=1'
-alias tt='t --level=2'
-alias ttt='t --level=3'
+alias t='T --level=1'
+alias tt='T --level=2'
+alias ttt='T --level=3'
 
 # --- Navigation ---
 
@@ -109,7 +109,7 @@ alias gwr='git worktree remove'
 
 alias ag='pushd $HOME/agents'
 alias agy='pushd $HOME/agents && y'
-alias agsync='agcd; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
+alias agsync='ag; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
 alias agtree='t $HOME/agents'
 
 # --- Find / Pickers ---
