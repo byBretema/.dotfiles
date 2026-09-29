@@ -10,11 +10,11 @@ export PATH="$DOTFILES_SCRIPTS:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
+export PATH="$HOME/.local/share/pnpm/bin:$PATH"
 
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/profile/aliases"
 alias fuuuck='cmd=$(fc -ln -1); gum confirm --default=false "Re-run as SUDO: $cmd" && eval sudo "$cmd"'
-alias gpcm='git add -A && git commit -m "$*" && git push'
 
 # --- Functions ----------------------------------------------------------------
 

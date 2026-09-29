@@ -66,7 +66,7 @@ alias dotm='$DOTFILES/linux/install.sh'
 # --- Git ---
 
 # Movement
-alias gt='pushd $(git rev-parse --show-toplevel 2>/dev/null)' # go to repo root
+alias gt='pushd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"' # go to repo root
 # Status
 alias gs='git status --short'
 # Management
@@ -82,12 +82,13 @@ alias ga='git add'
 alias gA='git add -A'
 alias gap='git add --patch'
 # Commit
-alias gm='git add -A; git commit -m '
-alias gc='git commit -m'
+alias gm='git add -A && gitcommit'
+alias gc='gitcommit'
 # Push
 alias gp='git push'
 alias gpnc='git add -A && git commit -m "-"           && git push'
 alias gpai='git add -A && git commit -m "AI++"        && git push'
+alias gpcm='git add -A && gitcommit --push'
 # Pull
 alias gu='git pull --rebase'
 # Log
@@ -107,10 +108,10 @@ alias gwr='git worktree remove'
 
 # --- External agents ---
 
-alias ag='pushd $HOME/agents'
-alias agy='pushd $HOME/agents && y'
-alias agsync='ag; git add -A; git stash; git pull; git stash pop; git commit -m "-"; git push; popd 2>/dev/null'
-alias agtree='t $HOME/agents'
+alias ea='pushd $HOME/agents'
+alias eay='pushd $HOME/agents && y'
+alias easync='ea && git add -A && git stash && git pull && git stash pop && git commit -m "-" && git push; popd 2>/dev/null'
+alias eatree='t $HOME/agents'
 
 # --- Find / Pickers ---
 

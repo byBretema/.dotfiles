@@ -1,0 +1,20 @@
+#!/usr/bin/env bash
+
+# Commit staged changes; editor fallback when no message given.
+# --push  push after a successful commit
+
+push=false
+if [[ $1 == "--push" ]]; then
+    push=true
+    shift
+fi
+
+if [[ $# -gt 0 ]]; then
+    git commit -m "$*" || exit
+else
+    git commit || exit
+fi
+
+if [[ $push == true ]]; then
+    git push
+fi
