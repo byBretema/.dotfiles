@@ -379,7 +379,7 @@ configure_git_filters() {
 
         is_git || {
             log_warn "Not inside a Git repository"
-            exit 0
+            exit 1
         }
 
         # Attributes file
@@ -505,8 +505,12 @@ done
 paru_confirm="--noconfirm"
 [[ $confirm_pacman == true ]] && paru_confirm=""
 
-[[ "${do_remove}" == "true" ]] && remove_packages
-[[ "${do_update}" == "true" ]] && system_update
-[[ "${do_install}" == "true" ]] && install_packages
-[[ "${do_links}" == "true" ]] && link_config_files
-[[ "${do_filters}" == "true" ]] && configure_git_filters
+exit_code=0
+
+[[ "${do_remove}" == "true" ]] && { remove_packages || exit_code=1; }
+[[ "${do_update}" == "true" ]] && { system_update || exit_code=1; }
+[[ "${do_install}" == "true" ]] && { install_packages || exit_code=1; }
+[[ "${do_links}" == "true" ]] && { link_config_files || exit_code=1; }
+[[ "${do_filters}" == "true" ]] && { configure_git_filters || exit_code=1; }
+
+exit "${exit_code}"
