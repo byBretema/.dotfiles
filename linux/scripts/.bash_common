@@ -83,6 +83,11 @@ guard__is_git() {
   is_git || error_exit "Current directory is not a git repository"
 }
 
+is_git_script_path() {
+  is_cmd "git" || return 1
+  git -C "${script_path}" rev-parse --is-inside-work-tree > /dev/null 2>&1
+}
+
 repo_root() {
   echo "$(git -C "${script_path}" rev-parse --show-toplevel 2>/dev/null)"
 }

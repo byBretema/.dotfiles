@@ -3,7 +3,6 @@
 script_path=$(cd -- "$(dirname -- "${BASH_SOURCE[-1]}")" &>/dev/null && pwd)
 source "${script_path}/scripts/.bash_common"
 
-
 # --- Consts -------------------------------------------------------------------
 
 DOT_CONFIGS="${script_path}/../configs"
@@ -12,7 +11,6 @@ DOT_LINUX_ASSETS="${script_path}/assets"
 
 HOME_CONFIG="$HOME/.config"
 mkdir -p "${HOME_CONFIG}"
-
 
 # --- Actions ------------------------------------------------------------------
 
@@ -52,7 +50,6 @@ link_config_files() {
     [[ ! -d "${tmux_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${tmux_dir}/plugins/tpm"; }
     ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${tmux_dir}/tmux.conf"
 
-
     # --- DevEnv ---
     log_header "Linking - Dev env"
 
@@ -86,7 +83,6 @@ link_config_files() {
     worktrunk_dir=$(mkdir_ret "${HOME_CONFIG}/worktrunk")
     ln -srf "${DOT_CONFIGS}/worktrunk.toml" "${worktrunk_dir}/config.toml"
 
-
     # --- Apps ---
     log_header "Linking - Apps settings"
 
@@ -113,7 +109,7 @@ link_config_files() {
     # Glow
     log_info "Glow"
     glow_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
-    cat > "${glow_dir}/glow.yml" <<EOF
+    cat >"${glow_dir}/glow.yml" <<EOF
 style: "${HOME}/.config/glow/themes/catppuccin-mocha.json"
 EOF
     glow_theme_dir=$(mkdir_ret "${glow_dir}/themes")
@@ -166,7 +162,6 @@ EOF
     ln -srf "${src_dir}/gruvbox_dark.xml" "${qtcreator_styles_dir}/gruvbox_dark_t.xml"
     ln -srf "${src_dir}/catppuccin_latte.xml" "${qtcreator_styles_dir}/catppuccin_latte_t.xml"
 
-
     # --- OpenCode ---
     log_header "Linking - OpenCode"
     opencode_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
@@ -192,7 +187,6 @@ EOF
     pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
     ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
 
-
     # --- Environment ---
     log_header "Linking - Env vars"
 
@@ -211,7 +205,6 @@ EOF
 
     log_info "SSH"
     ln -srf "$DOT_LINUX_ASSETS/env/10-ssh.conf" "${env_dir}/10-ssh.conf"
-
 
     # --- GNOME ---
     log_header "Linking - Gnome fixs"
@@ -249,7 +242,6 @@ EOF
 
     gtk4_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
     ln -srf "$DOT_LINUX_ASSETS/gtk/gtk-4.0/settings.ini" "${gtk4_dir}/settings.ini"
-
 
     # --- Input Management ---
     log_header "Linking - Input management"
@@ -299,7 +291,6 @@ EOF
     sudo systemctl enable drm-colortemp.service
     sudo systemctl restart drm-colortemp.service
 
-
     # --- Wallpapers ---
     log_header "Linking Wallpapers"
 
@@ -310,7 +301,6 @@ EOF
     sudo mkdir -p "$wallpapers_dir"
     sudo cp -r "$DOT_ASSETS/wallpapers/." "${wallpapers_dir}"
     log_info "Availables at: $wallpapers_dir"
-
 
     # --- Cosmic ---
     log_header "Linking Cosmic Settings"
@@ -332,8 +322,8 @@ collect_packages() {
         [[ -n $pkg ]] || continue
         eval "$check_cmd \"$pkg\"" &>/dev/null
         local status=$?
-        [[ $(( status ^ invert )) -eq 1 ]] && result+=("$pkg")
-    done < "$list_file"
+        [[ $((status ^ invert)) -eq 1 ]] && result+=("$pkg")
+    done <"$list_file"
 
     echo "${result[@]}"
 }
@@ -348,30 +338,30 @@ install_packages() {
 
     log_header "-- Pacman"
     is_cmd "paru" || sudo pacman -S paru
-    _pkgs=( $(collect_packages "$script_path/pacman_install.conf" "paru -Q" "[^a-zA-Z0-9_-]") )
+    _pkgs=($(collect_packages "$script_path/pacman_install.conf" "paru -Q" "[^a-zA-Z0-9_-]"))
     [[ ${#_pkgs[@]} -gt 0 ]] && paru -S $paru_confirm --skipreview "${_pkgs[@]}"
 
     log_header "-- Flatpak"
     is_cmd "flatpak" || sudo pacman -S flatpak
-    _pkgs=( $(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9.]") )
+    _pkgs=($(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9.]"))
     [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y install "${_pkgs[@]}"
 
     log_header "-- Pnpm"
-    _pkgs=( $(collect_packages "$script_path/pnpm_install.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]") )
+    _pkgs=($(collect_packages "$script_path/pnpm_install.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]"))
     [[ ${#_pkgs[@]} -gt 0 ]] && pnpm add -g "${_pkgs[@]}"
 }
 
 remove_packages() {
     log_header "Removing packages"
 
-    _pkgs=( $(collect_packages "$script_path/pacman_remove.conf" "paru -Q" "[^a-zA-Z0-9_-]" 1) )
+    _pkgs=($(collect_packages "$script_path/pacman_remove.conf" "paru -Q" "[^a-zA-Z0-9_-]" 1))
     [[ ${#_pkgs[@]} -gt 0 ]] && paru -Rns $paru_confirm "${_pkgs[@]}"
 
-    _pkgs=( $(collect_packages "$script_path/flatpak_remove.conf" "flatpak info" "[^a-zA-Z0-9.]" 1) )
+    _pkgs=($(collect_packages "$script_path/flatpak_remove.conf" "flatpak info" "[^a-zA-Z0-9.]" 1))
     [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y uninstall "${_pkgs[@]}"
     flatpak uninstall --unused -y
 
-    _pkgs=( $(collect_packages "$script_path/pnpm_remove.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]" 1) )
+    _pkgs=($(collect_packages "$script_path/pnpm_remove.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]" 1))
     [[ ${#_pkgs[@]} -gt 0 ]] && pnpm remove -g "${_pkgs[@]}"
 }
 
@@ -384,50 +374,70 @@ system_update() {
 configure_git_filters() {
     log_header "Configuring Git filters"
 
-    local repo_root git_dir attributes_file helper rectangle_command
-    local solaar_attribute cosmic_attribute
+    (
+        cd "$script_path"
 
-    repo_root=$(git -C "$script_path" rev-parse --show-toplevel 2>/dev/null) || {
-        log_info "Not inside a Git repository"
-        return 1
-    }
-    git_dir=$(git -C "$repo_root" rev-parse --absolute-git-dir)
-    attributes_file="${git_dir}/info/attributes"
-    helper="${git_dir}/cosmic-rectangle-clean.py"
-    solaar_attribute="linux/assets/solaar/config.yaml filter=solaar-cookie"
-    cosmic_attribute="linux/assets/cosmic/com.system76.CosmicPortal/v1/screenshot filter=cosmic-rectangle"
+        is_git || {
+            log_warn "Not inside a Git repository"
+            exit 0
+        }
 
-    mkdir -p "$(dirname "$attributes_file")"
-    touch "$attributes_file"
-    grep -Fqx -- "$solaar_attribute" "$attributes_file" || printf '%s\n' "$solaar_attribute" >> "$attributes_file"
-    grep -Fqx -- "$cosmic_attribute" "$attributes_file" || printf '%s\n' "$cosmic_attribute" >> "$attributes_file"
+        # Attributes file
+        local git_dir="$(git rev-parse --absolute-git-dir 2>/dev/null)"
+        local attributes_file="${git_dir}/info/attributes"
+        mkdir -p "$(dirname "$attributes_file")"
+        touch "$attributes_file"
 
-    git -C "$repo_root" config --local filter.solaar-cookie.clean "sed '/^[[:space:]]*_config_cookie:/d'"
+        # Solaar
+        (
+            attribute="linux/assets/solaar/config.yaml filter=solaar-cookie"
 
-    cat > "$helper" <<'PY'
-import re
-import subprocess
-import sys
+            grep -Fqx -- "$attribute" "$attributes_file" || printf '%s\n' "$attribute" >>"$attributes_file"
 
+            git config --local filter.solaar-cookie.clean "sed '/^[[:space:]]*_config_cookie:/d'"
+            git config --local filter.solaar-cookie.required true
+        )
 
-path = sys.argv[1]
-pattern = re.compile(rb"(?ms)^[ \t]*last_rectangle: Some\(\(\n.*?^[ \t]*\)\),")
-baseline = subprocess.check_output(["git", "show", f":{path}"])
-source = sys.stdin.buffer.read()
-match = pattern.search(baseline)
+        # Screenshot
+        (
+            attribute="linux/assets/cosmic/com.system76.CosmicPortal/v1/screenshot filter=cosmic-rectangle"
 
-if match:
-    source = pattern.sub(lambda _: match.group(0), source, count=1)
+            grep -Fqx -- "$attribute" "$attributes_file" || printf '%s\n' "$attribute" >>"$attributes_file"
 
-sys.stdout.buffer.write(source)
-PY
+            helper="${DOT_LINUX_ASSETS}/git_filters/cosmic_rectangle_clean.py"
+            printf -v rectangle_command 'python3 %q %%f' "$helper"
 
-    printf -v rectangle_command 'python3 %q %%f' "$helper"
-    git -C "$repo_root" config --local filter.cosmic-rectangle.clean "$rectangle_command"
+            git config --local filter.cosmic-rectangle.clean "$rectangle_command"
+            git config --local filter.cosmic-rectangle.required true
+        )
 
-    log_info "Solaar and Cosmic filters configured for ${repo_root}"
+        # Xkb
+        (
+            hw_model=$(cat /sys/class/dmi/id/product_name 2>/dev/null)
+            if [[ $hw_model != *MacBook* && $hw_model != *Apple* ]]; then
+                log_info "XKB Alt/Win swap skipped for ${hw_model}"
+                exit 0
+            fi
+
+            #... Apply keyboard settings (mac-only)
+
+            xkb_file="${DOT_LINUX_ASSETS}/cosmic/com.system76.CosmicComp/v1/xkb_config"
+            sed -i -E 's|^[[:space:]]*options:.*|    options: Some("altwin:swap_alt_win"),|' "$xkb_file"
+            log_info "XKB Alt/Win swap enabled for ${hw_model}"
+
+            #... Apply git filter
+
+            attribute="linux/assets/cosmic/com.system76.CosmicComp/v1/xkb_config filter=xkb-macbook"
+
+            grep -Fqx -- "$attribute" "$attributes_file" || printf '%s\n' "$attribute" >>"$attributes_file"
+
+            git config --local filter.xkb-macbook.clean "sed -E 's|^[[:space:]]*options:.*|    options: None,|'"
+            git config --local filter.xkb-macbook.required true
+        )
+
+        log_info "Git filters config done."
+    )
 }
-
 
 # --- Parse Args ---------------------------------------------------------------
 
@@ -435,19 +445,27 @@ PY
 
 usage() {
     echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
-    echo ""
+    echo
     echo "Manage configs and system apps, themes..."
-    echo ""
+    echo
     echo "Options:"
-    echo "  --rm | --remove            Remove discarded packages"
-    echo "    -u | --update            System update"
-    echo "    -i | --install           Install packages / apps"
-    echo "    -l | --links             Link configs / themes"
-    echo "       --set-git-filters  Configure local Solaar and Cosmic Git filters"
-    echo "  --all                      Run --rm, -u, -i, and -l in sequence"
-    echo "    --confirm-pacman         Prompt before each package action (removes --noconfirm)"
-    echo "    -h | --help              Show this message"
-    echo "    --                       Extra args after this"
+    echo "  -d | --remove            Remove discarded packages"
+    echo "  -u | --update            System update"
+    echo "  -i | --install           Install packages / apps"
+    echo "  -l | --links             Link configs / themes"
+    echo "       --all               Run -d, -u, -i, and -l in sequence"
+    echo
+    echo "  --set-git-filters        Configure local Git filters *1"
+    echo
+    echo "  --confirm-pacman         Prompt before each package action (removes --noconfirm)"
+    echo
+    echo "    -h | --help            Show this message"
+    echo "    --                     Extra args after this"
+    echo
+    echo " [*1]"
+    echo "      - Solaar     : Disable sync of, config_cookie."
+    echo "      - Screenshot : Disable sync of, last_rectangle."
+    echo "      - XKB        : Disable sync of, swap alt-win keys on macbooks."
 }
 
 #! Defaults
@@ -463,19 +481,24 @@ confirm_pacman=false
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
-    --rm | --remove) shift && do_remove=true ;;
+
+    -d | --remove) shift && do_remove=true ;;
     -u | --update) shift && do_update=true ;;
     -i | --install) shift && do_install=true ;;
-    -l | --link) shift && do_links=true ;;
-    --set-git-filters) shift && do_filters=true ;;
+    -l | --links) shift && do_links=true ;;
     --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
-    -h | --help) shift && usage ;;
-    --confirm-pacman) shift && confirm_pacman=true ;;
-    --) shift && break ;;
-    *) break ;;
-esac
-done
 
+    --set-git-filters) shift && do_filters=true ;;
+
+    --confirm-pacman) shift && confirm_pacman=true ;;
+
+    -h | --help) shift && usage ;;
+    --) shift && break ;;
+
+    *) break ;;
+
+    esac
+done
 
 # --- Execution ----------------------------------------------------------------
 
