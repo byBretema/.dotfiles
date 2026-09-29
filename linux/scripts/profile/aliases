@@ -125,8 +125,8 @@ export __DIR__omi="$HOME/omi"
 alias om='mkdir -p "$__DIR__omi" && pushd "$__DIR__omi"'
 alias omy='om && y'
 
-alias omd='pushd ""$__DIR__omi/code/deploy_studio_engine"'
-alias omc='pushd ""$__DIR__omi/code/studio_engine" && gws'
+alias omd='pushd "$__DIR__omi/code/deploy_studio_engine"'
+alias omc='pushd "$__DIR__omi/code/studio_engine" && gws'
 alias omu="bash $HOME/omi/data/omi_utils.sh"
 
 # alias omn='pushd "$HOME/omi/data/notes"'
