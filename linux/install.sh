@@ -422,7 +422,7 @@ configure_git_filters() {
             #... Apply keyboard settings (mac-only)
 
             xkb_file="${DOT_LINUX_ASSETS}/cosmic/com.system76.CosmicComp/v1/xkb_config"
-            sed -i -E 's|^[[:space:]]*options:.*|    options: Some("altwin:swap_alt_win"),|' "$xkb_file"
+            sed -i -E 's|^[[:space:]]*options:.*|    options: Some("altwin:swap_alt_win,lv3:rwin_switch"),|' "$xkb_file"
             log_info "XKB Alt/Win swap enabled for ${hw_model}"
 
             #... Apply git filter
