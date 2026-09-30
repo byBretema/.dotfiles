@@ -12,6 +12,9 @@ DOT_LINUX_ASSETS="${script_path}/assets"
 HOME_CONFIG="$HOME/.config"
 mkdir -p "${HOME_CONFIG}"
 
+git_dir=$(git -C "$script_path" rev-parse --absolute-git-dir 2>/dev/null)
+attributes_file="${git_dir:+${git_dir}/info/attributes}"
+
 # --- Actions ------------------------------------------------------------------
 
 mkdir_ret() {
@@ -337,12 +340,10 @@ install_packages() {
     log_header "Installing packages"
 
     log_header "-- Pacman"
-    is_cmd "paru" || sudo pacman -S paru
     _pkgs=($(collect_packages "$script_path/pacman_install.conf" "paru -Q" "[^a-zA-Z0-9_-]"))
     [[ ${#_pkgs[@]} -gt 0 ]] && paru -S $paru_confirm --skipreview "${_pkgs[@]}"
 
     log_header "-- Flatpak"
-    is_cmd "flatpak" || sudo pacman -S flatpak
     _pkgs=($(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9.]"))
     [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y install "${_pkgs[@]}"
 
@@ -383,8 +384,6 @@ configure_git_filters() {
         }
 
         # Attributes file
-        local git_dir="$(git rev-parse --absolute-git-dir 2>/dev/null)"
-        local attributes_file="${git_dir}/info/attributes"
         mkdir -p "$(dirname "$attributes_file")"
         touch "$attributes_file"
 
@@ -411,32 +410,88 @@ configure_git_filters() {
             git config --local filter.cosmic-rectangle.required true
         )
 
-        # Xkb
-        (
-            hw_model=$(cat /sys/class/dmi/id/product_name 2>/dev/null)
-            if [[ $hw_model != *MacBook* && $hw_model != *Apple* ]]; then
-                log_info "XKB Alt/Win swap skipped for ${hw_model}"
-                exit 0
-            fi
-
-            #... Apply keyboard settings (mac-only)
-
-            xkb_file="${DOT_LINUX_ASSETS}/cosmic/com.system76.CosmicComp/v1/xkb_config"
-            sed -i -E 's|^[[:space:]]*options:.*|    options: Some("altwin:swap_alt_win,lv3:rwin_switch"),|' "$xkb_file"
-            log_info "XKB Alt/Win swap enabled for ${hw_model}"
-
-            #... Apply git filter
-
-            attribute="linux/assets/cosmic/com.system76.CosmicComp/v1/xkb_config filter=xkb-macbook"
-
-            grep -Fqx -- "$attribute" "$attributes_file" || printf '%s\n' "$attribute" >>"$attributes_file"
-
-            git config --local filter.xkb-macbook.clean "sed -E 's|^[[:space:]]*options:.*|    options: None,|'"
-            git config --local filter.xkb-macbook.required true
-        )
-
         log_info "Git filters config done."
     )
+}
+
+macbook_keyboard_setup() {
+    local action="$1"
+    case "$action" in
+    enable | disable) ;;
+    *)
+        log_error "Unknown action '${action}' (enable|disable)"
+        return 1
+        ;;
+    esac
+    log_header "MacBook keyboard - ${action}"
+
+    local hw_model=$(cat /sys/class/dmi/id/product_name 2>/dev/null)
+    local xkb_file="${DOT_LINUX_ASSETS}/cosmic/com.system76.CosmicComp/v1/xkb_config"
+    local attribute="linux/assets/cosmic/com.system76.CosmicComp/v1/xkb_config filter=xkb-macbook"
+    local fn_param="/sys/module/hid_apple/parameters/swap_fn_leftctrl"
+
+    if [[ "$action" == "enable" && "$hw_model" != *MacBook* && "$hw_model" != *Apple* ]]; then
+        log_warn "Not a MacBook/Apple machine (${hw_model:-unknown}) - skipped"
+        return 1
+    fi
+
+    if [[ "$action" == "enable" ]]; then
+
+        #... Fn <-> Left Ctrl (hid-apple: runtime now, persistent on boot)
+
+        if [[ -e "$fn_param" ]]; then
+            echo 1 | sudo tee "$fn_param" >/dev/null
+            sudo cp "$DOT_LINUX_ASSETS/modprobe/90-macbook-keyboard.conf" "/etc/modprobe.d/90-macbook-keyboard.conf"
+            log_info "Fn/Ctrl swap enabled (hid_apple.swap_fn_leftctrl=1)"
+        else
+            log_warn "hid_apple.swap_fn_leftctrl not available - Fn/Ctrl swap skipped"
+        fi
+
+        #... Alt/Win swap + AltGr on right cmd (COSMIC xkb, needs relogin)
+
+        sed -i -E 's|^[[:space:]]*options:.*|    options: Some("altwin:swap_alt_win,lv3:rwin_switch"),|' "$xkb_file"
+        log_info "XKB Alt/Win swap enabled"
+
+        #... Git filter : keep machine-local options out of commits
+
+        if git -C "$script_path" rev-parse --is-inside-work-tree &>/dev/null; then
+            mkdir -p "$(dirname "$attributes_file")"
+            touch "$attributes_file"
+            grep -Fqx -- "$attribute" "$attributes_file" || printf '%s\n' "$attribute" >>"$attributes_file"
+            git -C "$script_path" config --local filter.xkb-macbook.clean "sed -E 's|^[[:space:]]*options:.*|    options: None,|'"
+            git -C "$script_path" config --local filter.xkb-macbook.required true
+            log_info "Git filter xkb-macbook registered"
+        else
+            log_warn "Not a git repository - xkb-macbook filter NOT registered"
+        fi
+
+        log_info "Done. Relogin to load new xkb options."
+
+    else
+
+        #... Fn <-> Left Ctrl revert
+
+        [[ -e "$fn_param" ]] && echo 0 | sudo tee "$fn_param" >/dev/null
+        sudo rm -f "/etc/modprobe.d/90-macbook-keyboard.conf"
+        log_info "Fn/Ctrl swap reverted"
+
+        #... Xkb options revert
+
+        sed -i -E 's|^[[:space:]]*options:.*|    options: None,|' "$xkb_file"
+        log_info "XKB options reverted"
+
+        #... Git filter removal
+
+        if [[ -f "$attributes_file" ]] && grep -qxF -- "$attribute" "$attributes_file"; then
+            grep -vxF -- "$attribute" "$attributes_file" >"${attributes_file}.tmp"
+            mv "${attributes_file}.tmp" "$attributes_file"
+        fi
+        git -C "$script_path" config --local --unset filter.xkb-macbook.clean 2>/dev/null || true
+        git -C "$script_path" config --local --unset filter.xkb-macbook.required 2>/dev/null || true
+        log_info "Git filter xkb-macbook removed"
+
+        log_info "Done. Relogin to load reverted xkb options."
+    fi
 }
 
 # --- Parse Args ---------------------------------------------------------------
@@ -457,6 +512,9 @@ usage() {
     echo
     echo "  --set-git-filters        Configure local Git filters *1"
     echo
+    echo "  --mbkb-enable            MacBook keyboard : fn/ctrl swap, alt/win xkb, git filter *2"
+    echo "  --mbkb-disable           Revert MacBook keyboard setup"
+    echo
     echo "  --confirm-pacman         Prompt before each package action (removes --noconfirm)"
     echo
     echo "    -h | --help            Show this message"
@@ -465,7 +523,11 @@ usage() {
     echo " [*1]"
     echo "      - Solaar     : Disable sync of, config_cookie."
     echo "      - Screenshot : Disable sync of, last_rectangle."
-    echo "      - XKB        : Disable sync of, swap alt-win keys on macbooks."
+    echo
+    echo " [*2]"
+    echo "      - Swaps physical Fn with Left Ctrl (hid_apple.swap_fn_leftctrl)."
+    echo "      - Enables altwin:swap_alt_win,lv3:rwin_switch on COSMIC (es layout)."
+    echo "      - Registers xkb-macbook Git filter (commits options: None)."
 }
 
 #! Defaults
@@ -475,6 +537,7 @@ do_update=false
 do_install=false
 do_links=false
 do_filters=false
+do_mbkb=""
 confirm_pacman=false
 
 #! Process options
@@ -489,6 +552,9 @@ while [[ "${#}" > 0 ]]; do
     --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
 
     --set-git-filters) shift && do_filters=true ;;
+
+    --mbkb-enable) shift && do_mbkb="enable" ;;
+    --mbkb-disable) shift && do_mbkb="disable" ;;
 
     --confirm-pacman) shift && confirm_pacman=true ;;
 
@@ -507,10 +573,14 @@ paru_confirm="--noconfirm"
 
 exit_code=0
 
+is_cmd "paru"    || sudo pacman -S paru
+is_cmd "flatpak" || sudo pacman -S flatpak
+
 [[ "${do_remove}" == "true" ]] && { remove_packages || exit_code=1; }
 [[ "${do_update}" == "true" ]] && { system_update || exit_code=1; }
 [[ "${do_install}" == "true" ]] && { install_packages || exit_code=1; }
 [[ "${do_links}" == "true" ]] && { link_config_files || exit_code=1; }
 [[ "${do_filters}" == "true" ]] && { configure_git_filters || exit_code=1; }
+[[ -n "${do_mbkb}" ]] && { macbook_keyboard_setup "${do_mbkb}" || exit_code=1; }
 
 exit "${exit_code}"
