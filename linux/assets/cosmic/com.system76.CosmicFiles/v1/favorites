@@ -1,13 +1,11 @@
 [
     Home,
-    Documents,
     Downloads,
     Music,
     Pictures,
     Videos,
     Path("/home/dac/omi"),
-    Path("/home/dac/dev"),
     Path("/home/dac/omi/tasks"),
-    Path("/home/brtma/.dotfiles"),
     Path("/usr/share/wallpapers"),
+    Path("/home/dac/.dotfiles"),
 ]
