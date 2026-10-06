@@ -6,11 +6,13 @@ source "$HOME/.dotfiles/linux/scripts/profile/exports"
 export DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 
 typeset -U PATH
+setopt pushd_silent # dir stack on pushd/popd stays quiet, like fish
 export PATH="$DOTFILES_SCRIPTS:$PATH"
 export PATH="$HOME/.local/bin:$PATH"
 export PATH="$HOME/.cargo/bin:$PATH"
 export PATH="$HOME/Qt/Tools/QtCreator/bin:$PATH"
 export PATH="$HOME/.local/share/pnpm/bin:$PATH"
+export PATH="$HOME/go/bin:$PATH"
 
 alias configreload='source $HOME/.zshrc'
 source "$DOTFILES_SCRIPTS/profile/aliases"
@@ -37,7 +39,7 @@ mkcd() {
 
 # yazi
 y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")"
+    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
     command yazi "$@" --cwd-file="$tmp"
     if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
         builtin cd -- "$cwd"
@@ -60,21 +62,46 @@ bindkey '^Z' fancy-ctrl-z
 
 # --- Tweaks -------------------------------------------------------------------
 
+export HISTFILE="$HOME/.zsh_history"
+HISTSIZE=100000
+SAVEHIST=100000
+setopt SHARE_HISTORY EXTENDED_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+
 export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # --- Prompt -------------------------------------------------------------------
 
-eval "$(starship init zsh)"
+[[ -o interactive ]] && eval "$(starship init zsh)"
 
 # --- External -----------------------------------------------------------------
 
 export PATH="$HOME/omi/scripts:$PATH"
 
-if [ -x "/usr/bin/micromamba" ]; then
+if [[ -o interactive ]] && [ -x "/usr/bin/micromamba" ]; then
     export MAMBA_EXE="/usr/bin/micromamba"
     export MAMBA_ROOT_PREFIX="$HOME/.local/share/mamba"
     eval "$("$MAMBA_EXE" shell hook --shell zsh --root-prefix "$MAMBA_ROOT_PREFIX")"
 fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)"; fi
+
+# --- Shell integrations -------------------------------------------------------
+
+# completion system first (zsh-completions ships into site-functions, on fpath by default)
+[[ -o interactive ]] && { autoload -Uz compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"; }
+
+[[ -o interactive ]] && command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
+[[ -r /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
+[[ -r /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+
+[[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
+export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6C7086" # catppuccin overlay0, fish-grey
+
+[[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
+# history-substring-search is the sanctioned exception: sourced after syntax-highlighting
+[[ -r /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && {
+    source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
+    bindkey '^[[A' history-substring-search-up
+    bindkey '^[[B' history-substring-search-down
+}

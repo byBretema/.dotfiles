@@ -8,7 +8,15 @@ if ! is_git; then
   for dir in main master dev pin; do
     [[ -d "$dir/.git" ]] || [[ -f "$dir/.git" ]] && cd "$dir" && exec "$script_path/$script_name" "$@"
   done
-  error_exit "not a git repository"
+
+  tmpfile="$(mktemp -t "yazi-cwd.XXXXXX")"
+  command yazi "$@" --cwd-file="$tmpfile"
+  if cwd="$(cat -- "$tmpfile")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
+      builtin cd -- "$cwd"
+  fi
+  rm -f -- "$tmpfile"
+
+  exit 0
 fi
 
 MAX_HEIGHT=12

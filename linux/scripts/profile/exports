@@ -35,6 +35,8 @@ export FZF_DEFAULT_OPTS=" \
 
 export BAT_THEME="Catppuccin Mocha"
 
+export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+
 export GLOW_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
 export GLAMOUR_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
 

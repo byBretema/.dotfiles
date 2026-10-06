@@ -145,7 +145,7 @@ export __DIR__poet="$HOME/poet"
 
 alias po='mkdir -p "$__DIR__poet" && pushd "$__DIR__poet"'
 alias poy='po && y'
-alias pol='pushd "$(ls -1tA "$__DIR__poet" | head -1)" && gws'
+alias pol='pushd "$__DIR__poet/$(ls -1tA "$__DIR__poet" | head -1)" && gws'
 
 # --- Me ---
 
@@ -153,7 +153,7 @@ export __DIR__me="$HOME/me"
 
 alias me='mkdir -p "$__DIR__me" && pushd "$__DIR__me"'
 alias mey='me && y'
-alias mel='pushd "$(ls -1tA "$__DIR__me" | head -1)" && gws'
+alias mel='pushd "$__DIR__me/$(ls -1tA "$__DIR__me" | head -1)" && gws'
 
 
 # --- Lab ---

@@ -16,7 +16,7 @@ suffix=""
 
 # Longest-prefix alias map: path:display, specific before generic
 ALIASES=(
-    "$HOME/brtm:bm"
+    "$HOME/me:me"
     "$HOME/poet:poet"
     "$HOME/.dotfiles:dots"
     "$HOME/omi/code/deploy_studio_engine:omi_deploy"

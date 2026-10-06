@@ -1,4 +1,4 @@
-format = "$directory${custom.git_info}$git_status$cmd_duration\n$character"
+format = "${custom.shell}$directory${custom.git_info}$git_status$cmd_duration\n$character"
 # right_format = "$cmd_duration"
 
 scan_timeout = 500
@@ -24,6 +24,13 @@ format = '· (yellow)[$duration]($style)'
 
 [git_branch]
 disabled = true
+
+[custom.shell]
+description = "Active shell"
+command = "printf '%s' \"$STARSHIP_SHELL\"" # must be fish-safe: starship runs it via $STARSHIP_SHELL
+when = "true"
+style = "bold fg:#89b4fa"
+format = "[$output]($style) "
 
 [custom.git_info]
 command = "git_info"

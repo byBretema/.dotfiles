@@ -31,6 +31,11 @@ link_config_files() {
     log_info "Fish"
     ln -srf "${script_path}/.fishrc" "$HOME/.config/fish/config.fish"
 
+    # Bash
+    log_info "Bash"
+    ln -srf "${script_path}/.bashrc" "$HOME/.bashrc"
+    ln -srf "${script_path}/.bash_profile" "$HOME/.bash_profile"
+
     # Zsh
     log_info "Zsh"
     ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
