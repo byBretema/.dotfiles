@@ -123,15 +123,21 @@ alias fff='fzf --preview="bat --color=always {}"'
 
 export __DIR__omi="$HOME/omi"
 
-alias om='mkdir -p "$__DIR__omi" && pushd "$__DIR__omi"'
-alias omy='om && y'
+alias omi='mkdir -p "$__DIR__omi" && pushd "$__DIR__omi"'
+alias omiy='om && y'
 
-alias omd='pushd "$__DIR__omi/code/deploy_studio_engine"'
-alias omc='pushd "$__DIR__omi/code/studio_engine" && gws'
-alias omu="bash $HOME/omi/data/omi_utils.sh"
+alias omid='pushd "$__DIR__omi/code/deploy_studio_engine"'
+alias omic='pushd "$__DIR__omi/code/studio_engine" && gws'
 
-# alias omn='pushd "$HOME/omi/data/notes"'
-# alias omnn="mkdir -p \"$HOME/omi/data/notes\" && hx \"$HOME/omi/data/notes/$(date '+%Y-%m-%d').md\""
+alias omiu="bash $HOME/omi/data/omi_utils.sh"
+
+alias omir="./scripts/dani_autobuild2.sh --build"
+alias omis="omir --sb --pipelines"
+alias omiw="omir --wasm"
+alias omia="omir --addons"
+alias omib="omir --blender"
+alias omiab="omir --addons --blender"
+
 
 # --- Poet ---
 
@@ -149,8 +155,6 @@ alias me='mkdir -p "$__DIR__me" && pushd "$__DIR__me"'
 alias mey='me && y'
 alias mel='pushd "$(ls -1tA "$__DIR__me" | head -1)" && gws'
 
-# alias brn='pushd \"$HOME/me/notes\"'
-# alias brnn="mkdir -p \"$HOME/poet/data/notes\" && hx \"$HOME/poet/data/notes/$(date '+%Y-%m-%d').md\""
 
 # --- Lab ---
 
