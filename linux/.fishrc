@@ -88,3 +88,11 @@ end
 if status is-interactive; and type -q fzf_key_bindings
     fzf_key_bindings
 end
+
+# atuin AFTER fzf: fzf keeps Ctrl-T/Alt-C, atuin takes Ctrl-R
+if status is-interactive; and type -q atuin
+    atuin init fish | source
+    # Ctrl-P: same as atuin's up-arrow search (cwd-scoped)
+    bind \cp _atuin_bind_up
+    bind -M insert \cp _atuin_bind_up
+end

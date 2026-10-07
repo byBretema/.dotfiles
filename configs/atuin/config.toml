@@ -1,0 +1,26 @@
+# Atuin — ~/.config/atuin/config.toml (symlinked by linux/install.sh)
+
+# Ctrl-P / up-style search scopes to current dir; Ctrl-R stays global
+filter_mode_shell_up_key_binding = "directory"
+
+# built-in credential patterns (AWS/GitHub/npm/slack/... ) — on by default, kept explicit
+secrets_filter = true
+
+# extra unanchored regexes: matched commands are never stored (add before first sync)
+history_filter = [
+    "--password",
+    "--token",
+]
+
+[theme]
+name = "catppuccin-mocha-mauve"
+
+# Inspector tab (ctrl-o): ctrl-n/p move rows like the search tab (needs atuin >= 18.x)
+[keymap.inspector]
+"ctrl-n" = "inspect-next"
+"ctrl-p" = "inspect-previous"
+
+# default "auto" shows only commands recorded by the CURRENT shell in Ctrl-R;
+# "all" = full history in bash/zsh/fish (atuin >= 18.18)
+[search]
+shells = "all"

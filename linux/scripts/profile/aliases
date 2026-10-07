@@ -130,13 +130,17 @@ alias omid='pushd "$__DIR__omi/code/deploy_studio_engine"'
 alias omic='pushd "$__DIR__omi/code/studio_engine" && gws'
 
 alias omiu="bash $HOME/omi/data/omi_utils.sh"
+alias omis="./scripts/dani_autobuild2.sh"
+alias omib="./scripts/dani_autobuild2.sh --build"
 
-alias omir="./scripts/dani_autobuild2.sh --build"
-alias omis="omir --sb --pipelines"
-alias omiw="omir --wasm"
-alias omia="omir --addons"
-alias omib="omir --blender"
-alias omiab="omir --addons --blender"
+alias omi-wasm="omib --wasm"
+
+alias omi-bl="omib --blender"
+alias omi-add="omib --addons"
+alias omi-bl-add="omib --blender --addons"
+
+alias omi-sb="omib --sb --pipelines"
+alias omi-sb-gdb="omib --sb --pipelines --profile --use-debugger"
 
 
 # --- Poet ---

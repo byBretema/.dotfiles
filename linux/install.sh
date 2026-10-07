@@ -58,6 +58,26 @@ link_config_files() {
     [[ ! -d "${tmux_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${tmux_dir}/plugins/tpm"; }
     ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${tmux_dir}/tmux.conf"
 
+    # --- Atuin : shell history (config links + first-run seed) ---
+    log_header "Setup - Atuin"
+
+    atuin_dir=$(mkdir_ret "${HOME_CONFIG}/atuin")
+    ln -srf "${DOT_CONFIGS}/atuin/config.toml" "${atuin_dir}/config.toml"
+    atuin_themes_dir=$(mkdir_ret "${atuin_dir}/themes")
+    ln -srf "${DOT_CONFIGS}/atuin/themes/catppuccin-mocha-mauve.toml" "${atuin_themes_dir}/catppuccin-mocha-mauve.toml"
+
+    if is_cmd "atuin"; then
+        #... seed the DB once from bash/zsh/fish history files (import is idempotent, empty DB = first run)
+        atuin_db="${XDG_DATA_HOME:-$HOME/.local/share}/atuin/history.db"
+        if [[ ! -f "${atuin_db}" ]]; then
+            atuin import auto && log_info "History imported into ${atuin_db}"
+        fi
+        #... sync needs credentials -> stays manual
+        log_info "Sync: run 'atuin register' (first machine) or 'atuin login' (others)"
+    else
+        log_warn "atuin not installed yet (run -i) — config linked, import skipped"
+    fi
+
     # --- DevEnv ---
     log_header "Linking - Dev env"
 
@@ -85,6 +105,13 @@ link_config_files() {
     log_info "Git"
     ln -srf "${DOT_CONFIGS}/.gitconfig" "$HOME/.gitconfig"
     ln -srf "${DOT_CONFIGS}/.gitignore" "$HOME/.gitignore"
+
+    # GDB
+    log_info "GDB"
+    ln -srf "${DOT_CONFIGS}/.gdbinit" "$HOME/.gdbinit"
+
+    log_info "-- dashboard"
+    [[ ! -d "$HOME/.local/share/gdb-dashboard" ]] && { git clone "https://github.com/cyrus-and/gdb-dashboard" "$HOME/.local/share/gdb-dashboard"; }
 
     # WorkTrunk : Manage git-worktrees
     log_info "WorkTrunk"

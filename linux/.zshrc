@@ -91,9 +91,28 @@ if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)
 # completion system first (zsh-completions ships into site-functions, on fpath by default)
 [[ -o interactive ]] && { autoload -Uz compinit && compinit -d "${XDG_CACHE_HOME:-$HOME/.cache}/zsh/zcompdump"; }
 
+# Tab-completion: case-insensitive + -/_ interchangeable (readline vars in bash, built-in in fish)
+[[ -o interactive ]] && zstyle ':completion:*' matcher-list 'm:{a-zA-Z-_}={A-Za-z_-}'
+
+if [[ -o interactive ]]; then
+    # Interactive menu: immediate arrow-select list, grouped + colored (zsh builtins only)
+    zstyle ':completion:*' menu select
+    zstyle ':completion:*' group-name ''
+    zstyle ':completion:*' format ' -- %d --'
+    zstyle ':completion:*' list-colors "${(s.:.)LS_COLORS}"
+    setopt COMPLETE_IN_WORD ALWAYS_TO_END # complete from cursor inside word; cursor to end
+fi
+
 [[ -o interactive ]] && command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init zsh)"
 [[ -r /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -r /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
+
+# atuin AFTER fzf: Ctrl-R AND Up → atuin, same behaviour as bash/fish (no diffs)
+if [[ -o interactive ]] && command -v atuin >/dev/null 2>&1; then
+    eval "$(atuin init zsh)"
+    # Ctrl-P: atuin up-style search (emacs mode only — vi keymaps unused)
+    bindkey '^P' atuin-up-search
+fi
 
 # Alt-C: cd directly (fzf's default widget stuffs 'builtin cd -- <dir>' into BUFFER ->
 # visible command text + history pollution; fish cds directly)
@@ -109,17 +128,14 @@ if (( $+functions[__fzf_defaults] )); then
     }
     zle -N fzf-cd-widget
     bindkey -M emacs '\ec' fzf-cd-widget
-    bindkey -M vicmd '\ec' fzf-cd-widget
-    bindkey -M viins '\ec' fzf-cd-widget
 fi
 
 [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6C7086" # catppuccin overlay0, fish-grey
 
 [[ -r /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh ]] && source /usr/share/zsh-syntax-highlighting/zsh-syntax-highlighting.zsh
-# history-substring-search is the sanctioned exception: sourced after syntax-highlighting
+# history-substring-search still sourced (kept as fallback), but its ^[[A/^[[B
+# binds are gone: Up/Down = atuin for bash/zsh/fish parity
 [[ -r /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh ]] && {
     source /usr/share/zsh-history-substring-search/zsh-history-substring-search.zsh
-    bindkey '^[[A' history-substring-search-up
-    bindkey '^[[B' history-substring-search-down
 }
