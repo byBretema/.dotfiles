@@ -34,7 +34,23 @@ if [[ $- == *i* ]]; then
     [[ -z ${BASH_COMPLETION_VERSINFO+x} && -r /usr/share/bash-completion/bash_completion ]] && . /usr/share/bash-completion/bash_completion
     [[ -r /usr/share/fzf/key-bindings.bash ]] && . /usr/share/fzf/key-bindings.bash
     [[ -r /usr/share/fzf/completion.bash ]] && . /usr/share/fzf/completion.bash
-    command -v zoxide >/dev/null 2>&1 && eval "$(zoxide init bash)"
+
+    # Alt-C: cd directly (fzf's macro variant stuffs 'builtin cd -- <dir>' into the line,
+    # visible + executed; fish cds directly)
+    if declare -F __fzf_defaults >/dev/null; then
+        fzf_cd_widget() {
+            local dir
+            dir=$(FZF_DEFAULT_OPTS=$(__fzf_defaults "--reverse --walker=dir,follow,hidden --scheme=path" "${FZF_ALT_C_OPTS-} +m") \
+                FZF_DEFAULT_OPTS_FILE='' $(__fzfcmd) < /dev/tty) || return
+            [[ -n "$dir" ]] || return
+            builtin cd -- "$dir" || return
+            READLINE_LINE=""
+            READLINE_POINT=0
+        }
+        bind -m emacs-standard -x '"\ec": fzf_cd_widget'
+        bind -m vi-command -x '"\ec": fzf_cd_widget'
+        bind -m vi-insert -x '"\ec": fzf_cd_widget'
+    fi
 fi
 
 # --- Functions ----------------------------------------------------------------
@@ -97,3 +113,8 @@ if [[ $- == *i* ]] && [ -x "/usr/bin/micromamba" ]; then
 fi
 
 if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init bash)"; fi
+
+# zoxide last: starship replaces PROMPT_COMMAND, which would drop the zoxide hook
+if [[ $- == *i* ]] && command -v zoxide >/dev/null 2>&1; then
+    eval "$(zoxide init bash)"
+fi

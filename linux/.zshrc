@@ -95,6 +95,24 @@ if command -v wt >/dev/null 2>&1; then eval "$(command wt config shell init zsh)
 [[ -r /usr/share/fzf/key-bindings.zsh ]] && source /usr/share/fzf/key-bindings.zsh
 [[ -r /usr/share/fzf/completion.zsh ]] && source /usr/share/fzf/completion.zsh
 
+# Alt-C: cd directly (fzf's default widget stuffs 'builtin cd -- <dir>' into BUFFER ->
+# visible command text + history pollution; fish cds directly)
+if (( $+functions[__fzf_defaults] )); then
+    fzf-cd-widget() {
+        setopt localoptions pipefail no_aliases 2>/dev/null
+        local dir
+        dir=$(FZF_DEFAULT_OPTS=$(__fzf_defaults "--reverse --walker=dir,follow,hidden --scheme=path" "${FZF_ALT_C_OPTS-} +m") \
+            FZF_DEFAULT_OPTS_FILE='' $(__fzfcmd) < /dev/tty) || { zle redisplay; return 1 }
+        [[ -z "$dir" ]] && { zle redisplay; return 0 }
+        builtin cd -- "$dir" || return
+        zle reset-prompt
+    }
+    zle -N fzf-cd-widget
+    bindkey -M emacs '\ec' fzf-cd-widget
+    bindkey -M vicmd '\ec' fzf-cd-widget
+    bindkey -M viins '\ec' fzf-cd-widget
+fi
+
 [[ -r /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh ]] && source /usr/share/zsh-autosuggestions/zsh-autosuggestions.zsh
 export ZSH_AUTOSUGGEST_HIGHLIGHT_STYLE="fg=#6C7086" # catppuccin overlay0, fish-grey
 

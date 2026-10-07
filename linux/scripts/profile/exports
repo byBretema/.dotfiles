@@ -36,6 +36,9 @@ export FZF_DEFAULT_OPTS=" \
 export BAT_THEME="Catppuccin Mocha"
 
 export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+# pipe, don't pass {} as file (bat errors on it); strip date/epoch/number fields up to last tab
+# delimiter greedy → split at last tab → display+search command only (kills index/epoch col, all 3 shells)
+export FZF_CTRL_R_OPTS="--delimiter='.*\t' --with-nth=2.. --nth=2.. --preview 'echo {} | sed \"s/.*\t//\" | bat --color=always --style=plain -l sh' --preview-window=right:50%"
 
 export GLOW_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
 export GLAMOUR_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
