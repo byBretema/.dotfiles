@@ -6,6 +6,13 @@
   // "model": "opencode/x-preview-f-free",
   // "small_model": "ollama/qwen3.5:4b",
   "default_agent": "plan",
+  //--------------------------------------------------------------------------------
+  // WARMING (keep local model KV cache hot between turns)
+  //--------------------------------------------------------------------------------
+  "warming": {
+    "interval": "4 minutes",
+    "duration": "30 minutes"
+  },
   "instructions": [
     "~/.config/opencode/AGENTS.md"
   ],
@@ -51,12 +58,44 @@
         "qwen3.5:9b-q4_K_M": {},
         "Qwen3.8-27B-UD-IQ3_XXS:latest": {}
       }
+    },
+    "prism": {
+      "npm": "@ai-sdk/openai-compatible",
+      "name": "Prism (local)",
+      "options": {
+        "baseURL": "http://127.0.0.1:8080/v1"
+      },
+      "models": {
+        "bonsai": {
+          "limit": {
+            "context": 32768,
+            "output": 8192
+          },
+          // Bonsai template only accepts xhigh/medium/low; default "high" 500s
+          "settings": {
+            "reasoningEffort": "medium"
+          }
+        }
+      }
     }
   },
   //--------------------------------------------------------------------------------
   // AGENT BEHAVIORS & LIMITS
   //--------------------------------------------------------------------------------
   "agent": {
+    // Lean agent for local prism/bonsai: no web/subagent tools => smaller prompt
+    "bonsai": {
+      "description": "Lean primary agent for local Bonsai (prism/bonsai)",
+      "mode": "primary",
+      "model": "prism/bonsai",
+      "steps": 32,
+      "color": "#A6E3A1",
+      "permissions": [
+        { "action": "webfetch", "resource": "*", "effect": "deny" },
+        { "action": "websearch", "resource": "*", "effect": "deny" },
+        { "action": "subagent", "resource": "*", "effect": "deny" }
+      ]
+    },
     "build": {
       // "variant": "max",
       "steps": 32,

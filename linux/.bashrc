@@ -12,6 +12,7 @@ bash_add_path() {
 
 export HISTTIMEFORMAT="%F %T "
 shopt -s expand_aliases
+set -o ignoreeof # Ctrl+D won't exit, needs 10 presses (parity: fish bind \cd)
 
 # --- Basics -------------------------------------------------------------------
 

@@ -1,0 +1,94 @@
+#!/usr/bin/env bash
+source "${0%/*}/.bash_common"
+set -euo pipefail
+
+################################################################################
+### Config
+################################################################################
+
+PREFIX="${HOME}/.local/share/llama-prism"
+BIN_SRC="${PREFIX}/llama"
+BIN_LINK="${HOME}/.local/bin/llama-prism"
+TARBALL="llama-prism-b10754-2459f68-bin-linux-cuda-13.3-x64.tar.gz"
+RELEASE_API="https://api.github.com/repos/PrismML-Eng/llama.cpp/releases/latest"
+
+MODELS_DIR="${HOME}/.local/share/ai_models"
+MODEL_DIR="${MODELS_DIR}/Ternary-Bonsai-2-27B"
+HF_REPO="prism-ml/Ternary-Bonsai-2-27B-gguf"
+HF_REV="b072e1d3b35a0a630cece372c2127528e0994386"
+HF_FILE="Ternary-Bonsai-2-27B-PQ2_0.gguf"
+
+################################################################################
+### hf CLI
+################################################################################
+
+if ! pacman -Qq python-huggingface-hub &>/dev/null; then
+    log_info "Installing python-huggingface-hub"
+    sudo pacman -S --needed python-huggingface-hub
+fi
+required_cmd hf
+
+################################################################################
+### Prism llama.cpp (skip if installed)
+################################################################################
+
+echo && log_header "Prism llama.cpp"
+
+if [[ -f "${BIN_SRC}" ]]; then
+    log_info "Already installed => ${PREFIX}"
+else
+    mkdir -p "${PREFIX}"
+    tarball="${PREFIX}/${TARBALL}"
+
+    if [[ ! -f "${tarball}" ]]; then
+        log_info "Fetching release tarball"
+        # older releases hardcode a version in the asset name; match the pattern, not a fixed name
+        url=$(curl -fsSL "${RELEASE_API}" | grep -o "https://[^\"]*bin-linux-cuda-13\.3-x64\.tar\.gz" | head -n1)
+        [[ -n "${url}" ]] || error_exit "No linux-cuda-13.3-x64 asset in latest release, download ${TARBALL} manually into ${PREFIX}"
+        curl -fL -o "${tarball}" "${url}"
+    fi
+
+    log_info "Extracting => ${PREFIX}"
+    tar -xzf "${tarball}" -C "${PREFIX}" --strip-components=1
+fi
+
+log_info "Ensure link/chmod"
+chmod +x "${BIN_SRC}"
+ln -sf "${BIN_SRC}" "${BIN_LINK}"
+required_file "${BIN_LINK}"
+
+pacman -Q cuda &> /dev/null || {
+    log_info "Installing cuda"
+    sudo pacman -S --needed cuda
+}
+
+log_info "Validate deps"
+ldd "${BIN_SRC}" | grep "not found" && log_warn "Missing libs."
+
+################################################################################
+### Model (skip if present)
+################################################################################
+
+echo && log_header "Get model"
+
+mkdir -p "${MODEL_DIR}"
+if [[ -f "${MODEL_DIR}/${HF_FILE}" ]]; then
+    log_info "Already present => ${MODEL_DIR}/${HF_FILE}"
+else
+    log_info "Downloading ${HF_FILE}"
+    hf download "${HF_REPO}" "${HF_FILE}" --revision "${HF_REV}" --local-dir "${MODEL_DIR}"
+fi
+required_file "${MODEL_DIR}/${HF_FILE}"
+
+################################################################################
+### Verify + report
+################################################################################
+
+echo && log_header "Verify"
+
+log_info "Version check:\n\t$(${BIN_LINK} --version 2>&1 | head -n1)"
+log_info "Server : ${BIN_LINK}"
+log_info "Model  : ${MODEL_DIR}/${HF_FILE}"
+
+echo && log_header "Test command"
+log_info "llama-prism -m ${MODEL_DIR}/${HF_FILE} -ngl 99 -fa on -c 32768 -p 'hi' -n 16"

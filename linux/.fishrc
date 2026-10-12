@@ -56,6 +56,9 @@ end
 # bring to fg latest job in bg
 bind \cz 'fg 2>/dev/null; commandline -f repaint'
 
+# Ctrl+D never exits (default is delete-or-exit)
+bind \cd delete-char
+
 # --- Tweaks -------------------------------------------------------------------
 
 set -x MANROFFOPT -c

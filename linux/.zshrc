@@ -66,6 +66,7 @@ export HISTFILE="$HOME/.zsh_history"
 HISTSIZE=100000
 SAVEHIST=100000
 setopt SHARE_HISTORY EXTENDED_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
+setopt IGNORE_EOF # Ctrl+D won't exit, needs 10 presses (parity: fish bind \cd)
 
 export MANROFFOPT="-c"
 export MANPAGER="sh -c 'col -bx | bat -l man -p'"

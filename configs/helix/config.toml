@@ -257,6 +257,7 @@ f = "@:insert-output echo $(pwd)/%{buffer_name}<ret>yu"
 F = "@:insert-output echo $(pwd)/%{buffer_name}:%{cursor_line}<ret>yu"
 
 # Toggles
+0 = ":toggle line-number absolute relative"
 i = ":toggle lsp.display-inlay-hints"
 b = ":toggle bufferline never always"
 h = ":toggle whitespace.render none all"
