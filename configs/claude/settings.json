@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "theme": "auto",
+  "tui": "fullscreen",
+  "permissions": {
+    "additionalDirectories": [
+      "/tmp",
+      "~/dev",
+      "~/agents",
+      "~/.dotfiles"
+    ],
+    "ask": [
+      "Read(**/*.env)",
+      "Read(**/*.env.*)",
+      "Read(**/Dockerfile*)",
+      "Read(**/*.tf)",
+      "Read(**/*.tfvars)",
+      "Read(**/terraform/**)",
+      "Read(**/.github/workflows/**)",
+      "Read(**/.gitlab-ci.yml)",
+      "Read(**/k8s/**)",
+      "Read(**/helm/**)",
+      "Bash(sudo:*)",
+      "Bash(su:*)",
+      "Bash(rm:*)",
+      "Bash(git commit:*)",
+      "Bash(git push:*)",
+      "Bash(git rebase:*)",
+      "Bash(git reset:*)",
+      "Bash(git clean:*)",
+      "Bash(psql:*)",
+      "Bash(sqlite:*)",
+      "Bash(sqlite3:*)",
+      "Bash(mysql:*)",
+      "Bash(uv:*)",
+      "Bash(pip:*)",
+      "Bash(poetry:*)",
+      "Bash(python:*)",
+      "Bash(python3:*)"
+    ]
+  },
+  "hooks": {
+    "Notification": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "notify-send 'Claude Code' \"$(jq -r '.message // \"Needs attention\"')\"; paplay /usr/share/sounds/freedesktop/stereo/message.oga 2>/dev/null || true"
+          }
+        ]
+      }
+    ]
+  }
+}

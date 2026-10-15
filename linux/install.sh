@@ -222,6 +222,15 @@ EOF
     pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
     ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
 
+    # --- Claude Code ---
+    log_header "Linking - Claude Code"
+    claude_dir=$(mkdir_ret "$HOME/.claude")
+
+    log_info "CLAUDE.md"
+    ln -srf "${DOT_CONFIGS}/claude/CLAUDE.md" "${claude_dir}/CLAUDE.md"
+    log_info "Settings"
+    ln -srf "${DOT_CONFIGS}/claude/settings.json" "${claude_dir}/settings.json"
+
     # --- Environment ---
     log_header "Linking - Env vars"
 
