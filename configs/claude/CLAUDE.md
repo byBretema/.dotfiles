@@ -17,6 +17,8 @@
 - NO hallucinated structures/dependencies. Search/read BEFORE proposing/writing.
 - ONLY comments for: edge cases, invariants, quirks, or "why-not-what".
 - Do not confirm changes with `git diff`.
+- NEVER clean up scratch/test files under `/tmp` (or scratchpad). Leave them; OS purges them.
+- Delete with `~/.claude/bin/trash <paths>`, not `rm`, when it exists.
 
 ## SECURITY
 

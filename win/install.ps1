@@ -382,6 +382,14 @@ $worktrunk_dir = "${home}\.config\worktrunk"
 $null = New-Item -ItemType Directory -Path $worktrunk_dir -Force
 lns "$configs\worktrunk.toml" "$worktrunk_dir\worktrunk.toml"
 
+# Claude Code
+$claude_dir = "${home}\.claude"
+$null = New-Item -ItemType Directory -Path $claude_dir -Force
+lns "$configs\claude\CLAUDE.md"        "$claude_dir\CLAUDE.md"
+lns "$configs\claude\settings.json"    "$claude_dir\settings.json"
+lns "$configs\claude\keybindings.json" "$claude_dir\keybindings.json"
+lns "$configs\claude\bin"              "$claude_dir\bin"
+
 # Powershell Profile on Powershell 7.x
 $documents = ([Environment]::GetFolderPath("MyDocuments"))
 lns "$script_root\profile.ps1" "$documents\PowerShell\Microsoft.PowerShell_profile.ps1"

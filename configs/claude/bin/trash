@@ -1,0 +1,26 @@
+#!/usr/bin/env sh
+# Move paths to the OS trash (gio on Linux, Recycle Bin on Windows/Git Bash).
+# Flags are ignored so habits like `trash -rf x` still work.
+
+for p in "$@"; do
+    case "$p" in -*) continue ;; esac
+    # gio refuses tmpfs, and /tmp is volatile anyway.
+    case "$(realpath -m -- "$p")" in /tmp/*) rm -rf -- "$p" || exit 1; continue ;; esac
+    if command -v gio >/dev/null 2>&1; then
+        gio trash -- "$p" || exit 1
+    elif command -v powershell.exe >/dev/null 2>&1; then
+        # Path goes through env to avoid PowerShell quoting issues.
+        TRASH_PATH=$(cygpath -wa "$p") powershell.exe -NoProfile -Command '
+            Add-Type -AssemblyName Microsoft.VisualBasic
+            $p = $env:TRASH_PATH
+            $fs = [Microsoft.VisualBasic.FileIO.FileSystem]
+            if (Test-Path -LiteralPath $p -PathType Container) {
+                $fs::DeleteDirectory($p, "OnlyErrorDialogs", "SendToRecycleBin")
+            } elseif (Test-Path -LiteralPath $p) {
+                $fs::DeleteFile($p, "OnlyErrorDialogs", "SendToRecycleBin")
+            } else { exit 1 }' || exit 1
+    else
+        echo "trash: no backend (gio or powershell.exe)" >&2
+        exit 1
+    fi
+done

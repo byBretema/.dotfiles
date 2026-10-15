@@ -230,6 +230,10 @@ EOF
     ln -srf "${DOT_CONFIGS}/claude/CLAUDE.md" "${claude_dir}/CLAUDE.md"
     log_info "Settings"
     ln -srf "${DOT_CONFIGS}/claude/settings.json" "${claude_dir}/settings.json"
+    log_info "Keybindings"
+    ln -srf "${DOT_CONFIGS}/claude/keybindings.json" "${claude_dir}/keybindings.json"
+    log_info "Bin"
+    ln -srfn "${DOT_CONFIGS}/claude/bin" "${claude_dir}/bin"
 
     # --- Environment ---
     log_header "Linking - Env vars"
