@@ -388,6 +388,10 @@ $null = New-Item -ItemType Directory -Path $claude_dir -Force
 lns "$configs\claude\CLAUDE.md"        "$claude_dir\CLAUDE.md"
 lns "$configs\claude\settings.json"    "$claude_dir\settings.json"
 lns "$configs\claude\keybindings.json" "$claude_dir\keybindings.json"
+$claude_bin = Get-Item "$claude_dir\bin" -Force -ErrorAction SilentlyContinue
+if ($claude_bin -and -not $claude_bin.LinkType) {
+    Remove-Item -Recurse -Force $claude_bin.FullName
+}
 lns "$configs\claude\bin"              "$claude_dir\bin"
 
 # Powershell Profile on Powershell 7.x

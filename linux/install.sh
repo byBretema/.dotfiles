@@ -233,6 +233,8 @@ EOF
     log_info "Keybindings"
     ln -srf "${DOT_CONFIGS}/claude/keybindings.json" "${claude_dir}/keybindings.json"
     log_info "Bin"
+    # A real dir here would make ln nest the link inside it.
+    [ -d "${claude_dir}/bin" ] && [ ! -L "${claude_dir}/bin" ] && rm -rf "${claude_dir}/bin"
     ln -srfn "${DOT_CONFIGS}/claude/bin" "${claude_dir}/bin"
 
     # --- Environment ---
