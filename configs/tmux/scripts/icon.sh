@@ -14,7 +14,7 @@ bat) icon='󰈈' ;;
 vim | nvim ) icon='𝓥'; icon_space=' ' ;;
 helix) icon='𝓗' ;;
 python | python3 | .venv/bin/python*) icon='' ;;
-opencode | ollama) icon='' ;;
+claude | opencode | ollama) icon='' ;;
 git | lazygit) icon='' ;;
 docker | docker-compose | lazydocker) icon='' ;;
 node) icon='' ;;
