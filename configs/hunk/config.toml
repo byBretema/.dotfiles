@@ -1,5 +1,5 @@
 theme = "catppuccin-mocha"
-mode = "auto"
+mode = "unified"
 vcs = "git"
 watch = true
 exclude_untracked = false
@@ -13,3 +13,6 @@ sidebar = "auto"
 agent_notes = true
 prompt_save_view_preferences = true
 transparent_background = false
+hunk_headers = true
+copy_decorations = false
+cursor_line = "row"
