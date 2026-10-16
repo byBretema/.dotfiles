@@ -27,6 +27,7 @@ bash_add_path "$HOME/.local/share/pnpm/bin"
 bash_add_path "$HOME/go/bin"
 
 alias configreload='source "$HOME/.bashrc"'
+source "$DOTFILES_SCRIPTS/profile/functions"
 source "$DOTFILES_SCRIPTS/profile/aliases"
 alias fuuuck='cmd=$(fc -ln -1); gum confirm --default=false "Re-run as SUDO: $cmd" && eval sudo "$cmd"'
 
@@ -85,42 +86,10 @@ fi
 pushd() { builtin pushd "$@" >/dev/null; }
 popd() { builtin popd "$@" >/dev/null; }
 
-# git worktree add + cd
-gwa() {
-    git_worktree_add "$@"
-    local target=$(cat /tmp/git_worktree_add_target 2>/dev/null)
-    [[ -n "$target" && -d "$target" ]] && cd "$target"
-}
-gws() {
-    git_worktree_switch "$@"
-    local target=$(cat /tmp/git_worktree_switch_target 2>/dev/null)
-    [[ -n "$target" && -d "$target" ]] && cd "$target"
-}
-
-# mkdir + cd
-mkcd() {
-    mkdir -p "$1" && pushd "$1"
-}
-
-# yazi
-y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-    command yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-    fi
-    rm -f -- "$tmp"
-}
-
 # bring to fg latest job in bg (readline keeps the edited line, bash >= 4.3)
 if [[ $- == *i* ]]; then
     bind -x '"\C-z": fg 2>/dev/null'
 fi
-
-# --- Tweaks -------------------------------------------------------------------
-
-export MANROFFOPT="-c"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # --- Prompt -------------------------------------------------------------------
 

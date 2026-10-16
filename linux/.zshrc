@@ -15,37 +15,11 @@ export PATH="$HOME/.local/share/pnpm/bin:$PATH"
 export PATH="$HOME/go/bin:$PATH"
 
 alias configreload='source $HOME/.zshrc'
+source "$DOTFILES_SCRIPTS/profile/functions"
 source "$DOTFILES_SCRIPTS/profile/aliases"
 alias fuuuck='cmd=$(fc -ln -1); gum confirm --default=false "Re-run as SUDO: $cmd" && eval sudo "$cmd"'
 
 # --- Functions ----------------------------------------------------------------
-
-# git worktree add + cd
-gwa() {
-    git_worktree_add "$@"
-    local target=$(cat /tmp/git_worktree_add_target 2>/dev/null)
-    [[ -n "$target" && -d "$target" ]] && cd "$target"
-}
-gws() {
-    git_worktree_switch "$@"
-    local target=$(cat /tmp/git_worktree_switch_target 2>/dev/null)
-    [[ -n "$target" && -d "$target" ]] && cd "$target"
-}
-
-# mkdir + cd
-mkcd() {
-    mkdir -p "$1" && pushd "$1"
-}
-
-# yazi
-y() {
-    local tmp="$(mktemp -t "yazi-cwd.XXXXXX")" cwd
-    command yazi "$@" --cwd-file="$tmp"
-    if cwd="$(cat -- "$tmp")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-        builtin cd -- "$cwd"
-    fi
-    rm -f -- "$tmp"
-}
 
 # bring to fg latest job in bg
 fancy-ctrl-z() {
@@ -67,9 +41,6 @@ HISTSIZE=100000
 SAVEHIST=100000
 setopt SHARE_HISTORY EXTENDED_HISTORY HIST_IGNORE_DUPS HIST_IGNORE_SPACE
 setopt IGNORE_EOF # Ctrl+D won't exit, needs 10 presses (parity: fish bind \cd)
-
-export MANROFFOPT="-c"
-export MANPAGER="sh -c 'col -bx | bat -l man -p'"
 
 # --- Prompt -------------------------------------------------------------------
 

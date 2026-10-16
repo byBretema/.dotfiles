@@ -46,6 +46,9 @@ export STARSHIP_CONFIG="$DOTFILES/configs/starship.toml"
 
 export EDITOR=helix
 
+export MANROFFOPT="-c"
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+
 # --- gum UI (Catppuccin Mocha) -------------------------------------------------
 
 export _COLOR_0="#45475a"

@@ -18,20 +18,22 @@ alias fuuuck='set cmd (history search --max 1); and gum confirm --default=false 
 
 # --- Functions ----------------------------------------------------------------
 
-# git worktree add + cd
-function gwa
-    git_worktree_add $argv
-    set -l target (cat /tmp/git_worktree_add_target 2>/dev/null)
+# cd into the dir a helper script left in a target file (scripts can't cd the parent shell)
+function _cd_from_file -a file
+    set -l target (cat $file 2>/dev/null)
     if test -n "$target"; and test -d "$target"
         cd "$target"
     end
 end
+
+# git worktree add/switch + cd
+function gwa
+    git_worktree_add $argv
+    _cd_from_file /tmp/git_worktree_add_target
+end
 function gws
     git_worktree_switch $argv
-    set -l target (cat /tmp/git_worktree_switch_target 2>/dev/null)
-    if test -n "$target"; and test -d "$target"
-        cd "$target"
-    end
+    _cd_from_file /tmp/git_worktree_switch_target
 end
 
 # greeting
@@ -58,11 +60,6 @@ bind \cz 'fg 2>/dev/null; commandline -f repaint'
 
 # Ctrl+D never exits (default is delete-or-exit)
 bind \cd delete-char
-
-# --- Tweaks -------------------------------------------------------------------
-
-set -x MANROFFOPT -c
-set -x MANPAGER "sh -c 'col -bx | bat -l man -p'"
 
 # --- Prompt -------------------------------------------------------------------
 
