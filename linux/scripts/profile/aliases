@@ -111,7 +111,7 @@ alias gwr='git worktree remove'
 
 alias ea='pushd $HOME/agents'
 alias eay='pushd $HOME/agents && y'
-alias easync='ea && git add -A && git stash && git pull && git stash pop && git commit -m "-" && git push; popd 2>/dev/null'
+alias easync='git -C "$HOME/agents" add -A && git -C "$HOME/agents" commit -m "-" || true; git -C "$HOME/agents" pull --rebase --autostash && git -C "$HOME/agents" push'
 alias eatree='t $HOME/agents'
 
 # --- Find / Pickers ---
@@ -125,7 +125,7 @@ alias fff='fzf --preview="bat --color=always {}"'
 export __DIR__omi="$HOME/omi"
 
 alias omi='mkdir -p "$__DIR__omi" && pushd "$__DIR__omi"'
-alias omiy='om && y'
+alias omiy='omi && y'
 
 alias omid='pushd "$__DIR__omi/code/deploy_studio_engine"'
 alias omic='pushd "$__DIR__omi/code/studio_engine" && gws'

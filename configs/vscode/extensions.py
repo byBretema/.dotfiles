@@ -35,8 +35,9 @@ def main():
 
     # Read file
     extensions_from_file = set()
-    with open(extensions_filepath, "r") as f:
-        [extensions_from_file.add(l.strip()) for l in f if l.strip()]
+    if os.path.exists(extensions_filepath):
+        with open(extensions_filepath, "r") as f:
+            [extensions_from_file.add(l.strip()) for l in f if l.strip()]
 
     # Install
     if args.install:

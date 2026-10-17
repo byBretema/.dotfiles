@@ -4,7 +4,6 @@
 
 [core]
 	compression = 9
-	whitespace = error
 	preloadindex = true
 
 	editor = helix
@@ -21,7 +20,7 @@
 	insteadOf = "bb:"
 [url "git@github.com:"]
 	insteadOf = "gh:"
-[url "git@github.com:omi-lab"]
+[url "git@github.com:omi-lab/"]
 	insteadOf = "omi:"
 
 [init]
@@ -77,7 +76,6 @@
 
 [pull]
 	rebase = true
-	default = current
 
 [rebase]
 	autoStash = true
@@ -97,22 +95,13 @@
 # 	#ff = false  # https://stackoverflow.com/a/14865661
 # 	conflictstyle = zdiff3
 
-[advice]
-	detachedHead = false
-
-[init]
-	defaultBranch = main
-
 [safe]
 	directory = ~/dev/*
 	directory = ~/omi/*
 	directory = ~/agents/*
 	directory = ~/.dotfiles
 
-[credential]
-	helper = manager-core
-
-[remote "origin"]
+[fetch]
 	prune = true
 
 [filter "lfs"]

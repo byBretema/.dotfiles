@@ -29,7 +29,8 @@ link_config_files() {
 
     # Fish
     log_info "Fish"
-    ln -srf "${script_path}/.fishrc" "$HOME/.config/fish/config.fish"
+    fish_dir=$(mkdir_ret "${HOME_CONFIG}/fish")
+    ln -srf "${script_path}/.fishrc" "${fish_dir}/config.fish"
 
     # Bash
     log_info "Bash"
@@ -356,10 +357,12 @@ EOF
     log_header "Linking Cosmic Settings"
 
     cosmic_dir="${HOME_CONFIG}/cosmic"
-    if [[ -d "${cosmic_dir}" ]]; then
-        sudo rm -rf "${cosmic_dir}"
+    if [[ -d "${cosmic_dir}" && ! -L "${cosmic_dir}" ]]; then
+        cosmic_backup="${cosmic_dir}.bak.$(date +%Y%m%d%H%M%S)"
+        mv "${cosmic_dir}" "${cosmic_backup}" || { log_error "Could not back up ${cosmic_dir}"; return 1; }
+        log_warn "Existing cosmic config moved to ${cosmic_backup}"
     fi
-    ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${HOME_CONFIG}"
+    ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${cosmic_dir}"
 }
 
 collect_packages() {
@@ -605,7 +608,7 @@ while [[ "${#}" > 0 ]]; do
 
     --confirm-pacman) shift && confirm_pacman=true ;;
 
-    -h | --help) shift && usage ;;
+    -h | --help) usage && exit 0 ;;
     --) shift && break ;;
 
     *) break ;;

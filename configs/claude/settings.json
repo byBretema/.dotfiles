@@ -59,15 +59,16 @@
       }
     ]
   },
+  "worktree": {
+    "baseRef": "fresh"
+  },
   "statusLine": {
     "type": "command",
     "command": "export GIT_OPTIONAL_LOCKS=0; E=$(printf '\\033'); i=$(cat); j() { echo \"$i\" | jq -r \"$1 // empty\"; }; d=$(j .workspace.current_dir); [ -z \"$d\" ] && d=$(j .cwd); m=$(j .model.display_name); c=$(j .context_window.used_percentage); h=$(j .rate_limits.five_hour.used_percentage); w=$(j .rate_limits.seven_day.used_percentage); b=; r=$(git -C \"$d\" rev-parse --show-toplevel 2>/dev/null); if [ -n \"$r\" ]; then b=$(git -C \"$d\" branch --show-current 2>/dev/null); [ -z \"$b\" ] && b=$(git -C \"$d\" rev-parse --short HEAD 2>/dev/null); else r=$d; fi; f=$(cd \"$r\" 2>/dev/null && find . -mindepth 1 -maxdepth 2 \\( -name .git -o -name 'build*' -o -name node_modules -o -name target -o -name .venv \\) -prune -o -type f -print 2>/dev/null | head -3000); e=$(echo \"$f\" | sed -n 's/.*\\.\\([A-Za-z0-9]*\\)$/\\1/p' | sort -u); n=0; L=; a() { [ $n -lt 5 ] && L=\"${L:+$L,}$1\" && n=$((n+1)); true; }; x() { echo \"$e\" | grep -qxE \"$1\"; }; k() { echo \"$f\" | grep -qE \"$1\"; }; if x 'cpp|cc|cxx|hpp|hh'; then a cpp; elif x 'c|h'; then a c; fi; k '(^|/)CMakeLists\\.txt($)' && a cmake; { x rs || k '(^|/)Cargo\\.toml($)'; } && a rs; { x go || k '(^|/)go\\.mod($)'; } && a go; { x py || k '(^|/)pyproject\\.toml($)'; } && a py; { x 'ts|tsx' || k '(^|/)tsconfig\\.json($)'; } && a ts; x 'js|jsx|mjs|cjs' && a js; x lua && a lua; x zig && a zig; x odin && a odin; x sh && a sh; x fish && a fish; x qml && a qml; sep=\"${E}[38;2;108;112;134m | ${E}[0m\"; out=; seg() { out=\"${out:+$out$sep}${E}[38;2;$1m$2${E}[0m\"; }; [ -n \"$m\" ] && seg '203;166;247' \"$m\"; [ -n \"$b\" ] && seg '166;227;161' \"$b\"; [ -n \"$c\" ] && seg '137;180;250' \"ctx $(printf '%.0f' \"$c\")%\"; [ -n \"$h\" ] && seg '250;179;135' \"5h $(printf '%.0f' \"$h\")%\"; [ -n \"$w\" ] && seg '249;226;175' \"7d $(printf '%.0f' \"$w\")%\"; [ -n \"$L\" ] && seg '148;226;213' \"$L\"; printf '%s\\n' \"$out\""
   },
-  "worktree": {
-    "baseRef": "fresh"
-  },
   "enabledPlugins": {
-    "clangd-lsp@claude-plugins-official": true
+    "clangd-lsp@claude-plugins-official": true,
+    "pyright-lsp@claude-plugins-official": true
   },
   "feedbackDrafts": "notify",
   "askUserQuestionTimeout": "60s",

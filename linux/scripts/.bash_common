@@ -17,7 +17,8 @@ _log() {
   local color_reset="\033[0m"
   local msg="${@}";
   if ! ${LOG_WITH_COLOR}; then color_setup=""; color_reset=""; fi
-  printf "${color_setup}${msg}${color_reset}\n" >&2
+  # %b keeps \n/\t escapes in messages working without treating % as format
+  printf '%b\n' "${color_setup}${msg}${color_reset}" >&2
 }
 
 log_header() { _log 3 1 "@ ${@}";   }  # Yellow : 3 | Bold : 1
@@ -131,7 +132,7 @@ choose_from_dir_tail() {
 }
 choose_from_dir_glob() {
   [[ "${#}" > 1 ]] || error_exit "Usage: choose_from_dir_glob DIR PATTERN"
-  choose_one "${1}/$(_find_dir_name_only "${1}" "${2}")"
+  choose_one "$(_find_dir_name_only "${1}" "${2}" | awk -v p="${1}" '{print p "/" $0}')"
 }
 
 

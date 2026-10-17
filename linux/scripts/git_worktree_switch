@@ -11,8 +11,9 @@ if ! is_git; then
 
   tmpfile="$(mktemp -t "yazi-cwd.XXXXXX")"
   command yazi "$@" --cwd-file="$tmpfile"
+  # gws (shell function) cds into it; a script can't change the parent's cwd
   if cwd="$(cat -- "$tmpfile")" && [ -n "$cwd" ] && [ "$cwd" != "$PWD" ]; then
-      builtin cd -- "$cwd"
+      echo "$cwd" > "$target_file"
   fi
   rm -f -- "$tmpfile"
 

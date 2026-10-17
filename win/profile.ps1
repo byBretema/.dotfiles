@@ -54,7 +54,7 @@ function download_to_temp([string]$url, [string]$name = "", [string]$expectedHas
 }
 
 function install_exe_from_url([string]$url, [string]$filename) {
-	& "$(download_to_temp $url $filename "exe")"
+	& "$(download_to_temp $url $filename)"
 }
 
 function unzip([string]$path) {
