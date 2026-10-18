@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+# hunk diff without AI agent instructions/memory (AGENTS.md, CLAUDE.md, .claude/, ...).
+# Usage: hunk_code_diff [hunk options/targets] [-- pathspec...]
+# Plain `hunk diff` still shows everything.
+
+EXCLUDES=(
+  "**/AGENTS.md"
+  "**/CLAUDE.md"
+  "**/CLAUDE.local.md"
+  "**/GEMINI.md"
+  "**/.cursorrules"
+  "**/.github/copilot-instructions.md"
+  "**/.claude/**"
+  "**/.opencode/**"
+  "**/.cursor/**"
+  "**/.gemini/**"
+  "**/.codex/**"
+  "**/.windsurf/**"
+  "**/claude/**"
+  "**/opencode/**"
+  "**/agents/**"
+)
+
+args=()
+specs=()
+while (($#)); do
+  if [[ $1 == -- ]]; then
+    shift
+    specs=("$@")
+    break
+  fi
+  args+=("$1")
+  shift
+done
+
+# :/ = whole repo like plain `git diff`; top = excludes also anchor at the root when run from a subdir
+((${#specs[@]})) || specs=(":/")
+exec hunk diff "${args[@]}" -- "${specs[@]}" "${EXCLUDES[@]/#/:(top,exclude,glob)}"
