@@ -370,7 +370,10 @@ EOF
     cosmic_dir="${HOME_CONFIG}/cosmic"
     if [[ -d "${cosmic_dir}" && ! -L "${cosmic_dir}" ]]; then
         cosmic_backup="${cosmic_dir}.bak.$(date +%Y%m%d%H%M%S)"
-        mv "${cosmic_dir}" "${cosmic_backup}" || { log_error "Could not back up ${cosmic_dir}"; return 1; }
+        mv "${cosmic_dir}" "${cosmic_backup}" || {
+            log_error "Could not back up ${cosmic_dir}"
+            return 1
+        }
         log_warn "Existing cosmic config moved to ${cosmic_backup}"
     fi
     ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${cosmic_dir}"
@@ -560,35 +563,39 @@ macbook_keyboard_setup() {
 #! Help
 
 usage() {
-    echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options]"
-    echo
-    echo "Manage configs and system apps, themes..."
-    echo
-    echo "Options:"
-    echo "  -d | --remove            Remove discarded packages"
-    echo "  -u | --update            System update"
-    echo "  -i | --install           Install packages / apps"
-    echo "  -l | --links             Link configs / themes"
-    echo "       --all               Run -d, -u, -i, and -l in sequence"
-    echo
-    echo "  --set-git-filters        Configure local Git filters *1"
-    echo
-    echo "  --mbkb-enable            MacBook keyboard : fn/ctrl swap, alt/win xkb, git filter *2"
-    echo "  --mbkb-disable           Revert MacBook keyboard setup"
-    echo
-    echo "  --confirm-pacman         Prompt before each package action (removes --noconfirm)"
-    echo
-    echo "    -h | --help            Show this message"
-    echo "    --                     Extra args after this"
-    echo
-    echo " [*1]"
-    echo "      - Solaar     : Disable sync of, config_cookie."
-    echo "      - Screenshot : Disable sync of, last_rectangle."
-    echo
-    echo " [*2]"
-    echo "      - Swaps physical Fn with Left Ctrl (hid_apple.swap_fn_leftctrl)."
-    echo "      - Enables altwin:swap_alt_win,lv3:rwin_switch on COSMIC (es layout)."
-    echo "      - Registers xkb-macbook Git filter (commits options: None)."
+    local show=(cat)
+    is_cmd "bat" && show=(bat --plain --paging=never --language=help)
+    "${show[@]}" <<EOF
+Usage: $(basename "${BASH_SOURCE[-1]}") [options]
+
+Manage configs and system apps, themes...
+
+Options:
+  -d | --remove            Remove discarded packages
+  -u | --update            System update
+  -i | --install           Install packages / apps
+  -l | --links             Link configs / themes
+       --all               Run -d, -u, -i, and -l in sequence
+
+  --set-git-filters        Configure local Git filters *1
+
+  --mbkb-enable            MacBook keyboard : fn/ctrl swap, alt/win xkb, git filter *2
+  --mbkb-disable           Revert MacBook keyboard setup
+
+  --confirm-pacman         Prompt before each package action (removes --noconfirm)
+
+  -h | --help              Show this message
+  --                       Extra args after this
+
+ [*1]
+      - Solaar     : Disable sync of, config_cookie.
+      - Screenshot : Disable sync of, last_rectangle.
+
+ [*2]
+      - Swaps physical Fn with Left Ctrl (hid_apple.swap_fn_leftctrl).
+      - Enables altwin:swap_alt_win,lv3:rwin_switch on COSMIC (es layout).
+      - Registers xkb-macbook Git filter (commits options: None).
+EOF
 }
 
 #! Defaults
@@ -634,7 +641,7 @@ paru_confirm="--noconfirm"
 
 exit_code=0
 
-is_cmd "paru"    || sudo pacman -S paru
+is_cmd "paru" || sudo pacman -S paru
 is_cmd "flatpak" || sudo pacman -S flatpak
 
 [[ "${do_remove}" == "true" ]] && { remove_packages || exit_code=1; }
