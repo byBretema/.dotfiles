@@ -22,6 +22,12 @@ mkdir_ret() {
     echo "$1"
 }
 
+# Copy into a system path; skips when unchanged, keeps a numbered backup (file.~1~) otherwise
+sys_copy() {
+    cmp -s "$1" "$2" && return 0
+    sudo cp --backup=numbered "$1" "$2"
+}
+
 link_config_files() {
 
     # --- Shell ---
@@ -200,28 +206,32 @@ EOF
 
     # --- OpenCode ---
     log_header "Linking - OpenCode"
-    opencode_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
+    if is_cmd "opencode"; then
+        opencode_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
 
-    log_info "AGENTS.md"
-    ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${opencode_dir}/AGENTS.md"
-    log_info "Settings"
-    ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${opencode_dir}/opencode.jsonc"
-    ln -srf "${DOT_CONFIGS}/opencode/cli.json" "${opencode_dir}/cli.json"
-    log_info "TUI"
-    ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${opencode_dir}/tui.json"
-    themes_dir=$(mkdir_ret "${opencode_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/opencode/themes/catppuccin-transparent.json" "${themes_dir}/catppuccin-transparent.json"
-    log_info "Commands"
-    ln -srfn "${DOT_CONFIGS}/opencode/commands" "${opencode_dir}/commands"
-    log_info "Agents"
-    ln -srfn "${DOT_CONFIGS}/opencode/agents" "${opencode_dir}/agents"
-    log_info "Skills"
-    ln -srfn "${DOT_CONFIGS}/opencode/skills" "${opencode_dir}/skills"
-    log_info "Plugins"
-    ln -srfn "${DOT_CONFIGS}/opencode/plugins" "${opencode_dir}/plugins"
-    log_info "Scripts"
-    pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
-    ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
+        log_info "AGENTS.md"
+        ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${opencode_dir}/AGENTS.md"
+        log_info "Settings"
+        ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${opencode_dir}/opencode.jsonc"
+        ln -srf "${DOT_CONFIGS}/opencode/cli.json" "${opencode_dir}/cli.json"
+        log_info "TUI"
+        ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${opencode_dir}/tui.json"
+        themes_dir=$(mkdir_ret "${opencode_dir}/themes")
+        ln -srf "${DOT_CONFIGS}/opencode/themes/catppuccin-transparent.json" "${themes_dir}/catppuccin-transparent.json"
+        log_info "Commands"
+        ln -srfn "${DOT_CONFIGS}/opencode/commands" "${opencode_dir}/commands"
+        log_info "Agents"
+        ln -srfn "${DOT_CONFIGS}/opencode/agents" "${opencode_dir}/agents"
+        log_info "Skills"
+        ln -srfn "${DOT_CONFIGS}/opencode/skills" "${opencode_dir}/skills"
+        log_info "Plugins"
+        ln -srfn "${DOT_CONFIGS}/opencode/plugins" "${opencode_dir}/plugins"
+        log_info "Scripts"
+        pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
+        ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
+    else
+        log_warn "opencode not found — links skipped"
+    fi
 
     # --- Claude Code ---
     log_header "Linking - Claude Code"
@@ -243,7 +253,7 @@ EOF
 
     # Global environment
     log_info "Global"
-    sudo cp "$DOT_LINUX_ASSETS/etc/environment" "/etc/environment"
+    sys_copy "$DOT_LINUX_ASSETS/etc/environment" "/etc/environment"
 
     # Per app/tool env settings
     env_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
@@ -277,7 +287,8 @@ EOF
 
     #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
-        sudo cp "$DOT_LINUX_ASSETS/pam/login" /etc/pam.d/login
+        sys_copy "$DOT_LINUX_ASSETS/pam/login" /etc/pam.d/login
+        log_warn "/etc/pam.d/login replaced (backup: /etc/pam.d/login.~N~). Test a TTY login before logging out."
     fi
 
     # XDG Desktop Portal

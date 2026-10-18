@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-target_file="/tmp/git_worktree_switch_target"
+target_file="${XDG_RUNTIME_DIR:-/tmp}/git_worktree_switch_target"
 rm -f "$target_file"
 
 source "${0%/*}/.bash_common"

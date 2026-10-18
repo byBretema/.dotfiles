@@ -1,6 +1,19 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
   "permissions": {
+    "deny": [
+      "Read(//**/.ssh/**)",
+      "Read(//**/.gnupg/**)",
+      "Read(//**/.aws/**)",
+      "Read(//**/.git-credentials)",
+      "Read(//**/.netrc)",
+      "Read(//**/*.pem)",
+      "Read(//**/*.key)",
+      "Read(//**/id_rsa*)",
+      "Read(//**/id_ed25519*)",
+      "Read(~/.config/gh/hosts.yml)",
+      "Read(~/.local/share/atuin/key)"
+    ],
     "ask": [
       "Read(**/*.env)",
       "Read(**/*.env.*)",
@@ -43,7 +56,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "[ -f ~/.claude/bin/trash ] && command -v jq >/dev/null || exit 0; jq -r '.tool_input.command // empty' | grep -qE '(^|[;&|(]|\\$\\()[[:space:]]*(sudo[[:space:]]+)?rm[[:space:]]' && { echo 'rm blocked: use `~/.claude/bin/trash <paths>` instead' >&2; exit 2; }; exit 0"
+            "command": "[ -x ~/.claude/bin/rm-guard ] || exit 0; exec ~/.claude/bin/rm-guard"
           }
         ]
       }

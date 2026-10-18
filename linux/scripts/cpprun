@@ -50,11 +50,9 @@ required_file "${filepath}"
 ### Execution
 ################################################################################
 
-bin_path="/tmp/cpprun/"
-mkdir -p ${bin_path}
+# private 0700 dir: a shared /tmp path would let other users plant the binary we run
+bin_dir=$(mktemp -d -t cpprun.XXXXXXXXXX)
+trap 'rm -rf "${bin_dir}"' EXIT
+bin_name="${bin_dir}/a.out"
 
-bin_name=$(mktemp -u "${bin_path}/XXXXXXXXXX")
-
-"${compiler}" --std="c++${stdver}" $filepath -o ${bin_name} && "${bin_name}"
-
-[[ -f "${bin_name}" ]] && rm "${bin_name}"
+"${compiler}" --std="c++${stdver}" "${filepath}" -o "${bin_name}" && "${bin_name}"

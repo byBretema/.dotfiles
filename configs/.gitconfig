@@ -1,6 +1,14 @@
 [user]
 	name = ByBretema
 	email = bybretema@gmail.com
+	# Same key init_ssh creates; add it on GitHub as a *Signing* key too
+	signingkey = ~/.ssh/id_ed25519.pub
+
+[gpg]
+	format = ssh
+
+[commit]
+	gpgsign = false
 
 [core]
 	compression = 9
@@ -90,6 +98,7 @@
 
 [tag]
 	sort = -taggerdate
+	gpgsign = false
 
 # [merge]
 # 	#ff = false  # https://stackoverflow.com/a/14865661

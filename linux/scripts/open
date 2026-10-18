@@ -11,19 +11,21 @@ is_file_or_dir() {
   return 1
 }
 
+# Files/dirs go to xdg-open, anything else runs as a command; no eval, so names with $(...) stay inert
+run() {
+  if is_file_or_dir "${1}"; then xdg-open "${1}"; else "$@"; fi
+}
+
 silent() {
-  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
-  eval "${item}" >/dev/null 2>&1 &
+  run "$@" >/dev/null 2>&1 &
   exit 0
 }
 detached() {
-  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
-  eval "${item}" &
+  run "$@" &
   exit 0
 }
 block() {
-  is_file_or_dir "${1}" && item="xdg-open ${1}" || item="${1}"
-  eval "${item}"
+  run "$@"
   exit 0
 }
 

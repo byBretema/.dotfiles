@@ -1,0 +1,17 @@
+#!/usr/bin/env sh
+# PreToolUse hook (Bash): steer deletes to ~/.claude/bin/trash.
+# A habit guard, not a sandbox: anything obfuscated enough gets through.
+
+command -v jq >/dev/null 2>&1 || exit 0
+cmd=$(jq -r '.tool_input.command // empty')
+
+# rm at a command position: line start, after ; & | ( ` $( or a wrapper (sudo, xargs -0, env, ...)
+pos='(^|[;&|(`]|\$\(|(sudo|xargs|command|exec|env|nice|nohup|time)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*)'
+del='[[:space:]]*((/usr)?/bin/)?(rm|unlink|shred)([[:space:]]|$)'
+
+if printf '%s\n' "$cmd" | grep -qE "${pos}${del}" ||
+    printf '%s\n' "$cmd" | grep -qE 'find[[:space:]].*-delete'; then
+    echo 'rm blocked: use `~/.claude/bin/trash <paths>` instead' >&2
+    exit 2
+fi
+exit 0

@@ -1,14 +1,15 @@
 # Shared bash/zsh functions (fish has its own copies in .fishrc)
 
 # cd into the dir a helper script left in a target file (scripts can't cd the parent shell)
+# (per-user runtime dir: a fixed /tmp file could be planted by another user)
 _cd_from_file() {
-    local target=$(cat "$1" 2>/dev/null)
+    local target=$(cat "${XDG_RUNTIME_DIR:-/tmp}/$1" 2>/dev/null)
     [[ -n "$target" && -d "$target" ]] && cd "$target"
 }
 
 # git worktree add/switch + cd
-gwa() { git_worktree_add "$@"; _cd_from_file /tmp/git_worktree_add_target; }
-gws() { git_worktree_switch "$@"; _cd_from_file /tmp/git_worktree_switch_target; }
+gwa() { git_worktree_add "$@"; _cd_from_file git_worktree_add_target; }
+gws() { git_worktree_switch "$@"; _cd_from_file git_worktree_switch_target; }
 
 # mkdir + cd
 mkcd() {

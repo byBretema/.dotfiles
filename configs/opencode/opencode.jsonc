@@ -58,44 +58,12 @@
         "qwen3.5:9b-q4_K_M": {},
         "Qwen3.8-27B-UD-IQ3_XXS:latest": {}
       }
-    },
-    "prism": {
-      "npm": "@ai-sdk/openai-compatible",
-      "name": "Prism (local)",
-      "options": {
-        "baseURL": "http://127.0.0.1:8080/v1"
-      },
-      "models": {
-        "bonsai": {
-          "limit": {
-            "context": 32768,
-            "output": 8192
-          },
-          // Bonsai template only accepts xhigh/medium/low; default "high" 500s
-          "settings": {
-            "reasoningEffort": "medium"
-          }
-        }
-      }
     }
   },
   //--------------------------------------------------------------------------------
   // AGENT BEHAVIORS & LIMITS
   //--------------------------------------------------------------------------------
   "agent": {
-    // Lean agent for local prism/bonsai: no web/subagent tools => smaller prompt
-    "bonsai": {
-      "description": "Lean primary agent for local Bonsai (prism/bonsai)",
-      "mode": "primary",
-      "model": "prism/bonsai",
-      "steps": 32,
-      "color": "#A6E3A1",
-      "permissions": [
-        { "action": "webfetch", "resource": "*", "effect": "deny" },
-        { "action": "websearch", "resource": "*", "effect": "deny" },
-        { "action": "subagent", "resource": "*", "effect": "deny" }
-      ]
-    },
     "build": {
       // "variant": "max",
       "steps": 32,
@@ -142,6 +110,18 @@
       // Secrets & Configs
       "*.env": "deny",
       "*.env.*": "deny",
+      // * is regex .* over the absolute path, so **/ matches at any depth; generic names stay ~-anchored
+      "**/.ssh/**": "deny",
+      "**/.gnupg/**": "deny",
+      "**/.aws/**": "deny",
+      "**/.git-credentials": "deny",
+      "**/.netrc": "deny",
+      "~/.config/gh/hosts.yml": "deny",
+      "~/.local/share/atuin/key": "deny",
+      "**/*.pem": "deny",
+      "**/*.key": "deny",
+      "**/id_rsa*": "deny",
+      "**/id_ed25519*": "deny",
       "**/Dockerfile*": "ask",
       // Infrastructure as Code
       "**/*.tf": "deny",
@@ -153,9 +133,6 @@
       "helm/**": "deny"
     },
     "bash": {
-      // Privilege Escalation
-      "sudo *": "deny",
-      "su -*": "deny",
       // Destructive Actions
       "rm *": "ask",
       // Git Mutations
@@ -185,7 +162,15 @@
       "odin *": "deny",
       "zig *": "deny",
       "python*": "ask",
-      "python3*": "ask"
+      "python3*": "ask",
+      // Privilege Escalation, anywhere in the command (env sudo, bash -c "sudo ..");
+      // kept last because the last matching rule wins
+      "su": "deny",
+      "su *": "deny",
+      "*sudo *": "deny",
+      "*doas *": "deny",
+      "*pkexec *": "deny",
+      "*run0 *": "deny"
     }
   },
   //--------------------------------------------------------------------------------

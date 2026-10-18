@@ -1,2 +1,0 @@
-
-# rg.exe : https://github.com/BurntSushi/ripgrep/releases (MSVC Version)

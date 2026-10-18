@@ -2,7 +2,6 @@
 
 alias j="jobs"
 alias oc="opencode"
-alias ocb='ai-bonsai-2-serve && opencode' # serve bonsai-2 if needed, then opencode (/models => prism/bonsai)
 alias bot='pushd "$(mktemp -d -t bot-XXXXXX)" && opencode'
 
 alias e='$EDITOR'

@@ -3,9 +3,16 @@
 # Flags are ignored so habits like `trash -rf x` still work.
 
 for p in "$@"; do
+
     case "$p" in -*) continue ;; esac
+
     # gio refuses tmpfs, and /tmp is volatile anyway.
-    case "$(realpath -m -- "$p")" in /tmp/*) rm -rf -- "$p" || exit 1; continue ;; esac
+    case "$(realpath -m -- "$p")" in /tmp/*)
+        rm -rf -- "$p" || exit 1
+        continue
+        ;;
+    esac
+
     if command -v gio >/dev/null 2>&1; then
         gio trash -- "$p" || exit 1
     elif command -v powershell.exe >/dev/null 2>&1; then
