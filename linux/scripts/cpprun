@@ -9,16 +9,18 @@ source "${0%/*}/.bash_common"
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options] FILEPATH"
-  echo ""
-  echo "Options:"
-  echo "  -g | --gnu    Compile with 'g++' (default)"
-  echo "  -c | --clang  Compile with 'clang'"
-  echo "  -m | --msvc   Compile with 'cl'"
-  echo "  -s | --std    Set std verision (default:20)"
-  echo "  -h | --help   Show this message"
-  echo "  --            Extra args after this"
-  exit 1
+  show_help <<EOF
+Usage: ${script_name} [options] FILEPATH
+
+Options:
+  -g | --gnu    Compile with 'g++' (default)
+  -c | --clang  Compile with 'clang++'
+  -m | --msvc   Compile with 'cl'
+  -s | --std    Set std version (default: 20)
+  -h | --help   Show this message
+  --            Extra args after this
+EOF
+  exit 0
 }
 
 #! Defaults

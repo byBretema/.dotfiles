@@ -37,15 +37,17 @@ block() {
 #! Help
 
 usage() {
-  echo "Usage: $(basename "${BASH_SOURCE[-1]}") [options] [ITEM_TO_OPEN]"
-  echo ""
-  echo "Options:"
-  echo "  -s | --silent     No log, no block"
-  echo "  -d | --detached   Log, no block"
-  echo "  -b | --block      Log and block"
-  echo "  -h | --help       Show this message"
-  echo "  --                Extra args after this"
-  exit 1
+  show_help <<EOF
+Usage: ${script_name} [options] [ITEM_TO_OPEN]
+
+Options:
+  -s | --silent     No log, no block
+  -d | --detached   Log, no block
+  -b | --block      Log and block
+  -h | --help       Show this message
+  --                Extra args after this
+EOF
+  exit 0
 }
 
 #! Process options

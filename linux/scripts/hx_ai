@@ -63,12 +63,11 @@ input() {
 
 # Replace mode: spinner popup until claude is done; Ctrl+C in it aborts and keeps the original
 spin() {
-  local cancel
-  cancel=$(mktemp -u)
-  tmux display-popup -E -T " hx_ai " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" -e "cancel=$cancel" \
-    'gum spin --spinner dot --title "Clauding..." -- tail --pid="$pid" -f /dev/null || : >"$cancel"'
-  [[ -e $cancel ]] || return 0
-  rm -f "$cancel"
+  tmux display-popup -E -T " hx_ai " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" \
+    'gum spin --spinner dot --title "Clauding..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
+  # Ctrl+C SIGINTs the popup's whole process group, so nothing in there can flag the cancel.
+  # The popup only closes on its own once claude exits: still running means cancelled.
+  kill -0 "$1" 2>/dev/null || return 0
   pkill -P $$
   return 1
 }

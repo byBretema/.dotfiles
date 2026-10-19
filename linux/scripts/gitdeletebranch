@@ -2,20 +2,25 @@
 source "${0%/*}/.bash_common"
 guard__is_git
 
+usage() {
+    show_help <<EOF
+Usage: ${script_name} [options]
+
+Options:
+  -f            Force local delete
+  -v            Enable verbose for git-trace/curl
+  -h | --help   Show this message
+EOF
+    exit 0
+}
+
 local_delete_flag="-d"
 
 while [[ "${#}" > 0 ]]; do
     case "${1}" in
         -f          ) shift; local_delete_flag="-D";;
         -v          ) shift; GIT_TRACE=1; GIT_CURL_VERBOSE=1;;
-        -h | --help ) shift;
-            echo "Usage: $script_name [options]"
-            echo ""
-            echo "Options:"
-            echo "  -f            Force local delete"
-            echo "  -v            Enable verbose for git-trace/curl"
-            echo "  -h | --help   Show this message"
-            exit 1;;
+        -h | --help ) shift; usage;;
         --          ) shift; break ;;
         *           ) break ;;
     esac

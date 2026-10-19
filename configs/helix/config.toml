@@ -181,6 +181,9 @@ o = ":open %sh{hx_switch_cpp %{buffer_name}}"
 # 'l' for faster access to: global search
 "l" = "global_search"
 
+# AI edit of the selection via `claude -p`, replaces it in place (blocks hx, Ctrl+C in the popup aborts)
+i = ":pipe hx_ai -r %{buffer_name}"
+
 # 'ñ' for faster access to: colon ':' actions
 "ñ" = "@:"
 
@@ -288,7 +291,6 @@ r = ":reload-all"
 
 # AI edit of the selection via `claude -p`, result goes to the clipboard (async, notifies when done)
 i = ":pipe-to hx_ai %{buffer_name}"
-I = ":pipe hx_ai -r %{buffer_name}" # same, but replaces the selection (blocks hx)
 
 # Duplicate line up/down
 j = '@X"dy"dp'
@@ -366,4 +368,8 @@ esc = ["normal_mode", ":write-all"]
 
 # AI edit of the selection via `claude -p` (same as normal mode ñ i)
 i = ":pipe-to hx_ai %{buffer_name}"
-I = ":pipe hx_ai -r %{buffer_name}" # same, but replaces the selection (blocks hx)
+
+[keys.select.space]
+
+# Same as normal mode space i
+i = ":pipe hx_ai -r %{buffer_name}"

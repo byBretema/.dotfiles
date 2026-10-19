@@ -563,10 +563,8 @@ macbook_keyboard_setup() {
 #! Help
 
 usage() {
-    local show=(cat)
-    is_cmd "bat" && show=(bat --plain --paging=never --language=help)
-    "${show[@]}" <<EOF
-Usage: $(basename "${BASH_SOURCE[-1]}") [options]
+    show_help <<EOF
+Usage: ${script_name} [options]
 
 Manage configs and system apps, themes...
 
