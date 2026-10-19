@@ -1,0 +1,115 @@
+#!/usr/bin/env bash
+
+# Helix: send the selection + a prompt to `claude -p`.
+# Usage (from hx):
+#   :pipe-to hx_ai %{buffer_name}    async, copies the returned code to the clipboard
+#   :pipe hx_ai -r %{buffer_name}    blocks hx, replaces the selection with the returned code
+# The selection arrives on stdin.
+
+set -o pipefail
+
+mode=copy
+[[ $1 == -r ]] && { mode=replace; shift; }
+file=$1
+
+# Keep trailing newlines: line selections end with one and the replacement must too
+snippet=$(cat; printf x)
+snippet=${snippet%x}
+
+# In replace mode hx swaps the selection for our stdout, so every bail-out echoes the original back
+keep() {
+  [[ $mode == replace ]] && printf '%s' "$snippet"
+  exit 0
+}
+
+need=(claude tmux gum notify-send)
+[[ $mode == copy ]] && need+=(wl-copy)
+missing=()
+for c in "${need[@]}"; do command -v "$c" >/dev/null || missing+=("$c"); done
+if ((${#missing[@]})); then
+  # notify-send itself may be the missing one
+  notify-send -u critical "hx_ai" "Missing: ${missing[*]}" 2>/dev/null || echo "hx_ai: missing: ${missing[*]}" >&2
+  keep
+fi
+
+[[ -n ${snippet//[[:space:]]/} ]] || { notify-send "hx_ai" "Empty selection"; keep; }
+
+# tmux popup prompt keeps the text away from hx's `sh -c`, so quotes/apostrophes are safe
+[[ -n $TMUX ]] || { notify-send "hx_ai" "Needs tmux"; keep; }
+popup_style=(-s "bg=#1e1e2e" -S "bg=#1e1e2e")
+tmp=$(mktemp)
+tmux display-popup -E -T " hx_ai " -w 60% -h 5 "${popup_style[@]}" -e "out=$tmp" -e "name=${file##*/}" \
+  'gum input --char-limit 0 --width 0 --header " $name" --header.foreground 212 \
+     --prompt "❯ " --prompt.foreground 99 --placeholder "Describe the edit..." > "$out"'
+task=$(<"$tmp")
+rm -f "$tmp"
+[[ -n ${task//[[:space:]]/} ]] || keep
+
+instructions="Edit the code inside <snippet> as the user asks.
+User request: ${task}
+<file> is the full file from disk, read-only context. Do not return it.
+Return ONLY the replacement code for <snippet>, keeping its indentation and style.
+No prose, no explanations, no markdown fences."
+
+# Replace mode freezes hx while claude runs, so favor speed
+model=()
+[[ $mode == replace ]] && model=(--model haiku)
+
+# Context goes on stdin, not argv: a single argument is capped at 128 KiB
+input() {
+  [[ -f $file ]] && printf '<file path="%s">\n%s\n</file>\n\n' "$file" "$(cat "$file")"
+  printf '<snippet>\n%s\n</snippet>\n' "$snippet"
+}
+
+# Replace mode: spinner popup until claude is done; Ctrl+C in it aborts and keeps the original
+spin() {
+  local cancel
+  cancel=$(mktemp -u)
+  tmux display-popup -E -T " hx_ai " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" -e "cancel=$cancel" \
+    'gum spin --spinner dot --title "Clauding..." -- tail --pid="$pid" -f /dev/null || : >"$cancel"'
+  [[ -e $cancel ]] || return 0
+  rm -f "$cancel"
+  pkill -P $$
+  return 1
+}
+
+# Sets $out; stderr kept apart so warnings never end up in the code
+ask() {
+  local err res rc pid
+  err=$(mktemp)
+  res=$(mktemp)
+  input | claude -p "${model[@]}" "$instructions" 2>"$err" | sed '/^[[:space:]]*```/d' >"$res" &
+  pid=$!
+  if [[ $mode == replace ]] && ! spin "$pid"; then
+    rm -f "$err" "$res"
+    return 1
+  fi
+  wait "$pid"
+  rc=$?
+  out=$(<"$res")
+  rm -f "$res"
+  if ((rc == 0)) && [[ -n ${out//[[:space:]]/} ]]; then
+    rm -f "$err"
+    return 0
+  fi
+  notify-send -u critical "hx_ai" "claude failed: $(head -c 200 "$err")"
+  rm -f "$err"
+  return 1
+}
+
+if [[ $mode == replace ]]; then
+  ask || keep
+  # $() already dropped trailing newlines; restore the selection's one
+  [[ $snippet == *$'\n' ]] && out+=$'\n'
+  printf '%s' "$out"
+  exit 0
+fi
+
+copy() {
+  ask || return
+  printf '%s\n' "$out" | wl-copy
+  notify-send "hx_ai" "Copied to clipboard"
+}
+
+# Background + closed fds so hx returns at once (it waits for EOF on our stdout)
+(copy &) </dev/null >/dev/null 2>&1

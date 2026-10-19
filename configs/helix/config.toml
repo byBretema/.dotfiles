@@ -286,6 +286,10 @@ X = ":bc!"
 # Buffers stuff
 r = ":reload-all"
 
+# AI edit of the selection via `claude -p`, result goes to the clipboard (async, notifies when done)
+i = ":pipe-to hx_ai %{buffer_name}"
+I = ":pipe hx_ai -r %{buffer_name}" # same, but replaces the selection (blocks hx)
+
 # Duplicate line up/down
 j = '@X"dy"dp'
 k = '@X"dy"dP'
@@ -356,3 +360,10 @@ A-c = "switch_case"
 
 # Escape also saves
 esc = ["normal_mode", ":write-all"]
+
+
+[keys.select.'ñ']
+
+# AI edit of the selection via `claude -p` (same as normal mode ñ i)
+i = ":pipe-to hx_ai %{buffer_name}"
+I = ":pipe hx_ai -r %{buffer_name}" # same, but replaces the selection (blocks hx)

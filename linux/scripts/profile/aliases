@@ -1,8 +1,6 @@
 # --- Tools ---
 
 alias j="jobs"
-alias oc="opencode"
-alias bot='pushd "$(mktemp -d -t bot-XXXXXX)" && opencode'
 
 alias e='$EDITOR'
 alias ee='e .'
@@ -17,6 +15,24 @@ alias now='date "+%d/%m/%Y %H:%M"'
 alias now_file='date "+%Y-%m-%d_%H-%M"'
 
 alias ytd='yt-dlp'
+
+# --- AI agents ---
+
+alias oc="opencode"
+alias occ='opencode -c'
+alias ocs='opencode -s'
+alias ocp='opencode run'
+alias ocu='opencode upgrade'
+alias ocplan='opencode --agent plan'
+alias ocbot='pushd "$(mktemp -d -t ocbot-XXXXXX)" && opencode'
+
+alias cl='claude'
+alias clc='claude -c'
+alias clr='claude -r'
+alias clp='claude -p'
+alias clu='claude update'
+alias clplan='claude --permission-mode plan'
+alias clbot='pushd "$(mktemp -d -t clbot-XXXXXX)" && claude'
 
 # --- Langs ---
 
