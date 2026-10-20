@@ -2,113 +2,215 @@
 
 # Helix: send the selection + a prompt to `claude -p`.
 # Usage (from hx):
-#   :pipe-to hx_ai %{buffer_name}    async, copies the returned code to the clipboard
-#   :pipe hx_ai -r %{buffer_name}    blocks hx, replaces the selection with the returned code
-# The selection arrives on stdin.
+#   :pipe-to hx_ai %{buffer_name} %{cursor_line} %{cursor_column}      async, copies the returned code to the clipboard
+#   :pipe hx_ai -r %{buffer_name} %{cursor_line} %{cursor_column}      blocks hx, replaces the selection with the returned code
+# The selection arrives on stdin. A bare cursor (1-char selection) asks for new code to insert at the cursor instead.
 
 set -o pipefail
 
+title="Helix AI"
+
 mode=copy
-[[ $1 == -r ]] && { mode=replace; shift; }
+[[ $1 == -r ]] && {
+    mode=replace
+    shift
+}
 file=$1
+line=$2
+col=$3
 
 # Keep trailing newlines: line selections end with one and the replacement must too
-snippet=$(cat; printf x)
+snippet=$(
+    cat
+    printf x
+)
 snippet=${snippet%x}
 
 # In replace mode hx swaps the selection for our stdout, so every bail-out echoes the original back
 keep() {
-  [[ $mode == replace ]] && printf '%s' "$snippet"
-  exit 0
+    [[ $mode == replace ]] && printf '%s' "$snippet"
+    exit 0
 }
 
+################################################################################
+# Check all the requirements are available
+################################################################################
+
+# Required binaires
 need=(claude tmux gum notify-send)
 [[ $mode == copy ]] && need+=(wl-copy)
+
+# Final missing list
 missing=()
-for c in "${need[@]}"; do command -v "$c" >/dev/null || missing+=("$c"); done
+for c in "${need[@]}"; do
+    command -v "$c" >/dev/null || missing+=("$c")
+done
+
+# If missing array is not empty notify missing values
 if ((${#missing[@]})); then
-  # notify-send itself may be the missing one
-  notify-send -u critical "hx_ai" "Missing: ${missing[*]}" 2>/dev/null || echo "hx_ai: missing: ${missing[*]}" >&2
-  keep
+    notify-send -u critical "$title" "Missing: ${missing[*]}" 2>/dev/null ||
+        echo "$title: Missing: ${missing[*]}" >&2
+    keep
 fi
 
-[[ -n ${snippet//[[:space:]]/} ]] || { notify-send "hx_ai" "Empty selection"; keep; }
+# We are inside a TMUX session
+[[ -n $TMUX ]] || {
+    notify-send "$title" "Needs tmux"
+    keep
+}
 
+################################################################################
+# Pick cursor or snippet mode based on selection count
+################################################################################
+
+cursor_mode=false
+
+if ((${#snippet} == 1)); then
+    [[ $line =~ ^[0-9]+$ && $col =~ ^[0-9]+$ ]] || {
+        notify-send "$title" "No cursor position, select some code"
+        keep
+    }
+    cursor_mode=true
+    hint="Describe the code to insert..."
+    text=$(sed -n "${line}p" "$file" 2>/dev/null)
+else
+    [[ -n ${snippet//[[:space:]]/} ]] || {
+        notify-send "$title" "Empty selection"
+        keep
+    }
+    hint="Describe the edit..."
+fi
+
+################################################################################
 # tmux popup prompt keeps the text away from hx's `sh -c`, so quotes/apostrophes are safe
-[[ -n $TMUX ]] || { notify-send "hx_ai" "Needs tmux"; keep; }
+################################################################################
+
+# Tmux popup prepare
 popup_style=(-s "bg=#1e1e2e" -S "bg=#1e1e2e")
 tmp=$(mktemp)
-tmux display-popup -E -T " hx_ai " -w 60% -h 5 "${popup_style[@]}" -e "out=$tmp" -e "name=${file##*/}" \
-  'gum input --char-limit 0 --width 0 --header " $name" --header.foreground 212 \
-     --prompt "❯ " --prompt.foreground 99 --placeholder "Describe the edit..." > "$out"'
+
+# Prompt input box
+tmux display-popup -E -T " $title " -w 60% -h 5 "${popup_style[@]}" -e "out=$tmp" -e "name=${file##*/}" -e "hint=$hint" \
+    'gum input --char-limit 0 --width 0 --header " $name" --header.foreground 212 \
+     --prompt "❯ " --prompt.foreground 99 --placeholder "$hint" > "$out"'
+
+# Input prompt capture + cleanup
 task=$(<"$tmp")
 rm -f "$tmp"
 [[ -n ${task//[[:space:]]/} ]] || keep
 
-instructions="Edit the code inside <snippet> as the user asks.
+# Prompt wrapper instructions
+if $cursor_mode; then
+    instructions="Nothing is selected. Write new code as the user asks, to insert at the cursor.
+User request: ${task}
+<file> is the full file from disk, read-only context. Do not return it.
+<cursor> is line ${line} of the file, with ⟨CURSOR⟩ marking the insertion point (column ${col}).
+Return ONLY the code to insert. It goes in verbatim at ⟨CURSOR⟩: the first line continues the text before it,
+indent any following lines to match the surrounding code. Match the file's style.
+No prose, no explanations, no markdown fences."
+else
+    instructions="Edit the code inside <snippet> as the user asks.
 User request: ${task}
 <file> is the full file from disk, read-only context. Do not return it.
 Return ONLY the replacement code for <snippet>, keeping its indentation and style.
 No prose, no explanations, no markdown fences."
+fi
 
-# Replace mode freezes hx while claude runs, so favor speed
+################################################################################
+# Choose model
+################################################################################
+
 model=()
 [[ $mode == replace ]] && model=(--model haiku)
 
+################################################################################
 # Context goes on stdin, not argv: a single argument is capped at 128 KiB
-input() {
-  [[ -f $file ]] && printf '<file path="%s">\n%s\n</file>\n\n' "$file" "$(cat "$file")"
-  printf '<snippet>\n%s\n</snippet>\n' "$snippet"
+################################################################################
+
+context() {
+    [[ -f $file ]] && printf '<file path="%s">\n%s\n</file>\n\n' "$file" "$(cat "$file")"
+    if $cursor_mode; then
+        printf '<cursor line="%s">\n%s⟨CURSOR⟩%s\n</cursor>\n' "$line" "${text:0:col-1}" "${text:col-1}"
+    else
+        printf '<snippet>\n%s\n</snippet>\n' "$snippet"
+    fi
 }
 
+################################################################################
 # Replace mode: spinner popup until claude is done; Ctrl+C in it aborts and keeps the original
+################################################################################
+
 spin() {
-  tmux display-popup -E -T " hx_ai " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" \
-    'gum spin --spinner dot --title "Clauding..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
-  # Ctrl+C SIGINTs the popup's whole process group, so nothing in there can flag the cancel.
-  # The popup only closes on its own once claude exits: still running means cancelled.
-  kill -0 "$1" 2>/dev/null || return 0
-  pkill -P $$
-  return 1
+    tmux display-popup -E -T " $title " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" \
+        'gum spin --spinner dot --title "Supercalifragilisticexpialidociousing..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
+    # Ctrl+C SIGINTs the popup's whole process group, so nothing in there can flag the cancel.
+    # The popup only closes on its own once claude exits: still running means cancelled.
+    kill -0 "$1" 2>/dev/null || return 0
+    # Called inside $(ask): the claude pipeline belongs to that subshell, not to $$
+    pkill -P "$BASHPID"
+    return 1
 }
 
-# Sets $out; stderr kept apart so warnings never end up in the code
+################################################################################
+# AI bits: ask the model and print its answer. Usage: answer=$(ask) || keep
+# Fails (after notifying) on claude error, empty answer or Ctrl+C.
+################################################################################
+
 ask() {
-  local err res rc pid
-  err=$(mktemp)
-  res=$(mktemp)
-  input | claude -p "${model[@]}" "$instructions" 2>"$err" | sed '/^[[:space:]]*```/d' >"$res" &
-  pid=$!
-  if [[ $mode == replace ]] && ! spin "$pid"; then
-    rm -f "$err" "$res"
-    return 1
-  fi
-  wait "$pid"
-  rc=$?
-  out=$(<"$res")
-  rm -f "$res"
-  if ((rc == 0)) && [[ -n ${out//[[:space:]]/} ]]; then
+    local err res rc pid answer
+    err=$(mktemp)
+    res=$(mktemp)
+
+    context | claude -p "${model[@]}" "$instructions" 2>"$err" | sed '/^[[:space:]]*```/d' >"$res" &
+
+    pid=$!
+    if [[ $mode == replace ]] && ! spin "$pid"; then
+        rm -f "$err" "$res"
+        return 1
+    fi
+    wait "$pid"
+
+    rc=$?
+    answer=$(<"$res")
+    rm -f "$res"
+
+    if ((rc == 0)) && [[ -n ${answer//[[:space:]]/} ]]; then
+        rm -f "$err"
+        printf '%s' "$answer"
+        return 0
+    fi
+
+    notify-send -u critical "$title" "LLM failed: $(head -c 200 "$err")"
     rm -f "$err"
-    return 0
-  fi
-  notify-send -u critical "hx_ai" "claude failed: $(head -c 200 "$err")"
-  rm -f "$err"
-  return 1
+    return 1
 }
+
+################################################################################
+# Inline invocation
+################################################################################
 
 if [[ $mode == replace ]]; then
-  ask || keep
-  # $() already dropped trailing newlines; restore the selection's one
-  [[ $snippet == *$'\n' ]] && out+=$'\n'
-  printf '%s' "$out"
-  exit 0
+    answer=$(ask) || keep
+    if $cursor_mode; then
+        # Insert, don't overwrite: the char under the cursor goes back after the new code
+        answer+=$snippet
+    else
+        # $() already dropped trailing newlines; restore the selection's one
+        [[ $snippet == *$'\n' ]] && answer+=$'\n'
+    fi
+    printf '%s' "$answer"
+    exit 0
 fi
 
+################################################################################
+# Background invocation to clipboard
+################################################################################
+
 copy() {
-  ask || return
-  printf '%s\n' "$out" | wl-copy
-  notify-send "hx_ai" "Copied to clipboard"
+    local answer
+    answer=$(ask) || return
+    printf '%s\n' "$answer" | wl-copy
+    notify-send "$title" "Copied to clipboard"
 }
 
-# Background + closed fds so hx returns at once (it waits for EOF on our stdout)
 (copy &) </dev/null >/dev/null 2>&1
