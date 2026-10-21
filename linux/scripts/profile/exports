@@ -20,9 +20,7 @@ export MICRO_TRUECOLOR=1
 export GTK_IM_MODULE=simple
 # export GTK_THEME=Adwaita:dark
 
-export QT_QPA_PLATFORM=xcb
 export QT_QPA_PLATFORMTHEME=xdgdesktopportal
-export QT_STYLE_OVERRIDE=qt6ct-style
 
 export FZF_BASE="/usr/share/fzf"
 
