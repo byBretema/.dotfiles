@@ -90,7 +90,7 @@ popup_style=(-s "bg=#1e1e2e" -S "bg=#1e1e2e")
 tmp=$(mktemp)
 
 # Prompt input box
-tmux display-popup -E -T " $title " -w 60% -h 5 "${popup_style[@]}" -e "out=$tmp" -e "name=${file##*/}" -e "hint=$hint" \
+tmux display-popup -E -T " $title " -w 40% -h 5 "${popup_style[@]}" -e "out=$tmp" -e "name=${file##*/}" -e "hint=$hint" \
     'gum input --char-limit 0 --width 0 --header " $name" --header.foreground 212 \
      --prompt "❯ " --prompt.foreground 99 --placeholder "$hint" > "$out"'
 
@@ -141,8 +141,8 @@ context() {
 ################################################################################
 
 spin() {
-    tmux display-popup -E -T " $title " -w 30 -h 3 "${popup_style[@]}" -e "pid=$1" \
-        'gum spin --spinner dot --title "Supercalifragilisticexpialidociousing..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
+    tmux display-popup -E -T " $title " -w 45 -h 3 "${popup_style[@]}" -e "pid=$1" \
+        'printf "\n"; gum spin --spinner dot --title "Supercalifragilisticexpialidociousing..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
     # Ctrl+C SIGINTs the popup's whole process group, so nothing in there can flag the cancel.
     # The popup only closes on its own once claude exits: still running means cancelled.
     kill -0 "$1" 2>/dev/null || return 0

@@ -1,22 +1,29 @@
+#:tombi schema.strict = false
+
 [env]
 TERM = "xterm-256color"
 
 [window]
-padding = { x = 12, y = 12 }
+# padding = { x = 2, y = 0 }
+# dynamic_padding = true
 decorations = "none"
-opacity = 0.9
+opacity = 1.0
 blur = true
+startup_mode = "Windowed"
 
 [scrolling]
 history = 100000
 
+[selection]
+save_to_clipboard = true
+
 [font]
 normal = { family = "VictorMono Nerd Font", style = "Regular" }
-size = 12
+size = 11.5
 
 [bell]
-animation = "Ease"
-duration = 500
+# animation = "Ease"
+duration = 0
 
 [cursor]
 style = { shape = "Block", blinking = "Always" }
@@ -26,29 +33,64 @@ vi_mode_style = { shape = "Underline", blinking = "Off" }
 hide_when_typing = true
 
 ################################################################################
-### THEME : Gruvbox Material Hard Dark
+### KEYBINDINGS
+################################################################################
+
+# ctrl+c is not bound: alacritty has no "performable" copy, so ctrl+c must stay SIGINT
+[[keyboard.bindings]]
+key = "C"
+mods = "Control|Shift"
+action = "Copy"
+
+[[keyboard.bindings]]
+key = "V"
+mods = "Control"
+action = "Paste"
+
+# vi mode off: unbind its only default entry point (ctrl+shift+space)
+[[keyboard.bindings]]
+key = "Space"
+mods = "Control|Shift"
+action = "None"
+
+# no ReloadConfig action in alacritty: config live-reloads on file save
+[[keyboard.bindings]]
+key = "F"
+mods = "Control|Alt|Shift"
+action = "ToggleFullscreen"
+
+################################################################################
+### THEME : Catppuccin Mocha
 ################################################################################
 
 [colors.primary]
-background = '#1d2021'
-foreground = '#d4be98'
+background = '#1e1e2e'
+foreground = '#cdd6f4'
+
+[colors.cursor]
+text = '#1e1e2e'
+cursor = '#f5e0dc'
+
+[colors.selection]
+text = '#cdd6f4'
+background = '#585b70'
 
 [colors.normal]
-black   = '#32302f'
-red     = '#ea6962'
-green   = '#a9b665'
-yellow  = '#d8a657'
-blue    = '#7daea3'
-magenta = '#d3869b'
-cyan    = '#89b482'
-white   = '#d4be98'
+black   = '#45475a'
+red     = '#f38ba8'
+green   = '#a6e3a1'
+yellow  = '#f9e2af'
+blue    = '#89b4fa'
+magenta = '#f5c2e7'
+cyan    = '#94e2d5'
+white   = '#a6adc8'
 
 [colors.bright]
-black   = '#32302f'
-red     = '#ea6962'
-green   = '#a9b665'
-yellow  = '#d8a657'
-blue    = '#7daea3'
-magenta = '#d3869b'
-cyan    = '#89b482'
-white   = '#d4be98'
+black   = '#585b70'
+red     = '#f38ba8'
+green   = '#a6e3a1'
+yellow  = '#f9e2af'
+blue    = '#89b4fa'
+magenta = '#f5c2e7'
+cyan    = '#94e2d5'
+white   = '#bac2de'
