@@ -5,7 +5,8 @@ source "${script_path}/scripts/.bash_common"
 
 # --- Consts -------------------------------------------------------------------
 
-DOT_CONFIGS="${script_path}/../configs"
+DOT_ROOT=$(cd -- "${script_path}/.." && pwd)
+DOT_CONFIGS="${DOT_ROOT}/configs"
 DOT_ASSETS="${script_path}/../assets"
 DOT_LINUX_ASSETS="${script_path}/assets"
 
@@ -17,62 +18,138 @@ attributes_file="${git_dir:+${git_dir}/info/attributes}"
 
 # --- Actions ------------------------------------------------------------------
 
-mkdir_ret() {
-    mkdir -p "$1" &>/dev/null
-    echo "$1"
-}
-
 # Copy into a system path; skips when unchanged, keeps a numbered backup (file.~1~) otherwise
 sys_copy() {
     cmp -s "$1" "$2" && return 0
     sudo cp --backup=numbered "$1" "$2"
 }
 
+# Symlink $1 -> $2, creating parent dirs. -n replaces an existing dir link instead of nesting into it.
+link() {
+    mkdir -p "$(dirname "$2")" && ln -srfn "$1" "$2"
+}
+
+# Reads "src dst" lines from stdin: src relative to the repo, dst relative to $HOME.
+link_table() {
+    local src dst
+    while read -r src dst; do
+        [[ -z "${src}" || "${src}" == \#* ]] && continue
+        link "${DOT_ROOT}/${src}" "$HOME/${dst}"
+    done
+}
+
 link_config_files() {
 
-    # --- Shell ---
-    log_header "Linking - Shell stuff"
+    log_header "Linking - Configs"
 
-    # Fish
-    log_info "Fish"
-    fish_dir=$(mkdir_ret "${HOME_CONFIG}/fish")
-    ln -srf "${script_path}/.fishrc" "${fish_dir}/config.fish"
+    #... a real dir here would make ln nest the link inside it
+    [ -d "$HOME/.claude/bin" ] && [ ! -L "$HOME/.claude/bin" ] && rm -rf "$HOME/.claude/bin"
 
-    # Bash
-    log_info "Bash"
-    ln -srf "${script_path}/.bashrc" "$HOME/.bashrc"
-    ln -srf "${script_path}/.bash_profile" "$HOME/.bash_profile"
+    link_table <<'TABLE'
 
-    # Zsh
-    log_info "Zsh"
-    ln -srf "${script_path}/.zshrc" "$HOME/.zshrc"
-    # ln -srf "${script_path}/.zshenv" "$HOME/.zshenv"  # uncomment if you drop fish and want zshenv
+# Shell
+linux/.fishrc                                        .config/fish/config.fish
+linux/.bashrc                                        .bashrc
+linux/.bash_profile                                  .bash_profile
+linux/.zshrc                                         .zshrc
+configs/ghostty.conf                                 .config/ghostty/config
+configs/alacritty.toml                               .config/alacritty/alacritty.toml
+configs/tmux/tmux.conf                               .config/tmux/tmux.conf
+configs/atuin/config.toml                            .config/atuin/config.toml
+configs/atuin/themes/catppuccin-mocha-mauve.toml     .config/atuin/themes/catppuccin-mocha-mauve.toml
 
-    # Ghostty
-    log_info "Ghostty"
-    ghostty_dir=$(mkdir_ret "${HOME_CONFIG}/ghostty")
-    ln -srf "${DOT_CONFIGS}/ghostty.conf" "${ghostty_dir}/config"
+# Dev env
+configs/helix/config.toml                            .config/helix/config.toml
+configs/helix/languages.toml                         .config/helix/languages.toml
+configs/helix/theme.toml                             .config/helix/themes/bretema.toml
+configs/.gitconfig                                   .gitconfig
+configs/.gitignore                                   .gitignore
+configs/.gdbinit                                     .gdbinit
+configs/worktrunk.toml                               .config/worktrunk/config.toml
 
-    # Alacritty
-    log_info "Alacritty"
-    alacritty_dir=$(mkdir_ret "${HOME_CONFIG}/alacritty")
-    ln -srf "${DOT_CONFIGS}/alacritty.toml" "${alacritty_dir}/alacritty.toml"
+# Apps
+configs/flameshot.ini                                .config/flameshot/flameshot.ini
+configs/copyq/copyq.conf                             .config/copyq/copyq.conf
+configs/copyq/copyq-commands.ini                     .config/copyq/copyq-commands.ini
+configs/copyq/themes/catppuccin-mocha.ini            .config/copyq/themes/catppuccin-mocha.ini
+linux/assets/autostart/copyq.desktop                 .config/autostart/copyq.desktop
+configs/lazygit/config.yml                           .config/lazygit/config.yml
+configs/glow/themes/catppuccin-mocha.json            .config/glow/themes/catppuccin-mocha.json
+configs/hunk/config.toml                             .config/hunk/config.toml
+configs/mpv/mpv.conf                                 .config/mpv/mpv.conf
+configs/obs-studio/global.ini                        .config/obs-studio/global.ini
+configs/obs-studio/user.ini                          .config/obs-studio/user.ini
+configs/obs-studio/basic/profiles/Untitled/basic.ini .config/obs-studio/basic/profiles/Untitled/basic.ini
+configs/obs-studio/basic/scenes/Untitled.json        .config/obs-studio/basic/scenes/Untitled.json
+configs/yazi/yazi.toml                               .config/yazi/yazi.toml
+configs/yazi/keymap.toml                             .config/yazi/keymap.toml
+configs/yazi/themes/theme.toml                       .config/yazi/theme.toml
+configs/qtcreator/themes/monokai_dark.xml            .config/QtProject/qtcreator/styles/monokai_dark_t.xml
+configs/qtcreator/themes/gruvbox_dark.xml            .config/QtProject/qtcreator/styles/gruvbox_dark_t.xml
+configs/qtcreator/themes/catppuccin_latte.xml        .config/QtProject/qtcreator/styles/catppuccin_latte_t.xml
 
-    # Tmux
-    log_info "Tmux"
-    tmux_dir=$(mkdir_ret "${HOME_CONFIG}/tmux")
-    git_url="https://github.com/tmux-plugins/tpm"
-    [[ ! -d "${tmux_dir}/plugins/tpm" ]] && { git clone "${git_url}" "${tmux_dir}/plugins/tpm"; }
-    ln -srf "${DOT_CONFIGS}/tmux/tmux.conf" "${tmux_dir}/tmux.conf"
+# Claude Code
+configs/claude/CLAUDE.md                             .claude/CLAUDE.md
+configs/claude/settings.json                         .claude/settings.json
+configs/claude/keybindings.json                      .claude/keybindings.json
+configs/claude/bin                                   .claude/bin
 
-    # --- Atuin : shell history (config links + first-run seed) ---
-    log_header "Setup - Atuin"
+# Open Code
+configs/opencode/AGENTS.md                           .config/opencode/AGENTS.md
+configs/opencode/opencode.jsonc                      .config/opencode/opencode.jsonc
+configs/opencode/cli.json                            .config/opencode/cli.json
+configs/opencode/tui.json                            .config/opencode/tui.json
+configs/opencode/themes/catppuccin-transparent.json  .config/opencode/themes/catppuccin-transparent.json
+configs/opencode/commands                            .config/opencode/commands
+configs/opencode/agents                              .config/opencode/agents
+configs/opencode/skills                              .config/opencode/skills
+configs/opencode/plugins                             .config/opencode/plugins
 
-    atuin_dir=$(mkdir_ret "${HOME_CONFIG}/atuin")
-    ln -srf "${DOT_CONFIGS}/atuin/config.toml" "${atuin_dir}/config.toml"
-    atuin_themes_dir=$(mkdir_ret "${atuin_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/atuin/themes/catppuccin-mocha-mauve.toml" "${atuin_themes_dir}/catppuccin-mocha-mauve.toml"
+# Env vars
+linux/assets/env/10-shell.conf                       .config/environment.d/10-shell.conf
+linux/assets/env/10-qt.conf                          .config/environment.d/10-qt.conf
+linux/assets/env/10-ssh.conf                         .config/environment.d/10-ssh.conf
 
+# Desktop
+linux/assets/autostart/gnome-keyring-secrets.desktop .config/autostart/gnome-keyring-secrets.desktop
+linux/assets/autostart/gnome-keyring-pkcs11.desktop  .config/autostart/gnome-keyring-pkcs11.desktop
+linux/assets/xdg-desktop-portal/portals.conf         .config/xdg-desktop-portal/portals.conf
+linux/assets/gtk/gtk-3.0/settings.ini                .config/gtk-3.0/settings.ini
+linux/assets/gtk/gtk-4.0/settings.ini                .config/gtk-4.0/settings.ini
+
+# Input
+linux/assets/solaar/rules.yaml                       .config/solaar/rules.yaml
+linux/assets/solaar/config.yaml                      .config/solaar/config.yaml
+linux/assets/solaar/solaar.desktop                   .config/autostart/solaar.desktop
+TABLE
+
+    #... per-file so themes/queries installed by other means are kept
+    for theme_file in "${DOT_CONFIGS}/helix/themes/"*.toml; do
+        link "${theme_file}" "${HOME_CONFIG}/helix/themes/$(basename "${theme_file}")"
+    done
+    for queries_dir in "${DOT_CONFIGS}/helix/runtime/queries/"*/; do
+        link "${queries_dir}" "${HOME_CONFIG}/helix/runtime/queries/$(basename "${queries_dir}")"
+    done
+
+    # --- Extras ---
+    log_header "Setup - Extras"
+
+    log_info "Tmux plugins"
+    [[ ! -d "${HOME_CONFIG}/tmux/plugins/tpm" ]] && { git clone "https://github.com/tmux-plugins/tpm" "${HOME_CONFIG}/tmux/plugins/tpm"; }
+
+    log_info "GDB dashboard"
+    [[ ! -d "$HOME/.local/share/gdb-dashboard" ]] && { git clone "https://github.com/cyrus-and/gdb-dashboard" "$HOME/.local/share/gdb-dashboard"; }
+
+    log_info "Glow"
+    echo "style: \"${HOME_CONFIG}/glow/themes/catppuccin-mocha.json\"" >"${HOME_CONFIG}/glow/glow.yml"
+
+    log_info "Yazi packages"
+    mkdir -p "${HOME_CONFIG}/yazi/flavors"
+    for pkg in flavors:catppuccin-mocha plugins:piper plugins:toggle-pane; do
+        ya pkg add "yazi-rs/${pkg}" &>/dev/null && ya pkg install || true
+    done
+
+    log_info "Atuin"
     if is_cmd "atuin"; then
         #... seed the DB once from bash/zsh/fish history files (import is idempotent, empty DB = first run)
         atuin_db="${XDG_DATA_HOME:-$HOME/.local/share}/atuin/history.db"
@@ -85,201 +162,12 @@ link_config_files() {
         log_warn "atuin not installed yet (run -i) — config linked, import skipped"
     fi
 
-    # --- DevEnv ---
-    log_header "Linking - Dev env"
-
-    # # Code
-    # log_info "VS Code"
-    # vscode_dir=$(mkdir_ret "${config_path}/Code/User")
-    # ln -srf "${my_configs}/vscode/settings.json" "${vscode_dir}/settings.json"
-    # ln -srf "${my_configs}/vscode/keybindings.json" "${vscode_dir}/keybindings.json"
-
-    # Helix
-    log_info "Helix"
-    helix_dir=$(mkdir_ret "${HOME_CONFIG}/helix")
-    log_info "-- Config"
-    ln -srf "${DOT_CONFIGS}/helix/config.toml" "${helix_dir}/config.toml"
-    log_info "-- Languages"
-    ln -srf "${DOT_CONFIGS}/helix/languages.toml" "${helix_dir}/languages.toml"
-    log_info "-- Themes"
-    helix_themes_dir=$(mkdir_ret "${helix_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/helix/theme.toml" "${helix_themes_dir}/bretema.toml"
-    for theme_file in "${DOT_CONFIGS}/helix/themes/"*; do
-        if [ -f "$theme_file" ]; then
-            filename=$(basename "$theme_file")
-            ln -srf "$theme_file" "${helix_themes_dir}/${filename}"
-        fi
-    done
-    log_info "-- Queries"
-    helix_queries_dir=$(mkdir_ret "${helix_dir}/runtime/queries")
-    for queries_dir in "${DOT_CONFIGS}/helix/runtime/queries/"*/; do
-        ln -srfn "$queries_dir" "${helix_queries_dir}/$(basename "$queries_dir")"
-    done
-
-    # Git
-    log_info "Git"
-    ln -srf "${DOT_CONFIGS}/.gitconfig" "$HOME/.gitconfig"
-    ln -srf "${DOT_CONFIGS}/.gitignore" "$HOME/.gitignore"
-
-    # GDB
-    log_info "GDB"
-    ln -srf "${DOT_CONFIGS}/.gdbinit" "$HOME/.gdbinit"
-
-    log_info "-- dashboard"
-    [[ ! -d "$HOME/.local/share/gdb-dashboard" ]] && { git clone "https://github.com/cyrus-and/gdb-dashboard" "$HOME/.local/share/gdb-dashboard"; }
-
-    # WorkTrunk : Manage git-worktrees
-    log_info "WorkTrunk"
-    worktrunk_dir=$(mkdir_ret "${HOME_CONFIG}/worktrunk")
-    ln -srf "${DOT_CONFIGS}/worktrunk.toml" "${worktrunk_dir}/config.toml"
-
-    # --- Apps ---
-    log_header "Linking - Apps settings"
-
-    # Flameshot
-    log_info "Flameshot"
-    flameshot_dir=$(mkdir_ret "${HOME_CONFIG}/flameshot")
-    ln -srf "${DOT_CONFIGS}/flameshot.ini" "${flameshot_dir}/flameshot.ini"
-
-    # CopyQ
-    log_info "CopyQ"
-    copyq_dir=$(mkdir_ret "${HOME_CONFIG}/copyq")
-    ln -srf "${DOT_CONFIGS}/copyq/copyq.conf" "${copyq_dir}/copyq.conf"
-    ln -srf "${DOT_CONFIGS}/copyq/copyq-commands.ini" "${copyq_dir}/copyq-commands.ini"
-    copyq_themes_dir=$(mkdir_ret "${copyq_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/copyq/themes/catppuccin-mocha.ini" "${copyq_themes_dir}/catppuccin-mocha.ini"
-    copyq_autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "${DOT_LINUX_ASSETS}/autostart/copyq.desktop" "${copyq_autostart_dir}/copyq.desktop"
-
-    # LazyGit
-    log_info "LazyGit"
-    lazygit_dir=$(mkdir_ret "${HOME_CONFIG}/lazygit")
-    ln -srf "${DOT_CONFIGS}/lazygit/config.yml" "${lazygit_dir}/config.yml"
-
-    # Glow
-    log_info "Glow"
-    glow_dir=$(mkdir_ret "${HOME_CONFIG}/glow")
-    cat >"${glow_dir}/glow.yml" <<EOF
-style: "${HOME}/.config/glow/themes/catppuccin-mocha.json"
-EOF
-    glow_theme_dir=$(mkdir_ret "${glow_dir}/themes")
-    ln -srf "${DOT_CONFIGS}/glow/themes/catppuccin-mocha.json" "${glow_theme_dir}/catppuccin-mocha.json"
-
-    # Hunk
-    log_info "Hunk"
-    hunk_dir=$(mkdir_ret "${HOME_CONFIG}/hunk")
-    ln -srf "${DOT_CONFIGS}/hunk/config.toml" "${hunk_dir}/config.toml"
-
-    # MPV
-    log_info "MPV"
-    mpv_dir=$(mkdir_ret "${HOME_CONFIG}/mpv")
-    ln -srf "${DOT_CONFIGS}/mpv/mpv.conf" "${mpv_dir}/mpv.conf"
-
-    # OBS Studio
-    log_info "OBS Studio"
-    obs_dir=$(mkdir_ret "${HOME_CONFIG}/obs-studio")
-    ln -srf "${DOT_CONFIGS}/obs-studio/global.ini" "${obs_dir}/global.ini"
-    ln -srf "${DOT_CONFIGS}/obs-studio/user.ini" "${obs_dir}/user.ini"
-    obs_profiles_dir=$(mkdir_ret "${obs_dir}/basic/profiles")
-    obs_profile_dir="$(mkdir_ret "${obs_profiles_dir}/Untitled")"
-    ln -srf "${DOT_CONFIGS}/obs-studio/basic/profiles/Untitled/basic.ini" "${obs_profile_dir}/basic.ini"
-    obs_scenes_dir=$(mkdir_ret "${obs_dir}/basic/scenes")
-    ln -srf "${DOT_CONFIGS}/obs-studio/basic/scenes/Untitled.json" "${obs_scenes_dir}/Untitled.json"
-
-    # Yazi : https://github.com/yazi-rs/flavors/blob/main/themes.md
-    log_info "Yazi"
-
-    yazi_dir=$(mkdir_ret "${HOME_CONFIG}/yazi")
-    ln -srf "${DOT_CONFIGS}/yazi/yazi.toml" "${yazi_dir}/yazi.toml"
-    ln -srf "${DOT_CONFIGS}/yazi/keymap.toml" "${yazi_dir}/keymap.toml"
-    ln -srf "${DOT_CONFIGS}/yazi/themes/theme.toml" "${yazi_dir}/theme.toml"
-
-    log_info "-- catppuccin"
-    yazi_flavors_dir=$(mkdir_ret "${yazi_dir}/flavors")
-    ya pkg add yazi-rs/flavors:catppuccin-mocha &>/dev/null && ya pkg install || true
-
-    log_info "-- piper"
-    ya pkg add yazi-rs/plugins:piper &>/dev/null && ya pkg install || true
-
-    log_info "-- toggle-pane"
-    ya pkg add yazi-rs/plugins:toggle-pane &>/dev/null && ya pkg install || true
-
-    # Qt Creator
-    log_info "Qt Creator"
-    qtcreator_styles_dir=$(mkdir_ret "${HOME_CONFIG}/QtProject/qtcreator/styles")
-    src_dir="${DOT_CONFIGS}/qtcreator/themes"
-    ln -srf "${src_dir}/monokai_dark.xml" "${qtcreator_styles_dir}/monokai_dark_t.xml"
-    ln -srf "${src_dir}/gruvbox_dark.xml" "${qtcreator_styles_dir}/gruvbox_dark_t.xml"
-    ln -srf "${src_dir}/catppuccin_latte.xml" "${qtcreator_styles_dir}/catppuccin_latte_t.xml"
-
-    # --- OpenCode ---
-    log_header "Linking - OpenCode"
-    if is_cmd "opencode"; then
-        opencode_dir=$(mkdir_ret "${HOME_CONFIG}/opencode")
-
-        log_info "AGENTS.md"
-        ln -srf "${DOT_CONFIGS}/opencode/AGENTS.md" "${opencode_dir}/AGENTS.md"
-        log_info "Settings"
-        ln -srf "${DOT_CONFIGS}/opencode/opencode.jsonc" "${opencode_dir}/opencode.jsonc"
-        ln -srf "${DOT_CONFIGS}/opencode/cli.json" "${opencode_dir}/cli.json"
-        log_info "TUI"
-        ln -srf "${DOT_CONFIGS}/opencode/tui.json" "${opencode_dir}/tui.json"
-        themes_dir=$(mkdir_ret "${opencode_dir}/themes")
-        ln -srf "${DOT_CONFIGS}/opencode/themes/catppuccin-transparent.json" "${themes_dir}/catppuccin-transparent.json"
-        log_info "Commands"
-        ln -srfn "${DOT_CONFIGS}/opencode/commands" "${opencode_dir}/commands"
-        log_info "Agents"
-        ln -srfn "${DOT_CONFIGS}/opencode/agents" "${opencode_dir}/agents"
-        log_info "Skills"
-        ln -srfn "${DOT_CONFIGS}/opencode/skills" "${opencode_dir}/skills"
-        log_info "Plugins"
-        ln -srfn "${DOT_CONFIGS}/opencode/plugins" "${opencode_dir}/plugins"
-        log_info "Scripts"
-        pnpm_bin_dir=$(mkdir_ret "$(pnpm bin -g 2>/dev/null || echo "$HOME/.local/share/pnpm/bin")")
-        ln -srf "${DOT_CONFIGS}/opencode/scripts/mocha-report" "${pnpm_bin_dir}/mocha-report"
-    else
-        log_warn "opencode not found — links skipped"
-    fi
-
-    # --- Claude Code ---
-    log_header "Linking - Claude Code"
-    claude_dir=$(mkdir_ret "$HOME/.claude")
-
-    log_info "CLAUDE.md"
-    ln -srf "${DOT_CONFIGS}/claude/CLAUDE.md" "${claude_dir}/CLAUDE.md"
-    log_info "Settings"
-    ln -srf "${DOT_CONFIGS}/claude/settings.json" "${claude_dir}/settings.json"
-    log_info "Keybindings"
-    ln -srf "${DOT_CONFIGS}/claude/keybindings.json" "${claude_dir}/keybindings.json"
-    log_info "Bin"
-    # A real dir here would make ln nest the link inside it.
-    [ -d "${claude_dir}/bin" ] && [ ! -L "${claude_dir}/bin" ] && rm -rf "${claude_dir}/bin"
-    ln -srfn "${DOT_CONFIGS}/claude/bin" "${claude_dir}/bin"
-
     # --- Environment ---
-    log_header "Linking - Env vars"
-
-    # Global environment
-    log_info "Global"
+    log_header "Copying - System env"
     sys_copy "$DOT_LINUX_ASSETS/etc/environment" "/etc/environment"
 
-    # Per app/tool env settings
-    env_dir=$(mkdir_ret "${HOME_CONFIG}/environment.d")
-
-    log_info "Shell"
-    ln -srf "$DOT_LINUX_ASSETS/env/10-shell.conf" "${env_dir}/10-shell.conf"
-
-    log_info "Qt"
-    ln -srf "$DOT_LINUX_ASSETS/env/10-qt.conf" "${env_dir}/10-qt.conf"
-
-    log_info "SSH"
-    ln -srf "$DOT_LINUX_ASSETS/env/10-ssh.conf" "${env_dir}/10-ssh.conf"
-
     # --- GNOME ---
-    log_header "Linking - Gnome fixs"
-
-    # Keyring
-    log_info "Keyring"
+    log_header "Setup - Gnome fixs"
 
     #... Unmask socket (was masked to /dev/null when using gcr-ssh-agent only)
     if [[ -L "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket" ]]; then
@@ -288,53 +176,18 @@ EOF
         systemctl --user enable gnome-keyring-daemon.socket 2>/dev/null || true
     fi
 
-    #... Autostart overrides for COSMIC (OnlyShowIn in /etc/xdg/autostart excludes COSMIC)
-    autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "$DOT_LINUX_ASSETS/autostart/gnome-keyring-secrets.desktop" "${autostart_dir}/gnome-keyring-secrets.desktop"
-    ln -srf "$DOT_LINUX_ASSETS/autostart/gnome-keyring-pkcs11.desktop" "${autostart_dir}/gnome-keyring-pkcs11.desktop"
-
     #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
         sys_copy "$DOT_LINUX_ASSETS/pam/login" /etc/pam.d/login
         log_warn "/etc/pam.d/login replaced (backup: /etc/pam.d/login.~N~). Test a TTY login before logging out."
     fi
 
-    # XDG Desktop Portal
-    log_info "XDG Desktop portal"
-    portal_dir=$(mkdir_ret "${HOME_CONFIG}/xdg-desktop-portal")
-    ln -srf "$DOT_LINUX_ASSETS/xdg-desktop-portal/portals.conf" "${portal_dir}/portals.conf"
-
-    # GTK
-    log_info "Gtk theme"
-
-    gtk3_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-3.0")
-    ln -srf "$DOT_LINUX_ASSETS/gtk/gtk-3.0/settings.ini" "${gtk3_dir}/settings.ini"
-
-    gtk4_dir=$(mkdir_ret "${HOME_CONFIG}/gtk-4.0")
-    ln -srf "$DOT_LINUX_ASSETS/gtk/gtk-4.0/settings.ini" "${gtk4_dir}/settings.ini"
-
     # --- Input Management ---
-    log_header "Linking - Input management"
-
-    # Solaar
-    log_info "Solaar"
-
-    #... config.yaml ///writes battery and weird things, just copy it
-    solaar_dir=$(mkdir_ret "${HOME_CONFIG}/solaar")
-    ln -srf "$DOT_LINUX_ASSETS/solaar/rules.yaml" "${solaar_dir}/rules.yaml"
-    ln -srf "$DOT_LINUX_ASSETS/solaar/config.yaml" "${solaar_dir}/config.yaml"
-    # if [[ ! -f "${solaar_dir}/config.yaml" ]]; then
-    #     cp "$DOT_LINUX_ASSETS/solaar/config.yaml" "${solaar_dir}/config.yaml"
-    # fi
-
-    #... autostart hidden
-    autostart_dir=$(mkdir_ret "${HOME_CONFIG}/autostart")
-    ln -srf "$DOT_LINUX_ASSETS/solaar/solaar.desktop" "${autostart_dir}/solaar.desktop"
+    log_header "Setup - Input management"
 
     # Caps 2 Esc
+    # ! Symlinks could fail at boot-time so copy the files is the best approach here
     log_info "Caps-2-Esc"
-    # -- Symlinks could fail at boot-time
-    # -- so copy the files is the best approach here
 
     #... caps2esc config
     service_config="/etc/udevmon.yaml"
