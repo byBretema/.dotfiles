@@ -146,7 +146,6 @@ alias omiy='omi && y'
 alias omid='pushd "$__DIR__omi/code/deploy_studio_engine"'
 alias omic='pushd "$__DIR__omi/code/studio_engine" && gws'
 
-alias omiu="bash $HOME/omi/data/omi_utils.sh"
 alias omis="./scripts/dani_autobuild2.sh"
 alias omib="./scripts/dani_autobuild2.sh --build"
 
@@ -158,6 +157,11 @@ alias omi-bl-add="omib --blender --addons"
 
 alias omi-sb="omib --sb --pipelines"
 alias omi-sb-gdb="omib --sb --pipelines --profile --use-debugger"
+
+alias omi-b3='"$__DIR__omi/apps/blender_3.6.23/blender"'
+alias omi-b4='"$__DIR__omi/apps/blender_4.5.13/blender"'
+# .env sourced in a subshell so its secrets stay out of the interactive shell
+alias omi-qt='bash -c "source \"$__DIR__omi/.env\" && exec qtcreator \"\$(git rev-parse --show-toplevel)/CMakeLists.txt\"" >/dev/null 2>&1 & disown'
 
 
 # --- Poet ---

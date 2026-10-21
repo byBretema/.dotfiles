@@ -97,8 +97,11 @@ link_config_files() {
     # Helix
     log_info "Helix"
     helix_dir=$(mkdir_ret "${HOME_CONFIG}/helix")
+    log_info "-- Config"
     ln -srf "${DOT_CONFIGS}/helix/config.toml" "${helix_dir}/config.toml"
+    log_info "-- Languages"
     ln -srf "${DOT_CONFIGS}/helix/languages.toml" "${helix_dir}/languages.toml"
+    log_info "-- Themes"
     helix_themes_dir=$(mkdir_ret "${helix_dir}/themes")
     ln -srf "${DOT_CONFIGS}/helix/theme.toml" "${helix_themes_dir}/bretema.toml"
     for theme_file in "${DOT_CONFIGS}/helix/themes/"*; do
@@ -106,6 +109,11 @@ link_config_files() {
             filename=$(basename "$theme_file")
             ln -srf "$theme_file" "${helix_themes_dir}/${filename}"
         fi
+    done
+    log_info "-- Queries"
+    helix_queries_dir=$(mkdir_ret "${helix_dir}/runtime/queries")
+    for queries_dir in "${DOT_CONFIGS}/helix/runtime/queries/"*/; do
+        ln -srfn "$queries_dir" "${helix_queries_dir}/$(basename "$queries_dir")"
     done
 
     # Git

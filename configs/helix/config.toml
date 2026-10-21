@@ -164,6 +164,14 @@ C-r = [
   ":reload-all",
 ]
 
+# Scooter search prefilled with the selection
+A-r = [
+  ":write-all",
+  ":insert-output scooter --no-stdin -s '%{selection}' >/dev/tty",
+  ":redraw",
+  ":reload-all",
+]
+
 # >>> Extends GoTo actions <<<
 #-------------------------------------------------------------------------------
 

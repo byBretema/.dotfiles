@@ -1,12 +1,25 @@
 [[language]]
 name = "cpp"
-auto-format = false
+auto-format = true
 language-servers = ["clangd"]
 formatter = { command = 'clang-format' }
+indent = { tab-width = 4, unit = '    ' }
 
 [[language]]
 name = 'bash'
-indent = { tab-width = 4, unit = ' ' }
+auto-format = true
+indent = { tab-width = 4, unit = '    ' }
+
+# Bash grammar, queries and LSP for bash-like files. Separate language so its
+# file-types extend instead of replacing bash's defaults.
+[[language]]
+name = "fallback-bash"
+scope = "source.bash"
+grammar = "bash"
+file-types = [{ glob = "project.inc" }]
+comment-token = "#"
+indent = { tab-width = 4, unit = '    ' }
+language-servers = ["bash-language-server"]
 
 [[language]]
 name = "python"
@@ -27,7 +40,7 @@ file-types = ["odin"]
 # roots = ["ols.json"]
 language-servers = [ "ols" ]
 comment-token = "//"
-indent = { tab-width = 4, unit = " " }
+indent = { tab-width = 4, unit = '    ' }
 injection-regex = "odin"
 formatter = { command = "odinfmt", args = [ "-stdin", "true" ] }
 
@@ -42,6 +55,7 @@ auto-format = true
 [[language]]
 name = "glsl"
 auto-format = true
+indent = { tab-width = 4, unit = '    ' }
 
 [[language]]
 name = "html"
@@ -77,10 +91,6 @@ comment-tokens = ["-", "+", "*", "- [ ]", ">"]
 [[language]]
 name = "lua"
 auto-format = true
-
-[[language]]
-name = "ini"
-file-types = ["project.inc"]
 
 # [language.auto-pairs]
 # '(' = ')'
