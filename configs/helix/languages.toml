@@ -16,7 +16,7 @@ indent = { tab-width = 4, unit = '    ' }
 name = "fallback-bash"
 scope = "source.bash"
 grammar = "bash"
-file-types = [{ glob = "*project.inc" }]
+file-types = [{ glob = "*project.inc" }, { glob = ".bash_common" }]
 comment-token = "#"
 indent = { tab-width = 4, unit = '    ' }
 language-servers = ["bash-language-server"]
