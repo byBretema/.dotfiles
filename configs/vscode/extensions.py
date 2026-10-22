@@ -40,11 +40,11 @@ def main():
             [extensions_from_file.add(l.strip()) for l in f if l.strip()]
 
     # Install
-    if args.install:
+    if args.install and extensions_from_file:
         cmd = ["code"]
         for ext in extensions_from_file:
             cmd.extend(["--install-extension", ext, "--force"])
-        run_cmd(cmd);
+        run_cmd(cmd)
 
     # Update / Overwrite
     if args.update or args.overwrite:
@@ -52,7 +52,7 @@ def main():
         current_extensions = set(current_extensions.stdout.strip().splitlines())
 
         # Overwrite: Let this set empty.
-        # Update   : Copy data from 'extensions_from_file' so intersection will merge current and saved.
+        # Update   : Copy data from 'extensions_from_file' so the union merges current and saved.
         saved_extensions = set()
         if not args.overwrite and os.path.exists(extensions_filepath):
             saved_extensions = extensions_from_file

@@ -3,7 +3,9 @@
 # cd into the dir a helper script left in a target file (scripts can't cd the parent shell)
 # (per-user runtime dir: a fixed /tmp file could be planted by another user)
 _cd_from_file() {
-    local target=$(cat "${XDG_RUNTIME_DIR:-/tmp}/$1" 2>/dev/null)
+    [[ -n "$XDG_RUNTIME_DIR" ]] || return
+    local target
+    target=$(cat "$XDG_RUNTIME_DIR/$1" 2>/dev/null)
     [[ -n "$target" && -d "$target" ]] && cd "$target"
 }
 

@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-target_file="${XDG_RUNTIME_DIR:-/tmp}/git_worktree_switch_target"
+# per-user runtime dir only: a fixed /tmp name could be pre-created by another user
+target_file="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR not set}/git_worktree_switch_target"
 rm -f "$target_file"
 
 source "${0%/*}/.bash_common"
@@ -24,7 +25,7 @@ MAX_HEIGHT=12
 
 parent_dir=$(dirname "$(git rev-parse --show-toplevel)")
 
-entries=$(git worktree list | while read -r path hash rest; do
+entries=$(git worktree list | while read -r path _ rest; do
   name=$(basename "$path")
   mtime=$(stat -c %Y "$path" 2>/dev/null || echo 0)
   case "$rest" in
@@ -39,10 +40,10 @@ height=$(( (count < MAX_HEIGHT ? count : MAX_HEIGHT) + 4 ))
 git worktree prune
 
 echo
-  selection=$(gum filter --height=$height --header="▌ git worktree switch" --placeholder="Choose a worktree..." <<< "$entries")
+selection=$(gum filter --height=$height --header="▌ git worktree switch" --placeholder="Choose a worktree..." <<< "$entries")
 [[ -z "$selection" ]] && gum style "cancelled" && exit 1
 
-name=$(echo "$selection" | awk '{print $1}')
+name=${selection%%$'\t'*}
 target="$parent_dir/$name"
 
 [[ -d "$target" ]] && echo "$target" > "$target_file"

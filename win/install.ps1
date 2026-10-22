@@ -44,7 +44,7 @@ function install_module([string]$pkg) {
     $null = Install-Module $pkg -Confirm:$False -Force -AllowClobber
 }
 
-function install_capabilites([string]$name, [string]$filters_by_comma = "") {
+function install_capabilities([string]$name, [string]$filters_by_comma = "") {
     $filters = $filters_by_comma.Split(",")
     $has_filter = $filters.Length -gt 0
     $caps = Get-WindowsCapability -Online | Where-Object { $_.Name -Like "*$name*" }
@@ -121,7 +121,7 @@ function print_title([string]$title, [string]$subtitle = "") {
     Write-Host "============================================================"
 }
 
-Write-Host "`n>>> SCRIPT BEGINING <<<`n"
+Write-Host "`n>>> SCRIPT BEGINNING <<<`n"
 
 
 ### WINGET Packages
@@ -192,7 +192,7 @@ modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanc
 # Hide widgets from taskbar
 Write-Host ">> Hiding: Widgets icon"
 modify_reg_prop "HKLM:/SOFTWARE/Microsoft/PolicyManager/default/NewsAndInterests/AllowNewsAndInterests" "value" 0
-modify_reg_prop "HKLM:/SOFTWARE/Policñies/Microsoft/Dsh" "AllowNewsAndInterests" 0
+modify_reg_prop "HKLM:/SOFTWARE/Policies/Microsoft/Dsh" "AllowNewsAndInterests" 0
 
 # Hide taskbar on non-primary screens
 Write-Host ">> Hiding: Taskbar on non-primary screens"
@@ -216,7 +216,7 @@ modify_reg_prop "HKLM:/SOFTWARE/Microsoft/Windows/CurrentVersion/Policies/DataCo
 modify_reg_prop "HKCU:/SOFTWARE/Microsoft/Windows/CurrentVersion/Explorer/Advanced" "Start_TrackProgs" 0
 
 # Enable 'end task' on taskbar
-Write-Host ">> Enabling: 'End Task' form TaskBar"
+Write-Host ">> Enabling: 'End Task' from TaskBar"
 modify_reg_prop "HKCU:/Software/Microsoft/Windows/CurrentVersion/Explorer/Advanced/TaskbarDeveloperSettings" "TaskbarEndTask" 1
 
 # Only on laptops
@@ -252,15 +252,7 @@ $process_to_not_scan = @(
     "qtcreator_processlauncher.exe",
     "qtcreator.exe",
     "clangd.exe",
-    "clangd.exe",
-    # Shells
-    "pwsh.exe",
-    "powershell.exe",
-    "WindowsTerminal.exe",
-    "git-bash.exe",
-    "bash.exe"
-    # VS
-    "Code.exe",
+    # VS (shells, git, Code and msbuild stay scanned: they run arbitrary code)
     "vshost-clr2.exe",
     "VSInitializer.exe",
     "VSIXInstaller.exe",
@@ -302,10 +294,7 @@ $process_to_not_scan = @(
     "VSHiveStub.exe",
     "vshost.exe",
     "vshost32.exe",
-    "vshost32-clr2.exe",
-    "msbuild.exe",
-    # VCS
-    "git.exe"
+    "vshost32-clr2.exe"
 )
 
 $process_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionProcess $_ }
@@ -317,7 +306,7 @@ $process_to_not_scan | ForEach-Object { Add-MpPreference -ExclusionProcess $_ }
 print_title "Capabilities"
 
 # Enable OCR for all available languages
-install_capabilites "Language.OCR" "en-GB,en-US,es-ES,fr-FR"
+install_capabilities "Language.OCR" "en-GB,en-US,es-ES,fr-FR"
 
 
 ### LINKs
@@ -380,7 +369,7 @@ lns "$configs\.clang-format" "${home}\.clang-format"
 # WorkTrunk
 $worktrunk_dir = "${home}\.config\worktrunk"
 $null = New-Item -ItemType Directory -Path $worktrunk_dir -Force
-lns "$configs\worktrunk.toml" "$worktrunk_dir\worktrunk.toml"
+lns "$configs\worktrunk.toml" "$worktrunk_dir\config.toml"
 
 # Claude Code
 $claude_dir = "${home}\.claude"

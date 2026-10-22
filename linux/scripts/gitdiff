@@ -5,4 +5,6 @@ guard__is_git
 git status -s >&2
 
 echo ""
-git status -s | awk '{ print $2 }' | choose_one -p "Choose a file" | xargs -r git diff
+# -z: raw paths (no quoting); rename entries carry the old path as an extra record, skipped
+git status --porcelain -z | awk -v RS='\0' 'skip { skip = 0; next } { if ($0 ~ /^R/) skip = 1; print substr($0, 4) }' \
+  | choose_one -p "Choose a file" | xargs -r -d '\n' git diff --

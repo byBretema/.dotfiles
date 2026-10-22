@@ -15,7 +15,8 @@ old_name="${filename%.*}"
 
 new_file="$dir/$new_name.$ext"
 
-# 1. Copy the current file
+# 1. Copy the current file (never clobber an existing one)
+[[ -e "$new_file" ]] && { echo "hx_duplicate_cpp: '$new_file' already exists" >&2; exit 1; }
 cp "$filepath" "$new_file"
 
 # 2. Determine target extensions for the alternate file
@@ -56,7 +57,7 @@ if [[ -n "$alt_file" ]]; then
     alt_dir=$(dirname "$alt_file")
     new_alt_file="$alt_dir/$new_name.$alt_ext"
 
-    cp "$alt_file" "$new_alt_file"
+    cp -n "$alt_file" "$new_alt_file"
 fi
 
 # 5. Print the newly created file so Helix can open it

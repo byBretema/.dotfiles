@@ -6,6 +6,8 @@ OPTIONS=(
   "LIFE"
 )
 option=$(choose_one -p "Choose an action" -- "${OPTIONS[@]}")
+# cancelled picker = empty option; must not fall through to the unblock branch
+[[ -n "${option}" ]] || exit 1
 
 log_info "Focus mode set to: ${option}"
 

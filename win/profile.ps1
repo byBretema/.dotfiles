@@ -8,7 +8,10 @@
 ###############################################################################
 # Settings
 
-$env:POWERSHELL_TELEMETRY_OPTOUT = 1             # Avoid telemetry
+# Telemetry opt-out must exist before pwsh starts: persist it for the next sessions
+if (-not [Environment]::GetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', 'User')) {
+    [Environment]::SetEnvironmentVariable('POWERSHELL_TELEMETRY_OPTOUT', '1', 'User')
+}
 Set-PSReadLineOption -HistoryNoDuplicates:$True  # Avoid duplicates
 
 if ($PSVersionTable.PSVersion.Major -lt 7) {
@@ -17,6 +20,9 @@ if ($PSVersionTable.PSVersion.Major -lt 7) {
 
 ###############################################################################
 # Navigation
+
+# Built-in aliases win over functions, so drop them first
+Remove-Item Alias:ls -Force -ErrorAction SilentlyContinue
 
 function ls   { eza -a  --icons always --git -s type $args }
 function l    { eza -a  --icons always --git -s type $args }
@@ -63,6 +69,10 @@ function unzip([string]$path) {
     rmrf $folder
     $null = Start-Process -FilePath "${env:ProgramFiles}\7-Zip\7zG.exe" -ArgumentList "x `"$path`" -o`"$folder`" -aou" -PassThru -Wait
     Start-Process $folder
+}
+
+function path_to_windows([string]$path) {
+    return "$path".Replace("/", "\")
 }
 
 function lns([string]$from, [string]$to) {

@@ -36,7 +36,7 @@ keep() {
 # Check all the requirements are available
 ################################################################################
 
-# Required binaires
+# Required binaries
 need=(claude tmux gum notify-send)
 [[ $mode == copy ]] && need+=(wl-copy)
 
@@ -62,6 +62,14 @@ fi
 ################################################################################
 # Pick cursor or snippet mode based on selection count
 ################################################################################
+
+# The whole file is sent as context: never ship likely-secret files to the API
+case "${file##*/}" in
+.env | .env.* | *.env | *.pem | *.key | *.p12 | *.pfx | id_rsa* | id_ed25519* | id_ecdsa* | *secret* | *credential* | .netrc | .npmrc | .pypirc)
+    notify-send -u critical "$title" "Refusing: ${file##*/} may contain secrets"
+    keep
+    ;;
+esac
 
 cursor_mode=false
 

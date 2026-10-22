@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 
-target_file="${XDG_RUNTIME_DIR:-/tmp}/git_worktree_add_target"
+# per-user runtime dir only: a fixed /tmp name could be pre-created by another user
+target_file="${XDG_RUNTIME_DIR:?XDG_RUNTIME_DIR not set}/git_worktree_add_target"
 rm -f "$target_file"
 
 source "${0%/*}/.bash_common"
@@ -19,7 +20,7 @@ parent_dir=$(dirname "$repo_root")
 get_branches() {
   git branch -a --format='%(refname:short)' |
     sed 's|^origin/||'                      |
-    grep -v '^HEAD$'                        |
+    grep -vxE 'HEAD|origin'                 |
     sort -u
 }
 
@@ -47,7 +48,7 @@ if git rev-parse --verify --quiet "refs/heads/$selection" >/dev/null 2>&1; then
   git worktree add "$target" "$selection"
 elif git rev-parse --verify --quiet "refs/remotes/origin/$selection" >/dev/null 2>&1; then
   gum style "remote branch: $selection"
-  git worktree add "$target" "origin/$selection"
+  git worktree add --track -b "$selection" "$target" "origin/$selection"
 else
   gum style "new branch: $selection"
   git worktree add -b "$selection" "$target"

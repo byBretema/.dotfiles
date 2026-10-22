@@ -20,7 +20,7 @@ ip -4 -br addr | awk '{
 
 echo
 log_header "Public:"
-echo "    $(curl -s icanhazip.com)"
+echo "    $(curl -s https://icanhazip.com)"
 
 echo
 log_header "Times:"

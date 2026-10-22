@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/usr/bin/env bash
 # https://www.nerdfonts.com/cheat-sheet + vaaleyard/tmux-dotbar
 
-[[ $# < 1 ]] && { printf "??"; exit 0; }
+(( $# < 1 )) && { printf "??"; exit 0; }
 
 window_icon="$1"
 window_path="$2"
@@ -37,12 +37,11 @@ icon="$icon$icon_space"
 
 info=""
 if [[ -n "${2:-}" ]]; then
-  script_dir="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
   info="$( tmux_info "$window_path" )"
 fi
 
 if [[ -f "$HOME/.local/state/tmux/show_info" ]]; then
-  printf " $icon $info"
+  printf ' %s %s' "$icon" "$info"
 else
-  printf " $icon"
+  printf ' %s' "$icon"
 fi

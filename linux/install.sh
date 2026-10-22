@@ -43,7 +43,10 @@ link_config_files() {
     log_header "Linking - Configs"
 
     #... a real dir here would make ln nest the link inside it
-    [ -d "$HOME/.claude/bin" ] && [ ! -L "$HOME/.claude/bin" ] && rm -rf "$HOME/.claude/bin"
+    if [[ -d "$HOME/.claude/bin" && ! -L "$HOME/.claude/bin" ]]; then
+        claude_bin_backup="$HOME/.claude/bin.bak.$(date +%Y%m%d%H%M%S)"
+        mv "$HOME/.claude/bin" "${claude_bin_backup}" && log_warn "Existing ~/.claude/bin moved to ${claude_bin_backup}"
+    fi
 
     link_table <<'TABLE'
 
@@ -167,7 +170,7 @@ TABLE
     sys_copy "$DOT_LINUX_ASSETS/etc/environment" "/etc/environment"
 
     # --- GNOME ---
-    log_header "Setup - Gnome fixs"
+    log_header "Setup - Gnome fixes"
 
     #... Unmask socket (was masked to /dev/null when using gcr-ssh-agent only)
     if [[ -L "${HOME}/.config/systemd/user/gnome-keyring-daemon.socket" ]]; then
@@ -223,7 +226,7 @@ TABLE
     fi
     sudo mkdir -p "$wallpapers_dir"
     sudo cp -r "$DOT_ASSETS/wallpapers/." "${wallpapers_dir}"
-    log_info "Availables at: $wallpapers_dir"
+    log_info "Available at: $wallpapers_dir"
 
     # --- Cosmic ---
     log_header "Linking Cosmic Settings"
@@ -444,11 +447,10 @@ Options:
   --confirm-pacman         Prompt before each package action (removes --noconfirm)
 
   -h | --help              Show this message
-  --                       Extra args after this
 
  [*1]
-      - Solaar     : Disable sync of, config_cookie.
-      - Screenshot : Disable sync of, last_rectangle.
+      - Solaar     : Do not sync config_cookie.
+      - Screenshot : Do not sync last_rectangle.
 
  [*2]
       - Swaps physical Fn with Left Ctrl (hid_apple.swap_fn_leftctrl).

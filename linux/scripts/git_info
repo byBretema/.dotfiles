@@ -21,8 +21,8 @@ branch=$(git -C "$IN_DIR" rev-parse --abbrev-ref HEAD 2>/dev/null) || exit 0
 # --- Helpers ---
 
 is_worktree() {
-    [[ -d .git/worktrees ]] && [[ -n "$(ls -A .git/worktrees 2>/dev/null)" ]] && return 0
-    [[ -f .git ]] && grep -q 'gitdir:' .git 2>/dev/null && return 0
+    [[ -d $TOP_LEVEL/.git/worktrees ]] && [[ -n "$(ls -A "$TOP_LEVEL/.git/worktrees" 2>/dev/null)" ]] && return 0
+    [[ -f $TOP_LEVEL/.git ]] && grep -q 'gitdir:' "$TOP_LEVEL/.git" 2>/dev/null && return 0
     return 1
 }
 worktree_branch_match() {
@@ -45,7 +45,6 @@ if is_worktree; then
 fi
 
 sep=""
-skip_tag=''
 show_repo && show_branch && sep="::"
 
 out=""
@@ -57,4 +56,4 @@ if [[ -z "$out" ]]; then
         | sed -E 's#^(git@|ssh://[^/]+/|https?://[^/]+/)##; s#\.git$##; s#.*/##')"
 fi
 
-printf "($out)$mark"
+printf '(%s)%s' "$out" "$mark"

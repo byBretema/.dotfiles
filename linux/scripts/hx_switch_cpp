@@ -12,7 +12,7 @@ name="${filename%.*}"
 
 # Helpers
 _done()     { printf "%s" "$1"; exit 0; }
-_fallback() { _done $filepath; }
+_fallback() { _done "$filepath"; }
 
 # Get target list based on extension
 case "$ext" in

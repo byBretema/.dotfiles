@@ -21,9 +21,8 @@ alias fuuuck='set cmd (history search --max 1); and gum confirm --default=false 
 # cd into the dir a helper script left in a target file (scripts can't cd the parent shell)
 # (per-user runtime dir: a fixed /tmp file could be planted by another user)
 function _cd_from_file -a name
-    set -l dir /tmp
-    set -q XDG_RUNTIME_DIR; and set dir $XDG_RUNTIME_DIR
-    set -l target (cat $dir/$name 2>/dev/null)
+    set -q XDG_RUNTIME_DIR; or return
+    set -l target (cat $XDG_RUNTIME_DIR/$name 2>/dev/null)
     if test -n "$target"; and test -d "$target"
         cd "$target"
     end

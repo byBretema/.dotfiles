@@ -10,7 +10,7 @@ source "${0%/*}/.bash_common"
 
 usage() {
   show_help <<EOF
-Usage: ${script_name} [options] FILEPATH
+Usage: ${script_name} [options] FILEPATH [-- PROGRAM_ARGS...]
 
 Options:
   -g | --gnu    Compile with 'g++' (default)
@@ -18,7 +18,7 @@ Options:
   -m | --msvc   Compile with 'cl'
   -s | --std    Set std version (default: 20)
   -h | --help   Show this message
-  --            Extra args after this
+  --            Args after FILEPATH and this go to the program
 EOF
   exit 0
 }
@@ -44,8 +44,10 @@ done
 
 #! Params
 
+[[ -n "${1:-}" ]] || usage
 filepath=$(realpath "$1"); shift
 required_file "${filepath}"
+[[ "${1:-}" == "--" ]] && shift
 
 
 ################################################################################
@@ -57,4 +59,9 @@ bin_dir=$(mktemp -d -t cpprun.XXXXXXXXXX)
 trap 'rm -rf "${bin_dir}"' EXIT
 bin_name="${bin_dir}/a.out"
 
-"${compiler}" --std="c++${stdver}" "${filepath}" -o "${bin_name}" && "${bin_name}"
+if [[ "${compiler}" == "cl" ]]; then
+  bin_name+=".exe"
+  cl /nologo /EHsc "/std:c++${stdver}" "${filepath}" "/Fe:${bin_name}" "/Fo:${bin_dir}/" && "${bin_name}" "$@"
+else
+  "${compiler}" --std="c++${stdver}" "${filepath}" -o "${bin_name}" && "${bin_name}" "$@"
+fi
