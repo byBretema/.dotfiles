@@ -164,14 +164,6 @@ C-r = [
   ":reload-all",
 ]
 
-# Scooter search prefilled with the selection
-A-r = [
-  ":write-all",
-  ":insert-output scooter --no-stdin -s '%{selection}' >/dev/tty",
-  ":redraw",
-  ":reload-all",
-]
-
 # >>> Extends GoTo actions <<<
 #-------------------------------------------------------------------------------
 
@@ -201,10 +193,10 @@ E = "file_explorer_in_current_buffer_directory"
 # File Explorer - Yazi
 e = [
   ":write-all",
-  ":sh rm -f /tmp/hx_yazi.result",
-  ":insert-output yazi '%{buffer_name}' --chooser-file=/tmp/hx_yazi.result",
+  ':sh rm -f "$XDG_RUNTIME_DIR/hx_yazi.result"',
+  ":insert-output yazi '%{buffer_name}' --chooser-file=\"$XDG_RUNTIME_DIR/hx_yazi.result\"",
   ':sh printf "\x1b[?1049h\x1b[?2004h" > /dev/tty',
-  ":open %sh{cat /tmp/hx_yazi.result}",
+  ':open %sh{cat "$XDG_RUNTIME_DIR/hx_yazi.result"}',
   ":redraw",
   ":set mouse false",
   ":set mouse true",

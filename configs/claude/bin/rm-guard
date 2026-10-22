@@ -5,8 +5,8 @@
 command -v jq >/dev/null 2>&1 || exit 0
 cmd=$(jq -r '.tool_input.command // empty')
 
-# rm at a command position: line start, after ; & | ( ` $( or a wrapper (sudo, xargs -0, env, ...)
-pos='(^|[;&|(`]|\$\(|(sudo|xargs|command|exec|env|nice|nohup|time)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*)'
+# rm at a command position: line start, after ; & | ( ` { ! $( or a keyword/wrapper (then, do, sudo, xargs -0, ...)
+pos='(^|[;&|(`{!]|\$\(|(^|[^[:alnum:]_-])(then|do|else|sudo|xargs|command|exec|env|nice|nohup|time)[[:space:]]+(-[^[:space:]]+[[:space:]]+)*)'
 del='[[:space:]]*((/usr)?/bin/)?(rm|unlink|shred)([[:space:]]|$)'
 
 if printf '%s\n' "$cmd" | grep -qE "${pos}${del}" ||

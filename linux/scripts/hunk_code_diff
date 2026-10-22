@@ -17,9 +17,12 @@ EXCLUDES=(
   "**/.gemini/**"
   "**/.codex/**"
   "**/.windsurf/**"
-  "**/claude/**"
-  "**/opencode/**"
-  "**/agents/**"
+  "**/SKILL.md"
+  # prompts/commands/templates in non-dot agent config dirs (e.g. dotfiles' configs/claude);
+  # md only, so scripts and json there still show up
+  "**/claude/**/*.md"
+  "**/opencode/**/*.md"
+  "**/agents/**/*.md"
 )
 
 args=()

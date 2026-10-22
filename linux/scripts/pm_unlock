@@ -6,5 +6,6 @@ if pidof pacman > /dev/null; then
     exit 1
 fi
 
-sudo rm /var/lib/pacman/db.lck
-log_info "pacman DB lock removed"
+lock=/var/lib/pacman/db.lck
+[[ -e "${lock}" ]] || { log_info "no pacman DB lock"; exit 0; }
+sudo rm "${lock}" && log_info "pacman DB lock removed"

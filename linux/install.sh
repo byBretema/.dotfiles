@@ -148,9 +148,11 @@ TABLE
 
     log_info "Yazi packages"
     mkdir -p "${HOME_CONFIG}/yazi/flavors"
+    #... add fails when already present, so it can't gate the install
     for pkg in flavors:catppuccin-mocha plugins:piper plugins:toggle-pane; do
-        ya pkg add "yazi-rs/${pkg}" &>/dev/null && ya pkg install || true
+        ya pkg add "yazi-rs/${pkg}" &>/dev/null || true
     done
+    ya pkg install
 
     log_info "Atuin"
     if is_cmd "atuin"; then
@@ -251,8 +253,8 @@ collect_packages() {
         [[ $line != \#* ]] || continue
         local pkg=${line//$sanitize/}
         [[ -n $pkg ]] || continue
-        eval "$check_cmd \"$pkg\"" &>/dev/null
-        local status=$?
+        local status=0
+        eval "$check_cmd \"$pkg\"" &>/dev/null || status=$?
         [[ $((status ^ invert)) -eq 1 ]] && result+=("$pkg")
     done <"$list_file"
 
@@ -505,11 +507,26 @@ exit_code=0
 is_cmd "paru" || sudo pacman -S paru
 is_cmd "flatpak" || sudo pacman -S flatpak
 
-[[ "${do_remove}" == "true" ]] && { remove_packages || exit_code=1; }
-[[ "${do_update}" == "true" ]] && { system_update || exit_code=1; }
-[[ "${do_install}" == "true" ]] && { install_packages || exit_code=1; }
-[[ "${do_links}" == "true" ]] && { link_config_files || exit_code=1; }
-[[ "${do_filters}" == "true" ]] && { configure_git_filters || exit_code=1; }
-[[ -n "${do_mbkb}" ]] && { macbook_keyboard_setup "${do_mbkb}" || exit_code=1; }
+# ERR (inherited by functions via -E) flags any failing command inside a step, not only its last one.
+# Commands tested by if/&&/|| don't fire it, so guards like `[[ -d x ]] && ...` stay quiet.
+step_failed=0
+set -E
+trap 'step_failed=1' ERR
+step() {
+    step_failed=0
+    "$@"
+    if ((step_failed)); then
+        log_error "'$*' had failures (see output above)"
+        exit_code=1
+    fi
+    return 0
+}
+
+[[ "${do_remove}" == "true" ]] && step remove_packages
+[[ "${do_update}" == "true" ]] && step system_update
+[[ "${do_install}" == "true" ]] && step install_packages
+[[ "${do_links}" == "true" ]] && step link_config_files
+[[ "${do_filters}" == "true" ]] && step configure_git_filters
+[[ -n "${do_mbkb}" ]] && step macbook_keyboard_setup "${do_mbkb}"
 
 exit "${exit_code}"

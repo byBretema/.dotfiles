@@ -126,8 +126,9 @@ choose_one() {
           *             ) break;;
       esac
   done
-  #! Input
-  [[ ! -t 0 ]] && readarray -t fzf_input || fzf_input=("${@}")
+  #! Input: args first; stdin only without args (launchers often give a non-tty stdin)
+  local fzf_input=("${@}")
+  (( ${#fzf_input[@]} )) || [[ -t 0 ]] || readarray -t fzf_input
   [[ ${#fzf_input[@]} > 0 ]] || error_exit "Nothing to choose from"
   #! Command
   printf "%s\n" "${fzf_input[@]}" | fzf -1 --prompt="${prompt:+$prompt > }" --layout=reverse --cycle --info=inline-right --height $(min $(tput lines) 20)

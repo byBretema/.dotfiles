@@ -21,6 +21,6 @@ TO_BLOCK=(
   "linkedin.com"
 )
 for domain in "${TO_BLOCK[@]}"; do
-  sudo hostess "${op}" "${domain}" "${suffix}"
-  sudo hostess "${op}" "www.${domain}" "${suffix}"
+  sudo hostess "${op}" "${domain}" ${suffix:+"${suffix}"}
+  sudo hostess "${op}" "www.${domain}" ${suffix:+"${suffix}"}
 done

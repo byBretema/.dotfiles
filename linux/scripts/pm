@@ -90,6 +90,6 @@ clean)
     exit 1
     ;;
 
-*) exec paru --bottomup $flags "$verb" "$@" ;;
+*) exec paru --bottomup $flags ${verb:+"$verb"} "$@" ;;
 
 esac
