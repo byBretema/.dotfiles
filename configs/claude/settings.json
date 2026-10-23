@@ -70,7 +70,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "notify-send 'Claude Code' \"$(jq -r '.message // \"Needs attention\"')\"; paplay /usr/share/sounds/freedesktop/stereo/message.oga 2>/dev/null || true"
+            "command": "[ -x ~/.claude/bin/notify ] || exit 0; exec ~/.claude/bin/notify"
           }
         ]
       }

@@ -1,0 +1,41 @@
+#!/usr/bin/env sh
+# Notification hook: desktop popup with repo/branch + session title, plus sound.
+
+command -v notify-send >/dev/null 2>&1 || exit 0
+command -v jq >/dev/null 2>&1 || exit 0
+i=$(cat)
+j() { printf '%s' "$i" | jq -r "$1 // empty"; }
+
+d=$(j .cwd)
+msg=$(j .message)
+tr=$(j .transcript_path)
+
+repo=$(basename "$d")
+if r=$(git -C "$d" rev-parse --show-toplevel 2>/dev/null); then
+    url=$(git -C "$r" remote get-url origin 2>/dev/null)
+    repo=$(basename "${url:-$r}" .git)
+    b=$(git -C "$r" branch --show-current 2>/dev/null)
+    [ -z "$b" ] && b=$(git -C "$r" rev-parse --short HEAD 2>/dev/null)
+    repo="$repo/$b"
+fi
+
+# /rename title wins over the auto-generated one; both are appended as the session evolves.
+task=""
+if [ -f "$tr" ]; then
+    task=$(grep -hE '"type":"custom-title"' "$tr" | tail -1 | jq -r '.customTitle // empty' 2>/dev/null)
+    [ -z "$task" ] && task=$(grep -hE '"type":"ai-title"' "$tr" | tail -1 | jq -r '.aiTitle // empty' 2>/dev/null)
+fi
+
+# Body is Pango markup in most daemons.
+esc() { printf '%s' "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'; }
+body="<b>$(esc "${task:-Untitled session}")</b>
+$(esc "${msg:-Needs your attention.}")"
+
+notify-send -a 'Claude Code' -u critical -i dialog-information "$repo" "$body"
+
+snd=/usr/share/sounds/freedesktop/stereo/message-new-instant.oga
+command -v paplay >/dev/null 2>&1 && [ -f "$snd" ] && {
+    paplay --volume=65536 "$snd"
+    paplay --volume=65536 "$snd"
+} >/dev/null 2>&1 &
+exit 0
