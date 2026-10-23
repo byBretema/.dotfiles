@@ -20,4 +20,4 @@
 - agents/tasks/video_encoding.md
 - agents/tasks/ai_image_rescale.md
 
- <!-- markdown names are just orientative to ilustrate folder struct -->
+ <!-- markdown names are only examples of the folder structure -->

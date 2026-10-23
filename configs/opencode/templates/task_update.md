@@ -2,7 +2,7 @@ STOP if not active task.
 
 Keep entries concise (1 line each)
 
-Preserve sections and update is content with:
+Preserve sections and update its content with:
 
 - Completed items
 - New blockers

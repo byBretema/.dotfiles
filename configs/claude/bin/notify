@@ -6,8 +6,12 @@ command -v jq >/dev/null 2>&1 || exit 0
 i=$(cat)
 j() { printf '%s' "$i" | jq -r "$1 // empty"; }
 
+# Idle fires 60s after any input, even /clear on an empty session; Stop already covers "done".
+[ "$(j .notification_type)" = idle_prompt ] && exit 0
+
 d=$(j .cwd)
 msg=$(j .message)
+[ "$(j .hook_event_name)" = Stop ] && msg='Done.'
 tr=$(j .transcript_path)
 
 repo=$(basename "$d")
@@ -31,7 +35,15 @@ esc() { printf '%s' "$1" | sed 's/&/\&amp;/g; s/</\&lt;/g; s/>/\&gt;/g'; }
 body="<b>$(esc "${task:-Untitled session}")</b>
 $(esc "${msg:-Needs your attention.}")"
 
-notify-send -a 'Claude Code' -u critical -i dialog-information "$repo" "$body"
+# Background task completions start extra turns, each firing Stop: keep one popup per
+# session (replaced in place) and only re-chime if the last one is over 60s old.
+st=${XDG_RUNTIME_DIR:-/tmp}/claude-notify
+mkdir -p "$st"
+sf="$st/$(j .session_id | tr -cd 'A-Za-z0-9-')"
+old=$(cat "$sf" 2>/dev/null)
+age=$(($(date +%s) - $(stat -c %Y "$sf" 2>/dev/null || echo 0)))
+notify-send -p ${old:+-r "$old"} -a 'Claude Code' -u critical -i dialog-information "$repo" "$body" >"$sf"
+[ "$age" -lt 60 ] && exit 0
 
 snd=/usr/share/sounds/freedesktop/stereo/message-new-instant.oga
 command -v paplay >/dev/null 2>&1 && [ -f "$snd" ] && {

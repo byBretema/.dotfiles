@@ -13,7 +13,7 @@ https://bbs.archlinux.org/viewtopic.php?pid=2169885#p2169885
 disable_autostart() {
     fp="$HOME/.config/autostart/$1.desktop"
     rm $fp              # Get rid of the actual autostart
-    touch $fp           # Cretate a file to block the space
+    touch $fp           # Create a file to block the space
     sudo chattr +i $fp  # Avoid any app to modify the file
 }
 
@@ -46,7 +46,8 @@ __EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/10_nvidia.json"
 
 __VK_LAYER_NV_optimus="NVIDIA_only"
 VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
-VK_DRIVER_FILES="/usr/share/vulkadfn/icd.d/nvidia_icd.json"
+VK_DRIVER_FILES="/usr/share/vulkan/icd.d/nvidia_icd.json"
+```
 
 ## DRM-COLORTEMP — Screen Temperature
 
@@ -64,7 +65,7 @@ After switching to the monitor TTY, immediately switch back — the daemon appli
 
 ### Config
 
-`/etc/default/drm-colortemp.conf` (symlinked from `linux/assets/drm-colortemp/drm-colortemp.conf`)
+`/etc/default/drm-colortemp.conf` (copied by `install.sh -l` from `linux/assets/drm-colortemp/drm-colortemp.conf`)
 
 | Key | Default | Description |
 |-----|---------|-------------|
@@ -95,19 +96,17 @@ uv tool run cosmic-ext-window-helper state
 
 ## SSH_AUTH_SOCK not set
 
-If you see `SSH_AUTH_SOCK not set` briefly on session start (e.g., in TTY), the fix is to enable `gcr-ssh-agent`:
+`linux/assets/env/10-ssh.conf` sets `SSH_AUTH_SOCK=$XDG_RUNTIME_DIR/gcr/ssh`, a socket that only exists while `gcr-ssh-agent.socket` is enabled. `install.sh -l` enables it; by hand:
 
 ```shell
 systemctl --user enable --now gcr-ssh-agent.socket
-systemctl --user enable --now gcr-ssh-agent.service
 ```
-
-After enabling, the SSH socket appears at `$XDG_RUNTIME_DIR/keyring/ssh` and `SSH_AUTH_SOCK` is set automatically.
 
 To verify:
 ```shell
 echo $SSH_AUTH_SOCK
-# Should output: /run/user/$UID/keyring/ssh
+# Should output: /run/user/$UID/gcr/ssh
+ssh-add -l
 ```
 
 ## SKIP-WORKTREE (local git changes)
@@ -123,27 +122,13 @@ List all skipped files: `git ls-files -v | grep ^S`
 
 ## LOGIN KEYRING NOT UNLOCKED (cosmic-greeter)
 
-After switching from GDM to `cosmic-greeter`, apps (Slack, etc.) prompt for the login keyring password because `pam_gnome_keyring.so` is not in greetd's PAM stack.
+After switching from GDM to `cosmic-greeter`, apps (Slack, etc.) prompt for the login keyring password unless `pam_gnome_keyring.so` is in the PAM stack of the session.
 
-### Fix
+### Current setup (`install.sh -l`)
 
-Add `pam_gnome_keyring.so` to `/etc/pam.d/greetd`:
-
-```shell
-sudo cp /etc/pam.d/greetd /etc/pam.d/greetd.bak
-
-echo '#%PAM-1.0
-
-auth       required     pam_securetty.so
-auth       requisite    pam_nologin.so
-auth       include      system-local-login
-auth       optional     pam_gnome_keyring.so
-account    include      system-local-login
-session    include      system-local-login
-session    optional     pam_gnome_keyring.so auto_start' | sudo tee /etc/pam.d/greetd
-```
-
-Then log out and back in (or reboot) for the PAM config to take effect.
+- `cosmic-greeter` starts the user session through greetd with `Service=login`, so the PAM module goes in `/etc/pam.d/login` (copied from `linux/assets/pam/login` when the module is missing; numbered backup kept as `/etc/pam.d/login.~N~`). Test a TTY login before logging out.
+- `gnome-keyring-daemon.socket` stays enabled. Older notes masked it; `install.sh` removes that mask.
+- `linux/assets/autostart/gnome-keyring-{secrets,pkcs11}.desktop` start the remaining keyring components on COSMIC.
 
 ### Verify module installed
 
@@ -151,31 +136,6 @@ Then log out and back in (or reboot) for the PAM config to take effect.
 ls /usr/lib/security/pam_gnome_keyring.so
 ```
 
-### Still prompting once per login? Mask the socket
+### Still prompting once per login?
 
-Even with the PAM config above, apps kept asking for the keyring password once per login. Root cause: the user systemd unit `gnome-keyring-daemon.socket` (enabled by preset) binds `/run/user/$UID/keyring/control` when the systemd user manager starts. PAM's `auto_start` then spawns its daemon instance, which connects to that socket → systemd activates the service **without the login password**, and PAM's instance exits (`discover_other_daemon: 1`) without passing the password. Keyring daemon runs, but `login.keyring` stays locked.
-
-Fix: mask the socket so PAM spawns the daemon itself with the login password:
-
-```shell
-systemctl --user mask gnome-keyring-daemon.socket
-```
-
-**Mask alone is not enough on re-login.** The systemd user manager persists across logout/login (`KillUserProcesses=no`), so a socket that was already active keeps listening even after masking (masking only blocks future starts). Stop the units too (or reboot — a fresh user manager won't start the masked socket):
-
-```shell
-systemctl --user stop gnome-keyring-daemon.socket gnome-keyring-daemon.service
-systemctl --user daemon-reload
-```
-
-Then log out and back in. Expected after re-login: `systemctl --user status gnome-keyring-daemon.service` shows **inactive** (daemon now runs as a PAM child, not a systemd unit) — that is correct.
-
-Verify the daemon is not systemd-owned:
-
-```shell
-ps -o ppid= -p $(pgrep gnome-keyring-daemon)   # not the systemd --user PID
-```
-
-If it *still* prompts once: `login.keyring`'s password ≠ login password (keyring predates a password change). Fix via Seahorse → login keyring → Change Password (set to login password), or delete `~/.local/share/keyrings/login.keyring` — PAM re-creates it with the login password (saved secrets lost).
-
-```
+`login.keyring`'s password differs from the login password (keyring predates a password change). Fix via Seahorse: login keyring, Change Password (set it to the login password), or delete `~/.local/share/keyrings/login.keyring` so PAM re-creates it with the login password (saved secrets are lost).

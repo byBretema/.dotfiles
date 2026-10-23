@@ -33,7 +33,9 @@ export FZF_DEFAULT_OPTS=" \
 
 export BAT_THEME="Catppuccin Mocha"
 
-export FZF_CTRL_T_OPTS="--preview 'bat -n --color=always {}'"
+# built-in walker ignores .gitignore; skip the usual heavy dirs
+export FZF_CTRL_T_OPTS="--walker-skip .git,node_modules,build,target,.cache --preview 'bat -n --color=always {}'"
+export FZF_ALT_C_OPTS="--walker-skip .git,node_modules,build,target,.cache"
 
 export GLOW_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"
 export GLAMOUR_STYLE="$HOME/.config/glow/themes/catppuccin-mocha.json"

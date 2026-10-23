@@ -1,8 +1,5 @@
 
-[manager] # yazi < 25
-show_hidden = true
-
-[mgr] # yazi > 25
+[mgr]
 show_hidden = true
 
 [opener]

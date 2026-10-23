@@ -351,8 +351,8 @@ $flameshot_dir = "${home}\.config\flameshot"
 $null = New-Item -ItemType Directory -Path $flameshot_dir -Force
 lns "$configs\flameshot.ini" "$flameshot_dir\flameshot.ini"
 
-# Yazi (if installed)
-$yazi_dir = "${env:APPDATA}\yazi"
+# Yazi (if installed); on Windows it reads %AppData%\yazi\config\
+$yazi_dir = "${env:APPDATA}\yazi\config"
 $null = New-Item -ItemType Directory -Path $yazi_dir -Force
 lns "$configs\yazi\themes\theme.toml" "$yazi_dir\theme.toml"
 

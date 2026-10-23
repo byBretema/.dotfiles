@@ -12,7 +12,12 @@
       "Read(//**/id_rsa*)",
       "Read(//**/id_ed25519*)",
       "Read(~/.config/gh/hosts.yml)",
-      "Read(~/.local/share/atuin/key)"
+      "Read(~/.local/share/atuin/key)",
+      "Read(~/.claude/.credentials.json)",
+      "Read(~/.local/share/opencode/auth.json)",
+      "Read(~/.docker/config.json)",
+      "Read(//**/.npmrc)",
+      "Read(~/.local/share/keyrings/**)"
     ],
     "ask": [
       "Read(**/*.env)",
@@ -61,6 +66,16 @@
           {
             "type": "command",
             "command": "[ -x ~/.claude/bin/secret-guard ] || exit 0; exec ~/.claude/bin/secret-guard"
+          }
+        ]
+      }
+    ],
+    "Stop": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.claude/bin/notify ] || exit 0; exec ~/.claude/bin/notify"
           }
         ]
       }

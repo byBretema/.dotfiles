@@ -1,8 +1,8 @@
 # .dotfiles
 
-> dotfiles for Linux (CachyOS + Zsh) and Windows (Pure PowerShell 7 + Strong Linux vibes)
+> dotfiles for Linux (CachyOS + Fish, Bash/Zsh kept in parity) and Windows (Pure PowerShell 7 + Strong Linux vibes)
 
-- Donwload/Clone repo onto `$home/.dotfiles`  (*remove `.git` folder*)
+- Clone the repo into `~/.dotfiles` (keep `.git`: `--set-git-filters` needs it)
 - Read `install` script carefully and adapt it to your needs
 
 *Then just run it:*
@@ -10,7 +10,7 @@
 #### Linux
 
 ```bash
-./linux/install.sh -u -i -l
+./linux/install.sh --all
 ```
 
 #### Windows
@@ -19,7 +19,7 @@
 ```powershell
 # Allows unsigned scripts on current terminal
 Set-ExecutionPolicy Bypass -Scope Process
-./windows/install.ps1
+./win/install.ps1
 ```
 
 #### References
@@ -37,6 +37,5 @@ Set-ExecutionPolicy Bypass -Scope Process
 
     ```bash
     ssh-keygen -t ed25519
-    paru -S --needed --noconfirm xclip
-    cat .ssh/id_ed25519.pub | xclip -selection c
+    wl-copy < ~/.ssh/id_ed25519.pub
     ```

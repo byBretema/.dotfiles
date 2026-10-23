@@ -98,7 +98,9 @@
   // SECURITY & GUARDRAILS
   //--------------------------------------------------------------------------------
   "permission": {
+    // first: the last matching rule wins, so specific rules below override it
     "external_directory": {
+      "*": "ask",
       // Sys dirs
       "/tmp/**": "allow",
       // Home dirs
@@ -118,6 +120,11 @@
       "**/.netrc": "deny",
       "~/.config/gh/hosts.yml": "deny",
       "~/.local/share/atuin/key": "deny",
+      "~/.claude/.credentials.json": "deny",
+      "~/.local/share/opencode/auth.json": "deny",
+      "~/.docker/config.json": "deny",
+      "**/.npmrc": "deny",
+      "~/.local/share/keyrings/**": "deny",
       "**/*.pem": "deny",
       "**/*.key": "deny",
       "**/id_rsa*": "deny",
@@ -126,13 +133,15 @@
       // Infrastructure as Code
       "**/*.tf": "deny",
       "**/*.tfvars": "deny",
-      "terraform/**": "deny",
-      ".github/workflows/**": "deny",
-      ".gitlab-ci.yml": "deny",
-      "k8s/**": "deny",
-      "helm/**": "deny"
+      "**/terraform/**": "deny",
+      "**/.github/workflows/**": "deny",
+      "**/.gitlab-ci.yml": "deny",
+      "**/k8s/**": "deny",
+      "**/helm/**": "deny"
     },
     "bash": {
+      // read denies don't cover `cat ~/.ssh/..`, so nothing runs unasked
+      "*": "ask",
       // Destructive Actions
       "rm *": "ask",
       // Git Mutations

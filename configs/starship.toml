@@ -1,8 +1,8 @@
-format = "${custom.shell}$directory${custom.git_info}$git_status$cmd_duration\n$character"
+format = "${env_var.STARSHIP_SHELL}$directory${custom.git_info}$git_status$cmd_duration\n$character"
 # right_format = "$cmd_duration"
 
 scan_timeout = 500
-command_timeout = 60000
+command_timeout = 2000
 
 [character]
 format = "$symbol "
@@ -12,28 +12,24 @@ truncation_length = 1
 truncate_to_repo = true
 format = "[$path]($style)"
 
-[time]
-disabled = false
-time_format = "%T"
-format = "[$time]($style)"
-
 [cmd_duration]
 min_time = 3000
 show_milliseconds = true
-format = '· (yellow)[$duration]($style)'
+format = '· [$duration]($style)'
 
 [git_branch]
 disabled = true
 
-[custom.shell]
-description = "Active shell"
-command = "printf '%s' \"$STARSHIP_SHELL\"" # must be fish-safe: starship runs it via $STARSHIP_SHELL
-when = "true"
+# set by `starship init`; env_var avoids spawning a shell per prompt
+[env_var.STARSHIP_SHELL]
 style = "bold fg:#89b4fa"
-format = "[$output]($style) "
+format = "[$env_value]($style) "
 
+# custom modules run through $STARSHIP_SHELL by default (a full fish startup per prompt)
 [custom.git_info]
 command = "git_info"
-when = "true"
+shell = ["sh"]
+require_repo = true
+when = true
 style = "bold purple"
 format = " [$output]($style) "

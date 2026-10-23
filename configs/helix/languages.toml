@@ -108,9 +108,6 @@ args = ["--query-driver=/usr/bin/g++", "--header-insertion=never"]
 
 #! Python settings
 
-[language-server.ruff]
-command = "ruff-lsp"
-
 [language-server.pyright]
 command = "pyright-langserver"
 args = ["--stdio"]

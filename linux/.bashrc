@@ -11,6 +11,11 @@ bash_add_path() {
 }
 
 export HISTTIMEFORMAT="%F %T "
+# parity with zsh (100k, append); defaults are 500 lines and overwrite on exit
+HISTSIZE=100000
+HISTFILESIZE=100000
+HISTCONTROL=ignoreboth
+shopt -s histappend
 shopt -s expand_aliases
 set -o ignoreeof # Ctrl+D won't exit, needs 10 presses (parity: fish bind \cd)
 

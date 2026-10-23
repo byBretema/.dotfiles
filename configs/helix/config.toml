@@ -15,6 +15,7 @@ smart-tab.enable = false
 
 # Visuals
 true-color = true
+undercurl = true
 cursorline = true
 color-modes = true
 bufferline = "never"
@@ -220,7 +221,7 @@ g.g = ["changed_file_picker"]
 # Shows git blame on the status bar
 g.b = ":echo %sh{git blame -L %{cursor_line},+1 -- '%{buffer_name}'}"
 
-# Git Blame of current line
+# Git diff of the working tree in a vsplit
 g.d = [":vsplit-new", ":lang diff", ":insert-output git diff"]
 
 # Opens git-ui

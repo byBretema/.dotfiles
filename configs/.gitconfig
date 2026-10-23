@@ -128,7 +128,7 @@
 
 	sw    = switch
 	sc    = switch -c
-	sww   = !bname=$(git branch | fzf) && git sw "${bname#* }"
+	sww   = !bname=$(git branch --format='%(refname:short)' | fzf) && git sw "$bname"
 
 	lg    = log --graph --pretty=format:'%C(yellow)%h %C(yellow)· %C(green)%ar %C(yellow)· %C(bold blue)%an%C(auto)%d%n%C(auto)%s%n'
 

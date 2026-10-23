@@ -25,8 +25,16 @@ sys_copy() {
 }
 
 # Symlink $1 -> $2, creating parent dirs. -n replaces an existing dir link instead of nesting into it.
+# A real file/dir in the way (fresh install, or an app that saves by rename and breaks the link) moves
+# to a single $2.bak slot, replaced on each move so reruns never pile up backups. Identical files
+# are just replaced; a real dir always moves, since ln would otherwise nest the link inside it.
 link() {
-    mkdir -p "$(dirname "$2")" && ln -srfn "$1" "$2"
+    mkdir -p "$(dirname "$2")" || return
+    if [[ -e "$2" && ! -L "$2" ]] && ! cmp -s "$1" "$2" 2>/dev/null; then
+        rm -rf "$2.bak" && mv "$2" "$2.bak" || return
+        log_warn "Existing ${2/#$HOME/\~} moved to ${2/#$HOME/\~}.bak"
+    fi
+    ln -srfn "$1" "$2"
 }
 
 # Reads "src dst" lines from stdin: src relative to the repo, dst relative to $HOME.
@@ -42,12 +50,6 @@ link_config_files() {
 
     log_header "Linking - Configs"
 
-    #... a real dir here would make ln nest the link inside it
-    if [[ -d "$HOME/.claude/bin" && ! -L "$HOME/.claude/bin" ]]; then
-        claude_bin_backup="$HOME/.claude/bin.bak.$(date +%Y%m%d%H%M%S)"
-        mv "$HOME/.claude/bin" "${claude_bin_backup}" && log_warn "Existing ~/.claude/bin moved to ${claude_bin_backup}"
-    fi
-
     link_table <<'TABLE'
 
 # Shell
@@ -56,6 +58,7 @@ linux/.bashrc                                        .bashrc
 linux/.bash_profile                                  .bash_profile
 linux/.zshrc                                         .zshrc
 configs/ghostty.conf                                 .config/ghostty/config
+configs/boo-cursor.glsl                              .config/ghostty/boo-cursor.glsl
 configs/alacritty.toml                               .config/alacritty/alacritty.toml
 configs/tmux/tmux.conf                               .config/tmux/tmux.conf
 configs/atuin/config.toml                            .config/atuin/config.toml
@@ -101,7 +104,6 @@ configs/claude/bin                                   .claude/bin
 configs/opencode/AGENTS.md                           .config/opencode/AGENTS.md
 configs/opencode/opencode.jsonc                      .config/opencode/opencode.jsonc
 configs/opencode/cli.json                            .config/opencode/cli.json
-configs/opencode/tui.json                            .config/opencode/tui.json
 configs/opencode/themes/catppuccin-transparent.json  .config/opencode/themes/catppuccin-transparent.json
 configs/opencode/commands                            .config/opencode/commands
 configs/opencode/agents                              .config/opencode/agents
@@ -181,6 +183,9 @@ TABLE
         systemctl --user enable gnome-keyring-daemon.socket 2>/dev/null || true
     fi
 
+    #... SSH agent: 10-ssh.conf points SSH_AUTH_SOCK at gcr's socket, which only exists while this unit runs
+    systemctl --user enable --now gcr-ssh-agent.socket
+
     #... PAM unlock: login service holds user session via greetd (Service=login)
     if ! grep -q "pam_gnome_keyring.so" /etc/pam.d/login 2>/dev/null; then
         sys_copy "$DOT_LINUX_ASSETS/pam/login" /etc/pam.d/login
@@ -233,16 +238,7 @@ TABLE
     # --- Cosmic ---
     log_header "Linking Cosmic Settings"
 
-    cosmic_dir="${HOME_CONFIG}/cosmic"
-    if [[ -d "${cosmic_dir}" && ! -L "${cosmic_dir}" ]]; then
-        cosmic_backup="${cosmic_dir}.bak.$(date +%Y%m%d%H%M%S)"
-        mv "${cosmic_dir}" "${cosmic_backup}" || {
-            log_error "Could not back up ${cosmic_dir}"
-            return 1
-        }
-        log_warn "Existing cosmic config moved to ${cosmic_backup}"
-    fi
-    ln -srfn "$DOT_LINUX_ASSETS/cosmic" "${cosmic_dir}"
+    link "$DOT_LINUX_ASSETS/cosmic" "${HOME_CONFIG}/cosmic"
 }
 
 collect_packages() {
@@ -439,7 +435,8 @@ Options:
   -u | --update            System update
   -i | --install           Install packages / apps
   -l | --links             Link configs / themes
-       --all               Run -d, -u, -i, and -l in sequence
+       --sync              Run -d, -u, -i, and -l in sequence
+       --all               Run --sync and --set-git-filters
 
   --set-git-filters        Configure local Git filters *1
 
@@ -480,7 +477,8 @@ while [[ "${#}" > 0 ]]; do
     -u | --update) shift && do_update=true ;;
     -i | --install) shift && do_install=true ;;
     -l | --links) shift && do_links=true ;;
-    --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
+    --sync) shift && do_remove=true && do_update=true && do_install=true && do_links=true ;;
+    --all) shift && do_remove=true && do_update=true && do_install=true && do_links=true && do_filters=true ;;
 
     --set-git-filters) shift && do_filters=true ;;
 

@@ -9,6 +9,7 @@ bierner.markdown-mermaid
 bierner.markdown-preview-github-styles
 bierner.markdown-yaml-preamble
 boosted.helix-bogster-theme
+catppuccin.catppuccin-vsc
 chouzz.vscode-innosetup
 danielgavin.ols
 davidbroetje.algorithm-mnemonics-vscode
@@ -45,10 +46,12 @@ slevesque.vscode-3dviewer
 surajbarkale.ninja
 tal7aouy.icons
 tamasfe.even-better-toml
+thang-nm.catppuccin-perfect-icons
 theqtcompany.qt-core
 theqtcompany.qt-cpp
 tomoki1207.pdf
 tomoyukim.vscode-mermaid-editor
+tomrijndorp.find-it-faster
 toxblh.polacode-fork
 twxs.cmake
 usernamehw.errorlens

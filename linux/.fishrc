@@ -5,12 +5,17 @@
 source "$HOME/.dotfiles/linux/scripts/profile/exports"
 export DOTFILES_SCRIPTS="$DOTFILES/linux/scripts"
 
-fish_add_path "$DOTFILES_SCRIPTS" 2>/dev/null
-fish_add_path "$HOME/.local/bin" 2>/dev/null
-fish_add_path "$HOME/.cargo/bin" 2>/dev/null
-fish_add_path "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
-fish_add_path "$HOME/.local/share/pnpm/bin" 2>/dev/null
-fish_add_path "$HOME/go/bin" 2>/dev/null
+# -P: session-only; without it fish_add_path persists into the universal fish_user_paths,
+# which drifted between sessions (/usr/bin ended up ahead of ~/.local/bin).
+# -m: move entries inherited from a parent shell to the front instead of skipping them.
+set -qU fish_user_paths; and set -Ue fish_user_paths
+
+fish_add_path -Pm "$DOTFILES_SCRIPTS" 2>/dev/null
+fish_add_path -Pm "$HOME/.local/bin" 2>/dev/null
+fish_add_path -Pm "$HOME/.cargo/bin" 2>/dev/null
+fish_add_path -Pm "$HOME/Qt/Tools/QtCreator/bin" 2>/dev/null
+fish_add_path -Pm "$HOME/.local/share/pnpm/bin" 2>/dev/null
+fish_add_path -Pm "$HOME/go/bin" 2>/dev/null
 
 alias configreload='source $HOME/.config/fish/config.fish'
 source "$DOTFILES_SCRIPTS/profile/aliases"
@@ -71,7 +76,7 @@ end
 
 # --- External -----------------------------------------------------------------
 
-fish_add_path "$HOME/omi/scripts" 2>/dev/null
+fish_add_path -Pm "$HOME/omi/scripts" 2>/dev/null
 
 if status is-interactive; and test -x /usr/bin/micromamba
     set -gx MAMBA_EXE /usr/bin/micromamba

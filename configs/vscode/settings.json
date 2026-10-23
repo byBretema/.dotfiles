@@ -1,7 +1,7 @@
 {
   //--------------------------------------------------------------------------
   // SECURITY
-  "security.workspace.trust.untrustedFiles": "open",
+  "security.workspace.trust.untrustedFiles": "prompt",
   "telemetry.telemetryLevel": "off",
   "github.copilot.enable": { "*": false },
   "chat.disableAIFeatures": true,
@@ -20,7 +20,7 @@
   "files.eol": "\n",
   "files.insertFinalNewline": true,
   "files.associations": {
-    "*.inc": "shellscript"
+    "*project.inc": "shellscript"
   },
   "explorer.confirmDelete": false,
   //--------------------------------------------------------------------------
@@ -207,21 +207,14 @@
   //--------------------------------------------------------------------------
   // BASH
   //--------------------------------------------------------------------------
-  "shellformat.path": "/usr/bin/shfmt",
   "bashBeautify.tabSize": 4,
   //--------------------------------------------------------------------------
-  // DYNAMIC / USORTED
+  // DYNAMIC / UNSORTED
   //--------------------------------------------------------------------------
   "workbench.colorTheme": "Catppuccin Mocha",
   "workbench.editorAssociations": {
     "{git,gitlens,chat-editing-snapshot-text-model,copilot,git-graph,git-graph-3}:/**/*.qrc": "default",
     "*.qrc": "qt-core.qrcEditor"
   },
-  "qt-core.additionalQtPaths": [
-    {
-      "name": "Qt-5.15.18-linux-g++_from_PATH",
-      "path": "/usr/bin/qmake"
-    }
-  ],
   "editor.inlayHints.enabled": "on",
 }

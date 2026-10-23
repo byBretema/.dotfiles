@@ -22,7 +22,7 @@
 - Verify file exists before editing. Use read/glob first.
 - NO hallucinated structures/dependencies. Use search/read tools BEFORE proposing/writing.
 - ONLY comments for: edge cases, invariants, quirks, or "why-not-what".
-- Do not confirm changes with `git diff *` patches output are enough.
+- Do not confirm changes with `git diff`; the edit tool's patch output is enough.
 
 ## SECURITY
 
