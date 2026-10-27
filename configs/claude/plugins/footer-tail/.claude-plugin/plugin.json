@@ -1,0 +1,1 @@
+{ "name": "footer-tail", "version": "0.1.0", "description": "Appends the active model and git branch to the prompt footer line", "types": "./types/index.d.ts" }
