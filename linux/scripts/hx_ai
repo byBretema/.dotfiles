@@ -149,7 +149,7 @@ context() {
 ################################################################################
 
 spin() {
-    tmux display-popup -E -T " $title " -w 45 -h 3 "${popup_style[@]}" -e "pid=$1" \
+    tmux display-popup -E -T " $title " -w 46 -h 3 "${popup_style[@]}" -e "pid=$1" \
         'printf "\n"; gum spin --spinner dot --title "Supercalifragilisticexpialidociousing..." -- tail -s 0.2 --pid="$pid" -f /dev/null'
     # Ctrl+C SIGINTs the popup's whole process group, so nothing in there can flag the cancel.
     # The popup only closes on its own once claude exits: still running means cancelled.

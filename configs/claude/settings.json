@@ -108,5 +108,10 @@
   "timeFormat": "auto",
   "theme": "auto",
   "editorMode": "normal",
-  "remoteControlAtStartup": false
+  "remoteControlAtStartup": false,
+  "modelSettings": {
+    "claude-opus-5-5": {
+      "autoCompactWindow": 300000
+    }
+  }
 }

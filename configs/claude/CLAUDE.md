@@ -19,6 +19,7 @@
 - Do not confirm changes with `git diff`.
 - NEVER clean up scratch/test files under `/tmp` (or scratchpad). Leave them; OS purges them.
 - Delete with `~/.claude/bin/trash <paths>`, not `rm`, when it exists.
+- Before stating commit status or offering to commit, run `git status`/`git log -1`; the session-start git snapshot goes stale.
 
 ## SECURITY
 
