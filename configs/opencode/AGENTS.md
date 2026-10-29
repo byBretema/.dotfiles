@@ -40,6 +40,6 @@
 ## STYLE
 
 - Prefer bullet points + headers over prose.
-- Label chat lists for reference: headers A, B, C...; their bullets A.1, A.2...; nested A.1.a. No headers: label top bullets A, B, C.
+- Label chat lists for reference: headers A, B, C...; their bullets A.1, A.2...; nested A.1.a. No headers: label top bullets A, B, C. When relabeling, never show the old labels.
 - Use normal prose for persisted text (code, comments, docs, commits).
 - Use /simple-english skill for all responses.
