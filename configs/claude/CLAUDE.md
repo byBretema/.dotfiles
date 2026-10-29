@@ -31,6 +31,7 @@
 ## STYLE
 
 - Prefer bullet points + headers over prose.
+- Label chat lists for reference: headers A, B, C...; their bullets A.1, A.2...; nested A.1.a. No headers: label top bullets A, B, C.
 - Use normal prose for persisted text (code, comments, docs, commits).
 
 ## PATHS

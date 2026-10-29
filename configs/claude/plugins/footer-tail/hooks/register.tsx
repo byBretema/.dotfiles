@@ -21,9 +21,7 @@ const refresh = async ($: EngineInterface) => {
   await update($, info, () => next)
 }
 
-// Drawing the line ourselves loses the engine's styling, so the mode label gets its color back here.
-const modeColor = (mode: string) =>
-  mode.startsWith('plan') ? 'planMode' : mode.startsWith('auto') ? 'warning' : 'autoAccept'
+const HIDDEN = ['install gh', 'esc to interrupt']
 
 export const register: Register = on => {
   on('session.start', async ($, e, next) => {
@@ -42,20 +40,17 @@ export const register: Register = on => {
     if (!cur) return next(e)
 
     const { Box, Text } = $.ui.resolve(e)
-    const hint = e.props.hint.replace(/\s*\(shift\+tab to cycle\)/, '')
-    const m = /^(.*?\b(\S+) mode on)(.*)$/.exec(hint)
+    const hint = e.props.hint
+      .replace(/\s*\(shift\+tab to cycle\)/, '')
+      .split('·')
+      .map(s => s.trim())
+      .filter(s => s && !HIDDEN.some(h => s.startsWith(h)))
+      .join(' · ')
 
     return (
       <Box>
-        {m ? (
-          <Text>
-            <Text color={modeColor(m[2]!)}>{m[1]}</Text>
-            <Text dimColor>{m[3]}</Text>
-          </Text>
-        ) : (
-          <Text dimColor>{hint}</Text>
-        )}
-        <Text dimColor> | </Text>
+        {/* The mode label and the "·" after it are the engine's, drawn before this line; with no hint left, that "·" is the separator. */}
+        {hint ? <Text dimColor>{hint} | </Text> : null}
         <Text color="#cba6f7">{cur.model}</Text>
         {cur.branch ? (
           <Text>
