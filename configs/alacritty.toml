@@ -19,7 +19,7 @@ save_to_clipboard = true
 
 [font]
 normal = { family = "VictorMono Nerd Font", style = "Regular" }
-size = 11.5
+size = 12
 
 [bell]
 # animation = "Ease"

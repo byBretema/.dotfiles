@@ -2,11 +2,19 @@
 source "${0%/*}/.bash_common"
 guard__is_git
 
-url=$(git remote -v | head -n 1 | awk '{print $2}')
+branch=$(git symbolic-ref --quiet --short HEAD)
+# Prefer the branch's upstream remote, fall back to the first remote
+remote=$(git config "branch.${branch}.remote" || git remote | head -n 1)
+url=$(git remote get-url "${remote}")
 
-if [[ "${url}" == *@* ]]; then
-  ssh=$(echo "${url}" | awk -F'@' '{print $2}' | sed 's/:/\//')
-  xdg-open "https://${ssh}"  >/dev/null 2>&1 &
-else
-  xdg-open "${url}"  >/dev/null 2>&1 &
+url=${url%.git}
+url=${url#ssh://}
+if [[ "${url}" != http* ]]; then
+  url=${url#*@}
+  url="https://${url/://}"
 fi
+
+# Detached HEAD opens the repo root
+[[ -n "${branch}" ]] && url="${url}/tree/${branch}"
+
+xdg-open "${url}" >/dev/null 2>&1 &

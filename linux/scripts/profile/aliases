@@ -83,6 +83,7 @@ alias dotm='$DOTFILES/linux/install.sh'
 
 # Movement
 alias gt='pushd "$(git rev-parse --show-toplevel 2>/dev/null || echo .)"' # go to repo root
+alias gg='gitopen'
 # Status
 alias gs='git status --short'
 # Management
