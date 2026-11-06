@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+# SessionStart hook: once a day per project, ask Claude to audit its auto-memory.
+
+command -v jq >/dev/null 2>&1 || exit 0
+i=$(cat)
+j() { printf '%s' "$i" | jq -r "$1 // empty"; }
+
+# resume/compact/clear continue existing work; audit only fresh sessions.
+[ "$(j .source)" = startup ] || exit 0
+
+d=$(j .cwd)
+key=$(printf '%s' "$d" | sed 's/[^A-Za-z0-9]/-/g')
+mem="$HOME/.claude/projects/$key/memory"
+[ -s "$mem/MEMORY.md" ] || exit 0
+
+# One audit per project per day, even across many sessions.
+st=${XDG_CACHE_HOME:-$HOME/.cache}/claude-memory-audit
+mkdir -p "$st"
+sf="$st/$key"
+age=$(($(date +%s) - $(stat -c %Y "$sf" 2>/dev/null || echo 0)))
+[ "$age" -lt 86400 ] && exit 0
+touch "$sf"
+
+msg="Memory audit due for $mem. Before the user's first task (or alongside it, briefly): read MEMORY.md and each linked file; merge duplicates; delete entries now covered by CLAUDE.md or .claude/rules, or by merged/finished work (check git log); verify named files, paths, flags and functions still exist and fix or drop stale ones; keep MEMORY.md one line per file. Delete with ~/.claude/bin/trash. Report changes in one or two lines; say nothing if none."
+jq -n --arg m "$msg" '{hookSpecificOutput: {hookEventName: "SessionStart", additionalContext: $m}}'

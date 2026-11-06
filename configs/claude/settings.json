@@ -89,6 +89,16 @@
           }
         ]
       }
+    ],
+    "SessionStart": [
+      {
+        "hooks": [
+          {
+            "type": "command",
+            "command": "[ -x ~/.claude/bin/memory-audit ] || exit 0; exec ~/.claude/bin/memory-audit"
+          }
+        ]
+      }
     ]
   },
   "worktree": {
