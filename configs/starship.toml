@@ -1,4 +1,4 @@
-format = "${env_var.STARSHIP_SHELL}$directory${custom.git_info}$git_status$cmd_duration\n$character"
+format = "${env_var.STARSHIP_SHELL}$directory${custom.git_info}${custom.git_info_win}$git_status$cmd_duration\n$character"
 # right_format = "$cmd_duration"
 
 scan_timeout = 500
@@ -29,6 +29,17 @@ format = "[$env_value]($style) "
 [custom.git_info]
 command = "git_info"
 shell = ["sh"]
+os = "linux"
+require_repo = true
+when = true
+style = "bold purple"
+format = " [$output]($style) "
+
+# pwsh has no sh: run the same script through Git for Windows' bash (install.ps1 links it)
+[custom.git_info_win]
+command = '"$HOME/.config/starship/git_info"'
+shell = ["C:/Program Files/Git/bin/bash.exe", "--noprofile", "--norc"]
+os = "windows"
 require_repo = true
 when = true
 style = "bold purple"

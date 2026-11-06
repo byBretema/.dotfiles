@@ -23,31 +23,17 @@ disable_autostart "electron"
 
 ## GPU SELECTION
 
-Settings to place on `/etc/environment`
+Handled by `envycontrol` (`envy-tui` as front-end). Covers hybrid laptops with an Intel or AMD iGPU plus an Nvidia dGPU; a dedicated AMD GPU is not handled.
 
-"Disable" Nvidia, prefer iGPU:  *(TODO: Check if works the same for integrated AMD/Intel)*
-```
-__NV_PRIME_RENDER_OFFLOAD=0
-
-__GLX_VENDOR_LIBRARY_NAME="mesa"
-__EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/50_mesa.json"
-
-__VK_LAYER_NV_optimus="non_NVIDIA_only"
-VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json"
-VK_DRIVER_FILES="/usr/share/vulkan/icd.d/radeon_icd.x86_64.json"
+```shell
+envycontrol -q                  # current mode
+sudo envycontrol -s integrated  # iGPU only, Nvidia off
+sudo envycontrol -s hybrid      # iGPU default, Nvidia via PRIME offload (add --rtd3 for power saving)
+sudo envycontrol -s nvidia      # Nvidia only
+sudo envycontrol --reset        # revert envycontrol changes
 ```
 
-"Enable" Nvidia, prefer dGPU:  *(TODO: Check the same for dedicated AMD)*
-```
-__NV_PRIME_RENDER_OFFLOAD=1
-
-__GLX_VENDOR_LIBRARY_NAME="nvidia"
-__EGL_VENDOR_LIBRARY_FILENAMES="/usr/share/glvnd/egl_vendor.d/10_nvidia.json"
-
-__VK_LAYER_NV_optimus="NVIDIA_only"
-VK_ICD_FILENAMES="/usr/share/vulkan/icd.d/nvidia_icd.json"
-VK_DRIVER_FILES="/usr/share/vulkan/icd.d/nvidia_icd.json"
-```
+Reboot after switching.
 
 ## DRM-COLORTEMP — Screen Temperature
 

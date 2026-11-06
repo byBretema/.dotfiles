@@ -329,6 +329,7 @@ lns "$configs\vscode\keybindings.json" "${vscode_config_path}\keybindings.json"
 $starship_dir = "${home}\.config\starship"
 $null = New-Item -ItemType Directory -Path $starship_dir -Force
 lns "$configs\starship.toml" "$starship_dir\starship.toml"
+lns "$script_root\..\linux\scripts\git_info" "$starship_dir\git_info"
 
 # Alacritty (if installed)
 $alacritty_dir = "${env:APPDATA}\alacritty"
