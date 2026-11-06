@@ -64,8 +64,9 @@ auto-format = true
 
 [[language]]
 name = "json"
-formatter = { command = "prettier", args = ["--parser", "json"] }
+formatter = { command = "prettier", args = ["--parser", "json", "--tab-width", "4"] }
 auto-format = true
+indent = { tab-width = 4, unit = '    ' }
 
 [[language]]
 name = "css"
