@@ -1,0 +1,16 @@
+#!/usr/bin/env bash
+# Usage: hx_glow FILE [LINE]
+# Opens FILE in `glow -t` inside a tmux popup, starting at the heading that contains LINE.
+
+file="$1"
+line="${2:-1}"
+
+[[ -n "$TMUX" ]] || { echo "hx_glow: needs tmux"; exit 1; }
+[[ -f "$file" ]] || { echo "hx_glow: no such file: $file"; exit 1; }
+
+# Nearest heading at or above LINE, ignoring '#' lines inside code fences; starting mid-block breaks the render
+start=$(awk -v n="$line" 'NR > n { exit } /^(```|~~~)/ { fence = !fence } !fence && /^#/ { h = NR } END { print (h ? h : 1) }' "$file")
+
+# Same popup colors as hx_ai
+tmux display-popup -E -w 90% -h 90% -d "$PWD" -T " $(basename "$file") " -s "bg=#1e1e2e" -S "bg=#1e1e2e" \
+    "tail -n +$start $(printf '%q' "$file") | glow -t -"

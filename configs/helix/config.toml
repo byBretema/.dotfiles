@@ -185,6 +185,9 @@ o = ":open %sh{hx_switch_cpp '%{buffer_name}'}"
 # AI edit of the selection via `claude -p`, replaces it in place (blocks hx, Ctrl+C in the popup aborts)
 i = ":pipe hx_ai -r '%{buffer_name}' %{cursor_line} %{cursor_column}"
 
+# Markdown preview: glow -t in a tmux popup, from the heading above the cursor (reads the file on disk)
+m = ":sh hx_glow '%{buffer_name}' %{cursor_line}"
+
 # 'ñ' for faster access to: colon ':' actions
 "ñ" = "@:"
 
