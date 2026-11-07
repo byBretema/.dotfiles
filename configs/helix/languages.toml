@@ -69,6 +69,12 @@ auto-format = true
 indent = { tab-width = 4, unit = '    ' }
 
 [[language]]
+name = "jsonc"
+formatter = { command = "prettier", args = ["--parser", "jsonc", "--tab-width", "4"] }
+auto-format = true
+indent = { tab-width = 4, unit = '    ' }
+
+[[language]]
 name = "css"
 formatter = { command = "prettier", args = ["--parser", "css"] }
 auto-format = true
