@@ -1,0 +1,9 @@
+{
+    "rate_control": "CRF",
+    "crf": 0,
+    "preset": "superfast",
+    "profile": "",
+    "tune": "",
+    "x264opts": "",
+    "keyint_sec": 0
+}

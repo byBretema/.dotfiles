@@ -207,6 +207,14 @@
     (
         modifiers: [
             Super,
+            Ctrl,
+            Shift,
+        ],
+        key: "s",
+    ): Spawn("/home/dac/.dotfiles/linux/scripts/screenrec"),
+    (
+        modifiers: [
+            Super,
             Shift,
         ],
         key: "c",

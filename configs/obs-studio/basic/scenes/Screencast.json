@@ -1,0 +1,42 @@
+{
+    "name": "Screencast",
+    "current_scene": "Screencast",
+    "current_program_scene": "Screencast",
+    "scene_order": [{ "name": "Screencast" }],
+    "groups": [],
+    "transitions": [],
+    "transition_duration": 300,
+    "DesktopAudioDevice1": {
+        "id": "pulse_output_capture", "versioned_id": "pulse_output_capture", "name": "Desktop Audio",
+        "enabled": true, "flags": 0, "mixers": 255, "muted": false, "volume": 1.0,
+        "settings": { "device_id": "default" }
+    },
+    "AuxAudioDevice1": {
+        "id": "pulse_input_capture", "versioned_id": "pulse_input_capture", "name": "Mic/Aux",
+        "enabled": true, "flags": 0, "mixers": 255, "muted": true, "volume": 1.0,
+        "settings": { "device_id": "default" }
+    },
+    "sources": [
+        {
+            "id": "scene", "versioned_id": "scene", "name": "Screencast",
+            "enabled": true, "flags": 0, "mixers": 0,
+            "settings": {
+                "custom_size": false,
+                "id_counter": 1,
+                "items": [
+                    {
+                        "name": "Screen", "id": 1, "visible": true, "locked": false,
+                        "pos": { "x": 0.0, "y": 0.0 }, "scale": { "x": 1.0, "y": 1.0 }, "rot": 0.0,
+                        "align": 5, "bounds_type": 2, "bounds_align": 0, "bounds": { "x": 2560.0, "y": 1440.0 },
+                        "crop_left": 0, "crop_top": 0, "crop_right": 0, "crop_bottom": 0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "pipewire-screen-capture-source", "versioned_id": "pipewire-screen-capture-source", "name": "Screen",
+            "enabled": true, "flags": 0, "mixers": 0,
+            "settings": { "ShowCursor": true }
+        }
+    ]
+}

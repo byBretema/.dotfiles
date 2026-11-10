@@ -1,0 +1,116 @@
+{
+    "name": "VHS",
+    "current_scene": "VHS",
+    "current_program_scene": "VHS",
+    "scene_order": [
+        {
+            "name": "VHS"
+        }
+    ],
+    "groups": [],
+    "transitions": [],
+    "current_transition": "Fundido",
+    "transition_duration": 300,
+    "sources": [
+        {
+            "id": "scene",
+            "versioned_id": "scene",
+            "name": "VHS",
+            "enabled": true,
+            "flags": 0,
+            "mixers": 0,
+            "settings": {
+                "custom_size": false,
+                "id_counter": 2,
+                "items": [
+                    {
+                        "name": "Capturadora VHS",
+                        "id": 1,
+                        "visible": true,
+                        "locked": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "rot": 0.0,
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0,
+                        "scale_filter": "disable"
+                    },
+                    {
+                        "name": "Audio VHS",
+                        "id": 2,
+                        "visible": true,
+                        "locked": false,
+                        "pos": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "scale": {
+                            "x": 1.0,
+                            "y": 1.0
+                        },
+                        "rot": 0.0,
+                        "align": 5,
+                        "bounds_type": 0,
+                        "bounds_align": 0,
+                        "bounds": {
+                            "x": 0.0,
+                            "y": 0.0
+                        },
+                        "crop_left": 0,
+                        "crop_top": 0,
+                        "crop_right": 0,
+                        "crop_bottom": 0
+                    }
+                ]
+            }
+        },
+        {
+            "id": "v4l2_input",
+            "versioned_id": "v4l2_input",
+            "name": "Capturadora VHS",
+            "enabled": true,
+            "flags": 0,
+            "mixers": 0,
+            "deinterlace_mode": 0,
+            "settings": {
+                "device_id": "/dev/v4l/by-id/usb-MACROSILICON_USB_Video_20200909-video-index0",
+                "input": 0,
+                "pixelformat": 1448695129,
+                "resolution": 47186496,
+                "framerate": 65561,
+                "color_range": 1,
+                "buffering": true
+            }
+        },
+        {
+            "id": "pulse_input_capture",
+            "versioned_id": "pulse_input_capture",
+            "name": "Audio VHS",
+            "enabled": true,
+            "flags": 0,
+            "mixers": 1,
+            "muted": false,
+            "volume": 1.0,
+            "sync": 0,
+            "monitoring_type": 0,
+            "settings": {
+                "device_id": "alsa_input.usb-MACROSILICON_USB_Video_20200909-02.analog-stereo"
+            }
+        }
+    ]
+}

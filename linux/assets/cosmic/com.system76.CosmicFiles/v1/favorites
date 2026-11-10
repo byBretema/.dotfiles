@@ -8,4 +8,5 @@
     Path("/home/dac/omi/tasks"),
     Path("/usr/share/wallpapers"),
     Path("/home/dac/.dotfiles"),
+    Path("/home/dac/me"),
 ]

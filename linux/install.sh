@@ -87,6 +87,14 @@ configs/obs-studio/global.ini                        .config/obs-studio/global.i
 configs/obs-studio/user.ini                          .config/obs-studio/user.ini
 configs/obs-studio/basic/profiles/Untitled/basic.ini .config/obs-studio/basic/profiles/Untitled/basic.ini
 configs/obs-studio/basic/scenes/Untitled.json        .config/obs-studio/basic/scenes/Untitled.json
+configs/obs-studio/basic/profiles/Screencast/basic.ini          .config/obs-studio/basic/profiles/Screencast/basic.ini
+configs/obs-studio/basic/profiles/Screencast/recordEncoder.json .config/obs-studio/basic/profiles/Screencast/recordEncoder.json
+configs/obs-studio/basic/scenes/Screencast.json                 .config/obs-studio/basic/scenes/Screencast.json
+configs/obs-studio/basic/profiles/VHS_Captura/basic.ini         .config/obs-studio/basic/profiles/VHS_Captura/basic.ini
+configs/obs-studio/basic/profiles/VHS_Captura/recordEncoder.json .config/obs-studio/basic/profiles/VHS_Captura/recordEncoder.json
+configs/obs-studio/basic/scenes/VHS.json                        .config/obs-studio/basic/scenes/VHS.json
+configs/obs-studio/scripts/vhs2mp4.sh                .local/bin/vhs2mp4
+configs/obs-studio/scripts/trimblack.sh              .local/bin/trimblack
 configs/yazi/yazi.toml                               .config/yazi/yazi.toml
 configs/yazi/keymap.toml                             .config/yazi/keymap.toml
 configs/yazi/themes/theme.toml                       .config/yazi/theme.toml
@@ -267,29 +275,29 @@ install_packages() {
 
     log_header "-- Pacman"
     _pkgs=($(collect_packages "$script_path/pacman_install.conf" "paru -Q" "[^a-zA-Z0-9_-]"))
-    [[ ${#_pkgs[@]} -gt 0 ]] && paru -S $paru_confirm --skipreview "${_pkgs[@]}"
+    if ((${#_pkgs[@]})); then paru -S $paru_confirm --skipreview "${_pkgs[@]}"; fi
 
     log_header "-- Flatpak"
-    _pkgs=($(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9.]"))
-    [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y install "${_pkgs[@]}"
+    _pkgs=($(collect_packages "$script_path/flatpak_install.conf" "flatpak info" "[^a-zA-Z0-9._-]"))
+    if ((${#_pkgs[@]})); then flatpak -y install --system flathub "${_pkgs[@]}"; fi
 
     log_header "-- Pnpm"
     _pkgs=($(collect_packages "$script_path/pnpm_install.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]"))
-    [[ ${#_pkgs[@]} -gt 0 ]] && pnpm add -g "${_pkgs[@]}"
+    if ((${#_pkgs[@]})); then pnpm add -g "${_pkgs[@]}"; fi
 }
 
 remove_packages() {
     log_header "Removing packages"
 
     _pkgs=($(collect_packages "$script_path/pacman_remove.conf" "paru -Q" "[^a-zA-Z0-9_-]" 1))
-    [[ ${#_pkgs[@]} -gt 0 ]] && paru -Rns $paru_confirm "${_pkgs[@]}"
+    if ((${#_pkgs[@]})); then paru -Rns $paru_confirm "${_pkgs[@]}"; fi
 
-    _pkgs=($(collect_packages "$script_path/flatpak_remove.conf" "flatpak info" "[^a-zA-Z0-9.]" 1))
-    [[ ${#_pkgs[@]} -gt 0 ]] && flatpak -y uninstall "${_pkgs[@]}"
+    _pkgs=($(collect_packages "$script_path/flatpak_remove.conf" "flatpak info" "[^a-zA-Z0-9._-]" 1))
+    if ((${#_pkgs[@]})); then flatpak -y uninstall "${_pkgs[@]}"; fi
     flatpak uninstall --unused -y
 
     _pkgs=($(collect_packages "$script_path/pnpm_remove.conf" "pnpm_installed" "[^a-zA-Z0-9@\/._-]" 1))
-    [[ ${#_pkgs[@]} -gt 0 ]] && pnpm remove -g "${_pkgs[@]}"
+    if ((${#_pkgs[@]})); then pnpm remove -g "${_pkgs[@]}"; fi
 }
 
 system_update() {

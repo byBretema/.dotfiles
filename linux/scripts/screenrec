@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Toggles a region screen recording, like a screenshot tool but for video.
+# First run: select an area with slurp (click = whole monitor, Esc = cancel)
+# and start recording. Next run: stop and save to $SCREENREC_DIR (~/Videos/screenrec);
+# the file is then copied to the clipboard. Extra args go to
+# gpu-screen-recorder, e.g. `screenrec -a default_output` to record audio.
+set -euo pipefail
+
+# Signal the recorder inside the Flatpak sandbox: signalling `flatpak run`
+# leaves it recording and the file unfinished. comm is cut to 15 chars.
+pkill -INT -x gpu-screen-reco && exit 0
+
+# slurp reads preset boxes from stdin when it isn't a terminal; the shortcut
+# daemon's stdin is a pipe that never closes, so slurp would wait forever.
+region=$(slurp -f '%wx%h+%x+%y' </dev/null) || exit 0
+dir=${SCREENREC_DIR:-$HOME/Videos/screenrec}
+mkdir -p "$dir"
+out=$dir/$(date +%F_%H-%M-%S).mp4
+
+notify-send -a screenrec -t 2000 "Recording" "Run screenrec again to stop"
+# A 0x0 region (single click) records the whole monitor under the pointer.
+flatpak run --command=gpu-screen-recorder com.dec05eba.gpu_screen_recorder \
+	-w "$region" -f 30 -k h264 -cursor yes -v no "$@" -o "$out"
+
+wl-copy -t text/uri-list "file://$out"
+notify-send -a screenrec "Recording saved" "$out"
