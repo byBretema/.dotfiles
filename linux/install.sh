@@ -95,6 +95,7 @@ configs/obs-studio/basic/profiles/VHS_Captura/recordEncoder.json .config/obs-stu
 configs/obs-studio/basic/scenes/VHS.json                        .config/obs-studio/basic/scenes/VHS.json
 configs/obs-studio/scripts/vhs2mp4.sh                .local/bin/vhs2mp4
 configs/obs-studio/scripts/trimblack.sh              .local/bin/trimblack
+configs/zentabs.toml                                 .config/zentabs/rules.toml
 configs/yazi/yazi.toml                               .config/yazi/yazi.toml
 configs/yazi/keymap.toml                             .config/yazi/keymap.toml
 configs/yazi/themes/theme.toml                       .config/yazi/theme.toml

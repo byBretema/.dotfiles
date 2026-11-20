@@ -147,8 +147,8 @@ alias omiy='omi && y'
 alias omid='pushd "$__DIR__omi/code/deploy_studio_engine"'
 alias omic='pushd "$__DIR__omi/code/studio_engine" && gws'
 
-alias omis="./scripts/dani_autobuild2.sh"
-alias omib="./scripts/dani_autobuild2.sh --build"
+alias omis="./scripts/danic/autobuild.sh"
+alias omib="./scripts/danic/autobuild.sh --build"
 
 alias omi-wasm="omib --wasm"
 

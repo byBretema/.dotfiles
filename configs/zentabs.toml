@@ -1,0 +1,20 @@
+# zentabs rules: [Space name] -> Folder = [regexes].
+# Regexes are case-insensitive and matched against "title url" of each loose tab.
+# The first matching folder in file order wins; missing folders are created.
+# Unmatched tabs stay loose and are listed as "Space / ?".
+
+[Personal]
+Streaming = ['tv\.apple\.com', 'primevideo\.com', 'netflix\.com', 'hbomax\.com', 'disneyplus\.com']
+Amazon = ['amazon\.(es|com)']
+GymShark = ['gymshark\.com']
+
+[Distractions]
+GameDev = ['gamedev', 'game ?engine', 'godot', 'unity', 'unreal', 'movement mechanic', 'devlog']
+"C++" = ['c\+\+', 'cpp', 'leetcode', 'enums?\b']
+CLI = ['tmux', '\bvim\b', 'neovim', '\btui\b', 'terminal']
+AI = ['\bAI\b', '\bIA\b', 'agentic', 'vibe.?cod', 'llm', 'claude', 'what is happening to software', 'se puede copiar', 'open source the world']
+"Dev / Tech" = ['rust', 'linux', '\bnix\b', 'omarchy', 'webstorm', 'keyboard', 'software engineer', 'github\.com', 'framework', 'nvidia']
+Photography = ['fuji', 'lens', 'aps-c', 'macro', 'photograph', 'sigma', 'sony a\d', 'camera', 'photos']
+Gym = ['mobility', 'stretch', 'calistenia', 'fitness', 'muscle', 'athletic', 'lifting', 'jump rope', 'rope flow', 'exercise']
+Music = ['playlist', 'music', 'lofi', 'vinyl']
+GamePlays = ['speedrun', 'silksong', 'clash royale', '\bwow\b', 'ocarina', 'uncharted', 'ubisoft', 'trailer', 'steam', 'juego', 'mage', 'rogue', 'espejo', 'puzzle', 'hero']

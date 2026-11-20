@@ -1,0 +1,142 @@
+#!/usr/bin/env -S PYTHONWARNINGS=ignore uv run -q --script
+# /// script
+# dependencies = ["marionette_driver"]
+# ///
+"""Sort loose Zen tabs into folders using regex rules from a TOML file.
+
+Zen must expose Marionette with system access. If it does not, --restart
+closes Zen and reopens it that way, then reopens it normally when done.
+"""
+import argparse, json, os, signal, socket, subprocess, sys, time, tomllib
+from pathlib import Path
+
+ZEN = "/opt/zen-browser-bin/zen-bin"
+PORT = 2828
+RULES = Path(os.environ.get("XDG_CONFIG_HOME", Path.home() / ".config")) / "zentabs/rules.toml"
+
+SORT_JS = r"""
+const [rules, dry] = arguments;
+return (async () => {
+  const w = Services.wm.getMostRecentWindow('navigator:browser');
+  await SessionStore.promiseAllWindowsRestored;
+  const g = w.gBrowser;
+  let spaces = w.gZenWorkspaces.getWorkspaces();
+  if (spaces?.then) spaces = await spaces;
+  // Unloaded (lazy) tabs report about:blank; their real URL lives in the session store.
+  const url = t => {
+    const u = t.linkedBrowser?.currentURI?.spec;
+    if (u && u !== 'about:blank') return u;
+    const st = JSON.parse(SessionStore.getTabState(t));
+    return st.entries?.[st.index - 1]?.url ?? '';
+  };
+  const moved = [], unmatched = [], missing = [];
+  for (const [spaceName, folders] of Object.entries(rules)) {
+    const space = spaces.find(s => s.name === spaceName);
+    if (!space) { missing.push(spaceName); continue; }
+    const res = Object.entries(folders).map(([f, pats]) => [f, pats.map(p => new RegExp(p, 'i'))]);
+    const loose = [...g.tabs].filter(t => t.getAttribute('zen-workspace-id') === space.uuid
+      && !t.pinned && !t.group && !t.hasAttribute('zen-essential') && !t.hasAttribute('zen-empty-tab'));
+    const buckets = new Map();
+    for (const t of loose) {
+      const hay = t.label + ' ' + url(t);
+      const hit = res.find(([, rs]) => rs.some(r => r.test(hay)));
+      if (!hit) { unmatched.push([spaceName, t.label]); continue; }
+      if (!buckets.has(hit[0])) buckets.set(hit[0], []);
+      buckets.get(hit[0]).push(t);
+    }
+    for (const [name, tabs] of buckets) {
+      const folder = g.tabGroups.find(x => x.isZenFolder && x.label === name
+        && x.getAttribute('zen-workspace-id') === space.uuid);
+      for (const t of tabs) moved.push([spaceName, name, !folder, t.label]);
+      if (dry) continue;
+      if (folder) { tabs.forEach(t => g.pinTab(t)); folder.addTabs(tabs); }
+      else w.gZenFolders.createFolder(tabs, {label: name, workspaceId: space.uuid, renameFolder: false});
+    }
+  }
+  return {moved, unmatched, missing};
+})();
+"""
+
+
+def port_open():
+    with socket.socket() as s:
+        return s.connect_ex(("127.0.0.1", PORT)) == 0
+
+
+def zen_pids():
+    out = subprocess.run(["pgrep", "-x", "zen-bin"], capture_output=True, text=True).stdout
+    return [int(p) for p in out.split()]
+
+
+def stop_zen():
+    for p in zen_pids():
+        os.kill(p, signal.SIGTERM)
+    for _ in range(30):
+        if not zen_pids():
+            return
+        time.sleep(0.5)
+    sys.exit("zentabs: Zen did not exit")
+
+
+def start_zen(remote):
+    env = dict(os.environ)
+    args = [ZEN]
+    if remote:
+        env["MOZ_REMOTE_ALLOW_SYSTEM_ACCESS"] = "1"
+        args.append("--marionette")
+    subprocess.Popen(args, env=env, start_new_session=True,
+                     stdin=subprocess.DEVNULL, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+    if remote:
+        for _ in range(60):
+            if port_open():
+                return
+            time.sleep(0.5)
+        sys.exit("zentabs: Marionette port never opened")
+
+
+def main():
+    ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
+    ap.add_argument("-c", "--config", type=Path, default=RULES)
+    ap.add_argument("-n", "--dry-run", action="store_true")
+    ap.add_argument("--restart", action="store_true", help="restart a running Zen with remote control")
+    ap.add_argument("--keep", action="store_true", help="leave Zen in remote-control mode afterwards")
+    a = ap.parse_args()
+
+    rules = tomllib.loads(a.config.read_text())
+
+    launched = False
+    if not port_open():
+        if zen_pids():
+            if not a.restart:
+                sys.exit("zentabs: Zen is running without remote control; rerun with --restart")
+            stop_zen()
+        start_zen(remote=True)
+        launched = True
+
+    from marionette_driver.marionette import Marionette
+    m = Marionette(host="127.0.0.1", port=PORT)
+    m.start_session()
+    m.set_context("chrome")
+    r = m.execute_script(SORT_JS, script_args=[rules, a.dry_run], script_timeout=120000)
+
+    for space, folder, new, title in r["moved"]:
+        print(f"{space} / {folder}{' (new)' if new else ''}: {title}")
+    for space, title in r["unmatched"]:
+        print(f"{space} / ?: {title}")
+    for space in r["missing"]:
+        print(f"zentabs: no space named {space!r}", file=sys.stderr)
+
+    if not launched or a.keep:
+        m.delete_session()
+        return
+    # In-app quit flushes the session store, unlike a signal.
+    try:
+        m.execute_script("Services.startup.quit(Ci.nsIAppStartup.eAttemptQuit)")
+    except Exception:
+        pass
+    stop_zen()
+    start_zen(remote=False)
+
+
+if __name__ == "__main__":
+    main()

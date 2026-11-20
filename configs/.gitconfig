@@ -1,5 +1,5 @@
 [user]
-	name = ByBretema
+	name = Bretema
 	email = bybretema@gmail.com
 	# Same key init_ssh creates; add it on GitHub as a *Signing* key too
 	signingkey = ~/.ssh/id_ed25519.pub

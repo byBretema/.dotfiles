@@ -1,0 +1,10 @@
+#!/usr/bin/env bash
+# Launch.sh of the current POET worktree, compiling through sccache-launcher. CMake stores
+# the launcher on a build folder's first configure only: run once with -c to add it to an
+# existing one. Later builds there use it even without this script.
+source "${0%/*}/.bash_common"
+guard__is_git
+
+export CMAKE_C_COMPILER_LAUNCHER="${0%/*}/sccache-launcher"
+export CMAKE_CXX_COMPILER_LAUNCHER="$CMAKE_C_COMPILER_LAUNCHER"
+exec "$(git rev-parse --show-toplevel)/Launch.sh" "$@"
