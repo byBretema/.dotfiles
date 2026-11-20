@@ -5,7 +5,9 @@
 # "sccache --stop-server".
 #
 # Ninja compiles from the build folder, inside the worktree, so the sccache bundled in
-# that worktree's POET/BuildSystem is found walking up from $PWD; else the one on PATH.
+# that worktree's POET/BuildSystem is found walking up from $PWD. Branches older than
+# "linux sccache +x" commit it without the executable bit, so then any other worktree's
+# copy is used, else the one on PATH.
 bin=sccache
 d=$PWD
 while [[ $d == "$HOME/poet/"* ]]; do
@@ -14,6 +16,11 @@ while [[ $d == "$HOME/poet/"* ]]; do
     done
     d=${d%/*}
 done
+if [[ $bin == sccache ]]; then
+    for b in "$HOME"/poet/*/POET/BuildSystem/sccache-*-unknown-linux-musl/sccache; do
+        [[ -x $b ]] && { bin=$b; break; }
+    done
+fi
 
 dirs=("$HOME"/poet/*/)
 dirs=("${dirs[@]%/}")
