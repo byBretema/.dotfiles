@@ -17,41 +17,44 @@
       "Read(~/.local/share/opencode/auth.json)",
       "Read(~/.docker/config.json)",
       "Read(//**/.npmrc)",
-      "Read(~/.local/share/keyrings/**)"
+      "Read(~/.local/share/keyrings/**)",
+      "Read(~/.kube/**)",
+      "Read(~/.config/gcloud/**)",
+      "Read(~/.azure/**)",
+      "Read(~/.password-store/**)",
+      "Read(//**/.pypirc)",
+      "Read(//**/*.kdbx)"
     ],
     "ask": [
       "Read(**/*.env)",
       "Read(**/*.env.*)",
-      "Read(**/Dockerfile*)",
-      "Read(**/*.tf)",
       "Read(**/*.tfvars)",
-      "Read(**/terraform/**)",
       "Read(**/.github/workflows/**)",
       "Read(**/.gitlab-ci.yml)",
-      "Read(**/k8s/**)",
-      "Read(**/helm/**)",
-      "Bash(sudo:*)",
-      "Bash(su:*)",
-      "Bash(rm:*)",
-      "Bash(git commit:*)",
-      "Bash(git push:*)",
-      "Bash(git rebase:*)",
-      "Bash(git reset:*)",
-      "Bash(git clean:*)",
-      "Bash(psql:*)",
-      "Bash(sqlite:*)",
-      "Bash(sqlite3:*)",
-      "Bash(mysql:*)",
-      "Bash(uv:*)",
-      "Bash(pip:*)",
-      "Bash(poetry:*)"
+      "Bash(sudo *)",
+      "Bash(su *)",
+      "Bash(rm *)",
+      "Bash(git commit *)",
+      "Bash(git push *)",
+      "Bash(git rebase *)",
+      "Bash(git reset *)",
+      "Bash(git clean *)",
+      "Bash(psql *)",
+      "Bash(sqlite *)",
+      "Bash(sqlite3 *)",
+      "Bash(mysql *)",
+      "Bash(uv *)",
+      "Bash(pip *)",
+      "Bash(poetry *)"
     ],
     "defaultMode": "auto",
     "additionalDirectories": [
       "/tmp",
-      "~/dev",
       "~/agents",
-      "~/.dotfiles"
+      "~/.dotfiles",
+      "~/me",
+      "~/poet",
+      "~/omi/code"
     ]
   },
   "hooks": {
@@ -123,5 +126,10 @@
   "remoteControlAtStartup": false,
   "env": {
     "CLAUDE_CODE_PLUGIN_DIRS": "~/.dotfiles/configs/claude/plugins/footer-tail"
+  },
+  "outputStyle": "terse",
+  "attribution": {
+    "commit": "",
+    "pr": ""
   }
 }

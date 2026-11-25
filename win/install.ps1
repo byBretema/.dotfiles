@@ -383,6 +383,7 @@ if ($claude_bin -and -not $claude_bin.LinkType) {
     Remove-Item -Recurse -Force $claude_bin.FullName
 }
 lns "$configs\claude\bin"              "$claude_dir\bin"
+lns "$configs\claude\output-styles"    "$claude_dir\output-styles"
 $null = New-Item -ItemType Directory -Path "$claude_dir\skills" -Force
 lns "$configs\claude\skills\gen-short-commit" "$claude_dir\skills\gen-short-commit"
 

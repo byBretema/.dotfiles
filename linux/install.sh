@@ -108,6 +108,7 @@ configs/claude/CLAUDE.md                             .claude/CLAUDE.md
 configs/claude/settings.json                         .claude/settings.json
 configs/claude/keybindings.json                      .claude/keybindings.json
 configs/claude/bin                                   .claude/bin
+configs/claude/output-styles                         .claude/output-styles
 configs/claude/skills/gen-short-commit              .claude/skills/gen-short-commit
 
 # Open Code

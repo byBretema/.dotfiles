@@ -1,7 +1,7 @@
 ---
 name: gen-short-commit
 description: Generate a one-line commit message summarizing the current git changes, in the form "type: change 1 / change 2 / change 3". Use when the user asks for a short commit message or commit line.
-allowed-tools: Bash(git status:*) Bash(git diff:*) Bash(git log:*)
+allowed-tools: Bash(git status *) Bash(git diff *) Bash(git log *)
 ---
 
 # Generate a short commit message
