@@ -1,5 +1,12 @@
 {
   "$schema": "https://json.schemastore.org/claude-code-settings.json",
+  "env": {
+    "CLAUDE_CODE_PLUGIN_DIRS": "~/.dotfiles/configs/claude/plugins/footer-tail:~/.dotfiles/configs/claude/plugins/colorizer"
+  },
+  "attribution": {
+    "commit": "",
+    "pr": ""
+  },
   "permissions": {
     "deny": [
       "Read(//**/.ssh/**)",
@@ -112,6 +119,7 @@
     "pyright-lsp@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true
   },
+  "outputStyle": "terse",
   "feedbackDrafts": "notify",
   "modelSettings": {
     "claude-opus-5-5": {
@@ -123,13 +131,5 @@
   "timeFormat": "auto",
   "theme": "auto",
   "editorMode": "normal",
-  "remoteControlAtStartup": false,
-  "env": {
-    "CLAUDE_CODE_PLUGIN_DIRS": "~/.dotfiles/configs/claude/plugins/footer-tail"
-  },
-  "outputStyle": "terse",
-  "attribution": {
-    "commit": "",
-    "pr": ""
-  }
+  "remoteControlAtStartup": false
 }

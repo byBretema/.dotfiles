@@ -11,6 +11,7 @@
 - NEVER clean up scratch/test files under `/tmp` (or scratchpad). Leave them; OS purges them.
 - Delete with `~/.claude/bin/trash <paths>`, not `rm`, when it exists.
 - Before stating commit status or offering to commit, run `git status`/`git log -1`; the session-start git snapshot goes stale.
+- Never `git add`/`git commit` unless asked, merge commits and scratch test repos included: user reviews with `git diff` and commits themselves. Leave changes unstaged; list the remaining commands.
 - Never add Claude as co-author (no `Co-Authored-By`/"Generated with" lines) in commits or PRs.
 
 ## SECURITY
