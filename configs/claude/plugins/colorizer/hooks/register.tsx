@@ -11,11 +11,11 @@ const SPAN = /(`+)(.+?)\1|\*\*(.+?)\*\*|\[([^\]]+)\]\(([^)\s]+)\)/g
 const INLINE = /`[^`]+`|\[[^\]]+\]\([^)\s]+\)/
 
 // Raw colors on purpose: theme overrides don't reach markdown, and named colors follow the terminal palette.
-const HEADER_COLOR = 'blueBright'
-const ITEM_COLOR = 'yellow'
-const CODE_COLOR = 'magenta'
-const LINK_COLOR = 'green'
-const FENCE_COLOR = '#ff8700'
+const HEADER_COLOR = 'magenta'
+const ITEM_COLOR = 'magentaBright'
+const CODE_COLOR = 'yellow'
+const LINK_COLOR = 'blueBright'
+const FENCE_COLOR = 'greenBright'
 
 type Row =
   | { kind: 'md'; text: string }
@@ -79,7 +79,7 @@ export const register: Register = on => {
           ) : m[3] !== undefined ? (
             <Text weight="bold">{parts(m[3])}</Text>
           ) : (
-            <Text color={LINK_COLOR}>
+            <Text color={LINK_COLOR} underline>
               <Link href={m[5]!}>{m[4]}</Link>
             </Text>
           ),

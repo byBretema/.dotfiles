@@ -117,7 +117,8 @@
   "enabledPlugins": {
     "clangd-lsp@claude-plugins-official": true,
     "pyright-lsp@claude-plugins-official": true,
-    "typescript-lsp@claude-plugins-official": true
+    "typescript-lsp@claude-plugins-official": true,
+    "colorizer@synced": false
   },
   "outputStyle": "terse",
   "feedbackDrafts": "notify",
