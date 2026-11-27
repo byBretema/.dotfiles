@@ -18,9 +18,15 @@ mkdir -p "$dir"
 out=$dir/$(date +%F_%H-%M-%S).mp4
 
 notify-send -a screenrec -t 2000 "Recording" "Run screenrec again to stop"
+log=${XDG_RUNTIME_DIR:-/tmp}/screenrec.log
 # A 0x0 region (single click) records the whole monitor under the pointer.
-flatpak run --command=gpu-screen-recorder com.dec05eba.gpu_screen_recorder \
-	-w "$region" -f 30 -k h264 -cursor yes -v no "$@" -o "$out"
+if ! flatpak run --command=gpu-screen-recorder com.dec05eba.gpu_screen_recorder \
+	-w "$region" -f 30 -k h264 -cursor yes -v no "$@" -o "$out" 2>"$log"; then
+	rm -f "$out"
+	notify-send -a screenrec -u critical "Recording failed" "$(tail -n 1 "$log")
+Full log: $log"
+	exit 1
+fi
 
 wl-copy -t text/uri-list "file://$out"
 notify-send -a screenrec "Recording saved" "$out"

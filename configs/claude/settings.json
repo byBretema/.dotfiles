@@ -127,7 +127,14 @@
       "autoCompactWindow": 300000
     }
   },
-  "askUserQuestionTimeout": "60s",
+  "askUserQuestionTimeout": "never",
+  "pluginConfigs": {
+    "cc-plugin-easel@builtin": {
+      "options": {
+        "autoCharts": true
+      }
+    }
+  },
   "tui": "fullscreen",
   "timeFormat": "auto",
   "theme": "auto",
