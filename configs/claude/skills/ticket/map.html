@@ -1,0 +1,44 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>__TITLE__</title>
+<style>
+  body { margin: 0; padding: 1.5rem; background: #1e1e2e; color: #cdd6f4; font: 14px system-ui, sans-serif; }
+  h1 { font-size: 1.1rem; margin: 0 0 1rem; }
+  #map svg { max-width: none !important; }
+  pre { color: #f38ba8; white-space: pre-wrap; }
+  #map { overflow-x: auto; }
+  #notes { max-width: 70rem; }
+  #notes:empty { display: none; }
+  #notes section { background: #313244; border-radius: 8px; padding: 0.75rem 1rem; margin: 1rem 0; scroll-margin-top: 1rem; }
+  #notes section:target { outline: 2px solid #cba6f7; }
+  #notes h2 { font-size: 1rem; margin: 0 0 0.5rem; color: #cba6f7; }
+  #notes code { background: #181825; padding: 0 0.25rem; border-radius: 4px; }
+  #notes .risk { color: #fab387; }
+  #notes .new { color: #a6e3a1; }
+</style>
+</head>
+<body>
+<h1>__TITLE__</h1>
+<div id="map"></div>
+<main id="notes">__NOTES__</main>
+<!-- loose: allows `click Node href "#id"` to jump to its notes section -->
+<!-- text/plain, not <pre class="mermaid">: keeps <br/> and &lt; in labels from being parsed as HTML -->
+<script type="text/plain" id="src">
+__MERMAID__
+</script>
+<script type="module">
+  import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+  mermaid.initialize({ startOnLoad: false, theme: "dark", securityLevel: "loose", flowchart: { useMaxWidth: false } });
+  const src = document.getElementById("src").textContent;
+  try {
+    const { svg } = await mermaid.render("m", src);
+    document.getElementById("map").innerHTML = svg;
+  } catch (e) {
+    document.getElementById("map").innerHTML = "<pre></pre>";
+    document.querySelector("pre").textContent = e.message + "\n\n" + src;
+  }
+</script>
+</body>
+</html>

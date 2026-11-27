@@ -110,6 +110,7 @@ configs/claude/keybindings.json                      .claude/keybindings.json
 configs/claude/bin                                   .claude/bin
 configs/claude/output-styles                         .claude/output-styles
 configs/claude/skills/gen-short-commit              .claude/skills/gen-short-commit
+configs/claude/skills/ticket                        .claude/skills/ticket
 
 # Open Code
 configs/opencode/AGENTS.md                           .config/opencode/AGENTS.md
