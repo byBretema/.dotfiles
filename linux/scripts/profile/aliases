@@ -5,7 +5,7 @@ alias j="jobs"
 alias e='$EDITOR'
 alias ee='e .'
 alias edot='e $DOTFILES'
-alias ediff='e $(git ls-files -m -o --exclude-standard)'
+alias ediff='e $(git diff --name-only --relative --diff-filter=d) $(git ls-files -o --exclude-standard)'
 
 alias qc='qtcreator >/dev/null 2>&1'
 alias qcc='qtcreator CMakeLists.txt >/dev/null 2>&1'
@@ -90,11 +90,14 @@ alias gs='git status --short'
 alias gi='git init'
 alias gcl='git clone'
 # Diff
-alias gd='git diff'
+alias gd='code_diff git' # code only, hides agent instructions/memory
+alias gda='git diff'
+alias gdf='git diff --diff-filter=d' # new/modified only, hides deletions
 alias gdd='git diff HEAD~1..HEAD'
 alias gds='git diff --staged'
-alias hd='hunk_code_diff' # code only, hides agent instructions/memory
+alias hd='code_diff hunk' # code only, hides agent instructions/memory
 alias hda='hunk diff'
+alias hdf='hunk diff -- :/ $(git diff HEAD --name-only --diff-filter=D | sed "s|^|:(top,exclude)|")' # new/modified only, hides deletions
 # Add
 alias ga='git add'
 alias gA='git add -A'

@@ -1,8 +1,8 @@
 #!/usr/bin/env bash
 
-# hunk diff without AI agent instructions/memory (AGENTS.md, CLAUDE.md, .claude/, ...).
-# Usage: hunk_code_diff [hunk options/targets] [-- pathspec...]
-# Plain `hunk diff` still shows everything.
+# git/hunk diff without AI agent instructions/memory (AGENTS.md, CLAUDE.md, .claude/, ...).
+# Usage: code_diff <git|hunk> [diff options/targets] [-- pathspec...]
+# Plain `git diff`/`hunk diff` still show everything.
 
 EXCLUDES=(
   "**/AGENTS.md"
@@ -25,6 +25,10 @@ EXCLUDES=(
   "**/agents/**/*.md"
 )
 
+[[ $1 == git || $1 == hunk ]] || { echo "usage: code_diff <git|hunk> [args...]" >&2; exit 2; }
+cmd=("$1" diff)
+shift
+
 args=()
 specs=()
 while (($#)); do
@@ -39,4 +43,4 @@ done
 
 # :/ = whole repo like plain `git diff`; top = excludes also anchor at the root when run from a subdir
 ((${#specs[@]})) || specs=(":/")
-exec hunk diff "${args[@]}" -- "${specs[@]}" "${EXCLUDES[@]/#/:(top,exclude,glob)}"
+exec "${cmd[@]}" "${args[@]}" -- "${specs[@]}" "${EXCLUDES[@]/#/:(top,exclude,glob)}"
