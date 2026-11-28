@@ -9,7 +9,7 @@ disable-model-invocation: true
 
 Ticket: $ARGUMENTS. Skip steps that don't fit; say which and why.
 
-State file: `~/agents/<project>/tasks/<slug>.md`, in the same format as the existing ones (Status, Pending, Done, Current Rules, Key Files). Link it under `## Tasks` in `~/agents/<project>/AGENTS.md`.
+State file: `~/agents/<project>/tasks/<slug>.md`, in the same format as the existing ones (Status, Pending, Done, Current Rules, Key Files, Tests). Link it under `## Tasks` in `~/agents/<project>/AGENTS.md`.
 Write to it as soon as something is decided, not at the end. On `resume`, read it first and continue from Pending.
 
 ## 1. Map (only with --map or --map-visual; omi defaults to --map)
@@ -37,13 +37,18 @@ For the chosen option, list cons and side effects in detail: behaviour changes, 
 
 fix tickets: write a failing test that reproduces the bug before changing code.
 Add a test for each con or side effect that can be tested; mark the rest "untested" in the state file.
-Run the full suite. Report the command and its result; never say "tests pass" without a fresh run.
+Fill the Tests section of the state file, one line per tier, cheapest first:
+`<tier>: <command> — <what it covers> — <rough time>`, e.g. targeted (touched files), unit (full suite), e2e (renders, hardware, external services).
+Ask me before running a tier that takes over 5 minutes, needs a GPU or device, or costs money.
+Run every tier you can now. Report each command and its result; never say "tests pass" without a fresh run.
 omi: also add or update `scripts/run_<workflow>.sh` so I can check the renders myself.
 Then END THE TURN.
 
 ## 5. Iterate
 
-Apply my feedback. Each round: re-run tests, re-check Pending, update the state file. Log small choices as Rulings.
+Apply my feedback. Each round: run the targeted tier, re-check Pending, update the state file. Log small choices as Rulings.
+Run a wider tier in the round when the change touches shared code, config, build files or a public interface.
+After each run, write under Tests: `Last <tier>: <date> <result>` and `Stale: <tiers> — <files changed since their last pass>`. Never drop a stale tier without running it.
 Go to step 6 only when I say done / lgtm / commit.
 
 ## 6. Review
@@ -55,11 +60,12 @@ Run /simplify, then /code-review at medium. Show the findings and ask: fix now, 
 Update the docs the project already keeps for the changed items; no new doc files.
 Grep the whole repo (docs, JSON, configs, scripts) for changed names. LSP misses references outside code.
 Cross-check: every con has a test or an "untested" note, and every renamed item was grepped.
+Run every tier still listed under Stale. For the expensive ones, give me the commands and wait for my results; log them. Skip a tier only if I say so, and keep it under Stale.
 
 ## 8. Commit (after my approval in step 5)
 
 Title per /gen-short-commit; follow the project's own convention where it differs.
-Body: Rulings that matter, untested cons, how to test.
+Body: Rulings that matter, untested cons, tiers not re-run after the last change, how to test.
 Move Pending items to Done in the state file.
 
 ## 9. No push
